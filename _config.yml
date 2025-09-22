@@ -1,0 +1,22 @@
+title: 2024F, UCLA CS163 Course Projects
+name: "2024F, UCLA CS163 Course Projects"
+author: UCLAdeepvision
+baseurl: "/CS163-Projects-2024Fall"
+description: Course projects for UCLA CS163, Deep Learning in Compuver Vision
+profile_url: "http://UCLAdeepvision.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+excerpt_separator: <!--more-->
+plugins:
+  - jekyll-feed
+  - jekyll-archives
+exclude:
+  - Gemfile
+  - Gemfile.lock
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge
+  toc_levels: 1..3
