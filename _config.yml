@@ -1,7 +1,7 @@
-title: 2024F, UCLA CS163 Course Projects
-name: "2024F, UCLA CS163 Course Projects"
+title: 2025F, UCLA CS163 Course Projects
+name: "2025F, UCLA CS163 Course Projects"
 author: UCLAdeepvision
-baseurl: "/CS163-Projects-2024Fall"
+baseurl: "/CS163-Projects-2025Fall"
 description: Course projects for UCLA CS163, Deep Learning in Compuver Vision
 profile_url: "http://UCLAdeepvision.github.io"
 
@@ -12,9 +12,12 @@ excerpt_separator: <!--more-->
 plugins:
   - jekyll-feed
   - jekyll-archives
+# Folders and files to exclude from the build
 exclude:
+  - vendor/
   - Gemfile
   - Gemfile.lock
+  - node_modules/
 kramdown:
   input: GFM
   auto_ids: true
