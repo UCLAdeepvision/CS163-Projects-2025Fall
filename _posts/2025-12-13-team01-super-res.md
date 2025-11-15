@@ -32,7 +32,20 @@ date: 2025-01-01
 
 ### Look-Up Table (LUT) Methods
 
-base LUT is very simple, may be good to highlight one of the many recent extensions to it
+In the field of Super-Resolution (SR), there have been relatively few attempts to make SR practical for common consumer applications such as cameras, mobile phones, and televisions. Look-Up Table (LUT) methods aim to bridge this gap by introducing a single-image SR approach that runs significantly faster than traditional interpolation or deep neural network (DNN)–based methods. This efficiency is achieved by using a precomputed LUT, where the output values from an SR network are stored in advance. During inference, the system can quickly retrieve these high-resolution values by querying the LUT with low-resolution input pixels.
+
+
+![LUT architecture]({{ '/assets/images/01/lut_architecture.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 1. LUT Method Overview [3].*
+
+
+
+![LUT Comparison Table]({{ '/assets/images/01/lut_comparison.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 2. peak signal-to-noise ratio (PSNR) and runtime of various methods [3].*
+
+To achieve this fast runtime, SR models are trained with a small receptive field, since the size of the SR-LUT grows exponentially with the receptive field size. This limitation introduces an inherent trade-off between PSNR and runtime: increasing the receptive field can improve reconstruction quality, but it also causes the LUT to expand dramatically, leading to slower performance.
 
 -adv: 
 --made to be fast and small
@@ -65,6 +78,11 @@ idea: add AST to OCA and increase size of overlapping K/V windows, since the mod
 
 
 ## References
+[1] Chen, Xiangyu, et al. “Activating More Pixels in Image Super-Resolution Transformer.” arXiv preprint arXiv:2205.04437, 2023.
+
+[2] Zhang, Kai, et al. “Deep Unfolding Network for Image Super-Resolution.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2020, pp. 3217–3226.
+
+[3] Jo, Younghyun, and Seon Joo Kim. “Practical Single-Image Super-Resolution Using Look-Up Table.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2021, pp. 691–700. doi:10.1109/CVPR46437.2021.00075.
 
 
 
