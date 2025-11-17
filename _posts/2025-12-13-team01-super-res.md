@@ -59,35 +59,33 @@ To achieve this fast runtime, SR models are trained with a small receptive field
 
 The "unfolding" part of "unfolding method" comes from the way that we deal with our optimization target: our basic assumption will be that the input image for our method will be the blurred, downscaled, and additive white Gaussian noise-ed version of a ground-truth image, or in other words:
 
-(TODO: how do you represent a matrix in latex??? i dont like making them vectors)
-(TODO: i really want to swap x and y here, the decision to have x be the ground truth is silly and confusing but that's how they do it in the paper)
 $$
 \vec y = (\vec x \otimes \vec k)\downarrow_s + \vec N
 $$
 
 where:
-- $\vec x \otimes \vec k$ represents the application of blurring kernel $\vec k$ to ground-truth image $\vec x$
-- $\downarrow_s$ represents downsampling (decimation) by a factor of $s$
-- $\vec N \sim N(\vec 0, \sigma^2 I)$ for $\sigma \in \mathbb{R}$
+- $$\vec x \otimes \vec k$$ represents the application of blurring kernel $$vec k$$ to ground-truth image $$\vec x$$
+- $$\downarrow_s$$ represents downsampling (decimation) by a factor of $$s$$
+- $$\vec N \sim N(\vec 0, \sigma^2 I)$$ for $$\sigma \in \mathbb{R}$$
 
-Given that $\vec y \sim N((\vec x \otimes \vec k)\downarrow_s, \sigma^2 I)$, its PDF is
+Given that $$\vec y \sim N((\vec x \otimes \vec k)\downarrow_s, \sigma^2 I)$$, its PDF is
 
 $$
 P(\vec y | \vec x) = \frac 1 {(2\pi\sigma^2)^{\frac d 2}}e^{-\frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2}
 $$
 
-Furthermore, it will be useful to have an image prior, which, for a hyperparameter $\lambda$, we will define as
+Furthermore, it will be useful to have an image prior, which, for a hyperparameter $$\lambda$$, we will define as
 
 $$
 \Phi(\vec x) = -\frac{1}{\lambda}\log P(\vec x)
 $$
 
-which will stand as a measure of how "natural" an image $\vec x$ is, ideally being minimised for any of our ground truth images and being maximised for images that are very noisy or unrealistic (i.e. unlike our GT images); we could interpret it simply as the scaled negative logarithm of the a-priori probability distribution of our ground truth images. In a practical sense, incorporating such a measure in our optimization will push our model toward creating images that conform to the patterns that typically appear in real images regarding color, brightness, etc, as opposed to overfitting on an image reconstruction loss function (in other words, a form of regularization).
+which will stand as a measure of how "natural" an image $$\vec x$$ is, ideally being minimised for any of our ground truth images and being maximised for images that are very noisy or unrealistic (i.e. unlike our GT images); we could interpret it simply as the scaled negative logarithm of the a-priori probability distribution of our ground truth images. In a practical sense, incorporating such a measure in our optimization will push our model toward creating images that conform to the patterns that typically appear in real images regarding color, brightness, etc, as opposed to overfitting on an image reconstruction loss function (in other words, a form of regularization).
 
-Now, under a maximum a-posteriori (MAP) framework, our goal in super-resolution, given a degraded image $\vec y$ conforming to the assumptions above, can be defined as finding
+Now, under a maximum a-posteriori (MAP) framework, our goal in super-resolution, given a degraded image $$\vec y$$ conforming to the assumptions above, can be defined as finding
 
 $$
-\hat x = \argmax_{\vec x} P(\vec x | \vec y) \\
+\hat x = \arg \max_{\vec x} P(\vec x | \vec y) \\
 $$
 
 Or, in other words, the clean image that the degraded image most likely started as. From Bayes theorem, we have 
@@ -96,42 +94,54 @@ $$
 P(\vec x | \vec y) = \frac{P(\vec y | \vec x)P(\vec x)}{P(\vec y)} \propto P(\vec y | \vec x)P(\vec x)
 $$
 
-Since $P(\vec y)$ is constant with regard to $\vec x$. So now,
+Since $$P(\vec y)$$ is constant with regard to $$\vec x$$. So now,
 
 $$
 \begin{aligned}
-\hat x &= \argmax_{\vec x} P(\vec x | \vec y) \\
-&= \argmax_{\vec x} P(\vec y | \vec x)P(\vec x) \\
-&= \argmin_{\vec x} -\log(P(\vec y | \vec x)P(\vec x)) = \argmin_{\vec x} -\log P(\vec y | \vec x) - \log P(\vec x) \\
-&= \argmin_{\vec x} -(\log(\frac 1 {(2\pi\sigma^2)^{\frac d 2}}) - \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2) + \lambda\Phi(\vec x) \\
-&= \argmin_{\vec x} \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x)
+\hat x &= \arg \max_{\vec x} P(\vec x | \vec y) \\
+&= \arg \max_{\vec x} P(\vec y | \vec x)P(\vec x) \\
+&= \arg \min_{\vec x} -\log(P(\vec y | \vec x)P(\vec x)) = \arg \min_{\vec x} -\log P(\vec y | \vec x) - \log P(\vec x) \\
+&= \arg \min_{\vec x} -(\log(\frac 1 {(2\pi\sigma^2)^{\frac d 2}}) - \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2) + \lambda\Phi(\vec x) \\
+&= \arg \min_{\vec x} \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x)
 \end{aligned}
 $$
 
-Instead of directly minimizing this expression with something like gradient descent, one can actually notice that $\argmin_{\vec x} ||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2$ has a closed form solution (which we will detail later), so we can decouple the data term and prior term in our optimization by using half-quadratic splitting, where we introduce an auxiliary variable $\vec z$ into our optimization:
+Instead of directly minimizing this expression with something like gradient descent, one can actually notice that 
+$$\arg \min_{\vec x} ||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2$$
+ has a closed form solution (which we will detail later), so we can decouple the data term and prior term in our optimization by using half-quadratic splitting, where we introduce an auxiliary variable $$\vec z$$ into our optimization:
 
 $$
-\hat x = \argmin_{\vec x, \vec z}\frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z||_2^2
+\min_{\vec x, \vec z}\frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z||_2^2
 $$
 
-Now, $\mu$ is a hyperparameter controlling how much leeway we want to give $\vec x$ and $\vec z$ to be different, where $\mu \to +\infty$ recovers our original target. Now, given that we have two optimization variables instead of just one, we can *unfold* the target and perform iterative optimization (with $j$ as the step number):
-
-(TODO: $\mu_j$ and $\beta_j$ definitions)
+Now, $$\mu$$ is a hyperparameter controlling how much leeway we want to give $$\vec x$$ and $$\vec z$$ to be different, where $$\mu \to +\infty$$ recovers our original target. Now, given that we have two optimization variables instead of just one, we can *unfold* the target and perform iterative optimization (with $$j$$ as the step number):
 
 $$
 \begin{aligned}
-\vec z_j &= \argmin_{\vec z} \frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \frac \mu 2 ||\vec x_{j-1} - \vec z||_2^2\\
-&= \argmin_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \mu\sigma^2 ||\vec x_{j-1} - \vec z||_2^2 \\
-\vec x_j &= \argmin_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2
+\vec z_j &= \arg \min_{\vec z} \frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \frac \mu 2 ||\vec x_{j-1} - \vec z||_2^2\\
+&= \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \mu\sigma^2 ||\vec x_{j-1} - \vec z||_2^2 \\
+\vec x_j &= \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2
 & \\
 \end{aligned}
 $$
 
-Now, as alluded, $\vec z_j$ still has a closed form solution:
+Now, it may be useful to change the value of $$\mu$$ throughout our optimization as a form of gradual regularization; a small $$\mu$$ near the start of our optimization will help speed up the process, and a large $$\mu$$ near the end will ensure that our solution actually corresponds to the original problem. So, define $$\mu_1, ..., \mu_J$$ for an optimization of $$J$$ steps, and let $$\alpha_j = \mu_j\sigma^2$$, so we have
+
+$$
+\begin{aligned}
+\vec z_j &= \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2 \\
+\vec x_j &= \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac {\mu_j} 2 ||\vec x - \vec z_j||_2^2
+& \\
+\end{aligned}
+$$
+
+Now, as alluded, $$\vec z_j$$ still has a closed form solution:
 
 [thing with fourier transforms]
 
-So, it remains to find $\vec x_j = \argmin_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2$. One can notice that this is similar to our very first optimization target; indeed, finding $\vec x_j$ is equivalent to removing additive white Gaussian noise from $\vec z_j$ with $\sigma^2 = \frac 1 \mu$ under a MAP framework. Obviously, this has no closed form solution
+So, it remains to find 
+$$\vec x_j = \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac {\mu_j} 2 ||\vec x - \vec z_j||_2^2$$. 
+One can notice that this is similar to our very first optimization target; indeed, finding $$\vec x_j$$ is equivalent to removing additive white Gaussian noise from $$\vec z_j$$ with $$\sigma^2 = \frac 1 {\mu_j}$$ under a MAP framework. Obviously, this has no closed form solution, so we will opt for a denoising neural network.
 
 [so we need to estimate the solution, which we do with a NN, in the paper they use a UNet with residual blocks]
 
