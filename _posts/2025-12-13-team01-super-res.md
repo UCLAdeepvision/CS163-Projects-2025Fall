@@ -139,15 +139,39 @@ Now, as alluded, $$\vec z_j$$ still has a closed form solution:
 
 [thing with fourier transforms]
 
+The derivation of which is too long to include here, but is detailed in [number for reference to https://ieeexplore.ieee.org/document/7468504]
+
 So, it remains to find 
 $$\vec x_j = \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac {\mu_j} 2 ||\vec x - \vec z_j||_2^2$$. 
-One can notice that this is similar to our very first optimization target; indeed, finding $$\vec x_j$$ is equivalent to removing additive white Gaussian noise from $$\vec z_j$$ with $$\sigma^2 = \frac 1 {\mu_j}$$ under a MAP framework. Obviously, this has no closed form solution, so we will opt for a denoising neural network.
+One can notice that this is similar to our very first optimization target; indeed, finding $$\vec x_j$$ is equivalent to removing additive white Gaussian noise from $$\vec z_j$$ with $$\sigma^2 = \frac 1 {\mu_j}$$ under a MAP framework. However, if we assume that $$-\log P(\vec x) \approx \Phi(\vec x)$$, then we can instead use $$\lambda$$ as a hyperparameter further balancing the influence between the prior term $$\Phi(\vec x)$$ and the data term $$||\vec x - \vec z_j||_2^2$$:
 
-[so we need to estimate the solution, which we do with a NN, in the paper they use a UNet with residual blocks]
+$$
+\vec x_j = \arg \min_{\vec x} \Phi(\vec x) + \frac {\mu_j} {2\lambda} ||\vec x - \vec z_j||_2^2
+$$
 
-[define the data and prior modules, talk about how prior module doesnt need to learn anything and can adapt to any kernel, sigma, and downsample factor (whcih is a good thing); talk about how removing implicit assumptions of kernel and such makes the model more generalizable, only assumption model has to handle is diff noise levels for $x_j$ step]
+Now, this corresponds to removing additive white Gaussian noise from $$z_j$$ with $$\sigma^2 = \frac{\lambda}{\mu_j}$$ under a MAP framework. For convenience, we define 
+$$\beta_j = \sqrt{\frac{\lambda}{\mu_j}}$$
+ (the standard deviation of the Gaussian noise), so our optimization is now
 
-[include images somewhere]
+$$
+\begin{aligned}
+\vec z_j &= \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2 \\
+\vec x_j &= \arg \min_{\vec x} \Phi(\vec x) + \frac {1} {2\beta_j^2} ||\vec x - \vec z_j||_2^2
+& \\
+\end{aligned}
+$$
+
+With all of that, it still remains to find a method for updating $$\vec x$$ at each step; given that this is a simple denoising task, we will opt for a denoising neural network. The paper in question uses a "ResUNet", which is a UNet with added residual blocks, similar to those from a ResNet. [more about the network structurt and a picture or something]
+
+In order to ensure adaptibility of our method, we will incorporate the noise level $$\beta_j$$ into our network input. To this end, given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended to the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
+
+[define the data and prior modules, talk about how prior module doesnt need to learn anything and can adapt to any kernel, sigma, and downsample factor (whcih is a good thing); talk about how removing implicit assumptions of kernel and noise levels and such makes the model more generalizable]
+
+[talk about training process]
+
+[talk about results]
+
+[include more images somewhere]
 
 -adv: 
 --nonblind; explicitly adapts for diff blurring kernels, amts of noise, and downsampling factors
