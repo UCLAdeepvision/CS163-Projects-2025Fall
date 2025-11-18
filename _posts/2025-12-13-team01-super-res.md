@@ -15,10 +15,19 @@ date: 2025-01-01
 * TOC
 {:toc}
 
-## Background
+## Background and Introduction
 
--super res encompasses upscaling, denoising, deblurring
--mention classical methods
+Super-resolution is a natural problem for image-to-image methods in computer vision, referring to the process of using a degraded, downsampled image to recover the original image before degradation and downsampling. Of course, this is an ill-posed problem; two different high-resolution images can downsample into the same low-resolution image (that is, downsampling is not injective), so truly inverting the downsampling process is impossible. For this reason, we settle for the task of estimating a function that approximates an inverse, producing a high-resolution image based solely on some mathematical assumptions and the information of the low-resolution image. This includes simple, classical methods, such as nearest-neighbor or bicubic upsampling, as well as, in recent years, statistical methods making use of deep learning for computer vision.
+
+We will be surveying three of these recent methods, highlighting the very different ways that one can go about achieving the same end goal in super-resolution:
+
+- The Hybrid Attention Transformer (HAT), a shifted-window transformer-based method
+
+- Look-Up Table (LUT) methods, which use precomputed table of pixel estimates
+
+- Unfolding networks, which combine classical model-based methods with learning-based methods
+
+Additionally, we will be discussing an experiment that we carried out involving a modification to the HAT architecture.
 
 ## A Survey of Deep Learning for Super Resolution
 
@@ -53,22 +62,24 @@ To achieve this fast runtime, SR models are trained with a small receptive field
 --practically, very small receptive field; lookup table grows exponentially(?) with RF size
 --implicit assumptions about noise, blurring, downsampling of image based on training data
 
-### Unfolding Methods
+### Unfolding Networks
 
 [introduction, introduce the paper and how it combines learning-based and model-based methods]
+
+The "unfolding" in "unfolding network" refers to splitting up (unfolding) the problem of de-degredation into two distinct subproblems, that being (1) unblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.
 
 (TODO: is the first-person "we", "our", etc wording appropriate for this, or should it be changed to third-person "they", "their", etc? the first person wording may give the wrong impression that we are trying to claim this method as our own or recreate it in some way, but it also feels weird to write proof-esque stuff in thrid person)
 
 Now, we can go through and derive the method ourselves to illustrate how it arises:
 
-The basic assumption will be that the input image for the method will be the blurred, downscaled, and additive white Gaussian noise-ed version of a ground-truth image, or in other words:
+The basic assumption will be that the input image for the method will be the blurred, downscaled, and additive white Gaussian noise-ed version of a ground-truth image, or in other words, our degraded image $$\vec y$$ is
 
 $$
 \vec y = (\vec x \otimes \vec k)\downarrow_s + \vec N
 $$
 
 where:
-- $$\vec x \otimes \vec k$$ represents the application of blurring kernel $$\vec k$$ to ground-truth image $$\vec x$$
+- $$\vec x \otimes \vec k$$ represents the application of blurring kernel $$\vec k$$ to ground-truth image $$\vec x$$ (via convolution)
 - $$\downarrow_s$$ represents downsampling (decimation) by a factor of $$s$$
 - $$\vec N \sim N(\vec 0, \sigma^2 I)$$ for $$\sigma \in \mathbb{R}^+$$
 
@@ -126,14 +137,12 @@ $$
 \min_{\vec x, \vec z}\frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z||_2^2
 $$
 
-Now, $$\mu$$ is a hyperparameter controlling how much leeway we want to give $$\vec x$$ and $$\vec z$$ to be different, where $$\mu \to +\infty$$ recovers our original problem. Now, given that we have two optimization variables instead of just one, we can *unfold* (hence the name) the target and perform iterative optimization (with $$j$$ as the step number):
+Now, $$\mu$$ is a hyperparameter controlling how much leeway we want to give $$\vec x$$ and $$\vec z$$ to be different, where $$\mu \to +\infty$$ recovers our original problem. Now, given that we have two optimization variables instead of just one, we can *unfold* the target and perform alternating iterative optimization (with $$j$$ as the step number):
 
 $$
 \begin{aligned}
-\vec z_j &= \arg \min_{\vec z} \frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \frac \mu 2 ||\vec x_{j-1} - \vec z||_2^2\\
-&= \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \mu\sigma^2 ||\vec x_{j-1} - \vec z||_2^2 \\
-\vec x_j &= \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2 \\
-&= \arg \min_{\vec x} \Phi(\vec x) + \frac {\mu} {2\lambda} ||\vec x - \vec z_j||_2^2
+\vec z_j &= \arg \min_{\vec z} \frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \frac \mu 2 ||\vec x_{j-1} - \vec z||_2^2 \\
+\vec x_j &= \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2
 \end{aligned}
 $$
 
@@ -150,24 +159,17 @@ Now, as alluded, $$\vec z_j$$ actually still has a closed form solution:
 
 [thing with fourier transforms]
 
-The derivation of which is too long to include here, but is detailed in [number for reference to https://ieeexplore.ieee.org/document/7468504]
+The derivation of which is too long to include here, but is detailed in [4].
 
 So, it remains to find 
 $$\vec x_j = \arg \min_{\vec x} \Phi(\vec x) + \frac {\mu_j} {2\lambda} ||\vec x - \vec z_j||_2^2$$. 
-One can notice that this is similar to our very first optimization target; indeed, finding $$\vec x_j$$ is equivalent to removing additive white Gaussian noise from $$\vec z_j$$ with $$\sigma^2 = \frac {\lambda} {\mu_j}$$ under a MAP framework. So, for convenience, we define 
+One can notice that this is similar to our very first optimization target; indeed, finding $$\vec x_j$$ is equivalent to removing additive white Gaussian noise from $$\vec z_j$$ with $$\sigma^2_\text{noise} = \frac {\lambda} {\mu_j}$$ under a MAP framework. So, for convenience, we define 
 $$\beta_j = \sqrt{\frac{\lambda}{\mu_j}}$$
- (the standard deviation of the Gaussian noise), so our optimization is now
+ (the standard deviation of the Gaussian noise), and we have that finding $$x_j$$ is equivalent to a Gaussian denoising problem with noise level $$\beta_j$$ (or, $$\sigma^2_\text{noise} = \beta_j^2$$).
 
-$$
-\begin{aligned}
-\vec z_j &= \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2 \\
-\vec x_j &= \arg \min_{\vec x} \Phi(\vec x) + \frac {1} {2\beta_j^2} ||\vec x - \vec z_j||_2^2
-\end{aligned}
-$$
+Given that this is a simple denoising task, we will opt for a denoising neural network. The paper in question uses a "ResUNet", which is a UNet with added residual blocks, similar to those from a ResNet. [more about the network structurt and a picture or something]
 
-Now, it still remains to find a method for updating $$\vec x$$ at each step; given that this is a simple denoising task, we will opt for a denoising neural network. The paper in question uses a "ResUNet", which is a UNet with added residual blocks, similar to those from a ResNet. [more about the network structurt and a picture or something]
-
-In order to ensure adaptibility and nonblind-ness of our method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The paper's method for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended to the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
+In order to ensure adaptibility and nonblind-ness of our method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The paper's method for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended on the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
 
 [define the data and prior modules, talk about how prior module doesnt need to learn anything and can adapt to any kernel, sigma, and downsample factor (whcih is a good thing); talk about how removing implicit assumptions of kernel and noise levels and such makes the model more generalizable]
 
@@ -200,11 +202,14 @@ idea: add AST to OCA and increase size of overlapping K/V windows, since the mod
 
 
 ## References
+
 [1] Chen, Xiangyu, et al. “Activating More Pixels in Image Super-Resolution Transformer.” arXiv preprint arXiv:2205.04437, 2023.
 
 [2] Zhang, Kai, et al. “Deep Unfolding Network for Image Super-Resolution.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2020, pp. 3217–3226.
 
 [3] Jo, Younghyun, and Seon Joo Kim. “Practical Single-Image Super-Resolution Using Look-Up Table.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2021, pp. 691–700. doi:10.1109/CVPR46437.2021.00075.
+
+[4] N. Zhao, Q. Wei, A. Basarab, N. Dobigeon, D. Kouamé and J. -Y. Tourneret, "Fast Single Image Super-Resolution Using a New Analytical Solution for ℓ2 – ℓ2 Problems," in IEEE Transactions on Image Processing, vol. 25, no. 8, pp. 3683-3697, Aug. 2016
 
 
 
