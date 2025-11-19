@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: Optical Flow 
-author: Ryan Carney, Phi Nguyen, Nikolas Rodriguez 
+author: Ryan Carney, Phi Nguyen, Nikolas Rodriguez
 date: 2025-11-19
 ---
 
@@ -15,50 +15,53 @@ date: 2025-11-19
 * TOC
 {:toc}
 
-## Main Content
-Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+## 1. Introduction
+-  What is Optical Flow?
+-  Problem Formalization & Evaluation Metrics
+-  The Ground Truth Problem: Why Unsupervised?
+-  Report Scope
 
-## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
+## 2. Background & Timeline
+-  Traditional Methods (brief)
+-  Deep Learning Revolution (2015)
+-  The Shift Toward Unsupervised Learning
+-  Common Datasets & Benchmarks
 
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
+## 3. FlowNet: Pioneering Deep Learning for Optical Flow
+-  Motivation
+-  Architecture Overview
+-  FlowNetSimple vs FlowNetCorrelated
+-  Correlation Layer Innovation
+-  Supervised Training Strategy
+-  Strengths & Limitations
 
-Please cite the image if it is taken from other people's work.
+## 4. RAFT: Optical Flow Models and Training Techniques in Data-Constrained Environment
+-  Motivation & Improvements
+-  Architecture/Methodology
+-  Strengths & Limitations
 
+## 5. UFlow: What Matters in Unsupervised Optical Flow
+-  Motivation: The Supervised Learning Bottleneck
+-  Key Research Questions
+-  Architecture & Training Components
+-  Ablation Studies: What Actually Matters?
+-  Strengths & Limitations
 
-### Table
-Here is an example for creating tables, including alignment syntax.
+## 6. Comparative Analysis
+-  Supervised vs Unsupervised: Trade-offs
+-  Performance Comparison Across Datasets
+-  Training Data Requirements
+-  Generalization Capabilities
+-  Computational Costs
+-  Practical Considerations
 
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
+## 7. Discussion
+-  Evolution of the Field
+-  When to Use Each Approach
+-  Open Challenges
+-  Future Directions
 
-
-
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
-
-
-### Formula
-Please use latex to generate formulas, such as:
-
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
-
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
+## 8. Conclusion
 
 ## Reference
 Please make sure to cite properly in your work, for example:
