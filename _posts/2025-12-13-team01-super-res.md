@@ -31,7 +31,74 @@ Additionally, we will be discussing an experiment that we carried out involving 
 
 ## A Survey of Deep Learning for Super Resolution
 
-### Hyrbid Attention Transformer (HAT)
+### Hybrid Attention Transformer (HAT)
+
+The Hybrid Attention Transformer aims to advance the field of low-level super-resolution by improving transformer architectures, which have recently become popular in SR tasks. Specifically, it addresses a key limitation of transformer-based SR models: their restricted range of utilized information. To overcome this, the authors introduce a Hybrid Attention Transformer (HAT) block designed to activate and leverage more pixels by combining self-attention, channel attention, and a novel attention mechanism that uses overlapping windows during feature extraction.
+
+The HAT architecture consists of three main parts. First, the input image passes through a convolutional layer to extract shallow features. These features are then processed by a series of Residual Hybrid Attention Groups (RHAGs) followed by another convolutional layer. Finally, a global residual connection fuses the shallow features from the first convolution with the deep features produced by the RHAGs, and a reconstruction module uses this combined information to generate the final high-resolution image.
+
+
+
+![HAT architecture]({{ '/assets/images/01/HAT_architecture.png' | relative_url }})
+{: style="max-width: 90%;"}
+*Fig 1. HAT Architecture Overview [1].*
+
+Each RHAG block is made up of hybrid attention blocks (HAB), an overlappong cross-attention block (OCAB) and a 3x3 convolution layer with a residual connection. 
+#### Hybrid Attention Block (HAB)
+
+One way the paper aims to increase the amount of activated pixels is by introducing a channel-attention-based (CAB) convolution block. 
+This is inserted into a standard SWIN Transformer block after the first LayerNorm layer in parallel with the window-based  multi-head self-attention (W-MSA) module. For a given input feature X, HAB is computed as: 
+
+$$
+X_N = \mathrm{LN}(X),
+$$
+
+$$
+X_M = (S)\mathrm{W\!-\!MSA}(X_N) + \alpha\,\mathrm{CAB}(X_N) + X,\tag{1}
+$$
+
+$$
+Y = \mathrm{MLP}(\mathrm{LN}(X_M)) + X_M,
+$$
+
+$$X_N$$ and $$X_M$$ denote intermidiate features, Y is the output and $$\alpha$$ is added in order conflict of CAB and MSA. The self attention module W-MSA is caluculated by an input feature of size H X W X C, parititoned into $$\frac{HM}{M^2}$$ local windows then self-attention is applied to each window. Query, key and value matrices are computed by linear mappings Q,K and V for a local window feature. Window-based self attention is,
+
+$$
+Attention(Q,K,V) = SoftMax(QK^T /\sqrt{d} + B)V 
+$$
+
+
+with d being the dimension of query/key.
+
+The CAB consists of the convolution layers wiht GELU activation, and a channel attention module. 
+
+
+#### Overlapping Cross-Attention Block (OCAB)
+
+
+![Overlapping window partition]({{ '/assets/images/01/overlapping.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 2. The overlapping window partition for OCA [1].*
+
+
+
+An OCAB block is used to compute cross-window connections and enhance the representational ability of window-based self-attention. It consists of an overlapping cross-attention (OCA) layer followed by an MLP layer. Different window sizes are used to partition the projected features.
+
+For input features $$X$$, let $$X_Q, X_K, X_V \in \mathbb{R}^{H \times W \times C}$$. $$X_Q$$ is partitioned into $$\frac{HW}{M^2}$$ non-overlapping windows of size $$M \times M$$. $$X_K$$ and $$X_V$$ are unfolded into $$\frac{HW}{M^2}$$ overlapping windows of size $$M_o\times M_o$$, where $$M_o$$ is calculated as
+
+$$
+M_o = (1+ γ) X M,
+$$
+
+
+where γ is a constant introduced in order to control overlapping size. 
+
+
+#### All together
+
+This results in a model that relies on a larger portion of the original image—making it less locally constrained—while remaining efficient by avoiding dense transformers and instead leveraging Swin attention and channel attention.
+
+
 
 -adv: 
 --designed to have a large receptive field
