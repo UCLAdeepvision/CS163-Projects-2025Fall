@@ -54,7 +54,35 @@ In the field of Super-Resolution (SR), there have been relatively few attempts t
 {: style="max-width: 80%;"}
 *Fig 2. peak signal-to-noise ratio (PSNR) and runtime of various methods [3].*
 
-To achieve this fast runtime, SR models are trained with a small receptive field, since the size of the SR-LUT grows exponentially with the receptive field size. This limitation introduces an inherent trade-off between PSNR and runtime: increasing the receptive field can improve reconstruction quality, but it also causes the LUT to expand dramatically, leading to slower performance.
+To achieve this fast runtime, SR models are trained with a small receptive field, since the size of the SR-LUT grows exponentially with the receptive field size. This limitation introduces an inherent trade-off between PSNR and runtime: increasing the receptive field can improve reconstruction quality, but it also causes the LUT to expand dramatically, leading to slower performance.   
+
+Specifically, the SR-LUT grows exponentially as given by:   
+
+
+$$ \text{LUT Size} = (2^8)^{RF} \times r^2 \times 8\text{ bits} $$
+
+Example with RF = 2 and r = 4:
+
+$$
+\begin{align}
+\text{LUT Size}
+&= (2^8)^2 \times 4^2 \times 8\ \text{bits} \\
+&= 256^2 \times 16 \times 8\ \text{bits} \\
+&= 65{,}536 \times 16 \times 1\ \text{byte} \\
+&= 1{,}048{,}576\ \text{bytes} \\
+&= 1\ \text{MB}
+\end{align}
+$$
+
+The LUT stores precomputed output values for every possible combination of input pixels in a receptive field. Its size depends on the number of input pixels considered and the range of values each pixel can take. The LUT must cover all possible input cases and store the corresponding outputs.
+
+After training the SR model, an SR-LUT table is created based on the dimensions of the receptive field (e.g., a 4D SR-LUT for an RF size of 4). The output values from the trained model are computed and stored in the LUT. During inference, input values are used as indices into the LUT, and the corresponding output values are retrieved. This allows super-resolution to be performed using only the LUT, without running the original model.
+
+Currently, LUTs only work for fixed-scale images, which limits their real-world applicability when images are zoomed in or out. Recent extensions, such as IM-LUT: Interpolation Mixing Look-Up Tables for Image Super-Resolution, propose frameworks for arbitrary-scale SR tasks. These methods adapt to diverse image structures, providing super-resolution across arbitrary scales while maintaining the efficiency that LUTs offer. 
+
+
+TODO: CIte IM-LUT
+
 
 -adv: 
 --made to be fast and small
