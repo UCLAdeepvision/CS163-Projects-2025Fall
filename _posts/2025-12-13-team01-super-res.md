@@ -17,7 +17,7 @@ date: 2025-01-01
 
 ## Background and Introduction
 
-Super-resolution is a natural problem for image-to-image methods in computer vision, referring to the process of using a degraded, downsampled image to recover the original image before degradation and downsampling. Of course, this is an ill-posed problem; two different high-resolution images can downsample into the same low-resolution image (that is, downsampling is not injective), so truly inverting the downsampling process is impossible. For this reason, we settle for the task of estimating a function that approximates an inverse, producing a high-resolution image based solely on some mathematical assumptions and the information of the low-resolution image. This includes simple, classical methods, such as nearest-neighbor or bicubic upsampling, as well as, in recent years, statistical methods making use of deep learning for computer vision.
+Super-resolution is a natural problem for image-to-image methods in computer vision, referring to the process of using a degraded, downsampled image to recover the original image before degradation and downsampling. Of course, this is an ill-posed problem; two different high-resolution images can downsample and degrade into the same low-resolution image (that is, the process is not injective), so truly inverting the process is impossible. For this reason, we settle for the task of estimating a function that approximates an inverse, producing a high-resolution image based solely on some mathematical assumptions and the information of the low-resolution image. This includes simple, classical methods, such as nearest-neighbor or bicubic upsampling, as well as, in recent years, statistical methods making use of deep learning for computer vision.
 
 We will be surveying three of these recent methods, highlighting the very different ways that one can go about achieving the same end goal in super-resolution:
 
@@ -33,78 +33,106 @@ Additionally, we will be discussing an experiment that we carried out involving 
 
 ### Hybrid Attention Transformer (HAT)
 
-The Hybrid Attention Transformer aims to advance the field of low-level super-resolution by improving transformer architectures, which have recently become popular in SR tasks. Specifically, it addresses a key limitation of transformer-based SR models: their restricted range of utilized information. To overcome this, the authors introduce a Hybrid Attention Transformer (HAT) block designed to activate and leverage more pixels by combining self-attention, channel attention, and a novel attention mechanism that uses overlapping windows during feature extraction.
+The Hybrid Attention Transformer aims to advance the field of low-level super-resolution by improving transformer architectures, which have recently become popular in SR tasks. Specifically, it addresses a key limitation of transformer-based SR models: their restricted receptive field. To overcome this, [1] introduces a Hybrid Attention Transformer (HAT) architecture designed to leverage more image pixels for reconstruction by combining self-attention, channel attention, and a novel overlapping-window attention mechanism.
 
-The HAT architecture consists of three main parts. First, the input image passes through a convolutional layer to extract shallow features. These features are then processed by a series of Residual Hybrid Attention Groups (RHAGs) followed by another convolutional layer. Finally, a global residual connection fuses the shallow features from the first convolution with the deep features produced by the RHAGs, and a reconstruction module uses this combined information to generate the final high-resolution image.
-
-
+<!--i feel like this high-level overview does not make sense to a reader who doesnt already know what a RHAG or HAB or OCAB is-->
+<!-- The high-level overview of HAT is as follows: first, the input image passes through a convolutional layer to extract shallow features. These features are then processed by a series of Residual Hybrid Attention Groups (RHAGs) followed by another convolutional layer; each RHAG block is made up of hybrid attention blocks (HAB), an overlapping cross-attention block (OCAB) and a convolution layer with a residual connection (these modules are described in detail below). Finally, a global residual connection combines the shallow features from the first convolution with the deep features produced by the RHAGs, and a reconstruction module featuring a pixel-shuffle uses this combined information to generate the final high-resolution image. -->
 
 ![HAT architecture]({{ '/assets/images/01/HAT_architecture.png' | relative_url }})
 {: style="max-width: 90%;"}
 *Fig 1. HAT Architecture Overview [1].*
 
-Each RHAG block is made up of hybrid attention blocks (HAB), an overlappong cross-attention block (OCAB) and a 3x3 convolution layer with a residual connection. 
 #### Hybrid Attention Block (HAB)
 
-One way the paper aims to increase the amount of activated pixels is by introducing a channel-attention-based (CAB) convolution block. 
-This is inserted into a standard SWIN Transformer block after the first LayerNorm layer in parallel with the window-based  multi-head self-attention (W-MSA) module. For a given input feature X, HAB is computed as: 
+![hybrid attention block]({{ '/assets/images/01/hab.png' | relative_url }})
+{: style="max-width: 90%;"}
+*Fig 2. Hybrid Attention Block [1].*
+
+The Hybrid Attention Block (HAB) aims to combine the deep flexibility of vision transformers with the efficiency and global accessibility of channel attention.
+
+![channel attention block]({{ '/assets/images/01/cab.png' | relative_url }})
+{: style="max-width: 90%;"}
+*Fig 3. Channel Attention Block [1].*
+
+The Channel Attention Block (CAB) consists of two convolutional layers separated by a GELU activation, followed by a channel attention (CA) module. The CA module consists of global average pooling (GAP), followed by two $$1 \times 1$$ convolutions, ensuring that the channel number is the same as prior to the CA module, separated by another GELU. Then, the sigmoid function is applied to the now-$$1 \times 1 \times C$$-shaped output to create channel weights, which are multiplied channel-wise by the pre-CA module input, to get an output of the same $$H \times W \times C$$ shape, where each channel has been scaled by a factor in $$[0, 1]$$. The factors are applied globally to each channel and are determined by GAP + convolutions, allowing all channels to utilize information from, to some degree, all positions in all other channels in an efficient manner. 
+
+In the HAB, the CAB is inserted into a standard Swin transformer block after the first LayerNorm in parallel with the window-based multi-head self-attention (W-MSA) module, where they are then combined additively (along with a residual connection). The efficiency and simplicity of the CAB comes at the cost of specific positional information being unutilized due to GAP, which is why the CAB is used in parallel with W-MSA, which explicitly *does* account for positional information. So, then, for a given input feature $$X$$, HAB is computed as: 
 
 $$
 X_N = \mathrm{LN}(X),
 $$
 
 $$
-X_M = (S)\mathrm{W\!-\!MSA}(X_N) + \alpha\,\mathrm{CAB}(X_N) + X,\tag{1}
+X_M = (\text{S})\text{W-MSA}(X_N) + \alpha\,\mathrm{CAB}(X_N) + X
 $$
 
 $$
 Y = \mathrm{MLP}(\mathrm{LN}(X_M)) + X_M,
 $$
 
-$$X_N$$ and $$X_M$$ denote intermidiate features, Y is the output and $$\alpha$$ is added in order conflict of CAB and MSA. The self attention module W-MSA is caluculated by an input feature of size H X W X C, parititoned into $$\frac{HM}{M^2}$$ local windows then self-attention is applied to each window. Query, key and value matrices are computed by linear mappings Q,K and V for a local window feature. Window-based self attention is,
-
-$$
-Attention(Q,K,V) = SoftMax(QK^T /\sqrt{d} + B)V 
-$$
-
-
-with d being the dimension of query/key.
-
-The CAB consists of the convolution layers wiht GELU activation, and a channel attention module. 
-
+where LN is the LayerNorm, (S)W-MSA is the (shifted) window-multihead self attention, MLP is the standard positionwise feed-forward network of a transformer, $$X_N$$ and $$X_M$$ denote intermediate features, $$Y$$ is the output, and $$\alpha$$ is a small hyperparameter that tempers the influence of the CAB compared to the W-MSA, to avoid issues of conflict between the two modules during optimization; empirically, $$\alpha=0.01$$ was found to give the best performance, as this parallel scheme can introduce significant stability issues in the optimization process if the influence of each branch is not controlled. Within-window linear mappings are used to get $$Q$$, $$K$$, and $$V$$ matrices, though, notably, these mappings are applied on the individual spatial pixels of the input, not on patches (that is, patches of size $$1 \times 1$$ are used), as the spatial dimensions of the input need to be maintained throughout the network to account for residual connections. A fixed window size is employed, the same as in the regular Swin transformer, however, notably, the model does not contain any patch merging, again in service of retaining the shape of the image for residual connections. Within-window attention uses the standard attention scheme, with a fixed sinusoidal relative positional encoding within each window similar to that of "Attention is All You Need".
 
 #### Overlapping Cross-Attention Block (OCAB)
 
-
 ![Overlapping window partition]({{ '/assets/images/01/overlapping.png' | relative_url }})
 {: style="max-width: 100%;"}
-*Fig 2. The overlapping window partition for OCA [1].*
+*Fig 4. The overlapping window partition for OCA [1].*
 
+OCAB modules are used throughout the HAT to further allow for cross-window connections; the basic idea is that windowed self-attention is performed on the input as normal, in the exact same manner as in the HAB module, though the windows for the keys and values, while still centered on the same locations as the windows of the queries, are larger than those of the queries, allowing each window to pull in some information from neighboring windows that it normally would not see.
 
-
-An OCAB block is used to compute cross-window connections and enhance the representational ability of window-based self-attention. It consists of an overlapping cross-attention (OCA) layer followed by an MLP layer. Different window sizes are used to partition the projected features.
-
-For input features $$X$$, let $$X_Q, X_K, X_V \in \mathbb{R}^{H \times W \times C}$$. $$X_Q$$ is partitioned into $$\frac{HW}{M^2}$$ non-overlapping windows of size $$M \times M$$. $$X_K$$ and $$X_V$$ are unfolded into $$\frac{HW}{M^2}$$ overlapping windows of size $$M_o\times M_o$$, where $$M_o$$ is calculated as
+Specifically, for input features $$X$$, let $$X_Q, X_K, X_V \in \mathbb{R}^{H \times W \times C}$$. $$X_Q$$ is partitioned into $$\frac{HW}{M^2}$$ non-overlapping windows of size $$M \times M$$. $$X_K$$ and $$X_V$$ are partitioned into $$\frac{HW}{M^2}$$ overlapping windows of size $$M_o\times M_o$$, where $$M_o$$ is calculated as
 
 $$
-M_o = (1+ γ) X M,
+M_o = (1 + \gamma)M,
 $$
 
+where $$\gamma$$ is a hyperparameter introduced in order to control the size of the overlapping windows, and the input is zero-padded to account for this larger window. Aside from shifting windows, this allows for even more cross-window information transmission, as each query window, which are the standard size, can pull in information from the key and value windows that include the query window and extend into the space that would otherwise be a separate, independent window. Additionally, OCAB is specifically designed to mitigate the blocking artifacts that the standard Swin transformer produces:
 
-where γ is a constant introduced in order to control overlapping size. 
+![Blocking ]({{ '/assets/images/01/blocking.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 5. Comparison of blocking between SwinIR and HAT [1].*
 
+The OCAB combats this by directly stepping over the hard boundaries between windows, reducing their presence in the extracted features; each query window has access to information about the space beyond its own boundaries, so they can better create smooth boundaries in the features between adjacent windows. While standard window shifting has a similar goal, each shifted window still only has access to its own pixels, which may still lead to hard boundaries and blocking between windows that become present in the features.
 
-#### All together
+Empirically, $$\gamma=0.5$$ was found to give the best performance, translating to overlapping windows that are, by area, 4/9 composed of the original window and 5/9 composed of adjacent windows. This is less extreme than the shifted windows of the standard Swin transformer, where, since the regular shifting amount is half of the window size in each dimension, shifted windows are only 1/4 composed of their original window, and are 3/4 composed of other windows. Still, this additional method of cross-window attention gives the model greater flexibility and another opportunity to use a larger portion of the original image in its reconstruction process.
 
-This results in a model that relies on a larger portion of the original image—making it less locally constrained—while remaining efficient by avoiding dense transformers and instead leveraging Swin attention and channel attention.
+#### Residual Hybrid Attention Group (RHAG)
 
+![Residual Hybrid Attention Group]({{ '/assets/images/01/rhag.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 6. The structure of a Residual Hybrid Attention Group [1].*
 
+These modules are combined in a further modular format via a Residual Hybrid Attention Group (RHAG), which puts a variable number of HAB modules in sequence which are followed by an OCAB module, with a final convolutional layer to ensure compatability between shapes of the input and output that allows for a residual connection over the entire module. The sequencing of HAB modules mirrors the structure of standard Swin stages, as the attention windows are shifted between subsequent HABs; though, patch merging is skipped in favor of the OCABs, as they both aim to combine information between windows, and OCAB can retain the spatial size of the input.
 
--adv: 
+#### High-Level Model Structure
+
+![High Level HAT]({{ '/assets/images/01/highlevelhat.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 7. The high-level structure of the HAT [1].*
+
+Contrary to the standard Swin, projection to the desired channel dimension is done using an initial convolutional layer; though, mirroring the structure of the Swin transformer, multiple RHAG modules are placed in sequence (similar to the sequence of stages in Swin), though in this case, a residual connection (along with a convolutional layer to ensure compatability of shapes) is employed across the series of RHAGs. Then, the final image reconstruction is performed using convolutions (for channel number adjustments) and pixel shuffle, where pixels from many channels are pulled together sequentially into a smaller number of channels with a larger image size.
+
+#### Results
+
+![LAM Results]({{ '/assets/images/01/lam.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 8. LAM results for different SR methods [1].*
+
+In practice, the HAT does, indeed, use a larger portion of the input image for reconstruction than other transformer-based SR methods. Above is a comparison of Local Attribution Maps (LAM) between different methods, which is a method for measuring which portions of the input were most influential for a given patch of the output. We see that HAT is highly nonlocal compared to other methods in terms of LAM, and performs better for it.
+
+![Quantitative Results]({{ '/assets/images/01/quantitativeresultshat.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 9. Quantitative results for HAT compared to other methods [1].*
+
+Quantitatively, in terms of peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), two standard metrics for image reconstruction, HAT outperforms its peers (if only slightly).
+
+The HAT is a notable modification of the Swin transformer architecture, designed for super resolution, due to its large practical receptive field; while all SR methods have an entire image to work with as input, it takes effort and specific design to actually use the information that is there in an efficient manner, which can be crucial to reconstructing an image correctly. Judging by its quantitative results, the future state-of-the-art in SR will likely be driven, to some degree, by the development of methods that are designed to produce even larger receptive fields.
+
+<!-- -adv: 
 --designed to have a large receptive field
 --uses shifted window transformers; takes advantage of transformers while limiting computational burden
 -disadv: 
---implicit assumptions about noise, blurring, downsampling of image based on training data; may not match what is seen at inference time, leading to inaccuracy
+--implicit assumptions about noise, blurring, downsampling of image based on training data; may not match what is seen at inference time, leading to inaccuracy -->
 
 ### Look-Up Table (LUT) Methods
 
@@ -151,15 +179,15 @@ Currently, LUTs only work for fixed-scale images, which limits their real-world 
 TODO: CIte IM-LUT
 
 
--adv: 
+<!-- -adv: 
 --made to be fast and small
 -disadv: 
 --practically, very small receptive field; lookup table grows exponentially(?) with RF size
---implicit assumptions about noise, blurring, downsampling of image based on training data
+--implicit assumptions about noise, blurring, downsampling of image based on training data -->
 
 ### Unfolding Networks
 
-The "unfolding" in "unfolding network" refers to splitting up (unfolding) the problem of de-degredation into two distinct subproblems, that being (1) unblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.
+The "unfolding" in "unfolding network" refers to splitting up the problem of de-degredation into two distinct subproblems, that being (1) unblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.
 
 (TODO: is the first-person "we", "our", etc wording appropriate for this, or should it be changed to third-person "they", "their", etc? the first person wording may give the wrong impression that we are trying to claim this method as our own or recreate it in some way, but it also feels weird to write proof-esque stuff in thrid person)
 
@@ -272,14 +300,14 @@ In order to ensure adaptibility and nonblind-ness of our method, it is useful to
 
 [include more images somewhere]
 
--adv: 
+<!-- -adv: 
 --nonblind; explicitly adapts for diff blurring kernels, amts of noise, and downsampling factors
 --limits learned parameters by only using learning for denoising step; deblurring and upsampling is closed-form, but still included in the chain of the model to allow learning to take advantage of it
 -disadv: 
 --sequential design w/ conv nets and (inverse) FFTs may be slow? 
 --use of only conv nets for denoising step may limit effective receptive field
 
--more classical method can better adapt to diff blurring kernel, etc without extensive training; balance of learning based and model based method is good idk
+-more classical method can better adapt to diff blurring kernel, etc without extensive training; balance of learning based and model based method is good idk -->
 
 ## An Extension of the Hybrid Attention Transformer
 
