@@ -124,7 +124,7 @@ In practice, the HAT does, indeed, use a larger portion of the input image for r
 {: style="max-width: 100%;"}
 *Fig 9. Quantitative results for HAT compared to other methods [1].*
 
-(TODO: EXPLAIN WHAT HAT, HAT-S, AND HAT-L ARE)
+HAT, HAT-S, and HAT-L share the same architecture, with HAT matching SwinIR’s depth and width, HAT-L doubling RHAGs for a larger model, and HAT-S having fewer parameters with 144 channels.
 
 Quantitatively, in terms of peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), two standard metrics for image reconstruction, HAT outperforms its peers (if only slightly).
 
@@ -196,15 +196,16 @@ There are 3 models mentioned in the paper: V, F, and S, which have a receptive f
 {: style="max-width: 80%;"}
 *Fig 5. Quantitative comparison of results; runtimes for all methods besides sparse coding are on a Galaxy S7 phone [3].*
 
-[comment on the results]
+The V model achieves the fastest runtime (−45 ms compared to bicubic) with solid improvements in PSNR and SSIM (+0.8 dB, +0.0203). The F model is slightly slower (−26 ms) but shows higher image quality (+1.35 dB, +0.0328), while the S model has the best visual quality with a small runtime increase (+31 ms). Compared to sparse coding and DNN-based methods, these LUT-based approaches provide competitive or better PSNR/SSIM, require less memory, and run much faster, making them efficient for both software and hardware implementation.
 
-[comment on LUT being fast but somewhat inaccurate and difficult to scale, and a given LUT only works for a fixed RF and fixed upscale factor]
+LUT models achieve comparable performance to other super-resolution methods while running significantly faster. However, the exponential growth in LUT size limits accuracy and makes scaling challenging. Additionally, each LUT is specific to a fixed receptive field and upscaling factor, restricting its flexibility.
 
 #### IM-LUT
 
 Since its invention in 2021, there have been numerous published papers for extensions and modifications to the LUT. One of these, published in 2025, is Interpolation Mixing LUT, or IM-LUT.
 
-[briefly talk about IM-LUT, mention results and what it does better and worse than LUT]
+
+IM-LUT enhances LUT-based super-resolution by combining multiple interpolation methods with pixel-wise weighting, adapting efficiently to different textures and scale factors. It outperforms standard LUT methods in reconstruction quality and flexibility while remaining computationally light. However, its PSNR is still lower than state-of-the-art network-based ASISR approaches due to interpolation limitations.
 
 
 
