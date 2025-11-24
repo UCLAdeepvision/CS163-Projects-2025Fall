@@ -124,6 +124,8 @@ In practice, the HAT does, indeed, use a larger portion of the input image for r
 {: style="max-width: 100%;"}
 *Fig 9. Quantitative results for HAT compared to other methods [1].*
 
+(TODO: EXPLAIN WHAT HAT, HAT-S, AND HAT-L ARE)
+
 Quantitatively, in terms of peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), two standard metrics for image reconstruction, HAT outperforms its peers (if only slightly).
 
 The HAT is a notable modification of the Swin transformer architecture, designed for super resolution, due to its large practical receptive field; while all SR methods have an entire image to work with as input, it takes effort and specific design to actually use the information that is there in an efficient manner, which can be crucial to reconstructing an image correctly. Judging by its quantitative results, the future state-of-the-art in SR will likely be driven, to some degree, by the development of methods that are designed to produce even larger receptive fields.
@@ -136,20 +138,78 @@ The HAT is a notable modification of the Swin transformer architecture, designed
 
 ### Look-Up Table (LUT) Methods
 
-In the field of Super-Resolution (SR), there have been relatively few attempts to make SR practical for common consumer applications such as cameras, mobile phones, and televisions. Look-Up Table (LUT) methods aim to bridge this gap by introducing a single-image SR approach that runs significantly faster than traditional interpolation or deep neural network (DNN)–based methods. This efficiency is achieved by using a precomputed LUT, where the output values from an SR network are stored in advance. During inference, the system can quickly retrieve these high-resolution values by querying the LUT with low-resolution input pixels.
-
+There have been relatively few attempts to make modern learning-based methods of super-resolution practical for common consumer applications such as cameras, mobile phones, and televisions. Look-Up Table (LUT) methods, as described in [3], aim to bridge this gap by using a precomputed LUT, where the output values from an SR network are stored in advance; during inference, the system can quickly retrieve these high-resolution values by querying the LUT with low-resolution input pixels.
 
 ![LUT architecture]({{ '/assets/images/01/lut_architecture.png' | relative_url }})
 {: style="max-width: 80%;"}
 *Fig 1. LUT Method Overview [3].*
 
+#### The LUT
 
+Although it may seem backwards, it may be useful to start with how the LUT will be used in inference: given a low-resolution image and an upscaling factor $$r$$, our goal is will be to map each pixel of the low-res image to an image patch of size $$r \times r$$, which we then assemble into a full upscaled image. This process will be done independently for each color channel, so that we are assembling 3 independent images with 1 color channel each and then concatenating them to form a 3-channel image. For a given image pixel at location $$(i, j)$$, we would like this mapping to take into account the pixels surrounding $$(i, j)$$ as well as the pixel itself; so, to get the patch for pixel $$(i, j)$$, the LUT will be indexed by a fixed number of pixel values surrounding $$(i, j)$$, and at this index, there will be $$r^2$$ values that we can use to construct an image patch (given that we use pixel values for indexing, we use 8-bit color). For instance, for $$r=2$$ and a LUT receptive field of 4, let 
+$$I_0 = image[i, j], I_1 = image[i+1, j], I_2 = image[i, j+1], I_3 = image[i+1, j+1]$$. 
+Then, $$LUT[I_0][I_1][I_2][I_3][0][0]$$ will contain the top-left corner of the upscaled patch, and $$LUT[I_0][I_1][I_2][I_3][1][1]$$ will contain the bottom-right corner. This will be the basic method that the LUT uses in inference, which only requires table lookup, and no network computation.
+
+#### The SR Network
+
+Now, with a clear goal of how the LUT should function, we can construct the network that will give us its values. Given that we want the patch in the LUT for each specific pixel value to depend solely on a fixed number of surrounding pixels, a convolutional network with a finely-controlled receptive field seems natural; again, note that the LUT upscaling process is performed independently on each color channel, so the input to this network will only have 1 channel. Specifically, given a receptive field size $$n$$ and an upscaling factor $$r$$, we can construct a network as:
+
+- a series of convolutional layers (with nonlinearities), where, at the end, each output pixel has a gross receptive field of size $$n$$ and the output has $$r^2$$ channels
+
+- a pixel shuffle that will construct upscaled patches from our channels and concatenate them together into a full upscaled image
+
+with this, we have constructed a network where each tiled $$r \times r$$ patch of the output depends only on a (contiguous) size $$n$$ receptive field from the input. Now, if we optimize this network for super-resolution, to construct our LUT, we can simply generate patches of size $$n$$ (or more to create an array) with specific values (which will be indexes in the LUT) and feed them into the network, and the resulting upscaled patch can be added to the LUT. The kernels of the convolutional layers could be anything as long as it conforms to the receptive field requirement, however, the authors of the paper use an architecture where the first convolutional layer results in a receptive field of size $$n$$, and all subsequent layers are $$1\times 1$$ convolutions (the issue of the kernel reducing the size of the input is dealt with by pre-padding the image); additionally, they use a square (or anything closest to square) kernel when possible, as it will capture the pixels that are most adjacent, and thus most relevant, to each other.
+
+#### LUT Size
+
+Of course, the principal design priority of the LUT is efficiency in speed and size. Using 8-bit color, if we construct a LUT that accounts for every possible input patch, one can compute the size of the LUT for a given receptive field $$n$$ and upscale factor $$r$$ as 
+
+$$
+(2^8)^n r^2 \text{ bytes}
+$$
+
+This can be seen clearly from the structure of the LUT; there are $$2^8$$ possible values for a given 1-channel pixel, so for a RF of size $$n$$, there are $$(2^8)^n$$ possible input patches. At each index corresponding to an input patch, there is an upscaled patch of size $$r^2$$, whose entries are also each 8 bits (or 1 byte). Clearly, this will not scale well with $$n$$, and in fact, $$n=4$$ and $$r=2$$ gives us a LUT that is 16GB large. To counteract this, the paper uses a "sampled LUT", where only a subset of the possible input patches are sampled for use in the LUT; specifically, they found that sampling the color space of $$0$$ to $$2^8-1$$ uniformly (including endpoints) with a sampling interval of $$2^4$$ over each pixel of the input patch worked well to reduce the size of the LUT while retaining good performance, reducing the 16GB LUT to just $$(1+\frac{2^8}{2^4})^4 2^2 = 334084$$ bytes, or about 326KB.
+
+![LUT sizes]({{ '/assets/images/01/lutsizes.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 2. A comparison of LUT sizes [3].*
+
+Of course, this sampled LUT introduces the issue of indexing: how do we index from the LUT if the input patch doesn't match a patch that was seen while filling out the table? For this, the authors used interpolation; instead of indexing one upscaled patch, we can interpolate between up to $$2^n$$ patches, for a RF size $$n$$. For instance, for a LUT where $$n=2$$, using a sampling interval of $$2^4$$, getting the upscaled patch for an input patch where $$I_0 = 8, I_1 = 8$$ would require interpolating between $$LUT[0][0], LUT[0][1], LUT[1][0], LUT[1][1]$$. Using this sampling interval, these nearest points can actually be found easily by looking at the bit representation of $$I_j$$: the first 4 bits, when converted to integer, will be the index of the lower part of the interpolation (e.g. for $$I_j = 20$$, 20 $$\to$$ 00010100, and then 0001 $$\to$$ 1, meaning that $$LUT[1]$$ will be the lower part of the interpolation and $$LUT[2]$$ will be the upper part); this method of indexing for the interpolation points adds even further to the LUT's speed. The issue of interpolating between points in $$n$$ dimensional space is complex in its own right, though we note that the authors found that linear interpolation was slower than triangular interpolation (and its higher-dimensional couterparts), especially for larger $$n$$.
+
+![LUT sizes]({{ '/assets/images/01/interpolation.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 3. A comparison of interpolation methods for $$n=2, 3, 4$$ [3].*
+
+#### Results
 
 ![LUT Comparison Table]({{ '/assets/images/01/lut_comparison.png' | relative_url }})
 {: style="max-width: 80%;"}
-*Fig 2. peak signal-to-noise ratio (PSNR) and runtime of various methods [3].*
+*Fig 4. peak signal-to-noise ratio (PSNR) and runtime of various methods for 320 x 180 -> 1280 x 720 upsampling [3].*
 
-To achieve this fast runtime, SR models are trained with a small receptive field, since the size of the SR-LUT grows exponentially with the receptive field size. This limitation introduces an inherent trade-off between PSNR and runtime: increasing the receptive field can improve reconstruction quality, but it also causes the LUT to expand dramatically, leading to slower performance.   
+There are 3 models mentioned in the paper: V, F, and S, which have a receptive field of 2, 3, and 4, respectively. F and S use a sampled LUT with a sampling interval of $$2^4$$, while V uses a full LUT. We see that the LUT methods provide a good tradeoff in terms of speed vs reconstruction quality, where F is even faster than bicubic interpolation, and V is even faster than bilinear interpolation.
+
+![LUT qualitative results]({{ '/assets/images/01/lutqualitative.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 4. Qualitative comparison of results [3].*
+
+![LUT qualitative results]({{ '/assets/images/01/lutquantitative.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 5. Quantitative comparison of results; runtimes for all methods besides sparse coding are on a Galaxy S7 phone [3].*
+
+[comment on the results]
+
+[comment on LUT being fast but somewhat inaccurate and difficult to scale, and a given LUT only works for a fixed RF and fixed upscale factor]
+
+#### IM-LUT
+
+Since its invention in 2021, there have been numerous published papers for extensions and modifications to the LUT. One of these, published in 2025, is Interpolation Mixing LUT, or IM-LUT.
+
+[briefly talk about IM-LUT, mention results and what it does better and worse than LUT]
+
+
+
+
+<!-- To achieve this fast runtime, a convolutional SR network is trained with a small receptive field, since the size of the SR-LUT grows exponentially with the receptive field size. This limitation introduces an inherent trade-off between PSNR and runtime: increasing the receptive field can improve reconstruction quality, but it also causes the LUT to expand dramatically, leading to slower performance.   
 
 Specifically, the SR-LUT grows exponentially as given by:   
 
@@ -176,7 +236,7 @@ After training the SR model, an SR-LUT table is created based on the dimensions 
 Currently, LUTs only work for fixed-scale images, which limits their real-world applicability when images are zoomed in or out. Recent extensions, such as IM-LUT: Interpolation Mixing Look-Up Tables for Image Super-Resolution, propose frameworks for arbitrary-scale SR tasks. These methods adapt to diverse image structures, providing super-resolution across arbitrary scales while maintaining the efficiency that LUTs offer. 
 
 
-TODO: CIte IM-LUT
+TODO: CIte IM-LUT -->
 
 
 <!-- -adv: 
@@ -188,8 +248,6 @@ TODO: CIte IM-LUT
 ### Unfolding Networks
 
 The "unfolding" in "unfolding network" refers to splitting up the problem of de-degredation into two distinct subproblems, that being (1) unblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.
-
-(TODO: is the first-person "we", "our", etc wording appropriate for this, or should it be changed to third-person "they", "their", etc? the first person wording may give the wrong impression that we are trying to claim this method as our own or recreate it in some way, but it also feels weird to write proof-esque stuff in thrid person)
 
 Now, we can go through and derive the method ourselves to illustrate how it arises:
 
@@ -324,7 +382,7 @@ idea: add AST to OCA and increase size of overlapping K/V windows, since the mod
 
 ## References
 
-[1] Chen, Xiangyu, et al. “Activating More Pixels in Image Super-Resolution Transformer.” arXiv preprint arXiv:2205.04437, 2023.
+[1] X. Chen, X. Wang, J. Zhou, Y. Qiao and C. Dong, "Activating More Pixels in Image Super-Resolution Transformer," 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Vancouver, BC, Canada, 2023, pp. 22367-22377, doi: 10.1109/CVPR52729.2023.02142.
 
 [2] Zhang, Kai, et al. “Deep Unfolding Network for Image Super-Resolution.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2020, pp. 3217–3226.
 
@@ -332,6 +390,6 @@ idea: add AST to OCA and increase size of overlapping K/V windows, since the mod
 
 [4] N. Zhao, Q. Wei, A. Basarab, N. Dobigeon, D. Kouamé and J. -Y. Tourneret, "Fast Single Image Super-Resolution Using a New Analytical Solution for ℓ2 – ℓ2 Problems," in IEEE Transactions on Image Processing, vol. 25, no. 8, pp. 3683-3697, Aug. 2016
 
-
+[5] Park, S., Lee, S., Jin, K., & Jung, S.W. (2025). IM-LUT: Interpolation Mixing Look-Up Tables for Image Super-Resolution. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (pp. 14317-14325).
 
 ---
