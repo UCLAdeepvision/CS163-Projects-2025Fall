@@ -124,9 +124,7 @@ In practice, the HAT does, indeed, use a larger portion of the input image for r
 {: style="max-width: 100%;"}
 *Fig 9. Quantitative results for HAT compared to other methods [1].*
 
-HAT, HAT-S, and HAT-L share the same architecture, with HAT matching SwinIR’s depth and width, HAT-L doubling RHAGs for a larger model, and HAT-S having fewer parameters with 144 channels.
-
-Quantitatively, in terms of peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), two standard metrics for image reconstruction, HAT outperforms its peers (if only slightly).
+The authors compared 3 versions of the model: HAT-S, HAT, and HAT-L: HAT has a similar size to the existing Swin super-resolution model SwinIR, with 6 RHAG modules with 6 HABs each; HAT-L is larger than HAT, with 12 RHAGs instead of 6; HAT-S is smaller than HAT, with depthwise convolutions and a smaller channel number throughout the model, resulting in overall computation similar to that of SwinIR. Quantitatively, in terms of peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), two standard metrics for image reconstruction, HAT's variants outperform their peers (if only slightly), and larger HAT models tend to yield better performance (again, if only slightly).
 
 The HAT is a notable modification of the Swin transformer architecture, designed for super resolution, due to its large practical receptive field; while all SR methods have an entire image to work with as input, it takes effort and specific design to actually use the information that is there in an efficient manner, which can be crucial to reconstructing an image correctly. Judging by its quantitative results, the future state-of-the-art in SR will likely be driven, to some degree, by the development of methods that are designed to produce even larger receptive fields.
 
@@ -180,6 +178,28 @@ Of course, this sampled LUT introduces the issue of indexing: how do we index fr
 {: style="max-width: 80%;"}
 *Fig 3. A comparison of interpolation methods for $$n=2, 3, 4$$ [3].*
 
+#### Rotational Ensemble
+
+Additionally, during training and testing, the authors employed the strategy of "rotational ensemble". This is a method of data augmentation that involves:
+
+- rotating each input by 90, 180, and 270 (and 0) degrees
+
+- feeding each of 4 rotations of the input into the model
+
+- rotating each the super-resolution outputs such that they are all at their original orientation
+
+- taking the average over the 4 outputs, and treating that as your final output
+
+This method is well-suited to super resolution, as the semantic meaning of the image is not important; images that are rotated still fall under our base assumption of what "real" images look like for super resolution, so the model can improve by optimizing over them. In our case, this method can actually improve the effective receptive field of the model substantially:
+
+![Rotational Ensemble Illustration]({{ '/assets/images/01/rotensemble.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 4. An illustration of the effect of rotational ensemble on the receptive field; a 2x2 RF is effectively increased to a 3x3 RF [3].*
+
+During training, rotational ensemble simply works well as a way to increase your dataset size. However, this method can be used in inference as well; we can construct 4 different super-resolution predictions using the LUT, and then average them together. For a 2x2 square RF, one can see, in the illustration above representing 2x upsampling, that the relative position of the patch in the output corresponding to the RF in the input will be determined by the relative position of the top-left pixel of the RF in the input image; that is, any RF in the input, no matter the rotation of, will correspond to the same patch in the output as long as the top-left pixel of the RF is the same across those RFs in the input. So, when we look at the RFs across our rotational ensemble when the top-left pixel is kept constant, we see that their union will be a 3x3 area in the input, which means that the given output patch will be influenced by all pixels in the 3x3 area, effectively increasing our inference RF size to 9.
+
+While this does increase our computation time by a factor of 4 (discounting rotations and averaging), it is likely a worthy trade-off for such a substantial increase in RF size, which would normally require increasing the LUT size to an unmanageable degree.
+
 #### Results
 
 ![LUT Comparison Table]({{ '/assets/images/01/lut_comparison.png' | relative_url }})
@@ -196,16 +216,90 @@ There are 3 models mentioned in the paper: V, F, and S, which have a receptive f
 {: style="max-width: 80%;"}
 *Fig 5. Quantitative comparison of results; runtimes for all methods besides sparse coding are on a Galaxy S7 phone [3].*
 
-The V model achieves the fastest runtime (−45 ms compared to bicubic) with solid improvements in PSNR and SSIM (+0.8 dB, +0.0203). The F model is slightly slower (−26 ms) but shows higher image quality (+1.35 dB, +0.0328), while the S model has the best visual quality with a small runtime increase (+31 ms). Compared to sparse coding and DNN-based methods, these LUT-based approaches provide competitive or better PSNR/SSIM, require less memory, and run much faster, making them efficient for both software and hardware implementation.
+We see that, quantitatively, all LUT variants perform substantially better than traditional interpolation upsampling methods, and are competitive with methods that require far greater runtime and/or storage space. Interestingly, there are some cases where the F model seems to perform quantitatively better than the S model, despite the fact that the only difference between them is that S has a larger receptive field. This likely just indicates a plateau in performance wrt receptive field size, or the differently shaped receptive fields may fare differently on different datasets (since RF=3 for F and RF=4 for S, the RF for F is a line and the RF for S is a square).
 
-LUT models achieve comparable performance to other super-resolution methods while running significantly faster. However, the exponential growth in LUT size limits accuracy and makes scaling challenging. Additionally, each LUT is specific to a fixed receptive field and upscaling factor, restricting its flexibility.
+LUT methods are an interesting way to make super-resolution more efficient; instead of making a more efficient network, it avoids using a network for inference altogether. However, there are some obvious flaws: the quantitative results do not make it state-of-the-art in that regard, and the methodology of using the same LUT for each color channel independently seems somewhat unintuitive. Additionally, a given LUT is confined to a fixed receptive field size and upscaling factor; an entirely new SR network and table must be created to change these factors, which restricts the method's practical use.
 
 #### IM-LUT
 
-Since its invention in 2021, there have been numerous published papers for extensions and modifications to the LUT. One of these, published in 2025, is Interpolation Mixing LUT, or IM-LUT.
+Since its invention in 2021, there have been numerous published papers for extensions and modifications to the LUT. One of these, published in 2025, is Interpolation Mixing LUT, or IM-LUT [5]. IM-LUT allows for the model to adapt to the scaling factor at inference time, meaning that a single IM-LUT can be used to scale any image to any size. This is achieved by first upscaling the input image with standard interpolation algorithms, such as bicubic upsampling, and then using a standard LUT on the upscaled image. However, the IM-LUT can also adapt its interpolation upscaling to the input image; a single IM-LUT uses many different interpolation algorithms to upscale the input image, and then uses a weighted average, with weights based on the image itself and the given scale factor, to combine the interpolations together before the final refinement LUT. With this, the IM-LUT can adapt to any scaling factor while still also dynamically adapting to the specific input image.
+
+Now, we go through the structure of the IM-LUT
+
+##### IM-Net
+
+![IM Net]({{ '/assets/images/01/imnet.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 5. IM-Net, the network used to generate the LUTs for IM-LUT [3].*
+
+There are two overall parts to the IM-Net: weight map prediction, and image refinement. Image refinement is simply a network that refines an the interpolated input image; it takes an image of any given size, and produces an image of the same size. This part of the network is simple, but the weight maps are more involved:
+
+The IM-LUT works with a fixed set of $$K$$ interpolation functions, and for any given image, the network predicts per-pixel weights for each interpolation function; these weight maps allow the network to take advantage of the fact that different interpolation methods may fare better in different areas of a given image. The weight maps are a combination of the output of two other networks:
+
+- An image-to-weight map network, that takes the low-resolution image and produces low-resolution weight maps.
+
+- An upscaling factor-to-scale vector network ("scale modulator"), that takes the scaling factor as input and outputs a vector of per-interpolation function weights.
+
+The weights from the scale modulator are multiplied by the initial weight maps (one scale weight per weight map) to produce the final weight maps. The networks optimize their predictions of these weight maps as so:
+
+- For a given image (where the ground truth is known) and upscaling factor, downscale the image and then get interpolations back to the original size using each given interpolation function.
+
+- Calculate per-interpolation deviations from the GT image using per-pixel L1 loss, i.e. 
+$$E_k[i, j] = |I_{\text{interp } k}[i, j] - I_{\text{GT}}[i, j]|$$ 
+for $$k=1,...,K$$.
+
+- Compute ground-truth weight maps as a temperature-controlled per-pixel softmax over all negative interpolation deviations, i.e.
+$$W^{GT}_k[i, j] = \frac{e^{-\beta E_k[i, j]}}{\sum_{\ell=1}^K e^{-\beta E_\ell[i, j]}}$$ 
+for $$\beta$$ being the temperature constant.
+
+- Compute the "guide" loss (or, the weight map loss) as the L2 reconstruction loss between the predicted and ground-truth weight maps, that is
+$$\mathcal{L}_{\text{guide}} = \sum_{\ell=1}^K ||\hat W_\ell - W^{GT}_\ell||_2$$
+
+Then, when the predicted weight maps are used to create a final interpolated image, and that is run through the refinement network, the final reconstruction loss can be found as 
+$$\mathcal{L}_{\text{rec}} = ||\hat I - I^{GT}||_2$$ 
+and the final loss that we optimize over is 
+$$\mathcal{L} = \mathcal{L}_{\text{rec}} + \lambda \mathcal{L}_{\text{guide}}$$ 
+where $$\lambda$$ is our trade-off hyperparameter. With this, we can optimize both the refinement and the weight map predictions at once, and we can vary the upscaling factor to ensure that the network can adapt well to different amounts of upscaling.
+
+##### IM-LUT
+
+![IM LUT]({{ '/assets/images/01/imlut.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 5. An overview of the way in which the LUTs are created and used [3].*
+
+Now, we have to transfer the IM-Net to LUTs. Given that IM-Net has 3 distinct sub-networks (scaling factor network, weight map network, and refinement network), we will have 3 LUTs; note that the refinement and weight map networks each use convolutional networks that leave each pixel of the output with a 2x2 receptive field in the input, as was seen with the original LUT. Additionally, each LUT is created with a sampling-interval scheme and interpolated indexing, as was also seen with the standard LUT (except for the scale LUT, which uses nearest neighbor interpolation). Specifically, the scale modulator LUT is indexed by a single number and outputs a vector of $$K$$ weights, making it small and efficient; the weight map LUT is indexed by 4 pixel values and outputs $$K$$ pixel values (since the weight map network *does not* perform any resizing), making it similar in size to the standard LUT; the refiner LUT is indexed by 4 pixels and outputs 1 pixel value (again, no resizing), making it smaller than the standard LUT. We see that, unlike the standard LUT, the size of the LUTs has no dependence on the scale factor; however, given that the refiner LUT will be used on the entire upscaled image, the overall computational complexity will increase with the scale factor (though, they note in the paper, it does not increase substantially with upscale factor).
+
+Once the LUTs are computed, they can be used as stand-ins for the networks (as in the standard LUT), and then images can be upscaled as they were in IM-Net.
+
+##### Results
+
+![IM LUT qualitative]({{ '/assets/images/01/imlutqualitative.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 5. Qualitative results of IM-LUT compared to other methods [3].*
+
+![IM LUT quantitative]({{ '/assets/images/01/imlutresults.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 5. Multiply-accumulate (MAC) operations, required storage, and PSNR for various super-resolution methods [3].*
+
+Given the freedom to choose interpolation functions, the authors highlight a few possible combinations of functions: in the table above, N means "nearest neighbor", L means "bilinear", C means "bicubic" and Z means "lanczos", another kind of interpolation algorithm using windowed normalized sine functions; the letters, when put together, indicate that the IM-LUT uses all of those interpolation functions. We see that the IM-LUT methods manage to be very efficient on storage and, for certain combinations of interpolations, on computations, as well; at the same time, they have much better performance than any single interpolation function, and, while not being state-of-the-art quantitatively, stay competitive with other LUT or similarly-efficient SR methods that require more storage and, in the case of the other LUT methods, cannot use a single model to adapt to different scaling factors.
+
+![IM LUT weight maps]({{ '/assets/images/01/weightmaps.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 5. Analysis of weight maps for different interpolation functions [3].*
+
+From the color-coded weight maps above, we see that the model is, in fact, using the weight maps to adapt to the input image.
+
+[comment more about this or something]
+
+[conclusion about IM-LUT, how it improves on LUT by being flexible wrt scalinf factor, and the flexibility to have an arbitrary combination of interpolation functions also makes it flexible and allows it to trade-off speed for accuracy without changing the arhcitecture]
 
 
-IM-LUT enhances LUT-based super-resolution by combining multiple interpolation methods with pixel-wise weighting, adapting efficiently to different textures and scale factors. It outperforms standard LUT methods in reconstruction quality and flexibility while remaining computationally light. However, its PSNR is still lower than state-of-the-art network-based ASISR approaches due to interpolation limitations.
+
+
+
+
+
+IM-LUT extends the standard LUT by combining multiple interpolation methods with pixel-wise weighting, adapting efficiently to different textures and scale factors. It outperforms standard LUT methods in reconstruction quality and flexibility while remaining computationally light. However, its PSNR is still lower than state-of-the-art network-based ASISR approaches due to interpolation limitations.
 
 
 
