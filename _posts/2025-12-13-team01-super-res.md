@@ -281,28 +281,15 @@ Once the LUTs are computed, they can be used as stand-ins for the networks (as i
 {: style="max-width: 80%;"}
 *Fig 5. Multiply-accumulate (MAC) operations, required storage, and PSNR for various super-resolution methods [3].*
 
-Given the freedom to choose interpolation functions, the authors highlight a few possible combinations of functions: in the table above, N means "nearest neighbor", L means "bilinear", C means "bicubic" and Z means "lanczos", another kind of interpolation algorithm using windowed normalized sine functions; the letters, when put together, indicate that the IM-LUT uses all of those interpolation functions. We see that the IM-LUT methods manage to be very efficient on storage and, for certain combinations of interpolations, on computations, as well; at the same time, they have much better performance than any single interpolation function, and, while not being state-of-the-art quantitatively, stay competitive with other LUT or similarly-efficient SR methods that require more storage and, in the case of the other LUT methods, cannot use a single model to adapt to different scaling factors.
+Given the freedom to choose interpolation functions, the authors highlight a few possible combinations of functions: in the table above, N means "nearest neighbor", L means "bilinear", C means "bicubic" and Z means "lanczos", another kind of interpolation algorithm that uses windowed normalized sine functions; the letters, when put together, indicate that the given IM-LUT uses all of those interpolation functions. We see that the IM-LUT methods manage to be very efficient on storage and, for certain combinations of interpolations, on computations, as well; at the same time, they have much better performance than any single interpolation function, and, while not being state-of-the-art quantitatively, stay competitive with other LUT or similarly-efficient SR methods that require more storage and, in the case of the other LUT methods, cannot use a single model to adapt to different scaling factors.
 
 ![IM LUT weight maps]({{ '/assets/images/01/weightmaps.png' | relative_url }})
 {: style="max-width: 80%;"}
 *Fig 5. Analysis of weight maps for different interpolation functions [3].*
 
-From the color-coded weight maps above, we see that the model is, in fact, using the weight maps to adapt to the input image.
+From the color-coded weight maps above, we see that the model is, in fact, using the weight maps to adapt to the input image. For instance, when nearest-neighbor and bilinear interpolation are used together, we see that the bilinear interpolation is prioritized in areas of low brightness, while the nearest neighbor method is used elsewhere. However, we also see that when nearest-neighbor, bilinear, and bicubic interpolation are used together, the nearest-neighbor interpolation has very little influence, indicating that one could even use the weight maps as a form of interpolation function selection, similar to how L1 regularization is used as variable selection in linear regression.
 
-[comment more about this or something]
-
-[conclusion about IM-LUT, how it improves on LUT by being flexible wrt scalinf factor, and the flexibility to have an arbitrary combination of interpolation functions also makes it flexible and allows it to trade-off speed for accuracy without changing the arhcitecture]
-
-
-
-
-
-
-
-IM-LUT extends the standard LUT by combining multiple interpolation methods with pixel-wise weighting, adapting efficiently to different textures and scale factors. It outperforms standard LUT methods in reconstruction quality and flexibility while remaining computationally light. However, its PSNR is still lower than state-of-the-art network-based ASISR approaches due to interpolation limitations.
-
-
-
+The IM-Net is already an interesting kind of reparameterization of the problem of learning-based super-resolution; instead of directly learning how to upscale an image, the network instead learns how to ensemble a set of given interpolation functions to do upscaling. This modular design allows for a great deal of flexibility in the model, as it can be combined with any arbitrary-scale upscaling method, even other learning-based methods, without any change to the core architecture. Of course, in this case, our real goal is a LUT-based method; in the realm of LUT-based methods, IM-LUT still stands out for its capability of arbitrary-scale super-resolution. Dynamically adapting to different scales will be a practical necessity for any super-resolution method, so it will be ineteresting to see if, as time goes on, efficient super-resolution methods will expand further in the direction of the IM-LUT, or if an entirely different architecture will rise to the top.
 
 <!-- To achieve this fast runtime, a convolutional SR network is trained with a small receptive field, since the size of the SR-LUT grows exponentially with the receptive field size. This limitation introduces an inherent trade-off between PSNR and runtime: increasing the receptive field can improve reconstruction quality, but it also causes the LUT to expand dramatically, leading to slower performance.   
 
