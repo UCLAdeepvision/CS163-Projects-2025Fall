@@ -36,7 +36,7 @@ Optical flow models heavily utilize large, synthetically generated datasets. Key
 
 <center>
 
-![Datasets sizes](../assets/images/team27/datasets_sizes.png)
+<img src="{{ site.baseurl }}/assets/images/team27/datasets_sizes.png" />
 
 </center>
 
@@ -67,7 +67,7 @@ RAFT (Recurrent All-Pairs Field Transforms) is a state-of-the-art optical flow m
 
 <center>
 
-![RAFT architecture](../assets/images/team27/RAFT_arc.png)
+<img src="{{ site.baseurl }}/assets/images/team27/RAFT_arc.png" />
 
 </center>
 
@@ -101,9 +101,9 @@ The methods used included:
 -  Random asymmetric jitter, which alters brightness, contrast, saturation and hue.
 -  Random erasing of certain regions in the second image ($img_2$) of each pair.
 
-| Flying Chairs before augmentation                   | Flying Chairs after augmentation                        |
-| --------------------------------------------------- | ------------------------------------------------------- |
-| ![FC_no_aug](../assets/images/team27/FC_no_aug.png) | ![FC_with_aug](../assets/images/team27/FC_with_aug.png) |
+| Flying Chairs before augmentation                                             | Flying Chairs after augmentation                                                |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| <img src="{{ site.baseurl }}/assets/images/team27/FC_no_aug.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/FC_with_aug.png" width="400"> |
 
 ### Evaluation Metrics
 
@@ -119,29 +119,29 @@ The experiments compared FlowNet, the modified FlowNet with deconvolutional upsa
 
 Across nearly all settings, increasing the number of Flying Chairs samples improved performance. On Sintel, FlowNet’s EPE dropped from 10.18 → 6.79 as pre-training rose from 0 to 2000 samples, and RAFT showed an even steeper improvement, especially when paired with augmentation (e.g., EPE 18.37 → 6.51 at 2000 samples). However, results on KITTI revealed that FlowNet did not always benefit from larger synthetic datasets, likely due to the domain gap between Flying Chairs and real scenes in KITTI, suggesting that mismatched pre-training can sometimes hurt generalization.
 
-| Flownet on Sintel                                                   | Flownet on KITTI                                                  |
-| ------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| ![flownet_on_sintel](../assets/images/team27/flownet_on_sintel.png) | ![flownet_on_kitti](../assets/images/team27/flownet_on_kitti.png) |
+| Flownet on Sintel                                                                     | Flownet on KITTI                                                                     |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| <img src="{{ site.baseurl }}/assets/images/team27/flownet_on_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/flownet_on_kitti.png" width="400"> |
 
 Data augmentation consistently helped when the test domain differed from the training domain. For RAFT in particular, augmentation sharply reduced error. For example, on Sintel with 2000 pre-training samples, EPE improved from 38.78 (no aug) to 6.51 (with aug). FlowNet saw smaller gains, and in some Sintel cases the improvement was minimal, showing that FlowNet tends to overfit more regardless of augmentation.
 
-| RAFT on Sintel                                                | RAFT on KITTI                                               |
-| ------------------------------------------------------------- | ----------------------------------------------------------- |
-| ![raft_on_sintel](../assets/images/team27/raft_on_sintel.png) | ![raft_on_kitti](../assets/images/team27/raft_on_kitti.png) |
+| RAFT on Sintel                                                                     | RAFT on KITTI                                                                     |
+| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| <img src="{{ site.baseurl }}/assets/images/team27/raft_on_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/raft_on_kitti.png" width="400"> |
 
 The modified FlowNet architecture with deconvolutional upsampling performed almost identically to the original. For instance, at 2000 pre-training samples on Sintel, the new model achieved an EPE of 6.80, essentially the same as the original 6.79. The only noticeable pattern was that DU gave a slight advantage when little or no pre-training data was available, while the original FlowNet recovered a small edge with larger datasets. Overall, the architecture change did not introduce meaningful improvements.
 
 <center>
 
-![flownet_with_DU](../assets/images/team27/modded_flownet.png)
+<img src="{{ site.baseurl }}/assets/images/team27/modded_flownet.png" width="700">
 
 </center>
 
 Qualitatively, RAFT produced cleaner and more consistent flow fields than FlowNet, especially when pre-training and augmentation were combined. In scenes from the Driving and FlyingThings, RAFT captured fine-grained motion and global consistency better, while FlowNet focused more on object boundaries and sometimes missed motion details. In the low-data setting with no pre-training, RAFT still produced more coherent motion estimates, whereas FlowNet tended to rely heavily on edges rather than true frame-to-frame displacement.
 
-| RAFT on Sintel (no pre-training)                                 | Flownet on Sintel (no pre-training)                                |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------ |
-| ![raft_on_sintel](../assets/images/team27/raft_preds_sintel.png) | ![raft_on_kitti](../assets/images/team27/flownet_preds_sintel.png) |
+| RAFT on Sintel (no pre-training)                                                      | Flownet on Sintel (no pre-training)                                                      |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| <img src="{{ site.baseurl }}/assets/images/team27/raft_preds_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/flownet_preds_sintel.png" width="400"> |
 
 ## 5. UFlow: What Matters in Unsupervised Optical Flow
 
