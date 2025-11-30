@@ -418,7 +418,24 @@ $$
 
 Now, as alluded, $$\vec z_j$$ actually still has a closed form solution:
 
-[thing with fourier transforms]
+$$
+\vec z_j  = \mathcal{F}^{-1} \left(\frac{1}{\alpha_j}\left(d - \overline{\mathcal{F}(j)} \odot_s \frac{(\mathcal{F}(j)d) \Downarrow_s}{(\overline{\mathcal{F}(j)}\mathcal{F}(j))\Downarrow_s + \alpha_j} \right) \right)
+$$
+
+where
+
+$$
+
+d = \overline{\mathcal{F}(j)}\mathcal{F}(\vec y \uparrow_s) + \alpha_j \mathcal{F}(x_{j-1})
+
+$$
+
+$$
+\alpha_j := \mu_j\sigma^2
+$$
+
+and $$ \mathcal{F}( \centerdot ) $$ denotes the FFT and $$\odot_s$$ is the distinct block processing operator with element-wise multiplication.
+$$ \Downarrow_s $$ denotes the block downsampler and $$ \uparrow_s $$ denotes the upsampler.
 
 The derivation of which is too long to include here, but is detailed in [4].
 
@@ -428,11 +445,20 @@ One can notice that this is similar to our very first optimization target; indee
 $$\beta_j = \sqrt{\frac{\lambda}{\mu_j}}$$
  (the standard deviation of the Gaussian noise), and we have that finding $$x_j$$ is equivalent to a Gaussian denoising problem with noise level $$\beta_j$$ (or, $$\sigma^2_\text{noise} = \beta_j^2$$).
 
-Given that this is a simple denoising task, we will opt for a denoising neural network. The paper in question uses a "ResUNet", which is a UNet with added residual blocks, similar to those from a ResNet. [more about the network structurt and a picture or something]
+Given that this is a simple denoising task, we will opt for a denoising neural network. The paper in question uses a "ResUNet", which is a UNet with added residual blocks, similar to those from a ResNet. 
+
+![Unfolding UNet]({{ '/assets/images/01/UNet.png' | relative_url }})
+{: style="max-width: 80%;"}
+*Fig 1. UNet architecture as depicted in  [6].*
+
+The network takes in the concatenated $$ \vec z_k $$ and noise level map and outputs the denoised image $$ x_k $$.
+The ResUNet involves four scales in which 2x2 strided convolutions and 2x2 transposed convolutions are adopted and residual blocks are added during both
+downscaling and upscaling.
 
 In order to ensure adaptibility and nonblind-ness of our method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The paper's method for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended on the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
 
 [define the data and prior modules, talk about how prior module doesnt need to learn anything and can adapt to any kernel, sigma, and downsample factor (whcih is a good thing); talk about how removing implicit assumptions of kernel and noise levels and such makes the model more generalizable]
+
 
 [talk about training process]
 
@@ -473,5 +499,8 @@ idea: add AST to OCA and increase size of overlapping K/V windows, since the mod
 [4] N. Zhao, Q. Wei, A. Basarab, N. Dobigeon, D. Kouamé and J. -Y. Tourneret, "Fast Single Image Super-Resolution Using a New Analytical Solution for ℓ2 – ℓ2 Problems," in IEEE Transactions on Image Processing, vol. 25, no. 8, pp. 3683-3697, Aug. 2016
 
 [5] Park, S., Lee, S., Jin, K., & Jung, S.W. (2025). IM-LUT: Interpolation Mixing Look-Up Tables for Image Super-Resolution. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (pp. 14317-14325).
+
+[6]  Olaf Ronneberger, Philipp Fischer, and Thomas Brox. Unet: Convolutional networks for biomedical image segmentation. In International Conference on Medical image computing and computer-assisted intervention, pages 234–241.
+Springer, 2015.
 
 ---

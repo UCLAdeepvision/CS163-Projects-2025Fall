@@ -1,0 +1,2 @@
+- emphasis on non-blind SISR being the focus of the paper with commentary given on page 3
+-
