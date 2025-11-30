@@ -17,10 +17,11 @@ date: 2025-11-19
 
 ## 1. Introduction
 
--  What is Optical Flow?
--  Problem Formalization & Evaluation Metrics
--  The Ground Truth Problem: Why Unsupervised?
--  Report Scope
+The problem of optical flow in computer vision is simply the estimation motion in images, represented as a flow field at the pixel level. Being able to effectively solve this problem is crucial to many real-world applications, such as autonomous driving, object tracking, and general robotics. While the problem statement may be simple, there are various factors which make this a challenging task in practice. As such, the problem of optical flow is a fundamental one in the field of computer vision.
+
+Given how complex the issue of optical flow is, there have been many different attempts, spanning multiple machine learning paradigms, in an attempt to solve it. Traditionally, researchers in this field have taken a supervised learning approach, commonly with convolutional neural networks, to solve this problem. Most notably, the FlowNet model, along with the RAFT architecture, are among the state of the art in optical flow supervised learning. However, the unsupervised learning approach has recently gained traction in this field, largely driven by a global issue in optical flow problem, which is a lack of labeled training data. In fact, the magnitude of this issue is so great that supervised approaches often rely on synthetic data to train the models. Among unsupervised learning models, UFlow is the most notable.
+
+The scope of this report is to take a deep dive into each of these approaches. This is accomplished by first exploring each of these models individually, and then completing an analysis of how they compare. The individual descriptions include the relevant architectures, training methodologies, and other uniqueness factors. The final analysis and discussion will not only display the strengths and weaknesses of each approach, but also provide a timeline for how this field has progressed over time. The benchmarks and datasets used to compare these approaches are the standards in the optical flow field, including the endpoint error metric and the Sintel and KITTI datasets. Further, the applicable use cases for each of these approaches will also be discussed.
 
 ## 2. Background & Timeline
 
@@ -145,11 +146,68 @@ Qualitatively, RAFT produced cleaner and more consistent flow fields than FlowNe
 
 ## 5. UFlow: What Matters in Unsupervised Optical Flow
 
--  Motivation: The Supervised Learning Bottleneck
--  Key Research Questions
--  Architecture & Training Components
--  Ablation Studies: What Actually Matters?
--  Strengths & Limitations
+### Motivation: The Supervised Learning Bottleneck
+
+One of the major limitations of supervised models attempting to solve the optical flow problem is the lack of available labeled data. As previously discussed, one approach to mitigating this issue is to generate synthetic data and use it to train the supervised models. While this can be a viable option, it is not without trade offs. Namely, this approach is less effective for objects with less rigid geometry, leading to manual intervention being needed [3].
+
+Thus, an alternative solution to the optical flow problem is to abandon the supervised approach in favor of unsupervised models. This paradigm is particularly enticing because of how plentiful training data becomes, as any unlabeled video could be used. Additionally, unsupervised models typically showed advantages in inference speed and generalization as a result of being trained directly on real world (opposed to synthetic) data [3]. 
+
+These reasons were the driving force behind the creation of the UFlow model, which was created as a means to determine the most important factors in training an unsupervised model. Among the aspects that were investigated were photometric loss, occlusion handling, and smoothness regularization. 
+
+### Architecture & Training Components
+
+The underlying architecture that UFlow is based on is the PWC-Net, which is then improved upon to determine the most important components. Because the pyramid, warping, and cost (PWC) approach was initially intended for supervised learning, adjustments had to be made during the creation of the UFlow model. For example, the highest pyramid level was removed to decrease the model size and dropout was incorporated for additional regularization. 
+
+Despite these changes, UFlow at its core uses a self-supervised training loop across five pyramid levels to ultimately predict the flow field from two images, as shown in the figure below. Firstly, a shared CNN is used to extract the features from the two images. These features are then fed into the pyramid, where each level has a loop involving warping, cost volume computation, and flow estimation. The warping layer in each block uses the current flow estimate to align the second image's features with the first, creating the photo-consistency signal, which is needed to define photometric loss, the unsupervised training objective. The architecture behind the cost volume computation is a correlation layer, while the flow estimation at each block is done with a CNN.
+
+<img src="{{ site.baseurl }}/assets/images/team27/wcf-loop.png" />
+
+As previously mentioned, the unsupervised training objective is the photometric loss. While the team behind UFlow experimented with multiple different losses, the main one used was the generalized Charbonnier loss function, given by
+
+
+$$L_C = \frac{1}{n} \sum \left((I^{(1)} - w(I^{(2)}))^2 + \epsilon^2\right)^\alpha$$
+
+where $$\epsilon = 0.001$$ and $$\alpha = 0.5$$.
+
+
+### Ablation Studies: What Actually Matters?
+
+With the base model established, the team behind UFlow aimed to determine exactly which components mattered the most in an unsupervised model for optical flow. The major components that were found to have the biggest effects following analysis were occlusion handling, data augmentation, and smoothness regularization.
+
+#### Occlusion Handling
+
+As previously mentioned, the UFlow model takes two images as input, and feeds them into a shared CNN for feature extraction. The issue of occlusions arises when specific features or regions of one image are not present in the partner image. If this is not accounted for and handled correctly, any photometric loss calculations would include garbage values. As such, all occlusions, along with any other pixels deemed invalid, need to somehow be detected and gracefully handled. The approach taken by UFlow is to use a “range map”, which stores information regarding the number of pixels in the partner image that are mapped to each pixel in a target image. This range map is then used to determine which pixels are not mapped to at all in the target image, and those pixels are deemed occlusions. Against the KITTI dataset specifically, the approach taken by UFlow is a forward-backward consistency check, which marks pixels as occlusions whenever the flow and back-projected flow disagree by more than some margin [3]. Thus, these pixels are “masked”, where this mask can be calculated by [THIS EQUATION]. In this latter approach, the team found that stopping the gradient at the occlusion mask improved performance.
+
+#### Data Augmentation Strategies
+
+The next component that was analyzed within UFlow was data augmentation. Some of the data augmentation techniques used in training UFlow included color channel swapping, hue randomization, image flipping, and image cropping. However, the most emphasized augmentation technique during this process was continual self-supervision with image resizing. This specific method helped stabilize the training by starting with downsampled, lower-resolution images and then progressively increasing the input resolution over the training run, hence the resizing. The key result found by the team with respect to this factor was that both color and geometric augmentations were key for unsupervised models achieving good generalization.
+
+#### Smoothness Regularization
+
+In addition to data augmentation, one other component of UFlow that was analyzed was smoothness regularization. This aims to ensure that changes in flow estimations are not abrupt, which can happen for inputs with large homogenous regions. Specifically, the performance of both first-order and second-order smoothness regularization were investigated by the team. The difference between these two is simply which derivative of the estimated flow is being considered, and both can be represented by the equation below. The key finding related to this component was that it is significantly more beneficial to apply this smoothness regularization at the lower resolution of the flow itself opposed to the higher original input image resolution. In regards to the optimal regularization order, there was no answer as to which was definitely better, as the optimal order was different for the different datasets.
+
+$$L_{\text{smooth}}^{(k)} = \frac{1}{n} \sum \exp\left(-\frac{\lambda}{3} \sum_{c} \left|\frac{\partial I_c^{(1,\ell)}}{\partial x}\right|\right) \left|\frac{\partial^k V^{(1,\ell)}}{\partial x^k}\right| + \exp\left(-\frac{\lambda}{3} \sum_{c} \left|\frac{\partial I_c^{(1,\ell)}}{\partial y}\right|\right) \left|\frac{\partial^k V^{(1,\ell)}}{\partial y^k}\right|$$
+
+where $$k$$ denotes the order of smoothness (first-order or second-order), $$c$$ indexes color channels, and $$\lambda$$ controls the edge-aware weighting.
+
+All together, a comparison of the estimated flow without each of these three components can be seen in the figure below.
+
+
+<img src="{{ site.baseurl }}/assets/images/team27/ablations-comparisons.png" />
+
+### Results And Performance
+
+In order to objectively determine which components of unsupervised models matter the most, the team had to quantitatively measure UFlow’s performance on multiple different datasets. The metrics used to benchmark the model were endpoint error and error rate, which are standard for the KITTI dataset and therefore the optical flow problem as a whole. In addition to KITTI, the Sintel dataset was also used to evaluate UFlow. 
+
+In terms of performance, the key takeaways were that UFlow set the new gold standard for unsupervised models, by performing at a similar level to the supervised FlowNet2, despite being completely trained without ground-truth labels. Of course, this was achieved through the careful evaluation, optimization, and combination of the various different components of an unsupervised model, and not a single new “breakthrough” technique. 
+
+### Strengths & Limitations
+
+
+Like any other engineering feat, the success of the UFlow model came with tradeoffs. One major strength of UFlow, and unsupervised learning as a whole in the optical flow problem, is the abundance of training data available for use. The ability to take any color video and train on it makes the unsupervised learning paradigm very appealing in the context of optical flow, especially considering the current lack of labeled data. Further, by training on real-world data opposed to almost exclusively synthetic data, UFlow has shown to achieve superior generalization on real-world inputs. Lastly, in the case of the UFlow model itself, there is clearly a systematic way of determining the importance of each of the major components, setting the foundation for future unsupervised learning models to tackle the optical flow problem. 
+
+However, UFlow did show that it has some limitations as well. Firstly, in the case of absolute performance, UFlow was still outperformed by the best fine-tuned supervised models (despite performing on par with popular supervised models like FlowNet2). Further, while it was previously discussed that each of the mentioned components can be tuned for optimal results, this tuning can be expensive in practice. This is because, in the process of training UFlow, the researching team had to train a new model for each ablation study. Lastly, in terms of hardware and physical requirements, the PWC-net used by UFlow can be memory intensive. As such, training an unsupervised model like UFlow typically requires more available memory.
+
 
 ## 6. Comparative Analysis
 
