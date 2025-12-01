@@ -7,7 +7,7 @@ date: 2025-12-12
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know .
+> Human pose estimation is the computational task of detecting and localizing a set of predefined keypoints, such as joints or landmarks, on one or more objects in images or videos. These keypoints are typically represented as 2D or 3D coordinates (e.g., [x, y] or [x, y, visibility]), often accompanied by confidence scores indicating the model’s certainty for each point. By capturing the spatial arrangement of the body parts, pose estimation enables fine-grained applications such as motion analysis, gesture recognition, animation, biomechanics, surveillance, and human-computer interaction. 
 
 
 <!--more-->
