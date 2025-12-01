@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-11-30T15:06:05-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">super res title</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/01/01/team01-super-res.html" rel="alternate" type="text/html" title="super res title" /><published>2025-01-01T00:00:00-08:00</published><updated>2025-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/01/01/team01-super-res</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/01/01/team01-super-res.html"><![CDATA[<blockquote>
-  <p>Abstract: survery of 3 super res models, modification of one of them; 3 models highlight diff ways of doing super res</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-11-30T17:24:34-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">super res title</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/01/01/team01-super-res.html" rel="alternate" type="text/html" title="super res title" /><published>2025-01-01T00:00:00-08:00</published><updated>2025-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/01/01/team01-super-res</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/01/01/team01-super-res.html"><![CDATA[<blockquote>
+  <p>Abstract: survey of 3 super resolution models, modification of one of them; 3 models highlight different ways of doing super resolution</p>
 </blockquote>
 
 <!--more-->
@@ -434,13 +434,35 @@ downscaling and upscaling.</p>
 
 <p>In order to ensure adaptibility and nonblind-ness of our method, it is useful to incorporate the noise level \(\beta_j\) into the network input. The paper’s method for doing this is fairly simple: given an input image \(3 \times H \times W\), a constant matrix with size \(H \times W\) with all entries equal to \(\beta_j\) is appended on the channel dimension to create an input of shape \(4 \times H \times W\), which is fed into the network as normal.</p>
 
-<p>[define the data and prior modules, talk about how prior module doesnt need to learn anything and can adapt to any kernel, sigma, and downsample factor (whcih is a good thing); talk about how removing implicit assumptions of kernel and noise levels and such makes the model more generalizable]</p>
+<p>Now having created the strategy to accomplish the single image super resolution task, the paper makes the method explicit.
+To do this they first introduce the Data module \(\mathcal{D}\). This model computes the optimal solution to</p>
 
-<p>[talk about training process]</p>
+\[\vec z_j = \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2\]
 
-<p>[talk about results]</p>
+<p>This module takes as input the scale factor \(s\) and blur kernel \(k\) This module contains no trainable parameters, which allows
+for greater generalizability, being able to adapt to any kernel, sigma, and downsample factor and will always minimize the objective.
+The prior module \(\mathcal{P}\) is trained to optimize the other objective</p>
 
-<p>[include more images somewhere]</p>
+\[\vec x_j = \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2\]
+
+<p>lastly, the hyper-parameter module \(\mathcal{H}\) controls the outputs of the data and prior modules.
+This module takes in \(\sigma, s\)  and predicts optimal \(\lambda, \mu_j\) which in turn affect $$ \alph_j, \beta_j
+This module consists of three fully connected layers.</p>
+
+<p>Putting all of the modules together, the Deep Unfolding Network is trained by first synthesizing low resolution
+images from high resolution images, picking various scaling factors and Gaussian blur kernels. The L1 loss is used performance
+since it promotes sharper images. Later in training, VGG perceptual loss and relativistic adversarial loss are included.
+The model is optimized using batched gradient descent under the adam optimizer.</p>
+
+<p>In order to provide a baseline for model performance, only select combinations of blur kernels, scale factors, and noise levels are chosen for evaluation against other methods.</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/01/dun_data.jpg" alt="Unfolding Performance" /></p>
+<p><em>Fig 2. Average Peak Signal to Noise Ratio results of different methods with the best results highlighted in red and second best in blue as well as results of different image super resolution methods [2].</em></p>
+
+<p>As shown in Figure 2 the model from this paper outperforms the other models which were picked to be state of the art models at the time.
+Additionally, the visual results are shown under the table with the models from this paper performing favorably, note that the GAN version has sharper resolution which is to be expected by the introduction of a discriminator loss.</p>
+
+<p>For the task at hand, the unfolding network model shows how powerful learning methods can be when paired with model based methods as seen in the data module being paired with the prior module.</p>
 
 <!-- -adv: 
 --nonblind; explicitly adapts for diff blurring kernels, amts of noise, and downsampling factors
@@ -478,7 +500,7 @@ downscaling and upscaling.</p>
 <p>[6]  Olaf Ronneberger, Philipp Fischer, and Thomas Brox. Unet: Convolutional networks for biomedical image segmentation. In International Conference on Medical image computing and computer-assisted intervention, pages 234–241.
 Springer, 2015.</p>
 
-<hr />]]></content><author><name>Thomas Peeler, Dylan Truong, Asher Christian, Daniel Chvat</name></author><summary type="html"><![CDATA[Abstract: survery of 3 super res models, modification of one of them; 3 models highlight diff ways of doing super res]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+<hr />]]></content><author><name>Thomas Peeler, Dylan Truong, Asher Christian, Daniel Chvat</name></author><summary type="html"><![CDATA[Abstract: survey of 3 super resolution models, modification of one of them; 3 models highlight different ways of doing super resolution]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
   <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
 </blockquote>
 
