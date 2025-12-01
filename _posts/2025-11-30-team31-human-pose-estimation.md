@@ -1,9 +1,9 @@
 ---
 layout: post
 comments: true
-title: Post Template
-author: UCLAdeepvision
-date: 2024-01-01
+title: Human Pose Estimation
+author: Lina Lee
+date: 2025-12-12
 ---
 
 
