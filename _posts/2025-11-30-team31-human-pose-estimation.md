@@ -2,12 +2,12 @@
 layout: post
 comments: true
 title: Human Pose Estimation
-author: Lina Lee
+author: Lina Lee   
 date: 2025-12-12
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know .
 
 
 <!--more-->
