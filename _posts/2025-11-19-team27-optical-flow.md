@@ -227,10 +227,20 @@ However, UFlow did show that it has some limitations as well. Firstly, in the ca
 
 ## 8. Conclusion
 
+We discussed the evolution of the approaches to the optical flow problem over time, and analyzed the tradeoffs associated with the different approaches. We started by analyzing FlowNet, which acted as a pioneer for deep learning in the field of optical flow. The key point here was that FlowNet successfully used Convolutional Neural Networks to address the optical flow problem. Next was RAFT, which maintained the supervised approach, but used a feature encoder, correlation layer, and a recurrent GRU-based update operator as the key components in the solution. Lastly, we analyzed UFlow, which differed greatly from the other two models as UFlow was unsupervised. Comparing these three approaches did not reveal a definitive best model, but instead highlighted a different theme, which was that the optimization of the internal components of these models was more important than the exact training paradigm. This was also a key finding during the ablation studies from the team behind UFlow.
+
+One theme that was apparent and common throughout the different approaches was that a lack of training data was a big motivator behind the methods used. As such, much of the realized success and innovations can be attributed to this one single constraint. For example, the RAFT model highlighted the importance of the data augmentation strategies used, a result achieved directly from the initial lack of sufficient labeled data. In the more extreme case, UFlow completely disregarded the need for labeled data and paired an unsupervised approach with research into which components were the most important. Once again, this innovation was driven from what was initially a major constraint. Clearly, this idea is extremely relevant in the optical flow field, but is also very generalizable to other fields of computer science, which may be currently limited by some constraint.
+
+Clearly, the problem of optical flow is an important one, as there are many optical flow applications such as autonomous driving and robotics. As these fields grow, so will the need to find even better solutions to optical flow. The highlighted approaches show that there are multiple paths forward in this field, and future models will have the benefit of using the key findings from FlowNet, RAFT, and UFlow as the foundation.
+
 ## Reference
 
 Please make sure to cite properly in your work, for example:
 
 [1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." _Proceedings of the IEEE conference on computer vision and pattern recognition_. 2016.
+
+[2]
+
+[3] Jonschkowski, Rico, et al. "What Matters in Unsupervised Optical Flow." _European Conference on Computer Vision (ECCV)_. 2020.
 
 ---
