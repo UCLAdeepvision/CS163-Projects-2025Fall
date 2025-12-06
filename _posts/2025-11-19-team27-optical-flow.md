@@ -41,6 +41,8 @@ Optical flow models heavily utilize large, synthetically generated datasets. Key
 
 </center>
 
+_Figure 1. KITTI is the only non-synthetic dataset. Its size compared to other synthetic datasets highlights the scarcity of real-world data [2]._
+
 ### Scarcity of Real-world Data
 
 One of the core limitations in optical flow research is the difficulty of collecting real-world optical flow ground truth data. Due to this, the domain lacks any large, supervised real-world datasets. Optical flow models often have to rely on synthetic data, which are simulated by computers. However, this data is too "clean', in which it doesn't have the natural artifacts that real-world data has such as motion blur, noise, etc. Because of this, models trained on synthetic data alone may not be well-equipped to handle the noisy data in real life. Later on, we will discuss an alternative to supervised learning as a way to combat this data scarcity problem.
@@ -71,6 +73,7 @@ RAFT (Recurrent All-Pairs Field Transforms) is a state-of-the-art optical flow m
 <img src="{{ site.baseurl }}/assets/images/team27/RAFT_arc.png" />
 
 </center>
+*Figure 1. RAFT model architecture illustrating the feature encoder, correlation volume construction, and recurrent update operator [2].*
 
 #### Loss Function
 
@@ -106,6 +109,8 @@ The methods used included:
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | <img src="{{ site.baseurl }}/assets/images/team27/FC_no_aug.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/FC_with_aug.png" width="400"> |
 
+_Figure 2. Visualization of Flying Chairs samples before and after data augmentation, showing the effects of geometric and photometric transformations used during training [2]._
+
 ### Evaluation Metrics
 
 The primary metric was End-Point Error (EPE), which measures the Euclidean distance between the predicted flow vector and the ground-truth vector at each pixel:
@@ -124,11 +129,15 @@ Across nearly all settings, increasing the number of Flying Chairs samples impro
 | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | <img src="{{ site.baseurl }}/assets/images/team27/flownet_on_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/flownet_on_kitti.png" width="400"> |
 
+_Figure 3. FlowNet performance on Sintel and KITTI, displaying metrics after fine-tuning under different data conditions [2]._
+
 Data augmentation consistently helped when the test domain differed from the training domain. For RAFT in particular, augmentation sharply reduced error. For example, on Sintel with 2000 pre-training samples, EPE improved from 38.78 (no aug) to 6.51 (with aug). FlowNet saw smaller gains, and in some Sintel cases the improvement was minimal, showing that FlowNet tends to overfit more regardless of augmentation.
 
 | RAFT on Sintel                                                                     | RAFT on KITTI                                                                     |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | <img src="{{ site.baseurl }}/assets/images/team27/raft_on_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/raft_on_kitti.png" width="400"> |
+
+_Figure 4. RAFT performance on Sintel and KITTI, displaying metrics after fine-tuning under different data conditions [2]._
 
 The modified FlowNet architecture with deconvolutional upsampling performed almost identically to the original. For instance, at 2000 pre-training samples on Sintel, the new model achieved an EPE of 6.80, essentially the same as the original 6.79. The only noticeable pattern was that DU gave a slight advantage when little or no pre-training data was available, while the original FlowNet recovered a small edge with larger datasets. Overall, the architecture change did not introduce meaningful improvements.
 
@@ -138,11 +147,15 @@ The modified FlowNet architecture with deconvolutional upsampling performed almo
 
 </center>
 
+_Figure 5. Predictions from the modified FlowNet model using deconvolutional upsampling, compared against the original architecture on Sintel [2]._
+
 Qualitatively, RAFT produced cleaner and more consistent flow fields than FlowNet, especially when pre-training and augmentation were combined. In scenes from the Driving and FlyingThings, RAFT captured fine-grained motion and global consistency better, while FlowNet focused more on object boundaries and sometimes missed motion details. In the low-data setting with no pre-training, RAFT still produced more coherent motion estimates, whereas FlowNet tended to rely heavily on edges rather than true frame-to-frame displacement.
 
 | RAFT on Sintel (no pre-training)                                                      | Flownet on Sintel (no pre-training)                                                      |
 | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | <img src="{{ site.baseurl }}/assets/images/team27/raft_preds_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/flownet_preds_sintel.png" width="400"> |
+
+_Figure 6. Comparison of RAFT and FlowNet without pre-training, illustrating RAFT’s stronger inductive bias for motion estimation in extremely low data conditions [2]._
 
 ## 5. UFlow: What Matters in Unsupervised Optical Flow
 
@@ -150,13 +163,13 @@ Qualitatively, RAFT produced cleaner and more consistent flow fields than FlowNe
 
 One of the major limitations of supervised models attempting to solve the optical flow problem is the lack of available labeled data. As previously discussed, one approach to mitigating this issue is to generate synthetic data and use it to train the supervised models. While this can be a viable option, it is not without trade offs. Namely, this approach is less effective for objects with less rigid geometry, leading to manual intervention being needed [3].
 
-Thus, an alternative solution to the optical flow problem is to abandon the supervised approach in favor of unsupervised models. This paradigm is particularly enticing because of how plentiful training data becomes, as any unlabeled video could be used. Additionally, unsupervised models typically showed advantages in inference speed and generalization as a result of being trained directly on real world (opposed to synthetic) data [3]. 
+Thus, an alternative solution to the optical flow problem is to abandon the supervised approach in favor of unsupervised models. This paradigm is particularly enticing because of how plentiful training data becomes, as any unlabeled video could be used. Additionally, unsupervised models typically showed advantages in inference speed and generalization as a result of being trained directly on real world (opposed to synthetic) data [3].
 
-These reasons were the driving force behind the creation of the UFlow model, which was created as a means to determine the most important factors in training an unsupervised model. Among the aspects that were investigated were photometric loss, occlusion handling, and smoothness regularization. 
+These reasons were the driving force behind the creation of the UFlow model, which was created as a means to determine the most important factors in training an unsupervised model. Among the aspects that were investigated were photometric loss, occlusion handling, and smoothness regularization.
 
 ### Architecture & Training Components
 
-The underlying architecture that UFlow is based on is the PWC-Net, which is then improved upon to determine the most important components. Because the pyramid, warping, and cost (PWC) approach was initially intended for supervised learning, adjustments had to be made during the creation of the UFlow model. For example, the highest pyramid level was removed to decrease the model size and dropout was incorporated for additional regularization. 
+The underlying architecture that UFlow is based on is the PWC-Net, which is then improved upon to determine the most important components. Because the pyramid, warping, and cost (PWC) approach was initially intended for supervised learning, adjustments had to be made during the creation of the UFlow model. For example, the highest pyramid level was removed to decrease the model size and dropout was incorporated for additional regularization.
 
 Despite these changes, UFlow at its core uses a self-supervised training loop across five pyramid levels to ultimately predict the flow field from two images, as shown in the figure below. Firstly, a shared CNN is used to extract the features from the two images. These features are then fed into the pyramid, where each level has a loop involving warping, cost volume computation, and flow estimation. The warping layer in each block uses the current flow estimate to align the second image's features with the first, creating the photo-consistency signal, which is needed to define photometric loss, the unsupervised training objective. The architecture behind the cost volume computation is a correlation layer, while the flow estimation at each block is done with a CNN.
 
@@ -164,11 +177,9 @@ Despite these changes, UFlow at its core uses a self-supervised training loop ac
 
 As previously mentioned, the unsupervised training objective is the photometric loss. While the team behind UFlow experimented with multiple different losses, the main one used was the generalized Charbonnier loss function, given by
 
-
 $$L_C = \frac{1}{n} \sum \left((I^{(1)} - w(I^{(2)}))^2 + \epsilon^2\right)^\alpha$$
 
 where $$\epsilon = 0.001$$ and $$\alpha = 0.5$$.
-
 
 ### Ablation Studies: What Actually Matters?
 
@@ -192,22 +203,19 @@ where $$k$$ denotes the order of smoothness (first-order or second-order), $$c$$
 
 All together, a comparison of the estimated flow without each of these three components can be seen in the figure below.
 
-
 <img src="{{ site.baseurl }}/assets/images/team27/ablations-comparisons.png" />
 
 ### Results And Performance
 
-In order to objectively determine which components of unsupervised models matter the most, the team had to quantitatively measure UFlow’s performance on multiple different datasets. The metrics used to benchmark the model were endpoint error and error rate, which are standard for the KITTI dataset and therefore the optical flow problem as a whole. In addition to KITTI, the Sintel dataset was also used to evaluate UFlow. 
+In order to objectively determine which components of unsupervised models matter the most, the team had to quantitatively measure UFlow’s performance on multiple different datasets. The metrics used to benchmark the model were endpoint error and error rate, which are standard for the KITTI dataset and therefore the optical flow problem as a whole. In addition to KITTI, the Sintel dataset was also used to evaluate UFlow.
 
-In terms of performance, the key takeaways were that UFlow set the new gold standard for unsupervised models, by performing at a similar level to the supervised FlowNet2, despite being completely trained without ground-truth labels. Of course, this was achieved through the careful evaluation, optimization, and combination of the various different components of an unsupervised model, and not a single new “breakthrough” technique. 
+In terms of performance, the key takeaways were that UFlow set the new gold standard for unsupervised models, by performing at a similar level to the supervised FlowNet2, despite being completely trained without ground-truth labels. Of course, this was achieved through the careful evaluation, optimization, and combination of the various different components of an unsupervised model, and not a single new “breakthrough” technique.
 
 ### Strengths & Limitations
 
-
-Like any other engineering feat, the success of the UFlow model came with tradeoffs. One major strength of UFlow, and unsupervised learning as a whole in the optical flow problem, is the abundance of training data available for use. The ability to take any color video and train on it makes the unsupervised learning paradigm very appealing in the context of optical flow, especially considering the current lack of labeled data. Further, by training on real-world data opposed to almost exclusively synthetic data, UFlow has shown to achieve superior generalization on real-world inputs. Lastly, in the case of the UFlow model itself, there is clearly a systematic way of determining the importance of each of the major components, setting the foundation for future unsupervised learning models to tackle the optical flow problem. 
+Like any other engineering feat, the success of the UFlow model came with tradeoffs. One major strength of UFlow, and unsupervised learning as a whole in the optical flow problem, is the abundance of training data available for use. The ability to take any color video and train on it makes the unsupervised learning paradigm very appealing in the context of optical flow, especially considering the current lack of labeled data. Further, by training on real-world data opposed to almost exclusively synthetic data, UFlow has shown to achieve superior generalization on real-world inputs. Lastly, in the case of the UFlow model itself, there is clearly a systematic way of determining the importance of each of the major components, setting the foundation for future unsupervised learning models to tackle the optical flow problem.
 
 However, UFlow did show that it has some limitations as well. Firstly, in the case of absolute performance, UFlow was still outperformed by the best fine-tuned supervised models (despite performing on par with popular supervised models like FlowNet2). Further, while it was previously discussed that each of the mentioned components can be tuned for optimal results, this tuning can be expensive in practice. This is because, in the process of training UFlow, the researching team had to train a new model for each ablation study. Lastly, in terms of hardware and physical requirements, the PWC-net used by UFlow can be memory intensive. As such, training an unsupervised model like UFlow typically requires more available memory.
-
 
 ## 6. Comparative Analysis
 
@@ -239,7 +247,7 @@ Please make sure to cite properly in your work, for example:
 
 [1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." _Proceedings of the IEEE conference on computer vision and pattern recognition_. 2016.
 
-[2]
+[2] Isik, Senem, Shawn Zixuan Kang, and Zander Lack. “Optical Flow Models and Training Techniques in Data-Constrained Environment.” CS231N: Convolutional Neural Networks for Visual Recognition, Stanford University. 2022.
 
 [3] Jonschkowski, Rico, et al. "What Matters in Unsupervised Optical Flow." _European Conference on Computer Vision (ECCV)_. 2020.
 
