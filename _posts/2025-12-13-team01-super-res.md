@@ -483,9 +483,10 @@ The model is optimized using batched gradient descent under the adam optimizer.
 
 In order to provide a baseline for model performance, only select combinations of blur kernels, scale factors, and noise levels are chosen for evaluation against other methods.
 
-![Unfolding Performance]({{ '/assets/images/01/dun_data.jpg' | relative_url }})
+![Unfolding Performance]({{ '/assets/images/01/ast_arch.png' | relative_url }})
 {: style="max-width: 100%;"}
-*Fig 2. Average Peak Signal to Noise Ratio results of different methods with the best results highlighted in red and second best in blue as well as results of different image super resolution methods [2].*
+*Fig 2. Average Peak Signal-to-Noise Ratio across evaluated methods, with best results shown in red and second-best in blue, along with visual comparisons from several super-resolution models [2].*
+
 
 As shown in Figure 2 the model from this paper outperforms the other models which were picked to be state of the art models at the time.
 Additionally, the visual results are shown under the table with the models from this paper performing favorably, note that the GAN version has sharper resolution which is to be expected by the introduction of a discriminator loss.
@@ -506,11 +507,34 @@ For the task at hand, the unfolding network model shows how powerful learning me
 
 ### Adaptive Sparse Transformer (AST)
 
-this modifies the attention matrix AND the FFN after the values are computed from the self attention layer; potentially modifying a lot of parameters
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/01/ast_arch.png" alt="AST" /></p> *Fig 1. Overview of our Adaptive Sparse Transformer (AST) with Adaptive Sparse Self-Attention (ASSA) and the Feature Refinement Feed-Forward Network (FRFN) [7].*
+
+Adaptive Sparse Transformers extend the standard Transformer by introducing Adaptive Sparse Self-Attention (ASSA) and a Feature Refinement Feed-Forward Network (FRFN).
+Beyond the usual dense softmax attention (DSA), the ASSA block computes a sparse self-attention (SSA) map using a squared ReLU operation on the attention logits. The model then fuses dense and sparse attention through a learnable weighted sum:
+
+
+$$
+SSA = \mathrm{ReLU}^2\!\left(\frac{QK^\top}{\sqrt{d}} + B\right)
+$$
+
+$$
+DSA = \mathrm{SoftMax}\!\left(\frac{QK^\top}{\sqrt{d}} + B\right)
+$$
+
+$$
+A = \left(w_1 \cdot SSA + w_2 \cdot DSA\right)V
+$$
+
+This attention mechanism allows the model to reduce noise in its output and amplify information from important tokens while 
+preserving most of the input information, all while introducing only two new parameters per transformer block.
 
 ### Putting it Together
-
-idea: add AST to OCA and increase size of overlapping K/V windows, since the model can do a better job at filtering out any noise that it introduces; this part of the model is also like an overall filter for each RHAG block, which AST may be good for?
+We propose integrating AST into OCA and increasing the size of the overlapping K/V windows. 
+Specifically, since the OCAB is designed to aggregate information from a wider portion of the image and also 
+acts as a gate at the end of each RHAG, incorporating AST into the OCAB may help reduce the noise that passes through the model. 
+To potentially further improve performance, we also introduce the new FRFN module proposed in the AST paper into the OCAB block.
+After making the proposed modifications, we will retrain the model on teh same test sets as introduced in HAT and which we hope 
+will perform beter on the benchmarks.
 
 ### Results
 
@@ -529,5 +553,9 @@ idea: add AST to OCA and increase size of overlapping K/V windows, since the mod
 
 [6]  Olaf Ronneberger, Philipp Fischer, and Thomas Brox. Unet: Convolutional networks for biomedical image segmentation. In International Conference on Medical image computing and computer-assisted intervention, pages 234–241.
 Springer, 2015.
+
+[7] S. Zhou, D. Chen, J. Pan, J. Shi and J. Yang, 
+"Adapt or Perish: Adaptive Sparse Transformer with Attentive Feature Refinement for Image Restoration," 
+2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Seattle, WA, USA, 2024, pp. 2952-2963, doi: 10.1109/CVPR52733.2024.00285. 
 
 ---
