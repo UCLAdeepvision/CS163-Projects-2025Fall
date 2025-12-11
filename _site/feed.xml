@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-10T18:32:20-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Robot Navigation Using Deep Vision Models</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html" rel="alternate" type="text/html" title="Robot Navigation Using Deep Vision Models" /><published>2025-12-10T00:00:00-08:00</published><updated>2025-12-10T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html"><![CDATA[<blockquote>
+  <p>In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR).<br />
+Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as <strong>CLIP</strong>, <strong>SAM (Segment Anything)</strong>, and multimodal reasoning modules.<br />
+We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#computer-vision-model-architecture" id="markdown-toc-computer-vision-model-architecture">Computer Vision Model Architecture</a>    <ul>
+      <li><a href="#1-object-identification-with-clip" id="markdown-toc-1-object-identification-with-clip">1. <strong>Object Identification with CLIP</strong></a></li>
+      <li><a href="#2-segmentation-with-sam-segment-anything" id="markdown-toc-2-segmentation-with-sam-segment-anything">2. <strong>Segmentation with SAM (Segment Anything)</strong></a></li>
+      <li><a href="#3-spatial-relationship-detection" id="markdown-toc-3-spatial-relationship-detection">3. <strong>Spatial Relationship Detection</strong></a></li>
+    </ul>
+  </li>
+  <li><a href="#navigating-the-enviornment" id="markdown-toc-navigating-the-enviornment">Navigating the Enviornment</a></li>
+  <li><a href="#example-demonstration" id="markdown-toc-example-demonstration">Example Demonstration</a></li>
+  <li><a href="#conclusions" id="markdown-toc-conclusions">Conclusions</a></li>
+  <li><a href="#code" id="markdown-toc-code">Code</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>Embodied AI requires agents to perceive, reason, and act in realistic 3D environments.<br />
+We use <strong>AI2-THOR</strong>, an interactive simulation containing kitchens, living rooms, bedrooms, and bathrooms.<br />
+Our goal is to enable an agent to:</p>
+
+<ol>
+  <li>Identify target objects using vision-language models (CLIP)</li>
+  <li>Segment the target and surrounding context using SAM</li>
+  <li>Understand spatial relationships (e.g., <em>“the laptop is on the sofa”</em>)</li>
+  <li>Move toward the target using closed-loop visual feedback</li>
+</ol>
+
+<p>To achieve this, we integrate <strong>SAM</strong>, <strong>CLIP</strong>, and a custom spatial-reasoning module into a perception–action pipeline.</p>
+
+<hr />
+
+<h2 id="computer-vision-model-architecture">Computer Vision Model Architecture</h2>
+
+<h3 id="1-object-identification-with-clip">1. <strong>Object Identification with CLIP</strong></h3>
+
+<p>We use CLIP to match image patches against text prompts for object names.</p>
+
+<p style="width: 500px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team-id/clip_pipeline.png" alt="CLIP Pipeline" /></p>
+<p><em>Fig 1. CLIP identifies the target object using text–image similarity.</em></p>
+
+<p>Given a target command (e.g., <em>“find the microwave”</em>), the system:</p>
+
+<ol>
+  <li>Samples candidate bounding boxes</li>
+  <li>Extracts embeddings via CLIP image encoder</li>
+  <li>Computes similarity with the text embedding</li>
+  <li>Selects the highest-scoring region as the target</li>
+</ol>
+
+<hr />
+
+<h3 id="2-segmentation-with-sam-segment-anything">2. <strong>Segmentation with SAM (Segment Anything)</strong></h3>
+
+<p>After locating the target region, we refine the mask using SAM:</p>
+
+<p style="width: 500px;"><img src="/CS163-Projects-2025Fall/assets/images/team-id/sam_mask.png" alt="SAM Example" /></p>
+
+<p>SAM provides a high-quality segmentation mask, which we use for:</p>
+
+<ul>
+  <li>Object localization</li>
+  <li>Pixel-level spatial reasoning</li>
+  <li>Deriving the agent’s navigation targets</li>
+</ul>
+
+<hr />
+
+<h3 id="3-spatial-relationship-detection">3. <strong>Spatial Relationship Detection</strong></h3>
+
+<p>We extend the system to detect relations like:</p>
+
+<ul>
+  <li><em>“X is on Y”</em></li>
+  <li><em>“X is next to Y”</em></li>
+  <li><em>“X is inside Y”</em></li>
+</ul>
+
+<p>Using metadata from AI2-THOR combined with SAM masks:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block
+def get_spatial_context(controller, target_mask):
+    """
+    Uses AI2-THOR metadata + instance segmentation
+    to determine which object the target is on or inside.
+    """
+</code></pre></div></div>
+
+<h2 id="navigating-the-enviornment">Navigating the Enviornment</h2>
+
+<h2 id="example-demonstration">Example Demonstration</h2>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<h2 id="code">Code</h2>
+
+<p>Project Repo: <a href="https://github.com/Land-dev/finalProject163">GitHub Repository</a></p>
+
+<p>SAM repo:</p>
+
+<p>CLIP repo:</p>
+
+<p>Ai2-Thor simulation (We use RoboThor): <a href="https://ai2thor.allenai.org/robothor">RoboThor</a></p>
+
+<h2 id="references">References</h2>]]></content><author><name>Ryan Teoh, Bill, Maddox, Andrew</name></author><summary type="html"><![CDATA[In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR). Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as CLIP, SAM (Segment Anything), and multimodal reasoning modules. We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+  <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#main-content" id="markdown-toc-main-content">Main Content</a></li>
+  <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
+      <li><a href="#image" id="markdown-toc-image">Image</a></li>
+      <li><a href="#table" id="markdown-toc-table">Table</a></li>
+      <li><a href="#code-block" id="markdown-toc-code-block">Code Block</a></li>
+      <li><a href="#formula" id="markdown-toc-formula">Formula</a></li>
+      <li><a href="#more-markdown-syntax" id="markdown-toc-more-markdown-syntax">More Markdown Syntax</a></li>
+    </ul>
+  </li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<h2 id="main-content">Main Content</h2>
+<p>Your survey starts here. You can refer to the <a href="https://github.com/lilianweng/lil-log/tree/master/_posts">source code</a> of <a href="https://lilianweng.github.io/lil-log/">lil’s blogs</a> for article structure ideas or Markdown syntax. We’ve provided a <a href="https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html">sample post</a> from Lilian Weng and you can find the source code <a href="https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md">here</a></p>
+
+<h2 id="basic-syntax">Basic Syntax</h2>
+<h3 id="image">Image</h3>
+<p>Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.</p>
+
+<p style="width: 400px; max-width: 100%;">You can add an image to your survey like this:
+<img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/object_detection.png" alt="YOLO" /></p>
+<p><em>Fig 1. YOLO: An object detection method in computer vision</em> [1].</p>
+
+<p>Please cite the image if it is taken from other people’s work.</p>
+
+<h3 id="table">Table</h3>
+<p>Here is an example for creating tables, including alignment syntax.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: center">column 1</th>
+      <th style="text-align: right">column 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">row1</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">row2</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="code-block">Code Block</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block
+import torch
+print (torch.__version__)
+</code></pre></div></div>
+
+<h3 id="formula">Formula</h3>
+<p>Please use latex to generate formulas, such as:</p>
+
+\[\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}\]
+
+<p>or you can write in-text formula \(y = wx + b\).</p>
+
+<h3 id="more-markdown-syntax">More Markdown Syntax</h3>
+<p>You can find more Markdown syntax at <a href="https://www.markdownguide.org/basic-syntax/">this page</a>.</p>
+
+<h2 id="reference">Reference</h2>
+<p>Please make sure to cite properly in your work, for example:</p>
+
+<p>[1] Redmon, Joseph, et al. “You only look once: Unified, real-time object detection.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
+
+<hr />]]></content><author><name>UCLAdeepvision</name></author><summary type="html"><![CDATA[This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.]]></summary></entry></feed>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Robot Navigation Using Deep Vision Models</title>
+
+    <meta name="description" content="In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR). Our system detects objects, understands spatial relati...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Robot Navigation Using Deep Vision Models" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR). Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as CLIP, SAM (Segment Anything), and multimodal reasoning modules. We demonstrate an end-to-end system capable of..." property="og:description">
+    
+    
+        <meta content="http://localhost:4000/2025/12/10/team29-robotvisionnav.html" property="og:url">
+    
+<!--
+    
+        <meta content="Ryan Teoh, Bill, Maddox, Andrew" property="article:author">
+        <meta content="http://localhost:4000/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-10T00:00:00-08:00" property="article:published_time">
+        <meta content="http://localhost:4000/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Robot Navigation Using Deep Vision Models">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR).<br />
+Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as <strong>CLIP</strong>, <strong>SAM (Segment Anything)</strong>, and multimodal reasoning modules.<br />
+We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Robot Navigation Using Deep Vision Models</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-10T00:00:00-08:00" itemprop="datePublished">
+        
+        Dec 10, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Ryan Teoh, Bill, Maddox, Andrew</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/10/team29-robotvisionnav.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR).<br />
+Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as <strong>CLIP</strong>, <strong>SAM (Segment Anything)</strong>, and multimodal reasoning modules.<br />
+We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#computer-vision-model-architecture" id="markdown-toc-computer-vision-model-architecture">Computer Vision Model Architecture</a>    <ul>
+      <li><a href="#1-object-identification-with-clip" id="markdown-toc-1-object-identification-with-clip">1. <strong>Object Identification with CLIP</strong></a></li>
+      <li><a href="#2-segmentation-with-sam-segment-anything" id="markdown-toc-2-segmentation-with-sam-segment-anything">2. <strong>Segmentation with SAM (Segment Anything)</strong></a></li>
+      <li><a href="#3-spatial-relationship-detection" id="markdown-toc-3-spatial-relationship-detection">3. <strong>Spatial Relationship Detection</strong></a></li>
+    </ul>
+  </li>
+  <li><a href="#navigating-the-enviornment" id="markdown-toc-navigating-the-enviornment">Navigating the Enviornment</a></li>
+  <li><a href="#example-demonstration" id="markdown-toc-example-demonstration">Example Demonstration</a></li>
+  <li><a href="#conclusions" id="markdown-toc-conclusions">Conclusions</a></li>
+  <li><a href="#code" id="markdown-toc-code">Code</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>Embodied AI requires agents to perceive, reason, and act in realistic 3D environments.<br />
+We use <strong>AI2-THOR</strong>, an interactive simulation containing kitchens, living rooms, bedrooms, and bathrooms.<br />
+Our goal is to enable an agent to:</p>
+
+<ol>
+  <li>Identify target objects using vision-language models (CLIP)</li>
+  <li>Segment the target and surrounding context using SAM</li>
+  <li>Understand spatial relationships (e.g., <em>“the laptop is on the sofa”</em>)</li>
+  <li>Move toward the target using closed-loop visual feedback</li>
+</ol>
+
+<p>To achieve this, we integrate <strong>SAM</strong>, <strong>CLIP</strong>, and a custom spatial-reasoning module into a perception–action pipeline.</p>
+
+<hr />
+
+<h2 id="computer-vision-model-architecture">Computer Vision Model Architecture</h2>
+
+<h3 id="1-object-identification-with-clip">1. <strong>Object Identification with CLIP</strong></h3>
+
+<p>We use CLIP to match image patches against text prompts for object names.</p>
+
+<p style="width: 500px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team-id/clip_pipeline.png" alt="CLIP Pipeline" /></p>
+<p><em>Fig 1. CLIP identifies the target object using text–image similarity.</em></p>
+
+<p>Given a target command (e.g., <em>“find the microwave”</em>), the system:</p>
+
+<ol>
+  <li>Samples candidate bounding boxes</li>
+  <li>Extracts embeddings via CLIP image encoder</li>
+  <li>Computes similarity with the text embedding</li>
+  <li>Selects the highest-scoring region as the target</li>
+</ol>
+
+<hr />
+
+<h3 id="2-segmentation-with-sam-segment-anything">2. <strong>Segmentation with SAM (Segment Anything)</strong></h3>
+
+<p>After locating the target region, we refine the mask using SAM:</p>
+
+<p style="width: 500px;"><img src="/CS163-Projects-2025Fall/assets/images/team-id/sam_mask.png" alt="SAM Example" /></p>
+
+<p>SAM provides a high-quality segmentation mask, which we use for:</p>
+
+<ul>
+  <li>Object localization</li>
+  <li>Pixel-level spatial reasoning</li>
+  <li>Deriving the agent’s navigation targets</li>
+</ul>
+
+<hr />
+
+<h3 id="3-spatial-relationship-detection">3. <strong>Spatial Relationship Detection</strong></h3>
+
+<p>We extend the system to detect relations like:</p>
+
+<ul>
+  <li><em>“X is on Y”</em></li>
+  <li><em>“X is next to Y”</em></li>
+  <li><em>“X is inside Y”</em></li>
+</ul>
+
+<p>Using metadata from AI2-THOR combined with SAM masks:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block
+def get_spatial_context(controller, target_mask):
+    """
+    Uses AI2-THOR metadata + instance segmentation
+    to determine which object the target is on or inside.
+    """
+</code></pre></div></div>
+
+<h2 id="navigating-the-enviornment">Navigating the Enviornment</h2>
+
+<h2 id="example-demonstration">Example Demonstration</h2>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<h2 id="code">Code</h2>
+
+<p>Project Repo: <a href="https://github.com/Land-dev/finalProject163">GitHub Repository</a></p>
+
+<p>SAM repo:</p>
+
+<p>CLIP repo:</p>
+
+<p>Ai2-Thor simulation (We use RoboThor): <a href="https://ai2thor.allenai.org/robothor">RoboThor</a></p>
+
+<h2 id="references">References</h2>
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html">&larr; Post Template</a>
+    
+
+    <!--  -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
