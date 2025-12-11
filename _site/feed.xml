@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-10T18:32:20-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Robot Navigation Using Deep Vision Models</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html" rel="alternate" type="text/html" title="Robot Navigation Using Deep Vision Models" /><published>2025-12-10T00:00:00-08:00</published><updated>2025-12-10T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-11T01:45:29-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Robot Navigation Using Deep Vision Models</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html" rel="alternate" type="text/html" title="Robot Navigation Using Deep Vision Models" /><published>2025-12-10T00:00:00-08:00</published><updated>2025-12-10T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/10/team29-robotvisionnav.html"><![CDATA[<blockquote>
   <p>In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR).<br />
 Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as <strong>CLIP</strong>, <strong>SAM (Segment Anything)</strong>, and multimodal reasoning modules.<br />
 We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.</p>
@@ -55,7 +55,33 @@ Our goal is to enable an agent to:</p>
   <li>Selects the highest-scoring region as the target</li>
 </ol>
 
-<hr />
+<p>CLIP allows us to compute the semantic similarity between:</p>
+
+<ul>
+  <li>a text embedding (ex. cup)</li>
+  <li>an image embedding (ex. cropped SAM mask region)</li>
+</ul>
+
+<p>This allows for an open vocabulary object recognition, where even if the object is not part of a fixed category set, CLIP allows the model to still be able to identify these objects.</p>
+
+<p>In <code class="language-plaintext highlighter-rouge">find_best_object</code> we evaluate our SAM mask crop against the test query.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>text_tokens = tokenizer([clean_query]).to(device)
+image_inputs = torch.stack([clip_preprocess(img) for img in crops]).to(device)
+
+with torch.no_grad():
+    img_features = clip_model.encode_image(image_inputs)
+    txt_features = clip_model.encode_text(text_tokens)
+
+    img_features /= img_features.norm(dim=-1, keepdim=True)
+    txt_features /= txt_features.norm(dim=-1, keepdim=True)
+
+    # Softmax over similarity scores
+    probs = (100.0 * img_features @ txt_features.T).softmax(dim=0)
+    values, indices = probs.topk(1)
+</code></pre></div></div>
+
+<p>By cleaning the text query and computing similarity scores, we can pick the highest scoring object mask to get our predict object for the query. We use our best mask and score to draw our bounding boxes later as well as perform spatial reasoning and navigation. CLIP is also beneficial for our model because objects may be partially hidden, rotated, etc. in our robot simulation, and SAM alongside CLIP can determine whether a sigment looks like the queried box.</p>
 
 <h3 id="2-segmentation-with-sam-segment-anything">2. <strong>Segmentation with SAM (Segment Anything)</strong></h3>
 
@@ -70,6 +96,41 @@ Our goal is to enable an agent to:</p>
   <li>Pixel-level spatial reasoning</li>
   <li>Deriving the agent’s navigation targets</li>
 </ul>
+
+<p>To obtain object candidates in each frame, we use SAM as our instance segmengation module. SAM takes in a raw RGB frame from the RoboTHOR camera and then returns a set of masks that lets us</p>
+
+<ul>
+  <li>Object localization</li>
+  <li>Pixel-level spatial reasoning</li>
+  <li>Deriving the agent’s navigation targets</li>
+</ul>
+
+<p>We use a ViT-H variant of SAM alongside a <code class="language-plaintext highlighter-rouge">SamAutomaticMaskGenerator</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mask_generator = SamAutomaticMaskGenerator(
+    sam,
+    points_per_side=16,
+    pred_iou_thresh=0.3,
+    stability_score_thresh=0.3,
+    box_nms_thresh=0.7,
+    min_mask_region_area=400,
+)
+</code></pre></div></div>
+
+<p>We have a <code class="language-plaintext highlighter-rouge">find_best_object</code> helper function which performs our core perceptron segmentation to cropping to CLIP scoring.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>masks = mask_generator.generate(image_np)
+
+for mask_data in masks:
+    x, y, w, h = map(int, mask_data["bbox"])
+
+    if w &lt; 10 or h &lt; 10:
+        continue
+
+    crop = Image.fromarray(image_np[y:y+h, x:x+w])
+    crops.append(crop)
+    valid_masks.append(mask_data)
+</code></pre></div></div>
 
 <hr />
 
@@ -93,7 +154,54 @@ def get_spatial_context(controller, target_mask):
     """
 </code></pre></div></div>
 
+<p>Beyond simply finding what object matches the query, we also want to know where it is in the scene and whether it is on another object or on something else. Thus, to do so, we combine</p>
+
+<ol>
+  <li>SAM’s pixel level mask for the target object.</li>
+  <li>Ai2-THOR’s instance segmentation, telling us which object each pixel belongs to.</li>
+</ol>
+
+<p>We thus implement a helper function called <code class="language-plaintext highlighter-rouge">get_spatial_context(controller, target_mask)</code> that allows us to</p>
+
+<ol>
+  <li>Read the latest event from the controller</li>
+  <li>Extract pixels inside the SAM mask</li>
+  <li>Map RGB colors to a Thor object ID</li>
+  <li>Lookup the object metadata and parentReceptacles.</li>
+</ol>
+
+<p>Intuitiviely, the SAM mask tells us which pixels are part of the target, the instance segmentation frame tells us which simulator object those pixels correspond to, and the metadata tells us what the object is residing on, such as a table, couch, drawer, etc. We can then use this location string to visualize detections, indicating a bounding box with a CLIP score and spatial context.</p>
+
+<p>WE MIGHT WANT TO INCLUDE A PICTURE OF IT FROM OUR COLLAB NOTEBOOK.</p>
+
 <h2 id="navigating-the-enviornment">Navigating the Enviornment</h2>
+
+<p>By providing the system with a natural language query, such as “find the blue cup”, our model will decipher this message into a query that determines searching for a cup, in which afterwards RoboTHOR will explore the scene until the target is visible, in which we then can run our SAM / sliding window CLIP to find the object. We have two methods of navigation, one which relies on an existing API and another which uses a heuristic to calculate distance.</p>
+
+<p>GetShortestPath.</p>
+
+<ol>
+  <li>By using <a href="https://ai2thor.allenai.org/robothor/documentation/#sub-shortest-path">GetShortestPath</a> with the AI2-THOR, we can feed parameters of the object type we are looking for, such as cup, our current position, and the allowed error. If the object exists and is achievable, then we can get the path event from the start to the end object. One limitation of our API is that it is unable to distinguish between two objects, thus if a query supplies “apple” and there exist two apples on the simulation, it will naturally navigate to the closest one. GetShortestPath provides us with the corner paths on the path, so by setting them as waypoints, our robot can follow the action until it reaches the desired object.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from ai2thor.util.metrics import (
+    get_shortest_path_to_object_type
+)
+
+path = get_shortest_path_to_object_type(
+   controller=controller,
+    object_type="Apple",
+    initial_position=dict(
+        x=0,
+        y=0.9,
+        z=0.25
+    )
+)
+</code></pre></div></div>
+
+<p>If our navigation does not work, then we perform random navigation, in which we consider four different directions (left, right, forward, backwards), and essentially like a maze, follow the right side of the wall until we reach the desired object. We may also perform a full rotation, and if it fails to reveal the object, it can move until it finds a new vantage point.</p>
+
+<p>If the object does not exist, and if repeated movement patterns fail to detect the object, then the system concludes that the object is not in the scene and will report failure. This failsure ensures that our algorithm doesn’t infinitely search forever.</p>
 
 <h2 id="example-demonstration">Example Demonstration</h2>
 
@@ -109,7 +217,9 @@ def get_spatial_context(controller, target_mask):
 
 <p>Ai2-Thor simulation (We use RoboThor): <a href="https://ai2thor.allenai.org/robothor">RoboThor</a></p>
 
-<h2 id="references">References</h2>]]></content><author><name>Ryan Teoh, Bill, Maddox, Andrew</name></author><summary type="html"><![CDATA[In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR). Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as CLIP, SAM (Segment Anything), and multimodal reasoning modules. We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+<h2 id="references">References</h2>
+
+<p>Ai2-Thor Documentation: https://ai2thor.allenai.org/robothor/documentation/</p>]]></content><author><name>Ryan Teoh, Bill, Maddox, Andrew</name></author><summary type="html"><![CDATA[In this project we build a full robot navigation pipeline inside an embodied AI simulation (AI2-THOR). Our system detects objects, understands spatial relationships, and navigates toward a target object using modern vision models such as CLIP, SAM (Segment Anything), and multimodal reasoning modules. We demonstrate an end-to-end system capable of object identification, object-centric navigation, and spatial reasoning.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
   <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
 </blockquote>
 
