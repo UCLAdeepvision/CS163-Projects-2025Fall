@@ -2,6 +2,7 @@
 layout: post
 comments: true
 title: Robot Navigation Using Deep Vision Models
+Project Track: Project 6
 author: Ryan Teoh, Bill, Maddox, Andrew
 date: 2025-12-10
 ---
