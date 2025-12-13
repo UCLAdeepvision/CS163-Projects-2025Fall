@@ -177,9 +177,8 @@ Reprinted from Hertz et al. (2022).}
 #### Practical Insight.
 One subtle detail is that freezing attention maps across denoising steps implicitly constrains the latent geometry. This explains why Prompt-to-Prompt is remarkably good at preserving global structure even when the textual prompt introduces significant semantic changes.
 
-\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Implementation Note]
-Above all, for most codebases, applying Prompt-to-Prompt controls requires attention maps from different U-Net blocks to be aligned across timesteps. The most straightforward solution is to cache the attention tensors during the first pass and reuse them in the second.
-\end{tcolorbox}
+>> Above all, for most codebases, applying Prompt-to-Prompt controls requires attention maps from different U-Net blocks to be aligned across timesteps. The most straightforward solution is to cache the attention tensors during the first pass and reuse them in the second.
+
 Edits which require large geometric changes remain hard; attention manipulation cannot fully alter the latent spatial layout.
 
 
