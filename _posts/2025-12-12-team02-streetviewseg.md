@@ -331,7 +331,7 @@ Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the
 
 ### Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation
 
-## Results and Analysis
+## Results and Analyses
 After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
 
 Approach 1 - BASNet Hybrid Loss:
@@ -352,38 +352,40 @@ Overall, we get better mIoU score for all three approaches because mIoU is the a
 
 ### Approach-to-Approach Comparison
 When we compare the three approaches from each other, we can observe that the approach 2, which is the BASNet hybrid loss + copy-paste augmentation generally have better performance compare to the other two approaches, both per-class IoU and mIoU. The only class the approach did not win the other two is the fence class. In approach 1, which contains only BASNet hybrid loss has better per-class IoU than approach 2 for fence class. The reason is likely that copy-paste augmentation works well for self-contained objects, but fence is fundamentally different - it has a mesh grid structure and has high context dependency compare to other classes, and in copy-paste augmentation, we create binary masks that will treat fence as a solide blob, destroying the see-through mesh pattern, and pastes it in random locations where fences never natually appear, destroying the spatial context
-In general, we can say that the copy-paste augmentation can help to improve the model performance because it introduces variability (good for generalization), the only downside is that the variabiliy is artificial and includes unrealistic placements that add noise, so we did not get a very huge benefits from the augmentation
+In general, we can say that the copy-paste augmentation can help to improve the model performance because it introduces variability (good for generalization), the only downside is that the variabiliy is artificial and includes unrealistic placements that add noise, so we did not get a very huge benefits from the augmentation.
+
+### Visualization
+In this part, we provide two example visualizations of the Approach 2 Model (which is the BASNet hybrid loss + copy-paste augmentation approach) and compare it with the baseline model (fully-finetuned SegFormer)
+
+First visualization:
+
+![Vis1]({{ '/assets/images/team02/a1.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+*Fig 2. Example Visualization 1 of Approach 2 Model*.
+
+![Vis2]({{ '/assets/images/team02/a2.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+*Fig 3. Example Visualization 1 of Baseline Model*.
+
+Second visualization:
+
+![Vis3]({{ '/assets/images/team02/a3.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+*Fig 4. Example Visualization 2 of Approach 2 Model*.
+
+![Vis3]({{ '/assets/images/team02/a4.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+*Fig 5. Example Visualization 2 of Baseline Model*.
+
+From the example visualizations above we can see that the approach 2 is indeed improving the performance of the semantic segmetation task on fine-grained urban structures
+
 
 ## Conclusion
-
+From the reasoning in the Results and Analyses part, we can conclude that modify loss function to achieve boundary-aware supervision
 
 ## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
-
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
-
-Please cite the image if it is taken from other people's work.
-
 ### Code Block
 ```
 # This is a sample code block
 import torch
 print (torch.__version__)
 ```
-
-
-### Formula
-Please use latex to generate formulas, such as:
-
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
 
 ### More Markdown Syntax
 You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
