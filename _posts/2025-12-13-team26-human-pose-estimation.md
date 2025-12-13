@@ -2,14 +2,12 @@
 layout: post
 comments: true
 title: Comparison of Approaches to Human Pose Estimation
-author: Florence Zhao, Maheswari Bajji, Lauren Mirhan, Julia Gu
+author: Maheswari Bajji, Julia Gu, Lauren Mirhan Florence Zhao
 date: 2025-12-13
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
-
-
+> This paper presents a comparative analysis of prominent deep learning approaches for 2D human pose estimation, the task of locating key anatomical joints in images and videos. We examine the core methodologies, architectures, and performance metrics of three seminal models: the bottom-up OpenPose (2019), the top-down AlphaPose (2022), and the top-down ViTPose (2022), which leverages a Vision Transformer backbone. We then introduce Sapiens (2024), a recent foundation model that pushes state-of-the-art accuracy by adopting a massive MAE-pretrained transformer, high-resolution inputs, and significantly denser whole-body keypoint annotations. The comparison highlights the change from complex, manual systems like OpenPose, moved to efficient refining methods with AlphaPose, and now powerful but simple transformer models like ViTPose and Sapiens.
 <!--more-->
 {: class="table-of-content"}
 * TOC
@@ -440,7 +438,10 @@ Table 7: Results of Sapiens on Humans-5K test set compared to some other models
 
 ## 8. Conclusion 
 
-A brief survey of representative approaches to human pose estimation in the past seven years have revealed significant strides in terms of model accuracy, speed, and capabilities. Limb classification and human detection have very much become solved problems, with future research trending towards domain-specific applications of pose estimation. With now long-established support for image, video, and real-time streams, the field appears to be tending towards pose-guided 3D reconstructions and generative models. 
+A brief survey of representative approaches to human pose estimation in the past seven years has revealed significant strides in terms of model accuracy, speed, and capabilities. The evolution is marked by a clear trend away from the complex, bottom up approach of OpenPose, which relied on hand crafted features like Part Affinity Fields, towards efficient, simple, and scalable top down transformer architectures. Recent state of the art models, exemplified by AlphaPose, ViTPose and the foundation model Sapiens which improved the amount of keypoints used, achieve peak performance through architectural simplification, high resolution inputs, and aggressive data scaling on massive, high fidelity datasets.
+
+While 2D pose estimation is becoming a highly refined task, its fundamental limitation remains the depth ambiguity that multiple 3D poses can project to the same 2D image. Therefore, the future of HPE is moving rapidly into 3D human pose estimation and Human Mesh Recovery (HMR) to reconstruct the full 3D body shape and pose. Current research also heavily focuses on generative models (like diffusion models and GANs) to predict plausible future poses or generate more realistic and diverse 3D human motion sequences. These advancements are critical for applications in robotics, virtual reality, and healthcare, where a true understanding of spatial human movement is essential.
+
 
 
 ## 9. References 
