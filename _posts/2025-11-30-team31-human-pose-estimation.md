@@ -67,7 +67,7 @@ $$
 where $$f_theta$$ is a CNN parameterized by $$theta$$. The loss function is usually defined as the mean squared error between predicted and ground-truth heatmaps: 
 
 $$
-\mathcal{L}_{\text{pose}} =
+\mathcal{L} =
 \frac{1}{K} \sum_{k=1}^{K}
 \left\| \hat{\mathbf{H}}_k - \mathbf{H}_k \right\|_2^2
 $$
@@ -86,7 +86,7 @@ where $$Q$$, $$K$$, and $$V$$, are query, key, and value matrices derived from f
 ## 3D Human Pose Estimation 
 3D pose estimation extends the 2D formulation by predicting depth information for each joint. The task is inherently ill-posed because multiple 3D poses can project to the same 2D configuration. Many approaches therefore, rely on multi-view supervision, temporal constraints, or learned priors over human anatomy. 
 
-A common formulation predicts 3D joints ($$x_i##, ##y_i$$, $$z_i$$) from 2D detections: 
+A common formulation predicts 3D joints ($$x_i$$, $$y_i$$, $$z_i$$) from 2D detections: 
 
 $$
 P_\text{3D} = g_\phi(P_\text{2D})
