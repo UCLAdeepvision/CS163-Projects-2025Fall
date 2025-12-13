@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-12T20:52:18-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Streetview Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Streetview Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-12T20:56:42-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Streetview Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Streetview Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
   <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
@@ -35,34 +35,22 @@
 <h3 id="evaluation-metrics">Evaluation Metrics</h3>
 <p>We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). The equation of calculating IoU is given as follows:</p>
 
-<p>[
-\mathrm{IoU}(A, B) = \frac{|A \cap B|}{|A \cup B|}
-]</p>
+<table>
+  <tbody>
+    <tr>
+      <td>\mathrm{IoU}(A,B)=\frac{</td>
+      <td>A\cap B</td>
+      <td>}{</td>
+      <td>A\cup B</td>
+      <td>}</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>Where:</p>
 <ul>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>(</td>
-          <td>A \cap B</td>
-          <td>) is the area (or volume) of the overlap between <strong>A</strong> and <strong>B</strong></td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>(</td>
-          <td>A \cup B</td>
-          <td>) is the area (or volume) covered by <strong>A</strong> or <strong>B</strong> (their union)</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li>(A \cap B) is the area (or volume) of the overlap between <strong>A</strong> and <strong>B</strong></li>
+  <li>(A \cup B) is the area (or volume) covered by <strong>A</strong> or <strong>B</strong> (their union)</li>
 </ul>
 
 <p>Given <strong>C</strong> classes, the <strong>mean IoU (mIoU)</strong> is the average IoU across classes:</p>
