@@ -349,6 +349,6 @@ Please make sure to cite properly in your work, for example:
 
 [3] Jonschkowski, Rico, et al. "What Matters in Unsupervised Optical Flow." _European Conference on Computer Vision (ECCV)_. 2020.
 
-[3] Fischer, Philipp, et al. "FlowNet: Learning Optical Flow with Convolutional Networks". 2015.
+[4] Fischer, Philipp, et al. "FlowNet: Learning Optical Flow with Convolutional Networks". 2015.
 
 ---
