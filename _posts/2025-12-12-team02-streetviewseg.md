@@ -98,10 +98,10 @@ The performance of the baseline model is shown in the table below:
 ![Finetune]({{ '/assets/images/team02/finetune.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
 ## Approach 1 - BASNet Hybrid Loss
-We first implement a **boundary-aware supervision** strategy designed to improve the geometric precision of the baseline Segformer-B0 model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a "Boundary-Aware" mechanism redefines the optimization objective to prioritize structural fidelity.
-Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
+In our first approach we implement a **boundary-aware supervision** strategy designed to improve the geometric precision of the baseline model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a "Boundary-Aware" mechanism redefines the optimization objective to prioritize structural fidelity.
+Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
 
-1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
+1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window. By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
 
 $$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
 
@@ -115,7 +115,8 @@ We combine the three types of losses in a weighted way, so we can have more flex
 
 $$\ell_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}$$
 
-By defining this new loss function we shifted from a purely semantic focus to a hybrid focus. The hybrid loss implementation is shown below:
+By defining this new loss function we shifted from a purely semantic focus to a hybrid focus. 
+The hybrid loss implementation is shown below:
 
 ```
 class SSIM(nn.Module):
@@ -254,7 +255,7 @@ class HybridLoss(nn.Module):
         }
 ```
 
-To adopt this new loss function, we implement a new 'BATrainer' based on the original Trainer provided by the Hugging face
+To adopt this new loss function, we implement a new 'BATrainer' based on the original Trainer provided by the HuggingFace
 
 The implementation is shown below
 
@@ -279,6 +280,11 @@ class BATrainer(Trainer):
         return (loss, outputs) if return_outputs else loss
 ```
 
+Then, we just use the same training_arg as the one we used for our baseline model and test the per-class IoU and the mIoU across all classes
+
+## Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation
+
+## Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation
 
 ## Basic Syntax
 ### Image

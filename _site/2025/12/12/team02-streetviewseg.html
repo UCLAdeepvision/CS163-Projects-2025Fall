@@ -185,6 +185,8 @@
   <li><a href="#evaluation-metrics" id="markdown-toc-evaluation-metrics">Evaluation Metrics</a></li>
   <li><a href="#baseline-methods" id="markdown-toc-baseline-methods">Baseline Methods</a></li>
   <li><a href="#approach-1---basnet-hybrid-loss" id="markdown-toc-approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</a></li>
+  <li><a href="#approach-2---basnet-hybrid-loss--copypaste-augmentation" id="markdown-toc-approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</a></li>
+  <li><a href="#approach-3---ssim--lovasz-loss--copypaste-augmentation" id="markdown-toc-approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</a></li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -278,11 +280,11 @@ print("Done!")
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/finetune.png" alt="Finetune" style="width: 400px; max-width: 100%;" /></p>
 
 <h2 id="approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</h2>
-<p>We first implement a <strong>boundary-aware supervision</strong> strategy designed to improve the geometric precision of the baseline Segformer-B0 model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a “Boundary-Aware” mechanism redefines the optimization objective to prioritize structural fidelity.
-Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:</p>
+<p>In our first approach we implement a <strong>boundary-aware supervision</strong> strategy designed to improve the geometric precision of the baseline model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a “Boundary-Aware” mechanism redefines the optimization objective to prioritize structural fidelity.
+Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:</p>
 
 <ol>
-  <li><strong>Structural Similarity (SSIM):</strong> Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (<code class="language-plaintext highlighter-rouge">F.conv2d</code>), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:</li>
+  <li><strong>Structural Similarity (SSIM):</strong> Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window. By using Gaussian-weighted convolutions (<code class="language-plaintext highlighter-rouge">F.conv2d</code>), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:</li>
 </ol>
 
 \[\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\]
@@ -301,7 +303,8 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 
 \[\ell_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}\]
 
-<p>By defining this new loss function we shifted from a purely semantic focus to a hybrid focus. The hybrid loss implementation is shown below:</p>
+<p>By defining this new loss function we shifted from a purely semantic focus to a hybrid focus. 
+The hybrid loss implementation is shown below:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class SSIM(nn.Module):
     def __init__(self, window_size=11, size_average=True, return_loss=True):
@@ -439,7 +442,7 @@ class HybridLoss(nn.Module):
         }
 </code></pre></div></div>
 
-<p>To adopt this new loss function, we implement a new ‘BATrainer’ based on the original Trainer provided by the Hugging face</p>
+<p>To adopt this new loss function, we implement a new ‘BATrainer’ based on the original Trainer provided by the HuggingFace</p>
 
 <p>The implementation is shown below</p>
 
@@ -462,6 +465,12 @@ class HybridLoss(nn.Module):
 
         return (loss, outputs) if return_outputs else loss
 </code></pre></div></div>
+
+<p>Then, we just use the same training_arg as the one we used for our baseline model and test the per-class IoU and the mIoU across all classes</p>
+
+<h2 id="approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</h2>
+
+<h2 id="approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</h2>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>
