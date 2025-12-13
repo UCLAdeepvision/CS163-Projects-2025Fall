@@ -25,18 +25,18 @@ In this project, we remapped all categories in cityscapes to a consistent six-cl
 ### Evaluation Metrics
 We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). The equation of calculating IoU is given as follows:
 
-\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}
+$$\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
 
 
 Where:
-- \(A \cap B\) is the area (or volume) of the overlap between **A** and **B**
-- \(A \cup B\) is the area (or volume) covered by **A** or **B** (their union)
+- $$\(A \cap B\)$$ is the area (or volume) of the overlap between **A** and **B**
+- $$\(A \cup B\)$$ is the area (or volume) covered by **A** or **B** (their union)
 
 Given **C** classes, the **mean IoU (mIoU)** is the average IoU across classes:
 
-\[
+$$\[
 \mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c
-\]
+\]$$
 
 
 ## Model: Segformer
