@@ -10,6 +10,58 @@ date: 2025-12-11
 
 ### <u>LVSM: A Large View Synthesis Model With Minimal 3D Inductive Bias</u>
 
+Most existing novel view synthesis methods rely on explicit 3D scene representations, such as NeRF-style volumetric fields [5] or 3D Gaussian Splatting [6]. While effective, these approaches impose strong geometric inductive biases through predefined 3D structures and handcrafted rendering equations. LVSM proposes a fundamentally different approach by minimizing 3D inductive bias and reformulating novel view synthesis as a direct image-to-image prediction task conditioned on camera poses.
+
+#### Method
+
+##### Token-Based Representation
+
+Instead of constructing an explicit 3D representation as in NeRF or 3DGS, LVSM operates entirely in token space using a large transformer model. Given $$N$$ input images with poses $$\{(I_i, E_i, K_i)\}_{i=1}^N$$, LVSM computes pixel-wise Plücker ray embeddings $$P_i \in \mathbb{R}^{H \times W \times 6}$$ that encode ray origin and direction in a continuous 6D parametrization. The images and Plücker embeddings are patchified and projected into tokens:
+
+<center>
+$$x_{ij} = \text{Linear}_{\text{input}}([I_{ij}, P_{ij}]) \in \mathbb{R}^d$$
+</center>
+
+Target views are similarly represented by tokenized Plücker ray embeddings $$q_j$$.
+
+##### Encoder-Decoder Architecture
+
+The encoder–decoder architecture introduces fixed-size learnable latent scene tokens ($$L = 3072$$) that aggregate information from all input views through bidirectional self-attention:
+
+<center>
+$$x'_1, \ldots, x'_{l_x}, z_1, \ldots, z_L = \text{Transformer}_{\text{Enc}}(x_1, \ldots, x_{l_x}, e_1, \ldots, e_L)$$
+</center>
+
+<center>
+$$z'_1, \ldots, z'_L, y_1, \ldots, y_{l_q} = \text{Transformer}_{\text{Dec}}(z_1, \ldots, z_L, q_1, \ldots, q_{l_q})$$
+</center>
+
+This compact representation enables inference time independent of the number of input views.
+
+##### Decoder-Only Architecture
+
+The decoder-only architecture processes input and target tokens jointly in a single stream, removing the latent bottleneck:
+
+<center>
+$$x'_1, \ldots, x'_{l_x}, y_1, \ldots, y_{l_q} = \text{Transformer}_{\text{Dec-only}}(x_1, \ldots, x_{l_x}, q_1, \ldots, q_{l_q})$$
+</center>
+
+Although computationally costlier due to quadratic attention, it demonstrates superior scalability with increasing input views.
+
+Both architectures regress RGB values using $$\hat{I}^t_j = \text{Sigmoid}(\text{Linear}_{\text{out}}(y_j))$$ and are trained end-to-end with MSE and perceptual loss, without depth supervision or geometric constraints. QK-Normalization stabilizes training.
+
+#### Results
+
+LVSM achieves state-of-the-art performance on object-level (ABO, GSO) and scene-level (RealEstate10K) datasets, improving PSNR by 1.5–3.5 dB over GS-LRM [2], particularly excelling on specular materials, thin structures, and fine textures. The decoder-only model shows strong zero-shot generalization: trained with four views, it continues improving up to sixteen views. Conversely, the encoder-decoder model plateaus beyond eight views due to its fixed latent representation. Notably, even small LVSM models trained on limited resources outperform prior methods.
+
+#### Discussion
+
+LVSM demonstrates that high-quality novel view synthesis can be achieved through purely data-driven learning without explicit 3D representations. However, as a deterministic model, it struggles to hallucinate unseen regions, producing noisy artifacts rather than smooth extrapolation. The decoder-only architecture also becomes expensive with many input views.
+
+The superior performance of decoder-only over encoder-decoder reveals an important insight: 3D scenes may resist compression into fixed-length representations. Unlike language, visual information from multiple viewpoints contains redundant spatial structure that degrades when forced through a latent bottleneck, explaining why encoder-decoder performance drops beyond eight views while decoder-only continues scaling.
+
+Overall, LVSM demonstrates that learned representations without structural constraints offer a promising direction for novel view synthesis, echoing the shift from encoder–decoder to decoder-only architectures in large language models.
+
 ### <u>RayZer: A Self-supervised Large View Synthesis Model</u>
 
 The dominant paradigm in studies on novel view synthesis has been to train models on datasts with COLMAP [1] annotations. However, there are several notable drawbacks to this approach. COLMAP is slow, struggles in sparse-view and dynamic scenarios and may produce noisy annotations. RayZer introduces a groundbreaking new approach to novel view synthesis that is entirely self-supervised (e.g. it does not use any camera pose annotations during training or testing) and thus avoids COLMAP entirely.
