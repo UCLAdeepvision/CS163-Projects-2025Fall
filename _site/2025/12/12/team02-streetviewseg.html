@@ -293,17 +293,18 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 
 \[\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\]
 
-    <p>where \(\mu_x\) and \(\mu_y\) are the mean for x and y, and \(\sigma_x\), \(\sigma_y\) are the standard deviation for x and y</p>
+    <p>where $\mu_x$, $\mu_y$ are the mean for x and y, and $\sigma_x$, $\sigma_y$ are the standard deviations for x and y, $\sigma_{xy}$ is their covariance, $C_1 = 0.01^2$ and $C_2 = 0.03^2$ are used to avoid dividing by zero.</p>
   </li>
   <li>
     <p><strong>Multi-Class IoU Loss:</strong> This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct <em>extent</em> and <em>shape</em> of the predicted region, preventing the model from generating fragmented or “shattered” masks. It has the following mathematical form:</p>
-  </li>
-</ol>
 
 \[\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}^{H} \sum_{c=1}^{W} \left[ S(r,c) + G(r,c) - S(r,c) G(r,c) \right]}\]
 
-<ol>
-  <li><strong>Cross-Entropy (CE):</strong> We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.</li>
+    <p>where G(r,c) is the ground truth label of the pixel (r,c) and S(r,c) is the predicted probability</p>
+  </li>
+  <li>
+    <p><strong>Cross-Entropy (CE):</strong> We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.</p>
+  </li>
 </ol>
 
 <p>We combine the three types of losses in a weighted way, so we can have more flexibility.</p>
@@ -534,11 +535,12 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
 
 <h3 id="compare-to-baseline-model">Compare to Baseline Model</h3>
-<p>By comparing the results of all three approaches to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light gets increased, and the overall mIoU scores also get increased in all three approaches. However, the performance on both the car and vegetation classes get degraded slightly. Before we start to analyze, there is something we need to know at first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compare to other 4 classes. Then it becomes clear to analyze performance degradation issue on these two classes. The reason this will happen for all approaches are likely the same: the SSIM loss, IoU loss, and Losvasz loss can all create gradient imbalance - smaller objects can receive larger gradient from these three types of losses, and the larger objects can become suboptimal, and the performance on those larger object did not degrade too much because they are well protected by the original cross-entropy loss.
-Overall, we get better mIoU score for all three approaches because mIoU is the average score, we just win more than we lose. Though all 6 classes are counted as the fine-grained classes, but the performance on those really small objects get improved more than the performance on those relatively larger objects get worsened</p>
+<p>By comparing the results of all three approaches to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light gets increased, and the overall mIoU scores also get increased in all three approaches. However, the performance on both the car and vegetation classes get degraded slightly. Before we start to analyze, there is something we need to know at first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compare to other 4 classes. Then it becomes clear to analyze performance degradation issue on these two classes. The reason this will happen for all approaches are likely the same: the SSIM loss, IoU loss, and Losvasz loss all create gradient imbalance - smaller objects can receive larger gradient from these three types of losses, and the larger objects can become suboptimal. The performance on those larger object did not degrade too much because they are well protected by the original cross-entropy loss. So this is the reason why we are getting better performance on very tiny or thin fine-grained urban structures like poles, traffic signs, etc. while getting slightly worse performance on relatively larger objects like cars
+Overall, we get better mIoU score for all three approaches because mIoU is the average score, we just win more than we lose. Though all 6 classes are counted as the fine-grained classes, but the performance on those really small objects get improved more than the performance on those relatively larger objects get worsened, which proves that the change-of-loss strategy for boundary-aware supervision and the augmentation technique applied are valid ways to improve the performance semantic segmentations on fine-grained urban structures.</p>
 
 <h3 id="approach-to-approach-comparison">Approach-to-Approach Comparison</h3>
-<p>When we compare the three approaches from each other, we can observe that the approach 2, which is the BASNet hybrid loss + copy-paste augmentation generally have better performance compare to the other two approaches, both per-class IoU and mIoU. The only class</p>
+<p>When we compare the three approaches from each other, we can observe that the approach 2, which is the BASNet hybrid loss + copy-paste augmentation generally have better performance compare to the other two approaches, both per-class IoU and mIoU. The only class the approach did not win the other two is the fence class. In approach 1, which contains only BASNet hybrid loss has better per-class IoU than approach 2 for fence class. The reason is likely that copy-paste augmentation works well for self-contained objects, but fence is fundamentally different - it has a mesh grid structure and has high context dependency compare to other classes, and in copy-paste augmentation, we create binary masks that will treat fence as a solide blob, destroying the see-through mesh pattern, and pastes it in random locations where fences never natually appear, destroying the spatial context
+In general, we can say that the copy-paste augmentation can help to improve the model performance because it introduces variability (good for generalization), the only downside is that the variabiliy is artificial and includes unrealistic placements that add noise, so we did not get a very huge benefits from the augmentation</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
