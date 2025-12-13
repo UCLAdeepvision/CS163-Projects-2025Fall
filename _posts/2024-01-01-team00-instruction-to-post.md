@@ -1,13 +1,13 @@
 ---
 layout: post
 comments: true
-title: Post Template
-author: UCLAdeepvision
+title: "Project Track: Project 8 - Streetview Semantic Segmentation"
+author: "Team02"
 date: 2024-01-01
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> In this project, we'll delve into the topic of streetview semantic segmentation, especially, we want to perform the semantic segmenta
 
 
 <!--more-->
