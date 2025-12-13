@@ -62,7 +62,7 @@ The DANN optimization seeks to find the optimal parameters $\\theta\_f^\*, \\the
    *discriminative* for the classification task.
 
 2. **Domain Confusion**:  
-   The domain classifier ($G_d$) is optimized to minimize its error
+   The domain classifier ($$G_d$$) is optimized to minimize its error
    (i.e., maximize its ability to distinguish the domains), **while** the
    feature extractor ($G_f$) is optimized to *maximize* the domain classifier's
    error (i.e., make the domains indistinguishable). This forces the features
