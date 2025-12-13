@@ -647,6 +647,212 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 </code></pre></div></div>
 
 <h3 id="approach-3---ssim--lovasz-loss--copy-paste-augmentation">Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation</h3>
+<p>In the BASNet hybrid loss, the IoU loss attempts to approximate the Jaccard index directly by aggregating softmax probabilities across the entire image. Instead of discrete counts ($0$ or $1$), it uses continuous probability predictions.</p>
+
+<p>We inspect that a critical issue with this approach is that everything is calculated inside global sums. Consequently, there is no explicit mechanism to “fix the worst pixels first,”, and small or thin objects can be washed out by larger classes. More specifically, for a very small object like poles, the contribution to the global loss numerator/denominator is negligible compare to the bacground even if the model is 100% wrong. As a result, gradient is tiny and the optimizer effectively ignores the mistakes on the small object because it is drowned out by the correctly classified background pixels.</p>
+
+<p>So we employ the Lovasz-Softmax loss, which serves as a convex surrogate for the IoU loss. It addresses the issue through two steps:</p>
+
+<ol>
+  <li>
+    <p><strong>Sorting ($e_{(1)} \ge e_{(2)} \dots$)</strong> We rank every pixel by how confident the model is in its mistake.</p>
+  </li>
+  <li>
+    <p><strong>Weighting ($\Delta J$)</strong> We assign weights based on the marginal drop in IoU</p>
+  </li>
+</ol>
+
+<p>By sorting and multiplying by corresponding IoU loss, we force a specific alignment which aligns biggest error with steepest penalty and smallest error with flat penalty. As a result this ensures that a small object, if completely misclassified, generates a large, sharp gradient that cuts through the noise of the background</p>
+
+<p>The detailed implementaion of this approach is shown below:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class SSIM(nn.Module):
+    def __init__(self, window_size=11, size_average=True, return_loss=True):
+        super().__init__()
+        self.window_size = window_size
+        self.size_average = size_average
+        self.return_loss = return_loss
+        self.channel = 1
+        self.register_buffer('window', self._create_window(window_size, self.channel))
+
+    def _gaussian(self, window_size, sigma):
+        coords = torch.arange(window_size, dtype=torch.float32) - window_size // 2
+        gauss = torch.exp(-coords**2 / (2 * sigma**2))
+        return gauss / gauss.sum()
+
+    def _create_window(self, window_size, channel):
+        _1D_window = self._gaussian(window_size, 1.5).unsqueeze(1)
+        _2D_window = _1D_window.mm(_1D_window.t()).unsqueeze(0).unsqueeze(0)
+        return _2D_window.expand(channel, 1, window_size, window_size).contiguous()
+
+    def forward(self, img1, img2):
+        _, channel, _, _ = img1.size()
+        if channel != self.channel:
+            self.channel = channel
+            self.window = self._create_window(self.window_size, channel).to(img1.device, img1.dtype)
+
+        pad = self.window_size // 2
+        img1_padded = F.pad(img1, (pad, pad, pad, pad), mode='reflect')
+        img2_padded = F.pad(img2, (pad, pad, pad, pad), mode='reflect')
+
+        mu1 = F.conv2d(img1_padded, self.window, padding=0, groups=channel)
+        mu2 = F.conv2d(img2_padded, self.window, padding=0, groups=channel)
+
+        mu1_sq = mu1.pow(2)
+        mu2_sq = mu2.pow(2)
+        mu1_mu2 = mu1 * mu2
+
+        sigma1_sq = F.conv2d(img1_padded * img1_padded, self.window, padding=0, groups=channel) - mu1_sq
+        sigma2_sq = F.conv2d(img2_padded * img2_padded, self.window, padding=0, groups=channel) - mu2_sq
+        sigma12 = F.conv2d(img1_padded * img2_padded, self.window, padding=0, groups=channel) - mu1_mu2
+
+        sigma1_sq = torch.clamp(sigma1_sq, min=0)
+        sigma2_sq = torch.clamp(sigma2_sq, min=0)
+
+        C1 = 0.01 ** 2
+        C2 = 0.03 ** 2
+
+        ssim_map = ((2 * mu1_mu2 + C1) * (2 * sigma12 + C2)) / \
+                   ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))
+
+        if self.size_average:
+            ssim_val = ssim_map.mean()
+        else:
+            ssim_val = ssim_map.mean(dim=[1, 2, 3])
+
+        return 1 - ssim_val if self.return_loss else ssim_val
+
+class LovaszSoftmaxLoss(nn.Module):
+    def __init__(self, ignore_index=255, classes='present'):
+        super().__init__()
+        self.ignore_index = ignore_index
+        self.classes = classes
+
+    def lovasz_grad(self, gt_sorted):
+        p = len(gt_sorted)
+        gts = gt_sorted.sum()
+        intersection = gts - gt_sorted.float().cumsum(0)
+        union = gts + (1 - gt_sorted).float().cumsum(0)
+        jaccard = 1. - intersection / union
+        if p &gt; 1:
+            jaccard[1:p] = jaccard[1:p] - jaccard[0:-1]
+        return jaccard
+
+    def lovasz_softmax_flat(self, probas, labels):
+        C = probas.shape[1]
+        losses = []
+        valid = labels != self.ignore_index
+        if valid.sum() == 0:
+            return torch.tensor(0.).to(probas.device)
+
+        probas = probas[valid]
+        labels = labels[valid]
+
+        for c in range(C):
+            fg = (labels == c).float()
+            if self.classes == 'present' and fg.sum() == 0:
+                continue
+            class_pred = probas[:, c]
+            errors = (Variable(fg) - class_pred).abs()
+            errors_sorted, perm = torch.sort(errors, 0, descending=True)
+            perm = perm.data
+            fg_sorted = fg[perm]
+            losses.append(torch.dot(errors_sorted, Variable(self.lovasz_grad(fg_sorted))))
+
+        return sum(losses) / C
+
+    def forward(self, logits, labels):
+        probas = F.softmax(logits, dim=1)
+        probas = probas.permute(0, 2, 3, 1).contiguous().view(-1, probas.shape[1])
+        labels = labels.view(-1)
+        return self.lovasz_softmax_flat(probas, labels)
+
+class UltimateHybridLoss(nn.Module):
+    def __init__(self, num_classes=7, ce_weight=1.1, ssim_weight=0.5, lovasz_weight=0.5):
+        super().__init__()
+        self.num_classes = num_classes
+        self.ce_weight = ce_weight
+        self.ssim_weight = ssim_weight
+        self.lovasz_weight = lovasz_weight
+
+        # High weights for Fence(1), Pole(4), Sign(5)
+        # 0:bg, 1:fence, 2:car, 3:veg, 4:pole, 5:sign, 6:person
+        class_weights = torch.tensor([1.0, 5.0, 1.0, 1.0, 5.0, 5.0, 2.0]).cuda()
+
+        self.ce_loss = nn.CrossEntropyLoss(ignore_index=255, weight=class_weights)
+        self.ssim_module = SSIM(window_size=11, size_average=True)
+        self.lovasz_loss = LovaszSoftmaxLoss(ignore_index=255)
+
+    def forward(self, logits, labels):
+        if logits.shape[-2:] != labels.shape[-2:]:
+            logits = F.interpolate(logits, size=labels.shape[-2:], mode='bilinear', align_corners=False)
+
+        ce_out = self.ce_loss(logits, labels)
+
+        # SSIM Setup
+        pred_softmax = F.softmax(logits, dim=1)
+        valid_mask = (labels != 255)
+        labels_masked = labels.clone()
+        labels_masked[~valid_mask] = 0
+        target_onehot = F.one_hot(labels_masked, num_classes=self.num_classes).permute(0, 3, 1, 2).float()
+
+        valid_mask_expanded = valid_mask.unsqueeze(1).float()
+        ssim_out = self.ssim_module(pred_softmax * valid_mask_expanded, target_onehot * valid_mask_expanded)
+
+        # Lovasz Setup
+        lovasz_out = self.lovasz_loss(logits, labels)
+
+        total_loss = (self.ce_weight * ce_out + self.ssim_weight * ssim_out + self.lovasz_weight * lovasz_out)
+        return total_loss
+
+class UltimateTrainer(Trainer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.criterion = UltimateHybridLoss(num_classes=7)
+
+    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+        labels = inputs.pop("labels")
+        outputs = model(**inputs)
+        logits = outputs.logits
+        loss = self.criterion(logits, labels)
+        return (loss, outputs) if return_outputs else loss
+</code></pre></div></div>
+
+<p>In addition to this new hybrid loss, we also applied the copy-paste augmentation from approach 2, with the same rationale provided.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model_hybrid = SegformerForSemanticSegmentation.from_pretrained(
+    "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+    num_labels=7,
+    ignore_mismatched_sizes=True
+)
+
+training_args = TrainingArguments(
+    output_dir="./segformer-thin-structures-hybrid",
+    learning_rate=6e-5,
+    num_train_epochs=15,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    save_total_limit=1,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    logging_steps=25,
+    remove_unused_columns=False,
+    dataloader_num_workers=12,
+    fp16=torch.cuda.is_available(),
+    gradient_accumulation_steps=1,
+    report_to="none",
+)
+
+trainer = UltimateTrainer(
+    model=model_hybrid,
+    args=training_args,
+    train_dataset=train_dataset_aug,
+    eval_dataset=val_dataset,
+)
+
+trainer.train()
+trainer.save_model("./segformer-thin-structures-hybrid-final")
+</code></pre></div></div>
 
 <h2 id="results-and-analyses">Results and Analyses</h2>
 <p>After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.</p>
@@ -664,7 +870,7 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
 
 <h3 id="compare-to-baseline-model">Compare to Baseline Model</h3>
-<p>By comparing the results of all three approaches to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light get increased, and the overall mIoU scores also get increased in all three approaches. However, the performance on both the car and vegetation classes degraded slightly. Before we start to analyze, there is something we need to know first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compared to the other 4 classes.</p>
+<p>By comparing the results of Approach 1, 2, and 3 to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light get increased, and the overall mIoU scores also get increased in all three approachesn (with a 1.76%, 1.87%, and 1.24% mIoU increase respectively, as you can see from the table). However, the model performance on both the car and vegetation classes degraded slightly. Before we start to analyze, there is something we need to know first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compared to the other 4 classes.</p>
 
 <p>For the BASNet hybrid loss used in Approaches 1 and 2, SSIM loss is boundary-focused, providing stronger learning signals for objects that are mostly boundary, such as thin and small structures. IoU loss, on the other hand, is large-region focused, which actually helps large objects by emphasizing overall foreground confidence. However, SSIM’s boundary emphasis shifts overall model focus toward fine structures, and since model capacity is shared across all classes, this causes some degradation on some relatively large homogeneous regions. The original cross-entropy loss helps protect large objects by providing stable pixel-wise supervision across all pixels equally.</p>
 
@@ -673,11 +879,11 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 <p>The performance on larger objects did not degrade significantly because cross-entropy loss provides neutral, stable supervision for all pixels, and in the BASNet approaches specifically, IoU loss actually emphasizes large-region confidence which counterbalances SSIM’s boundary focus. Overall, we get better mIoU scores for all three approaches because we gain more on small and fine-grained classes than we lose on larger classes. Though all 6 classes are counted as fine-grained structures, the performance on “truly” small objects improved more than the performance on relatively larger objects worsened, which proves that the boundary-aware supervision strategy is valid for improving semantic segmentation on fine-grained urban structures.</p>
 
 <h3 id="approach-to-approach-comparison">Approach-to-Approach Comparison</h3>
-<p>When comparing the three approaches, Approach 2, which combines BASNet hybrid loss with copy-paste augmentation, generally achieves better performance than the other two approaches in both per-class IoU and mIoU. The only exception is the fence class, where Approach 1 using BASNet hybrid loss alone performs better than Approach 2.</p>
+<p>When comparing the three approaches, Approach 2, which combines BASNet hybrid loss with copy-paste augmentation, generally achieves better performance than the other two approaches in both per-class IoU and mIoU, with a 0.11% mIoU improvement. The only exception is the fence class, where Approach 1 using BASNet hybrid loss alone performs better than Approach 2 with a 0.8% per-class IoU higher than Approach 2.</p>
 
 <p>The reason fence degrades with copy-paste augmentation is that fence is fundamentally different from other classes. Fence has a mesh and grid structure with see-through patterns, and it has high context dependency. Copy-paste augmentation uses binary masks that treat fence as a solid blob, destroying its transparent mesh pattern, and places fence in random locations where fences never naturally appear, destroying spatial context. In contrast, other classes such as car, pole, sign, and person are self-contained objects whose identity comes from their internal appearance alone, making them more suitable for copy-paste augmentation. In general, Copy-paste Augmentation technique introduces helpful variability but also adds noise through unrealistic placements, hard binary edges, and context violations — these partially cancel out, leaving only small-to-modest net improvement.</p>
 
-<p>It is also observed that Approach 3 did not work as well as we expected, it appears that the model performs the worst across all classes as well as the mIoU when we compare to the other two approaches, even though we replace the IoU loss with Lovasz loss which create more boundary-aware focus. We suspect that the primary reason is that both SSIM and Lovász loss aggressively target boundary/hard pixels, creating redundant gradients that destabilize learning, causing the model performance on all classes to degrade compared to the other two approaches — while soft IoU provided complementary global-shape supervision that balanced SSIM’s boundary focus.</p>
+<p>It is also observed that Approach 3 did not work as well as we expected (with a 0.124% mIoU score, which is 0.52% lower than Approach 1 and 0.63% lower than Approach 2), it appears that the model performs the worst across all classes as well as the mIoU when we compare to the other two approaches, even though we replace the IoU loss with Lovasz loss which create more boundary-aware focus. We suspect that the primary reason is that both SSIM and Lovász loss aggressively target boundary/hard pixels, creating redundant gradients that destabilize learning, causing the model performance on all classes to degrade compared to the other two approaches — while soft IoU provided complementary global-shape supervision that balanced SSIM’s boundary focus.</p>
 
 <p>In general, the combination of BASNet hybrid loss and copy-paste augmentation helps improve model performance the most, achieving a 1.87% mIoU increase compared to the baseline model.</p>
 
