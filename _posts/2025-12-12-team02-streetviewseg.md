@@ -360,18 +360,18 @@ In this part, we provide two example visualizations of the Approach 2 Model (whi
 First visualization:
 
 ![Vis1]({{ '/assets/images/team02/a1.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-*Fig 2. Example Visualization 1 of Approach 2 Model*.
+    *Fig 2. Example Visualization 1 of Approach 2 Model*.
 
-![Vis2]({{ '/assets/images/team02/a2.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-*Fig 3. Example Visualization 1 of Baseline Model*.
+![Vis2]({{ '/assets/images/team02/a2.png' | relative_url }}){: style="width: 800px; max-width: 100%;"}
+    *Fig 3. Example Visualization 1 of Baseline Model*.
 
 Second visualization:
 
-![Vis3]({{ '/assets/images/team02/a3.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-*Fig 4. Example Visualization 2 of Approach 2 Model*.
+![Vis3]({{ '/assets/images/team02/a3.png' | relative_url }}){: style="width: 800px; max-width: 100%;"}
+    *Fig 4. Example Visualization 2 of Approach 2 Model*.
 
-![Vis3]({{ '/assets/images/team02/a4.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-*Fig 5. Example Visualization 2 of Baseline Model*.
+![Vis3]({{ '/assets/images/team02/a4.png' | relative_url }}){: style="width: 800px; max-width: 100%;"}
+    *Fig 5. Example Visualization 2 of Baseline Model*.
 
 From the example visualizations above we can see that the approach 2 is indeed improving the performance of the semantic segmetation task on fine-grained urban structures
 
