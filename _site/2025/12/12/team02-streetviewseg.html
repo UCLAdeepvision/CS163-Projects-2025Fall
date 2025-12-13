@@ -182,8 +182,8 @@
     </ul>
   </li>
   <li><a href="#model-segformer" id="markdown-toc-model-segformer">Model: Segformer</a></li>
-  <li><a href="#baseline-methods" id="markdown-toc-baseline-methods">Baseline Methods</a></li>
   <li><a href="#evaluation-metrics" id="markdown-toc-evaluation-metrics">Evaluation Metrics</a></li>
+  <li><a href="#baseline-methods" id="markdown-toc-baseline-methods">Baseline Methods</a></li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -213,8 +213,25 @@ The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4
 <img src="/CS163-Projects-2025Fall/assets/images/team02/segformerArch.png" alt="Segformer" style="width: 400px; max-width: 100%;" />
 <em>Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask</em> [1].</p>
 
+<h2 id="evaluation-metrics">Evaluation Metrics</h2>
+<p>We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:</p>
+
+\[\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}\]
+
+<p>Where:</p>
+<ul>
+  <li>\(A \cap B\) is the area (or volume) of the overlap between <strong>A</strong> and <strong>B</strong></li>
+  <li>\(A \cup B\) is the area (or volume) covered by <strong>A</strong> or <strong>B</strong> (their union)</li>
+</ul>
+
+<p>Given <strong>C</strong> classes, the <strong>mean IoU (mIoU)</strong> is the average IoU across classes:</p>
+
+\[\mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c\]
+
+<p>The higher the IoU and mIoU value is, the better is the model performance.</p>
+
 <h2 id="baseline-methods">Baseline Methods</h2>
-<p>Due to computational resource constraints, we use SegFormer-B0 as our baseline semantic segmentation model. Concretely, we initialize a SegformerForSemanticSegmentation from the pretrained checkpoint nvidia/segformer-b0-finetuned-cityscapes-512-1024, then replace the segmentation head to match our task’s 7 output labels (six fine-grained classes + background). We fine-tune the netire network end-to-end on our remapped stree-scene dataset using HuggingFace Trainer. The training setup is shown in the code below:</p>
+<p>We use a fully fine-tuned SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don’t match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model_base = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
     num_labels=7,
@@ -253,23 +270,17 @@ trainer.train()
 trainer.save_model("./segformer-thin-structures-v2-final")
 print("Done!")
 </code></pre></div></div>
+<p>All methods we explored in the project will use same set of training_args as shown above for better comparison.</p>
 
-<h2 id="evaluation-metrics">Evaluation Metrics</h2>
-<p>We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:</p>
-
-\[\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}\]
-
-<p>Where:</p>
-<ul>
-  <li>\(A \cap B\) is the area (or volume) of the overlap between <strong>A</strong> and <strong>B</strong></li>
-  <li>\(A \cup B\) is the area (or volume) covered by <strong>A</strong> or <strong>B</strong> (their union)</li>
-</ul>
-
-<p>Given <strong>C</strong> classes, the <strong>mean IoU (mIoU)</strong> is the average IoU across classes:</p>
-
-\[\mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c\]
-
-<p>The higher the IoU and mIoU value is, the better is the model performance.</p>
+<p>The performance of the baseline is shown in the table below:
+| class                | column 1    |  column 2     |
+| fence                |    :—-:   |          —: |
+| car                  | Text        | Text          |
+| vegetation           | Text        | Text          |
+| pole                 | Text        | Text          |
+| traffic sign         | Text        | Text          |
+| traffic light        | Text        | Text          |
+| mIoU                 | Text        | Text          |</p>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>

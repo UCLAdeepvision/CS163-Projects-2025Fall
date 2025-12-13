@@ -32,8 +32,26 @@ The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4
 ![Segformer]({{ '/assets/images/team02/segformerArch.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 *Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
 
+## Evaluation Metrics
+We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:
+
+$$\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
+
+
+Where:
+- $$A \cap B$$ is the area (or volume) of the overlap between **A** and **B**
+- $$A \cup B$$ is the area (or volume) covered by **A** or **B** (their union)
+
+Given **C** classes, the **mean IoU (mIoU)** is the average IoU across classes:
+
+$$
+\mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c
+$$
+
+The higher the IoU and mIoU value is, the better is the model performance.
+
 ## Baseline Methods
-Due to computational resource constraints, we use SegFormer-B0 as our baseline semantic segmentation model. Concretely, we initialize a SegformerForSemanticSegmentation from the pretrained checkpoint nvidia/segformer-b0-finetuned-cityscapes-512-1024, then replace the segmentation head to match our task's 7 output labels (six fine-grained classes + background). We fine-tune the netire network end-to-end on our remapped stree-scene dataset using HuggingFace Trainer. The training setup is shown in the code below:
+We use a fully fine-tuned SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
 ```
 model_base = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
@@ -73,25 +91,17 @@ trainer.train()
 trainer.save_model("./segformer-thin-structures-v2-final")
 print("Done!")
 ```
+All methods we explored in the project will use same set of training_args as shown above for better comparison.
 
-
-## Evaluation Metrics
-We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:
-
-$$\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
-
-
-Where:
-- $$A \cap B$$ is the area (or volume) of the overlap between **A** and **B**
-- $$A \cup B$$ is the area (or volume) covered by **A** or **B** (their union)
-
-Given **C** classes, the **mean IoU (mIoU)** is the average IoU across classes:
-
-$$
-\mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c
-$$
-
-The higher the IoU and mIoU value is, the better is the model performance.
+The performance of the baseline is shown in the table below:
+| class                | column 1    |  column 2     |
+| fence                |    :----:   |          ---: |
+| car                  | Text        | Text          |
+| vegetation           | Text        | Text          |
+| pole                 | Text        | Text          |
+| traffic sign         | Text        | Text          |
+| traffic light        | Text        | Text          |
+| mIoU                 | Text        | Text          |
 
 ## Basic Syntax
 ### Image
