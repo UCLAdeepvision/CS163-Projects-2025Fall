@@ -31,11 +31,12 @@ Just as important is the availability of powerful computational resources. Train
 Finally, deep learning architectures are designed to learning spatial dependencies between joints. Unlike traditional hand-crafted approaches, deep models can automatically learn hierarchical representations that encode both local joint appearance and global body structure. This allows pose estimation systems to scale effectively as data size increases, improving performance rather than saturating.  
 
 ## Problem Formulation of Human Pose Estimation 
-At its core, human pose estimation can be formulated as a structured prediction problem. Given an input Image 
-P = torch.tensor([
-    [x_i, y_i, c_i] for i in range(K)
+At its core, human pose estimation can be formulated as a structured prediction problem. Given an input Image $$I$$, the goal is to predict a set of keypoints: 
+
+$$
+\mathbf{P} = \{ (x_k, y_k, v_k) \mid k = 1, \dots, K \}
 ])
-where $(x_k, y_k)$ denotes the 2D coordinates of the $k$-th keypoint and $v_k \in \{0,1\}$ indicates its visibility.
+where $$K$$ is the number of keypoints, $$x_i, y_i)$ denotes the spatial location of the $$i$$-th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
 
 ## Basic Syntax
 ### Image
