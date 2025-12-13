@@ -563,7 +563,11 @@ In general, we can say that the copy-paste augmentation can help to improve the 
 <p>From the example visualizations above we can see that the approach 2 is indeed improving the performance of the semantic segmetation task on fine-grained urban structures</p>
 
 <h2 id="conclusion">Conclusion</h2>
-<p>From the reasoning in the Results and Analyses part, we can conclude that modifying loss function to achieve boundary-aware supervision, and the</p>
+<p>In this project, we investigated methods to improve semantic segmentation performance on fine-grained urban structures using the SegFormer architecture. Starting from a fully fine-tuned SegFormer-B0 baseline, we explored three approaches that combined boundary-aware loss functions with data augmentation techniques.
+Our experiments demonstrated that boundary-aware supervision—achieved through hybrid losses incorporating SSIM and IoU/Lovász components—consistently improves segmentation quality for small, thin urban structures such as poles, traffic signs, and traffic lights. All three approaches outperformed the baseline in terms of overall mIoU, with Approach 2 (BASNet Hybrid Loss + Copy-Paste Augmentation) achieving the best balance across most classes.
+However, our results also revealed an inherent trade-off: the boundary-focused losses that benefit smaller objects can lead to slight performance degradation on larger structures like cars and vegetation due to gradient imbalance. This suggests that future work could explore class-aware loss weighting or adaptive loss scheduling to maintain performance across objects of varying scales.
+We also observed that copy-paste augmentation, while generally beneficial for improving generalization, has limitations for context-dependent structures like fences. Objects with mesh-like patterns or strong spatial dependencies may require more sophisticated augmentation strategies that preserve their structural characteristics.
+In summary, our findings confirm that shifting from purely pixel-wise supervision toward hybrid, boundary-aware objectives is a valid and effective strategy for improving segmentation of fine-grained urban structures—a capability critical for autonomous driving, urban mapping, and robotic perception systems. Future work could explore class-adaptive loss weighting, context-aware augmentation techniques, and scaling these methods to larger SegFormer variants to further improve performance across all object sizes.</p>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="code-block">Code Block</h3>
