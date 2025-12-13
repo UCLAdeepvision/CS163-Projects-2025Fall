@@ -6,7 +6,7 @@ author: Ryan Carney, Phi Nguyen, Nikolas Rodriguez
 date: 2025-11-19
 ---
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> Optical flow is simply the problem of estimating motion in images, with real world applications in other fields such as autonomous driving. As such, there have been many different approaches to this problem. We compare three of these approaches: FlowNet, RAFT, and UFlow. We explore each of these models in depth, before moving on to a comparative analysis and discussion of the three models. This analysis highlights the key differences between each approach, when they are most applicable, and how they each handle common problems in the optical flow field such as the lack of available training data.
 
 <!--more-->
 {: class="table-of-content"}
