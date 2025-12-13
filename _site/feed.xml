@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T02:10:33-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T02:16:52-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
   <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
@@ -114,13 +114,26 @@ print("Done!")
 Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:</p>
 
 <ol>
-  <li>
-    <p><strong>Structural Similarity (SSIM):</strong> Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (<code class="language-plaintext highlighter-rouge">F.conv2d</code>), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
-\(\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\)</p>
-  </li>
-  <li><strong>Multi-Class IoU Loss:</strong> This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct <em>extent</em> and <em>shape</em> of the predicted region, preventing the model from generating fragmented or “shattered” masks.</li>
+  <li><strong>Structural Similarity (SSIM):</strong> Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (<code class="language-plaintext highlighter-rouge">F.conv2d</code>), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:</li>
+</ol>
+
+\[\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\]
+
+<ol>
+  <li><strong>Multi-Class IoU Loss:</strong> This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct <em>extent</em> and <em>shape</em> of the predicted region, preventing the model from generating fragmented or “shattered” masks. It has the following mathematical form:</li>
+</ol>
+
+\[\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}^{H} \sum_{c=1}^{W} \left[ S(r,c) + G(r,c) - S(r,c) G(r,c) \right]}\]
+
+<ol>
   <li><strong>Cross-Entropy (CE):</strong> We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.</li>
 </ol>
+
+<p>We combine the three types of losses in a weighted way, so we can have more flexibility.</p>
+
+\[\mathcal{L}_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}\]
+
+<p>By defining this new loss function we shifted from a purely semantic focus to a hybrid focus.</p>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>

@@ -103,10 +103,20 @@ We first implement a **boundary-aware supervision** strategy designed to improve
 Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
 
 1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
+
 $$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
 
-2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks.
+2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form:
+
+$$\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}^{H} \sum_{c=1}^{W} \left[ S(r,c) + G(r,c) - S(r,c) G(r,c) \right]}$$
+
 3.  **Cross-Entropy (CE):** We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.
+
+We combine the three types of losses in a weighted way, so we can have more flexibility.
+
+$$\mathcal{L}_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}$$
+
+By defining this new loss function we shifted from a purely semantic focus to a hybrid focus.
 
 
 ## Basic Syntax
