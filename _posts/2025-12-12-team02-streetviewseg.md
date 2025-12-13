@@ -51,7 +51,7 @@ $$
 The higher the IoU and mIoU value is, the better is the model performance.
 
 ## Baseline Methods
-We use a fully fine-tuned SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
+We fully fine-tuned a SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head, and we are going to use this fully-finetuned SegFormer-B0 as our **baseline model**. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
 ```
 model_base = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
@@ -280,11 +280,32 @@ class BATrainer(Trainer):
         return (loss, outputs) if return_outputs else loss
 ```
 
-Then, we just use the same training_arg as the one we used for our baseline model and test the per-class IoU and the mIoU across all classes
+Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
 
 ## Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation
 
+
+Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
+
 ## Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation
+
+## Results and Analysis
+After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
+
+For Approach 1 - BASNet Hybrid Loss:
+
+| Class         | Baseline |  BAS   | Improvement |
+|--------------|---------:|-------:|------------:|
+| fence        |   0.3438 | 0.3960 |     +0.0522 |
+| car          |   0.8964 | 0.8943 |     -0.0021 |
+| vegetation   |   0.8968 | 0.8948 |     -0.0020 |
+| pole         |   0.3119 | 0.3379 |     +0.0259 |
+| traffic sign |   0.5653 | 0.5819 |     +0.0166 |
+| traffic light|   0.4583 | 0.4730 |     +0.0147 |
+| **mIoU**     | **0.5788** | **0.5963** | **+0.0176** |
+
+
+## Conclusion
 
 ## Basic Syntax
 ### Image

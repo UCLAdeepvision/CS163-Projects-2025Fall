@@ -187,6 +187,8 @@
   <li><a href="#approach-1---basnet-hybrid-loss" id="markdown-toc-approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</a></li>
   <li><a href="#approach-2---basnet-hybrid-loss--copypaste-augmentation" id="markdown-toc-approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</a></li>
   <li><a href="#approach-3---ssim--lovasz-loss--copypaste-augmentation" id="markdown-toc-approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</a></li>
+  <li><a href="#results-and-analysis" id="markdown-toc-results-and-analysis">Results and Analysis</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -234,7 +236,7 @@ The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4
 <p>The higher the IoU and mIoU value is, the better is the model performance.</p>
 
 <h2 id="baseline-methods">Baseline Methods</h2>
-<p>We use a fully fine-tuned SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don’t match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:</p>
+<p>We fully fine-tuned a SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head, and we are going to use this fully-finetuned SegFormer-B0 as our <strong>baseline model</strong>. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don’t match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model_base = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
     num_labels=7,
@@ -466,11 +468,75 @@ class HybridLoss(nn.Module):
         return (loss, outputs) if return_outputs else loss
 </code></pre></div></div>
 
-<p>Then, we just use the same training_arg as the one we used for our baseline model and test the per-class IoU and the mIoU across all classes</p>
+<p>Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
 
 <h2 id="approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</h2>
 
+<p>Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
+
 <h2 id="approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</h2>
+
+<h2 id="results-and-analysis">Results and Analysis</h2>
+<p>After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.</p>
+
+<p>For Approach 1 - BASNet Hybrid Loss:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th style="text-align: right">Baseline</th>
+      <th style="text-align: right">BAS</th>
+      <th style="text-align: right">Improvement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>fence</td>
+      <td style="text-align: right">0.3438</td>
+      <td style="text-align: right">0.3960</td>
+      <td style="text-align: right">+0.0522</td>
+    </tr>
+    <tr>
+      <td>car</td>
+      <td style="text-align: right">0.8964</td>
+      <td style="text-align: right">0.8943</td>
+      <td style="text-align: right">-0.0021</td>
+    </tr>
+    <tr>
+      <td>vegetation</td>
+      <td style="text-align: right">0.8968</td>
+      <td style="text-align: right">0.8948</td>
+      <td style="text-align: right">-0.0020</td>
+    </tr>
+    <tr>
+      <td>pole</td>
+      <td style="text-align: right">0.3119</td>
+      <td style="text-align: right">0.3379</td>
+      <td style="text-align: right">+0.0259</td>
+    </tr>
+    <tr>
+      <td>traffic sign</td>
+      <td style="text-align: right">0.5653</td>
+      <td style="text-align: right">0.5819</td>
+      <td style="text-align: right">+0.0166</td>
+    </tr>
+    <tr>
+      <td>traffic light</td>
+      <td style="text-align: right">0.4583</td>
+      <td style="text-align: right">0.4730</td>
+      <td style="text-align: right">+0.0147</td>
+    </tr>
+    <tr>
+      <td><strong>mIoU</strong></td>
+      <td style="text-align: right"><strong>0.5788</strong></td>
+      <td style="text-align: right"><strong>0.5963</strong></td>
+      <td style="text-align: right"><strong>+0.0176</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="conclusion">Conclusion</h2>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>
