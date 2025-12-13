@@ -94,6 +94,7 @@ print("Done!")
 All methods we explored in the project will use same set of training_args as shown above for better comparison.
 
 The performance of the baseline is shown in the table below:
+
 | class                | column 1    |  column 2     |
 | :---                 |    :----:   |          ---: |
 | fence                |             |               |

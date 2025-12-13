@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T00:24:07-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T00:29:35-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
   <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
@@ -100,16 +100,54 @@ print("Done!")
 </code></pre></div></div>
 <p>All methods we explored in the project will use same set of training_args as shown above for better comparison.</p>
 
-<p>The performance of the baseline is shown in the table below:
-| class                | column 1    |  column 2     |
-| :—                 |    :—-:   |          —: |
-| fence                |             |               |
-| car                  | Text        | Text          |
-| vegetation           | Text        | Text          |
-| pole                 | Text        | Text          |
-| traffic sign         | Text        | Text          |
-| traffic light        | Text        | Text          |
-| mIoU                 | Text        | Text          |</p>
+<p>The performance of the baseline is shown in the table below:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">class</th>
+      <th style="text-align: center">column 1</th>
+      <th style="text-align: right">column 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">fence</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">car</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">vegetation</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">pole</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">traffic sign</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">traffic light</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">mIoU</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>
