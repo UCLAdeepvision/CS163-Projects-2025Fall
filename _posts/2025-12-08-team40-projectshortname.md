@@ -213,14 +213,6 @@ DINO achieves non-trivial representations without negative samples by combining 
 2. Sharpening: Using low-temperature softmax on teacher outputs to ensure teacher outputs are peaked and non-uniform.
 3. EMA Teacher Updating: Teacher parameters are updated slowly to provide stable optimization in training.
 
-### Table
-Here is an example for creating tables, including alignment syntax.
-
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
-
 ## Reference
 
 [1] Chen, T., Kornblith, S., Norouzi, M., & Hinton, G. (2020). A simple framework for contrastive learning of visual representations. In International Conference on Machine Learning (pp. 1597-1607). PMLR.
