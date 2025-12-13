@@ -184,14 +184,16 @@
   <li><a href="#model-segformer" id="markdown-toc-model-segformer">Model: Segformer</a></li>
   <li><a href="#evaluation-metrics" id="markdown-toc-evaluation-metrics">Evaluation Metrics</a></li>
   <li><a href="#baseline-methods" id="markdown-toc-baseline-methods">Baseline Methods</a></li>
-  <li><a href="#approach-1---basnet-hybrid-loss" id="markdown-toc-approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</a></li>
-  <li><a href="#approach-2---basnet-hybrid-loss--copypaste-augmentation" id="markdown-toc-approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</a></li>
-  <li><a href="#approach-3---ssim--lovasz-loss--copypaste-augmentation" id="markdown-toc-approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</a></li>
+  <li><a href="#our-approach" id="markdown-toc-our-approach">Our Approach</a>    <ul>
+      <li><a href="#approach-1---basnet-hybrid-loss" id="markdown-toc-approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</a></li>
+      <li><a href="#approach-2---basnet-hybrid-loss--copy-paste-augmentation" id="markdown-toc-approach-2---basnet-hybrid-loss--copy-paste-augmentation">Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation</a></li>
+      <li><a href="#approach-3---ssim--lovasz-loss--copy-paste-augmentation" id="markdown-toc-approach-3---ssim--lovasz-loss--copy-paste-augmentation">Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation</a></li>
+    </ul>
+  </li>
   <li><a href="#results-and-analysis" id="markdown-toc-results-and-analysis">Results and Analysis</a></li>
   <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
-      <li><a href="#table" id="markdown-toc-table">Table</a></li>
       <li><a href="#code-block" id="markdown-toc-code-block">Code Block</a></li>
       <li><a href="#formula" id="markdown-toc-formula">Formula</a></li>
       <li><a href="#more-markdown-syntax" id="markdown-toc-more-markdown-syntax">More Markdown Syntax</a></li>
@@ -272,11 +274,12 @@ trainer.save_model("./segformer-thin-structures-v2-final")
 </code></pre></div></div>
 <p>All methods we explored in the project will use same set of training_args as shown above for better comparison.</p>
 
-<p>The performance of the baseline model is shown in the table below:</p>
+<p>The performance of the baseline model is shown in below:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/finetune.png" alt="Finetune" style="width: 400px; max-width: 100%;" /></p>
 
-<h2 id="approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</h2>
+<h2 id="our-approach">Our Approach</h2>
+<h3 id="approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</h3>
 <p>In our first approach we implement a <strong>boundary-aware supervision</strong> strategy designed to improve the geometric precision of the baseline model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a “Boundary-Aware” mechanism redefines the optimization objective to prioritize structural fidelity.
 Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:</p>
 
@@ -502,11 +505,11 @@ trainer.train()
 trainer.save_model("./segformer-thin-structures-ba_aug-final")
 </code></pre></div></div>
 
-<h2 id="approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</h2>
+<h3 id="approach-2---basnet-hybrid-loss--copy-paste-augmentation">Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation</h3>
 
 <p>Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
 
-<h2 id="approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</h2>
+<h3 id="approach-3---ssim--lovasz-loss--copy-paste-augmentation">Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation</h3>
 
 <h2 id="results-and-analysis">Results and Analysis</h2>
 <p>After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.</p>
@@ -523,7 +526,8 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
 
-<p>The results here suggest that our second approach, which is BASNet hyrbid loss + copypaste augmentation outperforms the other two approaches and has the best per-class IoU and mIoU</p>
+<p>The results here suggest that our Approach 2, which is the BASNet hyrbid loss + copy-paste augmentation, in general outperforms the other two approaches and has the best performance. Comparing with the baseline model, we found that except for the car and vegetation classes, approach 2 model performs better, and has overall a better mIoU value than the performance of baseline model. The reason is likely that small objects tend to receive disproportionally stronger gradients from SSIM and IoU losses, and at the meantime, while still counted as fine-grained urban structures, car and vegetations have relatively larger sizes than all other classes in the 6-class scheme. Therefore for car and vegetation objects in the image they will receive biased parameter updates, which causes the segmentation on these two classes to degrade. Similar reason can be applied to approach 1 and approach 3.
+Overall, all three approaches outperformed the baseline model from mIoU perspective, though for  all of them has a</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -536,31 +540,6 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 <p><em>Fig 1. YOLO: An object detection method in computer vision</em> [1].</p>
 
 <p>Please cite the image if it is taken from other people’s work.</p>
-
-<h3 id="table">Table</h3>
-<p>Here is an example for creating tables, including alignment syntax.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: center">column 1</th>
-      <th style="text-align: right">column 2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">row1</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">row2</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
-    </tr>
-  </tbody>
-</table>
 
 <h3 id="code-block">Code Block</h3>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block

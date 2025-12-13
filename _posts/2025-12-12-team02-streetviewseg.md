@@ -88,11 +88,12 @@ trainer.save_model("./segformer-thin-structures-v2-final")
 ```
 All methods we explored in the project will use same set of training_args as shown above for better comparison.
 
-The performance of the baseline model is shown in the table below:
+The performance of the baseline model is shown in below:
 
 ![Finetune]({{ '/assets/images/team02/finetune.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
-## Approach 1 - BASNet Hybrid Loss
+## Our Approach
+### Approach 1 - BASNet Hybrid Loss
 In our first approach we implement a **boundary-aware supervision** strategy designed to improve the geometric precision of the baseline model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a "Boundary-Aware" mechanism redefines the optimization objective to prioritize structural fidelity.
 Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
 
@@ -315,14 +316,14 @@ trainer.train()
 trainer.save_model("./segformer-thin-structures-ba_aug-final")
 ```
 
-## Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation
+### Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation
 
 
 Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
 
 
 
-## Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation
+### Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation
 
 ## Results and Analysis
 After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
@@ -339,7 +340,8 @@ Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
 
 ![SLC]({{ '/assets/images/team02/SLC.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
-The results here suggest that our second approach, which is BASNet hyrbid loss + copypaste augmentation outperforms the other two approaches and has the best per-class IoU and mIoU
+The results here suggest that our Approach 2, which is the BASNet hyrbid loss + copy-paste augmentation, in general outperforms the other two approaches and has the best performance. Comparing with the baseline model, we found that except for the car and vegetation classes, approach 2 model performs better, and has overall a better mIoU value than the performance of baseline model. The reason is likely that small objects tend to receive disproportionally stronger gradients from SSIM and IoU losses, and at the meantime, while still counted as fine-grained urban structures, car and vegetations have relatively larger sizes than all other classes in the 6-class scheme. Therefore for car and vegetation objects in the image they will receive biased parameter updates, which causes the segmentation on these two classes to degrade. Similar reason can be applied to approach 1 and approach 3.
+Overall, all three approaches outperformed the baseline model from mIoU perspective, though for  all of them has a 
 
 
 
@@ -355,17 +357,6 @@ You can add an image to your survey like this:
 *Fig 1. YOLO: An object detection method in computer vision* [1].
 
 Please cite the image if it is taken from other people's work.
-
-
-### Table
-Here is an example for creating tables, including alignment syntax.
-
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
-
-
 
 ### Code Block
 ```
