@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: Robot Navigation Using Deep Vision Models
+title: "Robot Navigation Using Deep Vision Models - Project Track: Project 6"
 Project Track: Project 6
 author: Ryan Teoh, Bill, Maddox, Andrew
 date: 2025-12-10
@@ -35,11 +35,13 @@ To achieve this, we integrate **SAM**, **CLIP**, and a custom spatial-reasoning 
 
 ### 1. **Object Identification with CLIP**
 
-We use CLIP to match image patches against text prompts for object names.
+**Background:** CLIP (Contrastive Language–Image Pretraining) is a vision–language model trained to align images and text in a shared embedding space using large-scale contrastive learning. During training, CLIP learns two encoders—a visual encoder and a text encoder—that map images and natural language descriptions into a common latent space. The model is trained on millions of image–caption pairs by maximizing the similarity between matched image–text pairs while minimizing similarity between mismatched pairs. As a result, CLIP learns rich semantic representations that capture high-level visual concepts and their corresponding linguistic descriptions without relying on fixed class labels.
 
-![CLIP Pipeline]({{ '/assets/images/team-id/clip_pipeline.png' | relative_url }})
-{: style="width: 500px; max-width: 100%;"}
-*Fig 1. CLIP identifies the target object using text–image similarity.*
+We use CLIP for object identification because embodied environments contain a large variety of object instances, appearances, and viewpoints that are impractical to enumerate with fixed category classifiers. CLIP’s joint vision–language embedding space enables open-vocabulary recognition, allowing the agent to generalize to unseen objects, synonyms, and varied visual contexts without retraining.
+
+![CLIP Pipeline]({{ '/assets/images/29/CLIP.png' | relative_url }})
+{: style="width: 1000px; max-width: 100%;"}
+*Fig 1. CLIP identifies the target object using text–image similarity. (Image Credit: [CLIP](https://github.com/openai/CLIP))*
 
 Given a target command (e.g., *"find the microwave"*), the system:
 
@@ -53,7 +55,22 @@ CLIP allows us to compute the semantic similarity between:
 - a text embedding (ex. cup)
 - an image embedding (ex. cropped SAM mask region)
 
-This allows for an open vocabulary object recognition, where even if the object is not part of a fixed category set, CLIP allows the model to still be able to identify these objects. 
+In our pipeline, SAM and CLIP serve complementary roles. SAM is responsible for proposing high-quality, class-agnostic object masks, while CLIP assigns semantic meaning to each mask by scoring its visual content against the language query. This separation allows precise spatial localization without sacrificing semantic flexibility.
+
+For each candidate object mask $$m_i$$ produced by SAM, we compute a semantic similarity score with the language query 
+$$q$$ using CLIP’s joint vision–language embedding space:
+
+$$
+s_i =
+\frac{
+f_{\text{img}}(m_i)^\top f_{\text{text}}(q)
+}{
+\left\lVert f_{\text{img}}(m_i) \right\rVert_2
+\left\lVert f_{\text{text}}(q) \right\rVert_2
+}
+$$
+
+where $$f_{\text{img}}(⋅)$$ and $$f_{\text{text}}(⋅)$$ denote the CLIP image and text encoders, respectively. The mask with the highest cosine similarity score is selected as the target object. We apply a softmax over similarity scores to normalize confidence across candidate masks and select the most likely target region. To improve robustness, CLIP similarity is computed on cropped SAM mask regions rather than the full image. This reduces background bias and ensures that similarity scores are dominated by object appearance rather than surrounding scene context, which is especially important in cluttered indoor environments.
 
 In `find_best_object` we evaluate our SAM mask crop against the test query.
 
@@ -73,14 +90,18 @@ with torch.no_grad():
     values, indices = probs.topk(1)
 ```
 
-By cleaning the text query and computing similarity scores, we can pick the highest scoring object mask to get our predict object for the query. We use our best mask and score to draw our bounding boxes later as well as perform spatial reasoning and navigation. CLIP is also beneficial for our model because objects may be partially hidden, rotated, etc. in our robot simulation, and SAM alongside CLIP can determine whether a sigment looks like the queried box.
+By cleaning the text query and computing similarity scores, we can pick the highest scoring object mask to obtain our predicted object for the query. We use our best mask and score to draw our bounding boxes later as well as perform spatial reasoning and navigation. CLIP is also beneficial for our model because objects may be partially hidden, rotated, etc. in our robot simulation, and SAM alongside CLIP can determine whether a segment looks like the queried box. While CLIP provides strong semantic generalization, performance may degrade under severe occlusion, extreme viewpoint distortion, or visually ambiguous objects. To address these cases, our system leverages closed-loop navigation, allowing the agent to reposition and re-evaluate candidate masks from improved viewpoints.
+
 
 ### 2. **Segmentation with SAM (Segment Anything)**
 
+**Background:** The Segment Anything Model (SAM) is a foundation model for image segmentation designed to produce high-quality, class-agnostic masks for arbitrary objects in an image. SAM consists of a large vision encoder and a lightweight mask decoder that can generate segmentation masks from flexible prompts such as points, bounding boxes, or coarse region proposals. Trained on a diverse dataset of images and masks, SAM generalizes across object categories and visual domains without task-specific retraining, enabling robust instance segmentation even for previously unseen objects. This makes SAM particularly well-suited for embodied environments, where object appearance, scale, and occlusion vary significantly across scenes.
+
 After locating the target region, we refine the mask using SAM:
 
-![SAM Example]({{ '/assets/images/team-id/sam_mask.png' | relative_url }})
-{: style="width: 500px;"}
+![SAM Example]({{ '/assets/images/29/sam_mask.png' | relative_url }})
+{: style="width: 1000px; max-width: 100%;"}
+*Fig 2. SAM generates class-agnostic instance segmentation masks from raw RGB frames, providing candidate object regions for CLIP-based semantic matching. (Image Credit: [Segment Anything](https://github.com/facebookresearch/segment-anything))*
 
 SAM provides a high-quality segmentation mask, which we use for:
 
@@ -122,6 +143,14 @@ for mask_data in masks:
     crops.append(crop)
     valid_masks.append(mask_data)
 ```
+
+| <img src="{{ '/assets/images/29/sam_demonstration.png' | relative_url }}" alt="SAM Demonstration 1" style="width: 100%; max-width: 500px; height: auto;"> | <img src="{{ '/assets/images/29/sam_demonstration_2.png' | relative_url }}" alt="SAM Demonstration 2" style="width: 100%; max-width: 500px; height: auto;"> |
+|:---:|:---:|
+| *Fig 3a. Raw RGB frame captured from the robot's camera in an AI2-THOR office environment.* | *Fig 3b. Instance segmentation masks generated by SAM, with each object region highlighted in a distinct color.* |
+
+*Fig 3. Comparison of raw camera input and SAM segmentation output.*
+
+Figure 3 illustrates the role of SAM in converting raw visual observations into structured object-level representations. As shown in Fig. 3a, the robot’s onboard RGB camera captures a cluttered indoor scene containing multiple objects with varying scales, occlusions, and lighting conditions. Fig. 3b demonstrates SAM’s ability to generate dense, class-agnostic instance segmentation masks, where each distinct object region is separated and highlighted. These masks provide precise spatial boundaries for candidate objects, enabling downstream modules—such as CLIP-based semantic matching—to operate on isolated object regions rather than the full image. By decoupling spatial localization from semantic labeling, SAM allows the system to robustly handle novel objects and complex scenes without relying on predefined category labels.
 
 ---
 
@@ -192,13 +221,23 @@ If the object does not exist, and if repeated movement patterns fail to detect t
 
 ## Conclusions
 
+In this project, we presented an end-to-end robot navigation system that integrates modern foundation vision models with embodied AI simulation to enable object-centric perception, reasoning, and navigation. By combining SAM for class-agnostic instance segmentation and CLIP for open-vocabulary semantic matching, our system is able to robustly identify target objects in cluttered, realistic indoor environments without relying on predefined object categories or task-specific retraining.
+
+A key strength of our approach lies in the decoupling of spatial localization and semantic understanding. SAM provides precise pixel-level object boundaries, while CLIP assigns semantic meaning to each candidate region using natural language queries. This modular design allows the agent to generalize to unseen objects, handle partial occlusions, and adapt to diverse viewpoints—challenges that are common in embodied settings but difficult for traditional closed-set perception systems. Furthermore, by computing CLIP similarity over cropped segmentation masks rather than full images, we reduce background bias and improve robustness in visually complex scenes.
+
+Beyond object detection, we extend perception to spatial relationship reasoning by leveraging AI2-THOR metadata in conjunction with SAM masks. This enables the agent to infer relations such as whether an object is on, inside, or supported by another object, allowing richer scene understanding beyond simple target localization. These spatial cues can be visualized and used to inform navigation decisions, bridging perception and action in a meaningful way.
+
+Our navigation strategy combines simulator-provided shortest-path planning with heuristic exploration and closed-loop perception. This allows the agent to actively reposition itself when initial detections are ambiguous or incomplete, demonstrating the importance of embodied interaction for reliable visual understanding. When the target object is not present, the system terminates gracefully rather than searching indefinitely, ensuring practical behavior in failure cases.
+
+Overall, this project demonstrates how foundation models like CLIP and SAM can be effectively integrated into an embodied AI pipeline to enable flexible, generalizable robot navigation driven by natural language commands. Future work could explore tighter integration between perception and control, multi-step language instructions, memory-based exploration, or learning-based navigation policies that further exploit the rich semantic and spatial representations provided by these models.
+
 ## Code
 
 Project Repo: [GitHub Repository](https://github.com/Land-dev/finalProject163)
 
 SAM repo:
 
-CLIP repo:
+CLIP repo: [Open CLIP](https://github.com/mlfoundations/open_clip)
 
 Ai2-Thor simulation (We use RoboThor): [RoboThor](https://ai2thor.allenai.org/robothor)
 
