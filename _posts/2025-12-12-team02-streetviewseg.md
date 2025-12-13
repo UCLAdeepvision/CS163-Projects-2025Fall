@@ -530,7 +530,10 @@ You can find more Markdown syntax at [this page](https://www.markdownguide.org/b
 
 ## Reference
 [1] Xie, Enze, et al. "SegFormer: Simple and efficient design for semantic segmentation with transformers." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2021.
+
 [2] Qin, Xuebin, et al. "BASNet: Boundary-aware salient object detection." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2019.
+
 [3] Ghiasi, Golnaz, et al. "Simple Copy-Paste is a strong data augmentation method for instance segmentation." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2021.
+
 [4] Berman, Maxim, et al. "The Lovász-Softmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2018.
 ---
