@@ -184,6 +184,10 @@
   <li><a href="#model-segformer" id="markdown-toc-model-segformer">Model: Segformer</a></li>
   <li><a href="#evaluation-metrics" id="markdown-toc-evaluation-metrics">Evaluation Metrics</a></li>
   <li><a href="#baseline-methods" id="markdown-toc-baseline-methods">Baseline Methods</a></li>
+  <li><a href="#our-own-approach" id="markdown-toc-our-own-approach">Our Own Approach</a>    <ul>
+      <li><a href="#approach-1---basnet-hybrid-loss" id="markdown-toc-approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</a></li>
+    </ul>
+  </li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -272,9 +276,23 @@ print("Done!")
 </code></pre></div></div>
 <p>All methods we explored in the project will use same set of training_args as shown above for better comparison.</p>
 
-<p>The performance of the baseline is shown in the table below:</p>
+<p>The performance of the baseline model is shown in the table below:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/finetune.png" alt="Finetune" style="width: 400px; max-width: 100%;" /></p>
+
+<h2 id="our-own-approach">Our Own Approach</h2>
+<h3 id="approach-1---basnet-hybrid-loss">Approach 1 - BASNet Hybrid Loss</h3>
+<p>We first implement a <strong>boundary-aware supervision</strong> strategy designed to improve the geometric precision of the baseline Segformer-B0 model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a “Boundary-Aware” mechanism redefines the optimization objective to prioritize structural fidelity.
+Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:</p>
+
+<ol>
+  <li>
+    <p><strong>Structural Similarity (SSIM):</strong> Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (<code class="language-plaintext highlighter-rouge">F.conv2d</code>), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
+\(\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\)</p>
+  </li>
+  <li><strong>Multi-Class IoU Loss:</strong> This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct <em>extent</em> and <em>shape</em> of the predicted region, preventing the model from generating fragmented or “shattered” masks.</li>
+  <li><strong>Cross-Entropy (CE):</strong> We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.</li>
+</ol>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>

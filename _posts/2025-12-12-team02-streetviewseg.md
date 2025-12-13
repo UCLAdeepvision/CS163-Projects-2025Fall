@@ -93,9 +93,21 @@ print("Done!")
 ```
 All methods we explored in the project will use same set of training_args as shown above for better comparison.
 
-The performance of the baseline is shown in the table below:
+The performance of the baseline model is shown in the table below:
 
 ![Finetune]({{ '/assets/images/team02/finetune.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+
+## Our Own Approach
+### Approach 1 - BASNet Hybrid Loss
+We first implement a **boundary-aware supervision** strategy designed to improve the geometric precision of the baseline Segformer-B0 model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a "Boundary-Aware" mechanism redefines the optimization objective to prioritize structural fidelity.
+Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
+
+1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window (size $11\times11$). By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
+$$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
+
+2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks.
+3.  **Cross-Entropy (CE):** We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.
+
 
 ## Basic Syntax
 ### Image
