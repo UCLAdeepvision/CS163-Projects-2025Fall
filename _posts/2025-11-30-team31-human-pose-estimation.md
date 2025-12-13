@@ -34,8 +34,10 @@ Finally, deep learning architectures are designed to learning spatial dependenci
 At its core, human pose estimation can be formulated as a structured prediction problem. Given an input Image $$I$$, the goal is to predict a set of keypoints: 
 
 $$
-\mathbf{P} = \{ (x_k, y_k, v_k) \mid k = 1, \dots, K \}
+\mathbf{P} = P = \{(x_i, y_i, c_i)\}_{i=1}^{K}
 ])
+$$
+
 where $$K$$ is the number of keypoints, $$x_i, y_i)$ denotes the spatial location of the $$i$$-th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
 
 ## Basic Syntax
