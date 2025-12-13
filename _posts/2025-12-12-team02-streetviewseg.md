@@ -95,7 +95,8 @@ All methods we explored in the project will use same set of training_args as sho
 
 The performance of the baseline is shown in the table below:
 | class                | column 1    |  column 2     |
-| fence                |    :----:   |          ---: |
+| :---                 |    :----:   |          ---: |
+| fence                |             |               |
 | car                  | Text        | Text          |
 | vegetation           | Text        | Text          |
 | pole                 | Text        | Text          |
