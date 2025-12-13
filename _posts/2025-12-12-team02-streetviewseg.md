@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: "Project Track: Project 8 - Streetview Semantic Segmentation"
+title: "Project Track: Project 8 - Street-view Semantic Segmentation"
 author: "Team02"
 date: 2025-12-12
 ---
@@ -32,7 +32,48 @@ The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4
 ![Segformer]({{ '/assets/images/team02/segformerArch.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 *Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
 
-## Baseline
+## Baseline Methods
+Due to computational resource constraints, we use SegFormer-B0 as our baseline semantic segmentation model. Concretely, we initialize a SegformerForSemanticSegmentation from the pretrained checkpoint nvidia/segformer-b0-finetuned-cityscapes-512-1024, then replace the segmentation head to match our task's 7 output labels (six fine-grained classes + background). We fine-tune the netire network end-to-end on our remapped stree-scene dataset using HuggingFace Trainer. The training setup is shown in the code below:
+```
+model_base = SegformerForSemanticSegmentation.from_pretrained(
+    "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+    num_labels=7,
+    ignore_mismatched_sizes=True
+)
+
+model_base.cuda()
+print(model_base.device)
+
+training_args = TrainingArguments(
+    output_dir="./segformer-thin-structures-v2",
+    learning_rate=6e-5,
+    num_train_epochs=15,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    save_total_limit=1,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    logging_steps=25,
+    remove_unused_columns=False,
+    dataloader_num_workers=8,
+    fp16=torch.cuda.is_available(),
+    gradient_accumulation_steps=1,
+    report_to="none",
+)
+
+trainer = Trainer(
+    model=model_base,
+    args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=val_dataset,
+)
+print(training_args.device)
+
+trainer.train()
+trainer.save_model("./segformer-thin-structures-v2-final")
+print("Done!")
+```
+
 
 ## Evaluation Metrics
 We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:
