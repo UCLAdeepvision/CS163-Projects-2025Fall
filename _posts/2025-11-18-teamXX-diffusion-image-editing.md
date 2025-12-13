@@ -8,7 +8,11 @@ tags:
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> Image editing stands at the heart of computer vision applications and enables object attribute modifications, style changes, or transformations in general appearance while retaining much of the structural information about an image. Classic deep learning methods, in particular the GAN-based approach, suffer from this balancing act. They either introduce artifacts, distort salient features, or fail to preserve the original content when performing edits.
+
+Recently, diffusion models have emerged as a powerful alternative. Instead of generating an image with a single forward pass, diffusion models progressively remove noise according to a series of denoising steps. This iterative structure makes them particularly suitable for editing: partial noise levels can preserve the content, cross-attention layers control which regions change, and textual instructions guide the model to make targeted changes. For this reason, diffusion-based editing methods are among the most flexible and reliable tools in modern image manipulation.
+
+In this report, I investigate three diffusion-based image editing methods-SDEdit, Prompt-to-Prompt, and InstructPix2Pix-each representing a different stage in the evolution of editing techniques. SDEdit showcases how diffusion is able to maintain structure during edits, Prompt-to-Prompt introduces fine-grained control through prompt manipulation, and InstructPix2Pix allows for natural-language-driven edits without large model retraining. All together, these works highlight the versatility of diffusion models and illustrate how iterative denoising can support a wide range of editing tasks.
 
 
 <!--more-->
@@ -16,14 +20,9 @@ tags:
 * TOC
 {:toc}
 
-## 1. Introduction
-Image editing stands at the heart of computer vision applications and enables object attribute modifications, style changes, or transformations in general appearance while retaining much of the structural information about an image. Classic deep learning methods, in particular the GAN-based approach, suffer from this balancing act. They either introduce artifacts, distort salient features, or fail to preserve the original content when performing edits.
 
-Recently, diffusion models have emerged as a powerful alternative. Instead of generating an image with a single forward pass, diffusion models progressively remove noise according to a series of denoising steps. This iterative structure makes them particularly suitable for editing: partial noise levels can preserve the content, cross-attention layers control which regions change, and textual instructions guide the model to make targeted changes. For this reason, diffusion-based editing methods are among the most flexible and reliable tools in modern image manipulation.
 
-In this report, I investigate three diffusion-based image editing methods-SDEdit, Prompt-to-Prompt, and InstructPix2Pix-each representing a different stage in the evolution of editing techniques. SDEdit showcases how diffusion is able to maintain structure during edits, Prompt-to-Prompt introduces fine-grained control through prompt manipulation, and InstructPix2Pix allows for natural-language-driven edits without large model retraining. All together, these works highlight the versatility of diffusion models and illustrate how iterative denoising can support a wide range of editing tasks.
-
-## 2. Background 
+## 1. Background 
 Diffusion models are generative models that create images by learning to reverse a gradual noising process. During training, an image is repeatedly corrupted through the addition of Gaussian noise until it is almost indistinguishable from pure noise. Then the model is trained to do the opposite: starting from the noise, denoising it step by step to recover the distribution of original images. Although this idea is conceptually simple, the iterative nature of the denoising process makes diffusion models considerably more stable and controllable than earlier approaches to generative image synthesis.
 
 ### 2.1 Forward and Reverse Processes
@@ -48,12 +47,12 @@ Editing images itself encompasses many types of transformations. Some edits aim 
 Most models based on diffusion define the forward noising process as a sequence of Gaussian transitions:
 
 
-\[
+$$
 q(x_t \mid x_{t-1}) = \mathcal{N}\left(x_t; \sqrt{1-\beta_t}\, x_{t-1},\, \beta_t I \right),
-\]
+$$
 
 
-Here, $\alpha_t = 1 - \beta_t$ and $\bar{\alpha}_t = \prod_{s=1}^t \alpha_s$ denote the cumulative noise scheduling terms used in DDPMs.
+Here, $$\alpha_t = 1 - \beta_t$$ and $$\bar{\alpha}_t = \prod_{s=1}^t \alpha_s$$ denote the cumulative noise scheduling terms used in DDPMs.
 
  $\beta_t$ controls the amount of noise added at each step. The model then learns the reverse process $p_\theta(x_{t-1} \mid x_t)$, ussually parameterized by a U-Net that predicts the noise component $\epsilon_\theta(x_t, t)$. During either generation or editing, the model iteratively ``denoises'' a sample $x_T$ (pure noise) or a partially noised input image $x_t$ to reconstruct a coherent output.
 
