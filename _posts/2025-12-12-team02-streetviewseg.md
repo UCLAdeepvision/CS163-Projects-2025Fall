@@ -95,15 +95,15 @@ All methods we explored in the project will use same set of training_args as sho
 
 The performance of the baseline is shown in the table below:
 
-| class                | column 1    |  column 2     |
-| :---                 |    :----:   |          ---: |
-| fence                |             |               |
-| car                  | Text        | Text          |
-| vegetation           | Text        | Text          |
-| pole                 | Text        | Text          |
-| traffic sign         | Text        | Text          |
-| traffic light        | Text        | Text          |
-| mIoU                 | Text        | Text          |
+| class                | Fine-tuned    |
+| :---                 |     ---: |
+| fence                | 0.3438            |
+| car                  | 0.8964        |
+| vegetation           | 0.8968        |
+| pole                 | 0.3119        |
+| traffic sign         | 0.5653        |
+| traffic light        | 0.4583        |
+| mIoU                 | 0.5788        |
 
 ## Basic Syntax
 ### Image
