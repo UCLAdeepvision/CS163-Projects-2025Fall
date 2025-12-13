@@ -35,7 +35,7 @@
     
 <!--
     
-        <meta content="Team02" property="article:author">
+        <meta content="Zach Liu, Tianze Zhao, Ruizhe Cheng, Ahmad Khan" property="article:author">
         <meta content="http://localhost:4000/about/" property="article:author">
      -->
 
@@ -151,7 +151,7 @@
       </time>
 
       <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-        by <span itemprop="name">Team02</span>
+        by <span itemprop="name">Zach Liu, Tianze Zhao, Ruizhe Cheng, Ahmad Khan</span>
       </span>
 
       <!-- <span>
@@ -292,7 +292,7 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 
 \[\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\]
 
-    <p>where $\mu_x$, $\mu_y$ are the mean for x and y, and $\sigma_x$, $\sigma_y$ are the standard deviations for x and y, $\sigma_{xy}$ is their covariance, $C_1 = 0.01^2$ and $C_2 = 0.03^2$ are used to avoid dividing by zero [2].</p>
+    <p>where \(\mu_x\), $\mu_y$ are the mean for x and y, and $\sigma_x$, $\sigma_y$ are the standard deviations for x and y, $\sigma_{xy}$ is their covariance, $C_1 = 0.01^2$ and $C_2 = 0.03^2$ are used to avoid dividing by zero [2].</p>
   </li>
   <li>
     <p><strong>Multi-Class IoU Loss:</strong> This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct <em>extent</em> and <em>shape</em> of the predicted region, preventing the model from generating fragmented or “shattered” masks. It has the following mathematical form:</p>
@@ -615,9 +615,6 @@ class CopyPasteDataset(torch.utils.data.Dataset):
     ignore_mismatched_sizes=True
 )
 
-model_bas_aug.cuda()
-print(model_bas_aug.device)
-
 training_args = TrainingArguments(
     output_dir="./segformer-thin-structures-ba_aug",
     learning_rate=6e-5,
@@ -647,7 +644,6 @@ trainer = BATrainer(
 
 trainer.train()
 trainer.save_model("./segformer-thin-structures-ba_aug-final")
-print("Done!")
 </code></pre></div></div>
 
 <h3 id="approach-3---ssim--lovasz-loss--copy-paste-augmentation">Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation</h3>
