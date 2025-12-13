@@ -55,9 +55,22 @@ $$
 
 over all geocells using the features extracted by the CNN backbone.
 
+## Translocator: A New Architecture
+
+The next major advancement in tackling geolocation as a classification problem is introduced in the paper *Where in the World is this Image?
+Transformer-based Geo-localization in the Wild*. The paper proposes TransLocator, a fundamentally different model architecture to PlaNet that makes use of transformers and semantic segmentation maps [2].
+
+### Transformers + Segmentaion
+
+The Translocator uses a vision transformer as the backbone of the model, and contains two parallel vision transformer branches. One branch's input is the RGB image, and the other's is a semantic segmentation map of the image, obtained from  HRNet pretrained on ADE20K.
+
+![Translocator]({{ '/assets/images/team19/translocator.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+*Fig 2. Overview of the proposed model TransLocator* [2].
+
 ## PIGEON: The Semantic Shift (2023)
 
-The next leap forward comes from *PIGEON* (Pre-trained Image GEO-localization Network) [2]. This model was designed to compete against top human *GeoGuessr* players. Geoguessr is a popular browser game designed around humans guessing where you are in the world based on an image or 3D explorable space travelable via Google Streetview.
+The next leap forward comes from *PIGEON* (Pre-trained Image GEO-localization Network) [3]. This model was designed to compete against top human *GeoGuessr* players. Geoguessr is a popular browser game designed around humans guessing where you are in the world based on an image or 3D explorable space travelable via Google Streetview.
 
 ![Pigeon Geocells]({{ '/assets/images/team19/pigeon_diagram.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
@@ -71,7 +84,7 @@ PIGEON refines the geocell concept. While PlaNet split cells based purely on pho
 
 ![Pigeon Diagram]({{ '/assets/images/team19/naive_semantic_geocells.png' | relative_url }}) 
 {: style="width: 800px; max-width: 100%;"}
-*Fig 3. &emsp;&emsp;&emsp;&emsp; a) Old Naive geocells &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; b) Pigeon’s semantic geocells [2].*
+*Fig 3. &emsp;&emsp;&emsp;&emsp; a) Old Naive geocells &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; b) Pigeon’s semantic geocells [3].*
 
 ### Haversine Smoothing Loss
 A major limitation of PlaNet's classification approach is that it penalizes "near misses" just as harshly as "far misses." If the model guesses a cell 1km away from the correct one, standard One-Hot encoding treats it the same as guessing a cell on a different continent.
@@ -190,7 +203,6 @@ To calculate coordinates form textual reasoning, ETHAN employs several strategie
 ETHAN performs strongly, with high accuracy in country and continent classification, on par with Pigeon. As compared to previous strategies, ETHAN benefits from increased interpretability, zero-shot generalization, but has higher computational costs as VLM inference is slower. Additionally, it can suffer from hallucination risks where generative model recognizes non-existent models or applies incorrect assumptions.
 
 
-
 ## Basic Syntax
 ### Image
 Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
@@ -237,7 +249,10 @@ You can find more Markdown syntax at [this page](https://www.markdownguide.org/b
 
 [1] Weyand, Tobias, Ilya Kostrikov, and James Philbin. "Planet-photo geolocation with convolutional neural networks." *European Conference on Computer Vision*. Springer, Cham, 2016.
 
-[2] Haas, Lukas, et al. "PIGEON: Predicting Image Geolocations." *arXiv preprint* arXiv:2307.05845, 2023. https://doi.org/10.48550/arXiv.2307.05845 (Accepted at CVPR 2024.)
+[2] Pramanick, Shraman, et al. "Where in the World is this Image? Transformer-based Geo-localization in the Wild." 	arXiv:2204.13861, 2022. https://doi.org/10.48550/arXiv.2204.13861
+
+[3] Haas, Lukas, et al. "PIGEON: Predicting Image Geolocations." *arXiv preprint* arXiv:2307.05845, 2023. https://doi.org/10.48550/arXiv.2307.05845 (Accepted at CVPR 2024.)
 
 [4] Liu, Yi, et al. "Image-Based Geolocation Using Large Vision-Language Models." 	arXiv:2408.09474, 2024. 
 https://doi.org/10.48550/arXiv.2408.09474
+
