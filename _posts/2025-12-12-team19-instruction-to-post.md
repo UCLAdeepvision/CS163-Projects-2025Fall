@@ -113,6 +113,84 @@ While some may call the above results unimpressive, they then compare PIGEON's r
 {: style="width: 800px; max-width: 100%;"}
 *Fig 4. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.*
 
+## ETHAN
+
+
+ETHAN introduces a framework that leverages existing large vision language models(LVLMs). While PlaNet and PIGEON achieved impressive results, they operate as pattern matching systems, relying on visual features tied to geocells. ETHAN, instead, attempts to mimic human geoguessing strategies by analyzing visual and contextual cues such as architectural, natural, and cultural elements. It replicates this reasoning process through chain-of-thinking prompting built on top of existing VLMs.
+
+
+### Vision-Language Models:
+
+
+ETHAN is a prompting framework that relies on existing VLM models. They test their prompting framework on top of GPT-4o and LLaVA. These models have the architecture of Vision Encoder + projection + generative language model, combining context from image and text tokens. Ethan leverages this pre-existing knowledge without additional training
+
+
+
+
+### Chain-Of-Thought Geolocation
+
+
+The core innovation lies in the use of chain-of-thought(CoT) prompting that guide VLMs through structured geolocation reasoning. ETHAN produces intermediate reasoning steps that mirror human geographic deduction.
+
+
+A typical reasoning hierarchy looks like the following:
+
+
+1. Visual clue extraction: architecture, vegetation, road signs, infrastructure
+2. Geographic constraint Reasoning: apply world knowledge to narrow possibilities
+3. Progressive Refinement: Continent->Country->Region->Coordinates
+4. Uncertainty Quantification: Express confidence and alternate hypotheses
+
+
+### GPS Module Prompting Strategy:
+
+
+ETHAN introduces the GPS (Geolocation Prompting Strategy) module, which structures how queries are presented to VLMs. Since VLMs are general-purpose models not specifically trained for geolocation, careful prompt design is crucial for strong geographic reasoning.
+
+
+A typical prompt looks like:
+>You are the leading expert in geolocation research. You
+have been presented with an image, and your task is to
+determine its precise geolocation, specifically identifying
+the country it was taken in. To accomplish this, examine the
+image for broad geographic indicators such as architectural
+styles, natural landscapes, language on signs, and culturally
+distinctive elements to suggest a particular country. Narrow
+down the location by identifying regional characteristics
+like specific flora and fauna, types of vehicles, and road
+signs that can indicate a particular region or subdivision
+within the country. Focus on highly specific details within
+the image, such as unique landmarks, street names, or
+business names, to pinpoint an exact location. For instance,
+if the place is address, with coordinates lat, lon, explain
+how these elements led you to this conclusion by analyzing
+visual clues, cross-referencing data with known geographic
+information, and validating your findings with additional
+sources
+
+
+The GPS module can be enhanced with few-shot examples, providing 2-3 sample images with reasoning chains to prime the VLM's logical patterns and calibrate confidence levels.
+
+### Deriving Coordinates
+
+To calculate coordinates form textual reasoning, ETHAN employs several strategies:
+1. Direct Coordinate Prediction: VLMs output coordinates for recognized landmarks
+2. Geocoding Integration: Convert place names ("Stockholm, Sweden") to coordinates via APIs
+3. Hierarchical Averaging: Use region centroids when only broad areas are identified
+4. Multi-Hypothesis Handling: Process multiple candidates with associated probabilities
+
+
+### Results
+
+![Ethan Results]({{ '/assets/images/team19/ethan_results.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+*Fig 5. Results of ETHAN Prompting framework with SOTA LVLMs on custom dataset[4].*
+
+
+ETHAN performs strongly, with high accuracy in country and continent classification, on par with Pigeon. As compared to previous strategies, ETHAN benefits from increased interpretability, zero-shot generalization, but has higher computational costs as VLM inference is slower. Additionally, it can suffer from hallucination risks where generative model recognizes non-existent models or applies incorrect assumptions.
+
+
+
 ## Basic Syntax
 ### Image
 Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
@@ -160,3 +238,6 @@ You can find more Markdown syntax at [this page](https://www.markdownguide.org/b
 [1] Weyand, Tobias, Ilya Kostrikov, and James Philbin. "Planet-photo geolocation with convolutional neural networks." *European Conference on Computer Vision*. Springer, Cham, 2016.
 
 [2] Haas, Lukas, et al. "PIGEON: Predicting Image Geolocations." *arXiv preprint* arXiv:2307.05845, 2023. https://doi.org/10.48550/arXiv.2307.05845 (Accepted at CVPR 2024.)
+
+[4] Liu, Yi, et al. "Image-Based Geolocation Using Large Vision-Language Models." 	arXiv:2408.09474, 2024. 
+https://doi.org/10.48550/arXiv.2408.09474
