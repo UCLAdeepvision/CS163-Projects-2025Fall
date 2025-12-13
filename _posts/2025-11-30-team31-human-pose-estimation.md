@@ -32,9 +32,9 @@ Finally, deep learning architectures are designed to learning spatial dependenci
 
 ## Problem Formulation of Human Pose Estimation 
 At its core, human pose estimation can be formulated as a structured prediction problem. Given an input Image 
-\[
-\mathbf{P} = \{(x_k, y_k, v_k)\}_{k=1}^{K}
-\]
+P = torch.tensor([
+    [x_i, y_i, c_i] for i in range(K)
+])
 where $(x_k, y_k)$ denotes the 2D coordinates of the $k$-th keypoint and $v_k \in \{0,1\}$ indicates its visibility.
 
 ## Basic Syntax
