@@ -99,10 +99,10 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 
 1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window. By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
 
-$$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
+    $$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
 
-<br>
-where $$\mu_x$$ and $$\mu_y$$ are the mean for x and y, and $$\sigma_x$$, $$\sigma_y$$ are the standard deviation for x and y
+
+    where $$\mu_x$$ and $$\mu_y$$ are the mean for x and y, and $$\sigma_x$$, $$\sigma_y$$ are the standard deviation for x and y
 
 2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form:
 
