@@ -7,7 +7,7 @@ date: 2025-12-12
 ---
 
 
-> In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.
+> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.
 
 <!--more-->
 {: class="table-of-content"}
@@ -461,6 +461,8 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 
 ### Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation
 
+
+
 ## Results and Analyses
 After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
 
@@ -483,16 +485,16 @@ The reason for performance degradation on these two classes differs by approach.
 
 For the Lovász-based approach in Approach 3, SSIM remains boundary-focused as before. However, Lovász loss differs from soft IoU in an important way: it uses per-class averaging where each class contributes equally regardless of size, meaning per-pixel gradients are stronger for smaller classes. This creates a compounding effect with SSIM, as both losses now favor fine structures rather than providing complementary supervision. This explains why Approach 3 may show different trade-offs between small and large objects compared to Approaches 1 and 2.
 
-The performance on larger objects did not degrade significantly because cross-entropy loss provides neutral, stable supervision for all pixels, and in the BASNet approaches specifically, IoU loss actually emphasizes large-region confidence which counterbalances SSIM's boundary focus. Overall, we get better mIoU scores for all three approaches because we gain more on small and fine-grained classes than we lose on larger classes. Though all 6 classes are counted as fine-grained structures, the performance on truly small objects improved more than the performance on relatively larger objects worsened, which proves that the boundary-aware supervision strategy is valid for improving semantic segmentation on fine-grained urban structures.
+The performance on larger objects did not degrade significantly because cross-entropy loss provides neutral, stable supervision for all pixels, and in the BASNet approaches specifically, IoU loss actually emphasizes large-region confidence which counterbalances SSIM's boundary focus. Overall, we get better mIoU scores for all three approaches because we gain more on small and fine-grained classes than we lose on larger classes. Though all 6 classes are counted as fine-grained structures, the performance on "truly" small objects improved more than the performance on relatively larger objects worsened, which proves that the boundary-aware supervision strategy is valid for improving semantic segmentation on fine-grained urban structures.
 
 ### Approach-to-Approach Comparison
 When comparing the three approaches, Approach 2, which combines BASNet hybrid loss with copy-paste augmentation, generally achieves better performance than the other two approaches in both per-class IoU and mIoU. The only exception is the fence class, where Approach 1 using BASNet hybrid loss alone performs better than Approach 2.
 
 The reason fence degrades with copy-paste augmentation is that fence is fundamentally different from other classes. Fence has a mesh and grid structure with see-through patterns, and it has high context dependency. Copy-paste augmentation uses binary masks that treat fence as a solid blob, destroying its transparent mesh pattern, and places fence in random locations where fences never naturally appear, destroying spatial context. In contrast, other classes such as car, pole, sign, and person are self-contained objects whose identity comes from their internal appearance alone, making them well-suited for copy-paste augmentation.
 
-It is also observed that Approach 3 did not work as good as we expected, and we inspect that the primary reason is that both SSIM and Lovasz loss aggressively target boundart/hard pixels, creating redundant gradients that destabilize learning - while soft IoU provided complementary global shape supervision that balanced SSIM's boundary focus
+It is also observed that Approach 3 did not work as good as we expected, and we inspect that the primary reason is that both SSIM and Lovasz loss aggressively target boundart/hard pixels, creating redundant gradients that destabilize learning - while soft IoU provided complementary global shape supervision that balanced SSIM's boundary focus.
 
-In general, copy-paste augmentation helps improve model performance by introducing variability that encourages generalization. However, the benefit is modest because the variability is artificial, and unrealistic placements add noise alongside the useful signal.
+In general, the combination of BASNet hybrid loss and copy-paste augmentation helps improve model performance the most, achieving a 1.87% percentage of mIoU increase compare to the baseline model.
 
 ### Visualization
 In this part, we provide two example visualizations of the Approach 2 Model (which is the BASNet hybrid loss + copy-paste augmentation approach) and compare it with the baseline model (fully-finetuned SegFormer)
