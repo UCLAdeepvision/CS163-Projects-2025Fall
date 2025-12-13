@@ -20,6 +20,10 @@ Human pose estimation is the computational task of detecting and localizing pred
 The field of pose estimation has grown tremendously in the past few years, driven by advances in deep learning, the availability of large annotated datasets, and the development of flexible, production toolkits. Out of all of these, MMPose stands out as an open-source and extensible framework build on PyTorch that supports a wide array of tasks. Some of these tasks include 2D multi-person human pose estimation, hand keypoint detection, face landmarks, full-body pose estimation including body, hands, face, and feet, animal pose estimations, and so much more. 
 
 The advantages of MMPose is its comprehensive "model zoo" that includes both accuracy-oriented and real-time lightweight architectures, pertained weights on strandard datasets, and configurable pipelines for dataset loading, data augmentations, and evaluation. This versatility makes MMPose suitable for both academic research and real-world production systems, whether the task is single-person pose detection, multi-person tracking, or whole-body landmark detection. 
+![MAP]({{ '/assets/images/905972224/map.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 1. MAP: UMAP of datasets with root subtraction* [1].
+
 
 Accompanying the implementation is a curated collection of seminal and research papers, datasets, benchmark tasks, and open-source implementations that cover 2D and 3D pose estimation, human mesh construction, pose-based action recognition, and video pose tracking. These sources provide researchers and engineers with a structured overview of the theoretical foundations, methodological advances, and practical tools in the domain. In combiningthe  implementation toolkit with a comprehensive research source, one obtains both the useful means to build pose-estimation systems and the theoretical grounding to understand trade-offs. In this paper, we leverage the idea that we adopt the MMPose framwork for our pose estimation tasks, while consulting the literature summarized by several resources to choose appropraite architectures, training strategies, and evaluation protocols. The goal is to demonstrate accurate pose detection in both 2D and 3D, under diverse conditions, and to assess how well modern models generalize beyond standard benchmark datasets. 
 
@@ -118,6 +122,137 @@ This pipeline demonstrates how detection and pose estimation are decoupled in a 
 Human pose estimation enables a wide range of applications beyond academic benchmarks. In healthcare, pose estimation supports rehabilitation monitoring and gait analysis. In sports, it enables fine-grained motion analysis for performance optimization. In entertainment and AR/VR, pose estimation allows realistic avatar animation and immersive interaction.
 
 By converting raw pixel data into structured skeletal representations, pose estimation serves as a bridge between perception and semantic understanding of human behavior.
+
+## Related Work 
+Human pose estimation has evolved considerably over the last decade, largely driven by advances in deep learning architectures. In this section, we compare some of the most influential models and frameworks, including SRCNN and ViTPose, highlighting their design and limitations. 
+
+### SRCNN (Super-Resolution Convolutional Neural Network) 
+Although SRCNN was originally designed for image super-resolution, its underlying convolutional architecture has inspired early approaches to pose estimation through feature extraction and heatmap regression. SRCNN consists of three layers of convolution:
+
+$$
+F_1(Y) = \max\left(0, W_1 * Y + B_1\right)
+$$
+
+$$
+F_2(Y) = \max\left(0, W_2 * F_1(Y) + B_2\right)
+$$
+
+$$
+F(Y) = W_3 * F_2(Y) + B_3
+$$
+
+Where $$Y$$ is the input image, $$*$$ denotes convolution, $$W_i$$ and $$B_i$$ are the weights and biases of the $$i$$-th layer, and max (0,⋅) represents the ReLU activation. SRCNN's simplicity allows fast training and easy integration into pipelines where low-resolution keypoint heatmaps are upscaled to higher resolution for finer localization. 
+
+### Implementation of SRCNN 
+```
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SRCNN(nn.Module):
+    def __init__(self):
+        super(SRCNN, self).__init__()
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=9, padding=4)
+        self.conv2 = nn.Conv2d(64, 32, kernel_size=5, padding=2)
+        self.conv3 = nn.Conv2d(32, 3, kernel_size=5, padding=2)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = self.conv3(x)
+        return x
+```
+While SRCNN provides a foundation for feature extraction, it suffers in hgih complexity scenes due to its shallow structure and limited capacity to capture long range dependencies. 
+
+### ViTPose (Vision Transformer for Pose Estimation)
+ViTPose leverages transformer architectures, which excel at modeling long-range dependencies and global context, complementing convolutional methods. The input image is split into patches, embedded, and passed through a series of self-attention layers:
+
+$$
+Z_0 = X_p + E_{\text{pos}}
+$$
+
+$$
+Z_l' = \text{MSA}(\text{LN}(Z_{l-1})) + Z_{l-1}
+$$
+
+$$
+Z_l = \text{MLP}(\text{LN}(Z_l')) + Z_l'
+$$
+
+Where $$X_p$$ is the patch embedding, $$E_\pose$$ is positional encoding, MSA is multi-head self-attention, and LN is layer normalization. ViTPose produces heatmaps for keypoints using transformer output, enabling it to capture spatial and contextual dependencies across the whole image, even in crowded scenes. 
+```
+import torch
+import torch.nn as nn
+
+class PatchEmbed(nn.Module):
+    def __init__(self, img_size=256, patch_size=16, in_chans=3, embed_dim=768):
+        super().__init__()
+        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
+
+    def forward(self, x):
+        x = self.proj(x)  # (B, embed_dim, H/patch, W/patch)
+        x = x.flatten(2).transpose(1, 2)  # (B, num_patches, embed_dim)
+        return x
+```
+Example of patch embedding layer: 
+```
+import torch
+import torch.nn as nn
+
+class PatchEmbed(nn.Module):
+    def __init__(self, img_size=256, patch_size=16, in_chans=3, embed_dim=768):
+        super().__init__()
+        self.img_size = img_size
+        self.patch_size = patch_size
+        self.num_patches = (img_size // patch_size) ** 2
+        
+        self.proj = nn.Conv2d(
+            in_chans,
+            embed_dim,
+            kernel_size=patch_size,
+            stride=patch_size
+        )
+
+    def forward(self, x):
+        # x: (B, C, H, W)
+        x = self.proj(x)                  # (B, embed_dim, H/P, W/P)
+        x = x.flatten(2).transpose(1, 2)  # (B, N, embed_dim)
+        return x
+```
+Self-attention allows every patch to attend to every other patch: 
+```
+class MultiHeadSelfAttention(nn.Module):
+    def __init__(self, embed_dim=768, num_heads=12):
+        super().__init__()
+        self.num_heads = num_heads
+        self.head_dim = embed_dim // num_heads
+        self.scale = self.head_dim ** -0.5
+
+        self.qkv = nn.Linear(embed_dim, embed_dim * 3)
+        self.proj = nn.Linear(embed_dim, embed_dim)
+
+    def forward(self, x):
+        B, N, C = x.shape
+        qkv = self.qkv(x).reshape(
+            B, N, 3, self.num_heads, self.head_dim
+        ).permute(2, 0, 3, 1, 4)
+
+        q, k, v = qkv[0], qkv[1], qkv[2]
+
+        attn = (q @ k.transpose(-2, -1)) * self.scale
+        attn = attn.softmax(dim=-1)
+
+        out = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        out = self.proj(out)
+        return out
+```
+ViTPose has demonstrated strong performance on multi-person and whole-body pose estimation, particularly in complex scenes where CNNs struggle to capture long-range interactions. In modern pose estimation pipelines, a common strategy is to combine convolutional backbones with transformer modules, achieving both fine-grained localization and robust global reasoning.
+
+## Conclusion 
+Human pose estimation has emerged as a fundamental problem in modern computer vision, driven by deep learning, large datasets, and powerful toolkits such as MMPose. Through structured representations of the human body, pose estimation enables machines to reason about motion, posture, and interaction at a fine-grained level. As models continue to evolve toward 3D, whole-body, and real-time systems, pose estimation will remain a critical component of intelligent visual understanding. 
+
+
+
 
 ## Basic Syntax
 ### Image
