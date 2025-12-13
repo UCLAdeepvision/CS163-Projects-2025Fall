@@ -97,8 +97,7 @@ The performance of the baseline model is shown in the table below:
 
 ![Finetune]({{ '/assets/images/team02/finetune.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
-## Our Own Approach
-### Approach 1 - BASNet Hybrid Loss
+## Approach 1 - BASNet Hybrid Loss
 We first implement a **boundary-aware supervision** strategy designed to improve the geometric precision of the baseline Segformer-B0 model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a "Boundary-Aware" mechanism redefines the optimization objective to prioritize structural fidelity.
 Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a new hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
 
@@ -114,9 +113,171 @@ $$\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}
 
 We combine the three types of losses in a weighted way, so we can have more flexibility.
 
-$$\mathcal{L}_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}$$
+$$\ell_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}$$
 
-By defining this new loss function we shifted from a purely semantic focus to a hybrid focus.
+By defining this new loss function we shifted from a purely semantic focus to a hybrid focus. The hybrid loss implementation is shown below:
+
+```
+class SSIM(nn.Module):
+    def __init__(self, window_size=11, size_average=True, return_loss=True):
+        super().__init__()
+        self.window_size = window_size
+        self.size_average = size_average
+        self.return_loss = return_loss
+        self.channel = 1
+        self.register_buffer('window', self._create_window(window_size, self.channel))
+
+    def _gaussian(self, window_size, sigma):
+        coords = torch.arange(window_size, dtype=torch.float32) - window_size // 2
+        gauss = torch.exp(-coords**2 / (2 * sigma**2))
+        return gauss / gauss.sum()
+
+    def _create_window(self, window_size, channel):
+        _1D_window = self._gaussian(window_size, 1.5).unsqueeze(1)
+        _2D_window = _1D_window.mm(_1D_window.t()).unsqueeze(0).unsqueeze(0)
+        return _2D_window.expand(channel, 1, window_size, window_size).contiguous()
+
+    def forward(self, img1, img2):
+        _, channel, _, _ = img1.size()
+
+        # Recreate window if channel count changed
+        if channel != self.channel:
+            self.channel = channel
+            self.window = self._create_window(self.window_size, channel).to(img1.device, img1.dtype)
+
+        pad = self.window_size // 2
+
+        # Apply reflection padding to avoid artificial edges
+        img1_padded = F.pad(img1, (pad, pad, pad, pad), mode='reflect')
+        img2_padded = F.pad(img2, (pad, pad, pad, pad), mode='reflect')
+
+        # Compute means
+        mu1 = F.conv2d(img1_padded, self.window, padding=0, groups=channel)
+        mu2 = F.conv2d(img2_padded, self.window, padding=0, groups=channel)
+
+        mu1_sq = mu1.pow(2)
+        mu2_sq = mu2.pow(2)
+        mu1_mu2 = mu1 * mu2
+
+        # Compute variances and covariance
+        sigma1_sq = F.conv2d(img1_padded * img1_padded, self.window, padding=0, groups=channel) - mu1_sq
+        sigma2_sq = F.conv2d(img2_padded * img2_padded, self.window, padding=0, groups=channel) - mu2_sq
+        sigma12 = F.conv2d(img1_padded * img2_padded, self.window, padding=0, groups=channel) - mu1_mu2
+
+        # Clamp for numerical stability
+        sigma1_sq = torch.clamp(sigma1_sq, min=0)
+        sigma2_sq = torch.clamp(sigma2_sq, min=0)
+
+        # Stability constants
+        C1 = 0.01 ** 2
+        C2 = 0.03 ** 2
+
+        ssim_map = ((2 * mu1_mu2 + C1) * (2 * sigma12 + C2)) / \
+                   ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))
+
+        if self.size_average:
+            ssim_val = ssim_map.mean()
+        else:
+            ssim_val = ssim_map.mean(dim=[1, 2, 3])
+
+        return 1 - ssim_val if self.return_loss else ssim_val
+
+
+class MultiClassIoULoss(nn.Module):
+    def __init__(self, num_classes=7, smooth=1e-6):
+        super().__init__()
+        self.num_classes = num_classes
+        self.smooth = smooth
+
+    def forward(self, pred_softmax, target_onehot):
+        intersection = (pred_softmax * target_onehot).sum(dim=(2, 3))
+        union = pred_softmax.sum(dim=(2, 3)) + target_onehot.sum(dim=(2, 3)) - intersection
+
+        iou = (intersection + self.smooth) / (union + self.smooth)
+
+        #1 - mIoU as loss
+        return 1 - iou.mean()
+
+
+class HybridLoss(nn.Module):
+    def __init__(self, num_classes=7, ce_weight=1.0, ssim_weight=1.0, iou_weight=1.0):
+        super().__init__()
+        self.num_classes = num_classes
+        self.ce_weight = ce_weight
+        self.ssim_weight = ssim_weight
+        self.iou_weight = iou_weight
+
+        self.ce_loss = nn.CrossEntropyLoss(ignore_index=255)
+        self.ssim_module = SSIM(window_size=11, size_average=True)
+        self.iou_loss = MultiClassIoULoss(num_classes=num_classes)
+
+    def forward(self, logits, labels):
+        # Upsample logits to match label size
+        if logits.shape[-2:] != labels.shape[-2:]:
+            logits = F.interpolate(logits, size=labels.shape[-2:],
+                                   mode='bilinear', align_corners=False)
+
+        #Cross-Entropy Loss
+        ce_out = self.ce_loss(logits, labels)
+
+        pred_softmax = F.softmax(logits, dim=1)
+
+        #one-hot encoding for valid pixels
+        valid_mask = (labels != 255)
+        labels_for_onehot = labels.clone()
+        labels_for_onehot[~valid_mask] = 0
+
+        target_onehot = F.one_hot(labels_for_onehot, num_classes=self.num_classes)
+        target_onehot = target_onehot.permute(0, 3, 1, 2).float()
+
+        # Mask out invalid pixels
+        valid_mask_expanded = valid_mask.unsqueeze(1).float()
+        target_onehot = target_onehot * valid_mask_expanded
+        pred_softmax_masked = pred_softmax * valid_mask_expanded
+
+        #SSIM Loss (boundary-aware component)
+        #ssim_out = 1 - self.ssim_module(pred_softmax_masked, target_onehot)
+        ssim_out = self.ssim_module(pred_softmax_masked, target_onehot)
+
+        #IoU Loss
+        iou_out = self.iou_loss(pred_softmax_masked, target_onehot)
+
+        # Combine losses
+        total_loss = (self.ce_weight * ce_out +
+                      self.ssim_weight * ssim_out +
+                      self.iou_weight * iou_out)
+
+        return total_loss, {
+            'ce_loss': ce_out.item(),
+            'ssim_loss': ssim_out.item(),
+            'iou_loss': iou_out.item()
+        }
+```
+
+To adopt this new loss function, we implement a new 'BATrainer' based on the original Trainer provided by the Hugging face
+
+The implementation is shown below
+
+```
+class BATrainer(Trainer):
+    def __init__(self, *args, ce_weight=1.0, ssim_weight=1.0, iou_weight=1.0, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.hybrid_loss = HybridLoss(
+            num_classes=7,
+            ce_weight=ce_weight,
+            ssim_weight=ssim_weight,
+            iou_weight=iou_weight
+        )
+
+    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+        labels = inputs.pop("labels")
+        outputs = model(**inputs)
+        logits = outputs.logits
+
+        loss, loss_components = self.hybrid_loss(logits, labels)
+
+        return (loss, outputs) if return_outputs else loss
+```
 
 
 ## Basic Syntax
