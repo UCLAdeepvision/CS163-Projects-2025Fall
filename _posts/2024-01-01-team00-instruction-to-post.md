@@ -3,11 +3,11 @@ layout: post
 comments: true
 title: "Project Track: Project 8 - Streetview Semantic Segmentation"
 author: "Team02"
-date: 2024-01-01
+date: 2025-12-12
 ---
 
 
-> In this project, we'll delve into the topic of streetview semantic segmentation, especially on those fine-grained urban structures. We'll use Segformer model as our backbone
+> In this project, we'll delve into the topic of applying semantic segmentations on fine-grained urban structures using Segformer model, and explore techniques to enhance the model performance
 
 
 <!--more-->
