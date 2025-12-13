@@ -7,7 +7,7 @@ date: 2024-01-01
 ---
 
 
-> In this project, we'll delve into the topic of streetview semantic segmentation, especially, we want to perform the semantic segmenta
+> In this project, we'll delve into the topic of streetview semantic segmentation, especially on those fine-grained urban structures. We'll use Segformer model as our backbone
 
 
 <!--more-->
