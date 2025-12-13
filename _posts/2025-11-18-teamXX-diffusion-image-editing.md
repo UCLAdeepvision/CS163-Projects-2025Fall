@@ -143,14 +143,14 @@ For example, to change "a red car" to "a blue car", one needs only local changes
 
 Since it is an attentional shift, Prompt-to-Prompt allows several kinds of fine-grained editing:
 
-\begin{itemize}
-    \item Editing of attributes: color, material, and minor visual properties.
-    \item Object replacement: this allows substituting one object for another in a way that the surrounding scene is preserved.
-    \item Changes in style or texture are applied so that the overall structure remains intact.
-    \item Selective modification: edits are triggered by only certain words in the prompt.
-\end{itemize}
+
+    - Editing of attributes: color, material, and minor visual properties.
+    - Object replacement: this allows substituting one object for another in a way that the surrounding scene is preserved.
+    - Changes in style or texture are applied so that the overall structure remains intact.
+    - Selective modification: edits are triggered by only certain words in the prompt.
+
 These capabilities enable Prompt-to-Prompt to make edits that are far more precise compared to the ones from SDEdit, particularly when the preferred change is related to a specific concept or region.
-\subsection{Technical Details}
+## Technical Details
 
 Prompt-to-Prompt utilizes the cross-attention layers in the U-Net. At each step of denoising, the model computes attention maps that relate text tokens to spatial regions in the latent representation. Let $$A_{\text{orig}}$$ and $$A_{\text{edit}}$$ refer to the cross-attention maps extrated from the original and edited prompts respectively. Prompt-to-Prompt either freezes or blends these maps using
 
