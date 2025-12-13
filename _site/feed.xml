@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T12:11:17-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T12:29:31-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
   <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
@@ -341,8 +341,142 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 </code></pre></div></div>
 
 <h3 id="approach-2---basnet-hybrid-loss--copy-paste-augmentation">Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation</h3>
+<p>Building upon the structural precision achieved by our Boundary-Aware (BA) approach, we further introduce <strong>a Copy-Paste Augmentation</strong> strategy that fundamentally alters the training data distribution. While the BA method refines <em>how</em> the model learns, this augmentation strategy refines <em>what</em> the model sees during training.</p>
+
+<p>The core mechanism relies on an object-level augmentation technique that synthesizes new training samples dynamically. For each target image, the system randomly selects a source image from the dataset and identifies specific object classes within it. The identified objects are extracted and optionally transformed through geometric operations including resizing and horizontal flipping to introduce additional variance. These extracted objects are then composited onto the target image using alpha-blending, and the corresponding segmentation masks are updated simultaneously to reflect the newly transplanted objects. By combining extracted objects with realistic textures in a single image, this process creates training samples with increased object density and complexity. Importantly, the model is trained on these augmented samples using the same Hybrid Boundary-Aware loss function (SSIM + IoU + CE) described previously. This integrated approach ensures that the model not only encounters rare objects more frequently but also learns their precise boundaries with high fidelity.</p>
 
 <p>Then, we initialize another pretrained SegFormer-B0 model model_bas_aug, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
+
+<p>The motivation for this copy-paste augmentation is that: While the Boundary-Aware (BA) method successfully mitigates over-smoothing by sharpening object edges, it remains constrained by the inherent class imbalance present in the original dataset. In typical street-view scenes, safety-critical objects such as traffic poles, distant lights, and road signs constitute only a small fraction of total pixels relative to dominant classes including road, sky, and building surfaces. Consequently, even a boundary-focused model may struggle to detect these objects due to their limited representation in the training data. To directly address this “long-tail” distribution problem without incurring the cost of manual data collection, we employ Copy-Paste augmentation. By synthetically transplanting instances of rare classes onto diverse background contexts, we encourage the model to decouple objects from their typical environmental associations and recognize them based on intrinsic visual features rather than contextual priors. This augmentation strategy primarily targets <strong>recall</strong>: whereas the BA method improves the <em>quality</em> of detected object boundaries, Copy-Paste augmentation improves the <em>likelihood</em> of successful detection by exposing the model to a high frequency of rare, spatially sparse structures throughout training.</p>
+
+<p>The copy-paste augmentation implementation is demonstrated in the code below:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CopyPasteAugmentation:
+    def __init__(self, dataset, paste_prob=0.5):
+        self.dataset = dataset
+        self.paste_prob = paste_prob
+
+    def __call__(self, image, label):
+        if random.random() &gt; self.paste_prob:
+            return image, label
+
+        # Get random source image
+        source_idx = random.randint(0, len(self.dataset) - 1)
+        source_example = self.dataset[source_idx]
+        source_image = source_example['image'].convert('RGB')
+        source_label = np.array(source_example['semantic_segmentation'])
+        if len(source_label.shape) == 3:
+            source_label = source_label[:, :, 0]
+        source_label = remap_labels(source_label)
+
+        # Resize source to match main image
+        source_image = source_image.resize(image.size, Image.BILINEAR)
+        source_label = np.array(Image.fromarray(source_label.astype(np.uint8)).resize(
+            image.size, Image.NEAREST))
+
+        # Random horizontal flip
+        if random.random() &gt; 0.5:
+            source_image = source_image.transpose(Image.FLIP_LEFT_RIGHT)
+            source_label = np.fliplr(source_label).copy()
+
+        # Select random subset of classes to paste
+        available_classes = [c for c in range(1, 7) if c in source_label]
+        if not available_classes:
+            return image, label
+
+        num_to_paste = random.randint(1, len(available_classes))
+        classes_to_paste = random.sample(available_classes, num_to_paste)
+
+        # Create mask and blend: I1 × α + I2 × (1 − α)
+        alpha = np.isin(source_label, classes_to_paste).astype(np.float32)
+        alpha_3d = alpha[:, :, np.newaxis]
+
+        image_np = np.array(image).astype(np.float32)
+        source_np = np.array(source_image).astype(np.float32)
+
+        new_image_np = source_np * alpha_3d + image_np * (1 - alpha_3d)
+        new_image = Image.fromarray(new_image_np.astype(np.uint8))
+
+        # Update labels
+        new_label = np.where(alpha &gt; 0, source_label, label)
+
+        return new_image, new_label
+
+class CopyPasteDataset(torch.utils.data.Dataset):
+    def __init__(self, hf_dataset, processor, copy_paste_aug=None, target_size=(1024, 512)):
+        self.hf_dataset = hf_dataset
+        self.processor = processor
+        self.copy_paste_aug = copy_paste_aug
+        self.target_size = target_size
+
+    def __len__(self):
+        return len(self.hf_dataset)
+
+    def __getitem__(self, idx):
+        example = self.hf_dataset[idx]
+        image = example['image'].convert('RGB')
+        label = example['semantic_segmentation']
+
+        image = image.resize(self.target_size, Image.BILINEAR)
+        label = label.resize(self.target_size, Image.NEAREST)
+
+        label = np.array(label)
+        if len(label.shape) == 3:
+            label = label[:, :, 0]
+        label = remap_labels(label)
+
+        if self.copy_paste_aug is not None:
+            image, label = self.copy_paste_aug(image, label)
+
+        inputs = self.processor(images=image, return_tensors="pt")
+        inputs = {k: v.squeeze(0) for k, v in inputs.items()}
+        inputs['labels'] = torch.tensor(label, dtype=torch.long)
+
+        return inputs
+</code></pre></div></div>
+
+<p>Generally, this is the training flow: Boundary-aware Segformer-B0 + copy-paste augmented train split → BA loss training → save <code class="language-plaintext highlighter-rouge">segformer-thin-structures-ba_aug-final</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model_bas_aug = SegformerForSemanticSegmentation.from_pretrained(
+    "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+    num_labels=7,
+    ignore_mismatched_sizes=True
+)
+
+model_bas_aug.cuda()
+print(model_bas_aug.device)
+
+training_args = TrainingArguments(
+    output_dir="./segformer-thin-structures-ba_aug",
+    learning_rate=6e-5,
+    num_train_epochs=15,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    save_total_limit=1,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    logging_steps=25,
+    remove_unused_columns=False,
+    dataloader_num_workers=12,
+    fp16=torch.cuda.is_available(),
+    gradient_accumulation_steps=1,
+    report_to="none",
+)
+
+trainer = BATrainer(
+    model=model_bas_aug,
+    args=training_args,
+    train_dataset=train_dataset_aug,
+    eval_dataset=val_dataset,
+    ce_weight=1,
+    ssim_weight=0.4,
+    iou_weight=0.5,
+)
+
+trainer.train()
+trainer.save_model("./segformer-thin-structures-ba_aug-final")
+print("Done!")
+</code></pre></div></div>
 
 <h3 id="approach-3---ssim--lovasz-loss--copy-paste-augmentation">Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation</h3>
 
