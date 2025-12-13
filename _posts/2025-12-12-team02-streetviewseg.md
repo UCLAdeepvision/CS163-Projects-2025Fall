@@ -535,5 +535,6 @@ You can find more Markdown syntax at [this page](https://www.markdownguide.org/b
 
 [3] Ghiasi, Golnaz, et al. "Simple Copy-Paste is a strong data augmentation method for instance segmentation." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2021.
 
-[4] Berman, Maxim, et al. "The Lovász-Softmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2018.
+[4] Berman, Maxim, et al. "The Lovasz-Softmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2018.
+
 ---
