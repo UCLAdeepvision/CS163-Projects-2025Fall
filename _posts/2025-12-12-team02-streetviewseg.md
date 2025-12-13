@@ -15,15 +15,15 @@ date: 2025-12-12
 {:toc}
 
 ## Introduction
-Understanding street-level things through segmentation is crucial to autonoumous driving, urban mapping, and robot perception. And it is especially important to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily misses detailed. So, here is the core question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?
+Understanding street-level scenes through segmentation is crucial to autonoumous driving, urban mapping, and robot perception. And it is especially important when it comes to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily missed details. So, here is the core question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?
 
 ### Dataset
-Cityscapes is a large-scale, widely used dataset for understanding complex urban environments, featuring diverse street scenes from many cities with high-quality pixel-level annotations for tasks like semantic segmentation and instance segmentation. 
+Cityscapes is a large-scale, widely used dataset for understanding complex urban environments, featuring diverse street scenes from many cities with high-quality pixel-level annotations for tasks like semantic segmentation and instance segmentation. It contains 30 classes and many of them are considered to be fine-grained urban structures, thus this dataset is a perfect choice for this project.
 
-In this project, we remapped all categories in cityscapes to a consistent six-class scheme - fence, car, vegetation, pole, traffic sign, and traffic light. All of the classes are fine-grained urban structures. We define an additional implicit background class which are default to ignore by setting their pixel values to zero.
+We remapped all categories in cityscapes to a consistent six-class scheme - fence, car, vegetation, pole, traffic sign, and traffic light. All of the classes are fine-grained urban structures. We define an additional implicit background class which are default to ignore by setting their pixel values to zero.
 
 ### Evaluation Metrics
-We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). The equation of calculating IoU is given as follows:
+We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:
 
 $$\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
 
@@ -34,12 +34,15 @@ Where:
 
 Given **C** classes, the **mean IoU (mIoU)** is the average IoU across classes:
 
-$$\[
+$$
 \mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c
-\]$$
+$$
+
+The higher the IoU and mIoU value is, the better is the model performance.
 
 
 ## Model: Segformer
+
 ### Baseline
 
 ## Basic Syntax
