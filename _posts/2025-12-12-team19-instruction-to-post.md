@@ -1,13 +1,13 @@
 ---
 layout: post
 comments: true
-title: Post Template
-author: UCLAdeepvision
-date: 2024-01-01
+title: From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation
+author: Shelby Falde, Joshua Li, Alexander Chen
+date: 2025-12-12
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know. Chungus...
+> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
 
 
 <!--more-->
@@ -15,8 +15,13 @@ date: 2024-01-01
 * TOC
 {:toc}
 
-## Main Content
-Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+## Introduction
+
+Image geolocation is the task of predicting the geographic coordinates (latitude and longitude) of a given image. While humans rely on specific landmarks or cultural context, training a machine to recognize any location on Earth is a massive classification and regression challenge.
+
+Early approaches relied on matching images to databases of landmarks, but these failed in "in the wild" scenarios where no distinct landmark is visible (e.g., a random road in rural Norway). Deep learning has since shifted this paradigm by learning global feature distributions and characteristics around the world.
+
+In this survey, we explore how architectures have evolved from Convolutional Neural Networks (CNNs) to Transformers and CLIP-based models, specifically focusing on how they handle the partitioning of the Earth and the loss functions used to train them.
 
 ## Basic Syntax
 ### Image
