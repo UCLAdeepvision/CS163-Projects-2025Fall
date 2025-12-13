@@ -514,7 +514,7 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 
 <h3 id="approach-2---basnet-hybrid-loss--copy-paste-augmentation">Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation</h3>
 
-<p>Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
+<p>Then, we initialize another pretrained SegFormer-B0 model model_bas_aug, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
 
 <h3 id="approach-3---ssim--lovasz-loss--copy-paste-augmentation">Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation</h3>
 
@@ -563,7 +563,7 @@ In general, we can say that the copy-paste augmentation can help to improve the 
 <p>From the example visualizations above we can see that the approach 2 is indeed improving the performance of the semantic segmetation task on fine-grained urban structures</p>
 
 <h2 id="conclusion">Conclusion</h2>
-<p>From the reasoning in the Results and Analyses part, we can conclude that modify loss function to achieve boundary-aware supervision</p>
+<p>From the reasoning in the Results and Analyses part, we can conclude that modifying loss function to achieve boundary-aware supervision, and the</p>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="code-block">Code Block</h3>

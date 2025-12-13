@@ -325,7 +325,7 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 ### Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation
 
 
-Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
+Then, we initialize another pretrained SegFormer-B0 model model_bas_aug, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
 
 
 
@@ -377,7 +377,7 @@ From the example visualizations above we can see that the approach 2 is indeed i
 
 
 ## Conclusion
-From the reasoning in the Results and Analyses part, we can conclude that modify loss function to achieve boundary-aware supervision
+From the reasoning in the Results and Analyses part, we can conclude that modifying loss function to achieve boundary-aware supervision, and the 
 
 ## Basic Syntax
 ### Code Block
