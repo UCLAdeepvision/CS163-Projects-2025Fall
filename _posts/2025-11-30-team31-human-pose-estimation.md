@@ -34,7 +34,7 @@ Finally, deep learning architectures are designed to learning spatial dependenci
 At its core, human pose estimation can be formulated as a structured prediction problem. Given an input Image $$I$$, the goal is to predict a set of keypoints: 
 
 $$
-\mathbf{P} = P = \{(x_i, y_i, c_i)\}_{i=1}^{K}
+\mathbf{P} = \{(x_i, y_i, c_i)\}_{i=1}^{K}
 ])
 $$
 
@@ -64,7 +64,7 @@ $$
 \hat{\mathbf{H}}_k = f_\theta(\mathbf{I})
 $$
 
-where $$f_theta$$ is a CNN parameterized by $$theta$$. The loss function is usually defined as the mean squared error between predicted and ground-truth heatmaps: 
+where $$f_\theta$$ is a CNN parameterized by $$theta$$. The loss function is usually defined as the mean squared error between predicted and ground-truth heatmaps: 
 
 $$
 \mathcal{L} =
