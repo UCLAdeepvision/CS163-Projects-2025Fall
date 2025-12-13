@@ -30,10 +30,9 @@ There are two main approaches that define the way a human pose model estimates a
 
 The second method is known as the bottom-up approach. With this approach all key-points are detected first then the keypoints are grouped into different poses. This method is usually faster than the top-down because pose estimation doesn’t have to be repeated per person. It is also usually faster at handling corded scenes as well because it doesn’t rely on a separate person detector. 
 
-![](/assets/images/team26/approaches.png)
 
-
-Table 1: Comparison of top-down and bottom-up human pose estimation approaches
+![YOLO]({{ '/assets/images/team26/approaches.png' | relative_url }})
+*Table 1: Comparison of top-down and bottom-up human pose estimation approaches* [5].
 
 ### 1.4. Current Methods
 
@@ -83,9 +82,8 @@ $$S^{T_{P}} = \rho ^{t}(F,L^{T_{P}}), \forall t=T^{P}$$
 
 $$S^{t} = \rho ^{t}(F, L^{T_{P}}, S^{t-1}), \forall T_{p}< t\leq T_{P}+T_{C}$$
 
-![](/assets/images/team26/openpose_architecture.png)
-
-Figure 1: Multi-stage CNN architecture for OpenPose
+![YOLO]({{ '/assets/images/team26/openpose_architecture.png' | relative_url }})
+*Figure 1: Multi-stage CNN architecture for OpenPose*[1].
 
 ### 3.3. Training Strategy
 
@@ -109,9 +107,9 @@ With multiple people, there is a large set of part candidates for possible limbs
 
 ### 3.4. Performance
 
-![](/assets/images/team26/openpose_coco.png)
 
-Table 2: OpenPose performance on the COCO validation set
+![YOLO]({{ '/assets/images/team26/openpose_coco.png' | relative_url }})
+*Table 2: OpenPose performance on the COCO validation set*[1].
 
 Foot AP: ~78% AP (internal dataset)
 
@@ -177,7 +175,7 @@ By nature of a two-stage approach, the human pose estimator in a top-down framew
 
 To model the generated bounding box distribution given the part (or whole-body) classification $$p$$ of a training image, AlphaPose introduces a part-guided proposal generator to learn the probability function 
 
-$$P(\delta x_\text{min}, \delta x_\text{max}, \delta y_\text{min}, \delta y_\text{max} \: | \: p)$$,
+$P(\delta x_\text{min}, \delta x_\text{max}, \delta y_\text{min}, \delta y_\text{max} \mid p)$
 
 where $$\delta x_\text{min}$$ is the leftmost offset of a generated bounding box relative to ground truth, $$\delta x_\text{max}$$ is the rightmost offset of the generated bounding box relative to ground truth, $$\delta y_\text{min}$$ is the topmost offset relative to ground truth, and $$\delta y_\text{max}$$ is the bottommost offset relative to ground truth.
 
@@ -189,9 +187,9 @@ Because AlphaPose seeks to avoid the early commitment problem of top-down approa
 
 AlphaPose precalculates pose confidence as the greatest value of the keypoint confidence map from the discussion of two-step heatmap normalization. Pose similarity is derived from pose distance, which is defined as the following soft matching function: 
 
-$$d(P_i, P_j \: | \: \Lambda) = K_\text{Sim}(P_i, P_j \: | \: \sigma_1) + \lambda H_\text{Sim}(P_i, P_j \: | \: \sigma_2)$$.
+$$d(P_i, P_j \mid \Lambda) = K_\text{Sim}(P_i, P_j \mid \sigma_1) + \lambda H_\text{Sim}(P_i, P_j \mid \sigma_2)$$
 
-Here, $$K_\text{Sim}(P_i, P_j \: | \: \sigma_1)$$ will be close to 1 when pose $$P_i$$ and pose $$P_j$$ both have high confidence scores and will softly count the number of matching keypoints between the two poses. $$H_\text{Sim}(P_i, P_j \: | \: \sigma_2)$$ is large when the spatial distance between corresponding keypoints between $$P_i$$ and $$P_j$$ are large.
+Here, $K_\text{Sim}(P_i, P_j \mid \sigma_1)$ will be close to 1 when pose $P_i$ and pose $P_j$ both have high confidence scores and will softly count the number of matching keypoints between the two poses. $H_\text{Sim}(P_i, P_j \mid \sigma_2)$ is large when the spatial distance between corresponding keypoints between $P_i$ and $P_j$ is large.
 
 By iterating through poses in order of decreasing confidence and eliminating poses with a similarity greater than the elimination threshold $$\eta$$, delayed NMS enables AlphaPose to select more optimal poses than its predecessors. 
 
@@ -207,15 +205,13 @@ where the $$*$$ operation represents element-wise matrix multiplication. The adj
 
 The introduction of the PGA module has shown quantitative and qualitative improvements to model attention alike.
 
-![](/assets/images/team26/alphapose_pga.png)
-
-Figure 2: Comparison of AlphaPose attention with and without the PGA module
+![YOLO]({{ '/assets/images/team26/alphapose_pga.png' | relative_url }})
+*Figure 2: Comparison of AlphaPose attention with and without the PGA module*[2].
 
 ### 4.3. Inference Pipeline
 
-![](/assets/images/team26/alphapose_pipeline.png)
-
-Figure 3: Five-module inference pipeline for AlphaPose. Optional components within each module marked with dashed borders
+![YOLO]({{ '/assets/images/team26/alphapose_pipeline.png' | relative_url }})
+*Figure 3: Five-module inference pipeline for AlphaPose. Optional components within each module marked with dashed borders*[2]
 
 #### 4.3.1. Data Loader
 
@@ -231,9 +227,8 @@ The data transform module performs traditional box NMS on the bounding boxes pro
 
 #### 4.3.4. Pose Estimation
 
-![](/assets/images/team26/alphapose_fastpose.png)
-
-Figure 4: Aggressive upsampling architecture of FastPose
+![YOLO]({{ '/assets/images/team26/alphapose_fastpose.png' | relative_url }})
+*Figure 4: Aggressive upsampling architecture of FastPose*[2].
 
 AlphaPose proposes the FastPose human pose estimator, built on a ResNet backbone for feature extraction. The output of ResNet is passed successively through three dense upsampling convolution (DUC) modules, each of which contains a Conv2D layer followed by a PixelShuffle operation to double each spatial dimension of the feature map. Aggressive upsampling improves the representation of lower-resolution keypoints in later layers. A final 1×1 Conv2D layer generates heatmaps for each keypoint.
 
@@ -259,22 +254,21 @@ The model was trained with a batch size of 32 images of size 256×192 for 270 ep
 
 #### 4.5.1. Performance
 
-![](/assets/images/team26/alphapose_halpe.png)
 
-Table 3: Comparison of model performance on the Halpe-FullBody dataset
+![YOLO]({{ '/assets/images/team26/alphapose_halpe.png' | relative_url }})
+*Table 3: Comparison of model performance on the Halpe-FullBody dataset*[2].
 
 Symmetric integral regression variants of FastPose yielded a 5.7% relative increase in mAP to their heatmap-based counterparts, largely due to improved performance near the face and hands. The 2.4 increase in mAP suggests the effectiveness of symmetric integral regression in parsing dense keypoint localizations. With a combined 7.8 mAP contribution to performance on the Halpe-FullBody dataset and a combined 7.3 mAP contribution to performance on the COCO dataset, ablation studies suggest the same. FastPose additionally demonstrates higher accuracy and fewer GLOPs for the face and hands than other competitive models on the COCO-WholeBody dataset.
 
 The Pose-NMS and PGPG modules prove integral to the performance of FastPose as well. Pose-NMS accounts for a 0.4 mAP increase for the Halpe-FullBody dataset and a 1.3 mAP increase for the COCO dataset, whereas the PGPG module accounts for a 1.3 mAP increase for the Halpe-FullBody dataset with multi-domain knowledge distillation. 
 
-![](/assets/images/team26/alphapose_ablation.png)
 
-Table 4: Results of ablation studies on proposed methods. Asterisks indicate the use of multi-domain knowledge distillation
+![YOLO]({{ '/assets/images/team26/alphapose_ablation.png' | relative_url }})
 
+*Table 4: Results of ablation studies on proposed methods. Asterisks indicate the use of multi-domain knowledge distillation*[2].
 
-![](/assets/images/team26/alphapose_coco.png)
-
-Table 5: Comparison of model performance on the COCO test-dev dataset
+![YOLO]({{ '/assets/images/team26/alphapose_coco.png' | relative_url }})
+*Table 5: Comparison of model performance on the COCO test-dev dataset*[2]
 
 Although body-only pose estimation is not the primary objective of AlphaPose, FastPose matches the performance of state-of-the-art heatmap-based localization methods with a smaller input image and a simpler human detector. 
 
@@ -341,11 +335,9 @@ This simpler decoder, even with non-linear capacity, can achieve similar perform
 ### 5.4. Performance
 
 ViTPose models are trained using the default settings of MMPose. Input images have a resolution of 256 by 192, and the AdamW optimizer is used with an initial learning rate of 5e-4. Post-processing is performed using UDP. Models are trained for 210 epochs, with the learning rate reduced by a factor of 10 at the 170th and 200th epochs. Additionally, the layer-wise learning rate decay and stochastic drop path ratio are tuned for each model. Given these hyperparameters, even without complex architectural designs, ViTPose achieves state-of-the-art performance, reaching 80.9 AP on the MS COCO dataset.
-
-![](/assets/images/team26/vitpose_result_1.png)
-![](/assets/images/team26/vitpose_result_2.png)
-
-Figure 5: Visual pose estimation results of ViTPose on some test images from COCO dataset
+![YOLO]({{ '/assets/images/team26/vitpose_result_1.png' | relative_url }})
+![YOLO]({{ '/assets/images/team26/vitpose_result_2.png' | relative_url }})
+*Figure 5: Visual pose estimation results of ViTPose on some test images from COCO dataset*[3]
 
 ### 5.5. Other Experiments and Key Findings
 
@@ -379,8 +371,7 @@ ViTPose is simpler and easier to scale than OpenPose and AlphaPose, using a visi
 | Epochs | N/A | 270 | 210 |
 | COCO | 65.2 AP | 72.7 AP | 80.9 AP |
 
-
-Table 5: Comparison of OpenPose, AlphaPose, and ViTPose mean average precision on the COCO dataset
+*Table 5: Comparison of OpenPose, AlphaPose, and ViTPose mean average precision on the COCO dataset*
 
 
 ## 7. Sapiens
@@ -391,7 +382,7 @@ Sapiens is one of the most recent and advanced human-pose models, introduced jus
 
 Trained on the extensive Humans-300M dataset, which contains 300 million in-the-wild images, Sapiens demonstrates substantial improvements over the prior pose-estimation methods, some of which we talked about above. On the Humans-5k benchmark, it outperforms earlier 2D pose models by more than 7.6 mAP. Its massive training dataset, far larger than datasets like ImageNet, contributes significantly to this performance boost. Sapiens mainly draws inspiration from ViTPose. However it also introduces its own architectural innovations, resulting in higher accuracy
 
-### 7.2 A Criteria to Follow 
+### 7.2 Approach/A Criteria to Follow 
 
 Sapiens established a set of criteria for what a human-centric vision model should achieve. The researchers defined three key requirements: generalization, broad applicability, and high fidelity. Generalization refers to the model’s ability to remain robust under new or unseen conditions. Broad applicability means the model should be adaptable across a wide range of human-centric tasks without requiring significant model changes. High fidelity ensures that the model can produce precise, high-resolution outputs. The developers trained, tested, and evaluated Sapiens against these criteria, and the resulting model successfully meets all three.
 
@@ -399,15 +390,14 @@ Sapiens established a set of criteria for what a human-centric vision model shou
 
 A major advancement that differentiates Sapiens from some of the earlier models is its pretraining strategy. Like ViT-Pose, Sapiens adopts the MAE (masked autoencoder) pretraining approach, but it scales this idea much further. The researchers pretrained an entire family of Vision Transformer backbones, ranging from 300 million to 2 billion parameters. To achieve the high-fidelity outputs they targeted, Sapiens uses a significantly higher input resolution of 1024 pixels. 1024, as of 2024, represents nearly a 4× increase in FLOPs over the largest previously existing vision backbones. 
 
-![](/assets/images/team26/sapiens_humans300m.png)
-
-Table 6: Sapiens encoder specifications when pretrained using the Humans-300M dataset 
+![YOLO]({{ '/assets/images/team26/sapiens_humans300m.png' | relative_url }})
+*Table 6: Sapiens encoder specifications when pretrained using the Humans-300M dataset*[4] 
 
 Sapiens employs an encoder–decoder architecture, allowing the model to reconstruct masked images with impressive accuracy during pretraining. The encoder is initialized with weights during pertaining and it maps the visible images to a latent representation. The decoder is initialized randomly and it reconstructs the initial image using the latent representation given to it.  Similar to the ViT approach the model divides the image input into different patches and randomly masks these patches. This strong reconstruction capability helps the model learn richer human-centric features, ultimately improving downstream pose-estimation performance.
 
-![](/assets/images/team26/sapiens_mae.png)
+![YOLO]({{ '/assets/images/team26/sapiens_mae.png' | relative_url }})
 
-Figure 6: MAE reconstruction given different mask percentages 
+*Figure 6: MAE reconstruction given different mask percentages*[4] 
 
 ### 7.4 How did Sapiens improve prior models (KeyPoints)
 
@@ -416,24 +406,20 @@ Data quality plays a critical role in model performance, and Sapiens was trained
 During finetuning, Sapiens uses an encoder–decoder architecture and follows a top-down pose-estimation approach. For optimization, Sapiens uses the AdamW optimizer, applying cosine annealing during pretraining and linear learning-rate decay during finetuning. 
 
 Similar to ViTPose, Sapiens incorporates a Pose Estimation Transformer (P), which detects keypoints using bounding-box inputs and heatmap prediction. In the top-down framework, the model aims to predict the locations of K keypoints in an input image, where K is a tunable hyperparameter that directly affects accuracy. The team experimented with these encoder–decoder variants for pose classification using K = 17, 133, and 308 keypoints. While ViTPose operated with at most 133 keypoints, Sapiens significantly expanded this value to 308 for whole-body skeletons. For face-pose tasks, previous models typically used 68 facial keypoints, but Sapiens found through hyperparameter testing that 243 facial keypoints yielded the best results. Achieving this required new annotations at these higher densities, and these richer labels ultimately drove the model’s substantial accuracy gains. 
+![YOLO]({{ '/assets/images/team26/sapiens_annotations.png' | relative_url }})
 
-![](/assets/images/team26/sapiens_annotations.png)
-
-Figure 7: Example ground truth annotations with the new keypoint parameters  
+*Figure 7: Example ground truth annotations with the new keypoint parameters*[4]  
 
 ### 7.5 Performance  
-
-![](/assets/images/team26/sapiens_result.png)
-
-Figure 8. Pose estimation with Sapiens-1B for 308 keypoints images
+![YOLO]({{ '/assets/images/team26/sapiens_result.png' | relative_url }})
+*Figure 8. Pose estimation with Sapiens-1B for 308 keypoints images*[4]
 
 For the 2D pose-estimation task, the team trained on 1 million images from the 3M dataset and evaluated performance on a 5,000-image test set. Because earlier models did not support Sapiens’ full set of 308 keypoints, the researchers evaluated accuracy using both the 114 keypoints that overlap with their 308-keypoint scheme and the standard 133-keypoint vocabulary from the COCO-WholeBody dataset(used as a tester in our prior models as well).
 
 The results show substantial improvements. Compared to ViTPose—which also uses MAE pretraining and an encoder–decoder architecture—Sapiens achieves significantly higher accuracy due to its higher-resolution inputs, larger and denser keypoint annotations, and broader training data. Specifically, Sapiens reports +5.6 P and +7.9 AP gains over the strongest prior ViTPose variants.
 
-![](/assets/images/team26/sapiens_humans5k.png)
-
-Table 7: Results of Sapiens on Humans-5K test set compared to some other models 
+![YOLO]({{ '//assets/images/team26/sapiens_humans5k.png' | relative_url }})
+*Table 7: Results of Sapiens on Humans-5K test set compared to some other models*[4] 
 
 
 ## 8. Conclusion 
