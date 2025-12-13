@@ -15,14 +15,27 @@ date: 2025-12-12
 {:toc}
 
 ## Introduction
-Understanding street-level scenes through segmentation is crucial to autonoumous driving, urban mapping, and robot perception. And it is especially important when it comes to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily missed details. So, here is the core question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?
+Understanding street-level scenes through segmentation is crucial to autonoumous driving, urban mapping, and robot perception. And it is especially important when it comes to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily missed details. So, this naturally leads to the question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?
 
-### Dataset
+## Dataset
 Cityscapes is a large-scale, widely used dataset for understanding complex urban environments, featuring diverse street scenes from many cities with high-quality pixel-level annotations for tasks like semantic segmentation and instance segmentation. It contains 30 classes and many of them are considered to be fine-grained urban structures, thus this dataset is a perfect choice for this project.
 
 We remapped all categories in cityscapes to a consistent six-class scheme - fence, car, vegetation, pole, traffic sign, and traffic light. All of the classes are fine-grained urban structures. We define an additional implicit background class which are default to ignore by setting their pixel values to zero.
+### Dataset Split
+We partition the Cityscapes dataset into three subsets from training, validation, and testing. From the original Cityscapes training split, we sample 2000 images to form our training set, 250 images to form our validation set, and another 250 images to form our test set.
 
-### Evaluation Metrics
+## Model: Segformer
+In this project, we build everything upon the Segformer model.
+Segformer is a transformer-based semantic segmentation model designed to be simple and accurate. It contains two main parts: encoder and decoder. 
+The encoder is MiT (Mix Transformer), a hierarchical Transformer that produces 4 multi-scale feature maps. It uses overlapped patch embeddings and an efficient attention design.
+The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4 feature maps to the same channel size, upsamples them to the same resolution, concatenates and fuses them with an MLP, then outputs per-pixel class scores
+![Segformer]({{ '/assets/images/team02/segformerArch.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
+
+## Baseline
+
+## Evaluation Metrics
 We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:
 
 $$\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
@@ -39,11 +52,6 @@ $$
 $$
 
 The higher the IoU and mIoU value is, the better is the model performance.
-
-
-## Model: Segformer
-
-### Baseline
 
 ## Basic Syntax
 ### Image
