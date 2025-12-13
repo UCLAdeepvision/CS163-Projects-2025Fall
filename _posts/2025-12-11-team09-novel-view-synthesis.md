@@ -64,9 +64,9 @@ Overall, LVSM demonstrates that learned representations without structural const
 
 ### <u>RayZer: A Self-supervised Large View Synthesis Model</u>
 
-The dominant paradigm in studies on novel view synthesis has been to train models on datasts with COLMAP [1] annotations. However, there are several notable drawbacks to this approach. COLMAP is slow, struggles in sparse-view and dynamic scenarios and may produce noisy annotations. RayZer introduces a groundbreaking new approach to novel view synthesis that is entirely self-supervised (e.g. it does not use any camera pose annotations during training or testing) and thus avoids COLMAP entirely.
+The dominant paradigm in studies on novel view synthesis has been to train models on datasets with COLMAP [3] annotations. However, there are several notable drawbacks to this approach. COLMAP is slow, struggles in sparse-view and dynamic scenarios and may produce noisy annotations. RayZer introduces a groundbreaking new approach to novel view synthesis that is entirely self-supervised (e.g. it does not use any camera pose annotations during training or testing) and thus avoids COLMAP entirely.
 
-Along with SRT [2] and LVSM, RayZer falls into the group of novel view synthesis methods employing a purely learned latent scene representation and a neural network to render it. This is in contrast to most state-of-the-art methods, which primarily rely on NeRF [3] or 3D Gaussian [4] Representations. These two techniques carry a strong inductive bias through their use of volumetric rendering.
+Along with SRT [4] and LVSM [1], RayZer falls into the group of novel view synthesis methods employing a purely learned latent scene representation and a neural network to render it. This is in contrast to most state-of-the-art methods, which primarily rely on NeRF [5] or 3D Gaussian [6] Representations. These two techniques carry a strong inductive bias through their use of volumetric rendering.
  
 #### Method
 
@@ -102,7 +102,7 @@ where $$p_i$$ is the camera token for image $$I_i$$ and $$p_c$$ is the camera to
 
 ##### Scene Reconstructor
 
-We can generate a Plucker Ray map [5], a common technique to represent cameras, for each image in $$A$$ by combining the predicted SE(3) pose $$P_i$$ and intrinsic matrix $$K$$ (which is derived from the predicted focal length). The Plucker ray maps are patchified and then combined with the image tokens of $$A$$ along the feature dimension using an MLP. The result of this fusing process is $$x_A$$. 
+We can generate a Plucker Ray map [7], a common technique to represent cameras, for each image in $$A$$ by combining the predicted SE(3) pose $$P_i$$ and intrinsic matrix $$K$$ (which is derived from the predicted focal length). The Plucker ray maps are patchified and then combined with the image tokens of $$A$$ along the feature dimension using an MLP. The result of this fusing process is $$x_A$$. 
 
 The scene reconstructor uses an identical mechanism to the camera estimation module. Learnable tokens for the scene reconstruction $$z$$, with $$z \in \mathbb{R}^{L \times d}$$ for a latent scene of $$L$$ tokens, are updated through several transformer layers along with $$x_A$$. $$x_A$$ is discarded at the end of the sequence and the the final value of $$z$$, $$z^{*}$$, is the latent scene representation.
 
@@ -119,7 +119,7 @@ $$\hat{I} = \text{MLP}_{\text{rgb}}(r^{*})$$
 
 ##### Results
 
-Despite not using any ground truth camera annotations during training or testing, RayZer achieves state of the art performance. It achieves a 2.82% better PSNR, 4.70% better SSIM and 13.6% better LPIPS on the DL3DV-10K dataset [6] compared to LVSM, a leading method in novel view synthesis. The paper highlights how this may be in part due to the noisy nature of COLMAP annotations; by learning from the raw data itself, RayZer may have a higher ceiling than methods supervised by inaccurate camera pose data.
+Despite not using any ground truth camera annotations during training or testing, RayZer achieves state of the art performance. It achieves a 2.82% better PSNR, 4.70% better SSIM and 13.6% better LPIPS on the DL3DV-10K dataset [8] compared to LVSM, a leading method in novel view synthesis. The paper highlights how this may be in part due to the noisy nature of COLMAP annotations; by learning from the raw data itself, RayZer may have a higher ceiling than methods supervised by inaccurate camera pose data.
 
   
 ##### Discussion
@@ -128,14 +128,18 @@ Perhaps the most compelling and fascinating part about RayZer is that it is able
 
 ### References
 
-[1] Schonberger, Johannes L., and Jan-Michael Frahm. "Structure-from-motion revisited." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.
+[1] Jin, Haian, et al. "LVSM: A Large View Synthesis Model with Minimal 3D Inductive Bias." arXiv preprint arXiv:2410.17242 (2024).
 
-[2] Sajjadi, Mehdi SM, et al. "Scene representation transformer: Geometry-free novel view synthesis through set-latent scene representations." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022.
+[2] Zhang, Kai, et al. "GS-LRM: Large Reconstruction Model for 3D Gaussian Splatting." arXiv preprint arXiv:2404.19702 (2024).
 
-[3] Mildenhall, Ben, et al. "Nerf: Representing scenes as neural radiance fields for view synthesis." Communications of the ACM 65.1 (2021): 99-106.
+[3] Schonberger, Johannes L., and Jan-Michael Frahm. "Structure-from-motion revisited." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.
 
-[4] Kerbl, Bernhard, et al. "3D Gaussian splatting for real-time radiance field rendering." ACM Trans. Graph. 42.4 (2023): 139-1.
+[4] Sajjadi, Mehdi SM, et al. "Scene representation transformer: Geometry-free novel view synthesis through set-latent scene representations." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022.
 
-[5] Zhang, Jason Y., et al. "Cameras as rays: Pose estimation via ray diffusion." arXiv preprint arXiv:2402.14817 (2024).
+[5] Mildenhall, Ben, et al. "Nerf: Representing scenes as neural radiance fields for view synthesis." Communications of the ACM 65.1 (2021): 99-106.
 
-[6] Ling, Lu, et al. "Dl3dv-10k: A large-scale scene dataset for deep learning-based 3d vision." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024.
+[6] Kerbl, Bernhard, et al. "3D Gaussian splatting for real-time radiance field rendering." ACM Trans. Graph. 42.4 (2023): 139-1.
+
+[7] Zhang, Jason Y., et al. "Cameras as rays: Pose estimation via ray diffusion." arXiv preprint arXiv:2402.14817 (2024).
+
+[8] Ling, Lu, et al. "Dl3dv-10k: A large-scale scene dataset for deep learning-based 3d vision." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024.
