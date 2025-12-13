@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: Comparison of Approaches to Human Pose Estimation
-author: Maheswari Bajji, Julia Gu, Lauren Mirhan Florence Zhao
+author: Maheswari Bajji, Julia Gu, Lauren Mirhan, Florence Zhao
 date: 2025-12-13
 ---
 
@@ -22,13 +22,13 @@ Human pose estimation is the process of identifying key human joints (known as k
 
 ### 1.2. Challenges
 
-Some of the challenges to human pose estimation include occlusions which means that algorithms can struggle to infer the location of joints if they are hidden by other objects(other bodies or surroundings), Other challenges include variations in images from different camera angles, amount of people in the scene,  and in human appearances. Additionally poses occur in various scenarios like everyday, sports, classes etc and if not trained a model could fail on new data in unknown locations. Lighting and weather conditions can also change models. It is important that models think about all these challenges to have high accuracies. 
+Some of the challenges to human pose estimation include occlusions which means that algorithms can struggle to infer the location of joints if they are hidden by other objects(other bodies or surroundings). Other challenges include variations in images from different camera angles, amount of people in the scene, and differences in human appearance. Additionally poses occur in various scenarios inculding, sports, classes etc, and if not trained on these scenarios a model could fail on new data. Lighting and weather conditions can also change models. It is important that models think about all these challenges to have high accuracies. 
 
 ### 1.3. Approaches
 
 There are two main approaches that define the way a human pose model estimates and figures out key points to make a skeleton. The first method known as the topdown method is the process of detecting the person first using bounding boxes and then estimating the pose by figuring out their keypoints. 
 
-The second method is known as the bottom-up approach. With this approach all key-points are detected first then the keypoints are grouped into different poses. This method is usually faster than the top-down because pose estimation doesn’t have to be repeated per person. It is also usually faster at handling corded scenes as well because it doesn’t rely on a separate person detector. 
+The second method is known as the bottom-up approach. With this approach all key-points are detected first then the keypoints are grouped into different poses. This method is usually faster than the top-down because pose estimation doesn’t have to be repeated per person. It is also usually faster at handling crowded scenes as well because it doesn’t rely on a separate person detector. 
 
 
 ![YOLO]({{ '/assets/images/team26/approaches.png' | relative_url }})
@@ -175,7 +175,10 @@ By nature of a two-stage approach, the human pose estimator in a top-down framew
 
 To model the generated bounding box distribution given the part (or whole-body) classification $$p$$ of a training image, AlphaPose introduces a part-guided proposal generator to learn the probability function 
 
-$P(\delta x_\text{min}, \delta x_\text{max}, \delta y_\text{min}, \delta y_\text{max} \mid p)$
+$$
+P(\delta x_{\min}, \delta x_{\max}, \delta y_{\min}, \delta y_{\max} \mid p)
+$$
+
 
 where $$\delta x_\text{min}$$ is the leftmost offset of a generated bounding box relative to ground truth, $$\delta x_\text{max}$$ is the rightmost offset of the generated bounding box relative to ground truth, $$\delta y_\text{min}$$ is the topmost offset relative to ground truth, and $$\delta y_\text{max}$$ is the bottommost offset relative to ground truth.
 
@@ -187,9 +190,20 @@ Because AlphaPose seeks to avoid the early commitment problem of top-down approa
 
 AlphaPose precalculates pose confidence as the greatest value of the keypoint confidence map from the discussion of two-step heatmap normalization. Pose similarity is derived from pose distance, which is defined as the following soft matching function: 
 
-$$d(P_i, P_j \mid \Lambda) = K_\text{Sim}(P_i, P_j \mid \sigma_1) + \lambda H_\text{Sim}(P_i, P_j \mid \sigma_2)$$
+$$
+P(\delta x_{\text{min}}, \delta x_{\text{max}}, \delta y_{\text{min}}, \delta y_{\text{max}} \mid p)
+$$
 
-Here, $K_\text{Sim}(P_i, P_j \mid \sigma_1)$ will be close to 1 when pose $P_i$ and pose $P_j$ both have high confidence scores and will softly count the number of matching keypoints between the two poses. $H_\text{Sim}(P_i, P_j \mid \sigma_2)$ is large when the spatial distance between corresponding keypoints between $P_i$ and $P_j$ is large.
+
+Here, $$
+K_{\text{Sim}}(P_i, P_j \mid \sigma_1)
+$$
+will be close to 1 when pose P_i and pose P_j both have high confidence scores and will softly count the number of matching keypoints between the two poses.
+$$
+H_{\text{Sim}}(P_i, P_j \mid \sigma_2)
+$$
+is large when the spatial distance between corresponding keypoints between P_i and P_j are large.
+
 
 By iterating through poses in order of decreasing confidence and eliminating poses with a similarity greater than the elimination threshold $$\eta$$, delayed NMS enables AlphaPose to select more optimal poses than its predecessors. 
 
@@ -380,7 +394,7 @@ ViTPose is simpler and easier to scale than OpenPose and AlphaPose, using a visi
 
 Sapiens is one of the most recent and advanced human-pose models, introduced just last year(2024) by a Meta AI research team. Rather than being a single network, Sapiens is actually a unified collection of four complementary models designed to address core human-centric vision tasks: 2D pose estimation, body-part segmentation, depth estimation, and surface-normal prediction. In our discussion, we will focus primarily on the 2D pose-estimation component.
 
-Trained on the extensive Humans-300M dataset, which contains 300 million in-the-wild images, Sapiens demonstrates substantial improvements over the prior pose-estimation methods, some of which we talked about above. On the Humans-5k benchmark, it outperforms earlier 2D pose models by more than 7.6 mAP. Its massive training dataset, far larger than datasets like ImageNet, contributes significantly to this performance boost. Sapiens mainly draws inspiration from ViTPose. However it also introduces its own architectural innovations, resulting in higher accuracy
+Trained on the extensive Humans-300M dataset,containing 300 million in-the-wild images, Sapiens demonstrates substantial improvements over the prior pose-estimation methods mentioned above. On the Humans-5k(subset of the Humans-300M) benchmark, it outperforms earlier 2D pose models by more than 7.6 mAP. This massive training dataset, far larger than datasets like ImageNet, contributes significantly to this performance boost. Sapiens mainly draws inspiration from ViTPose. However it also introduces its own architectural innovations, resulting in higher accuracy.
 
 ### 7.2 Approach/A Criteria to Follow 
 
@@ -400,10 +414,9 @@ Sapiens employs an encoder–decoder architecture, allowing the model to reconst
 *Figure 6: MAE reconstruction given different mask percentages*[4] 
 
 ### 7.4 How did Sapiens improve prior models (KeyPoints)
+During finetuning, Sapiens uses an encoder–decoder architecture and follows a top-down pose-estimation approach. For optimization, Sapiens uses the AdamW optimizer, applying cosine annealing during pretraining and linear learning-rate decay during finetuning. 
 
 Data quality plays a critical role in model performance, and Sapiens was trained using the extensive Humans-300M dataset. While this is an improvement in data size and resolution to some prior models like ImgNet, ground truth label quality is equally important. Currently 2D pose estimation uses keypoints as a main label to figure out pose,.To improve pose-estimation accuracy, the team introduced a much denser set of 2D whole-body keypoints for human-pose recognition. Their enhanced annotation scheme for keypoints, covered detailed regions such as the hands, feet, face, and full body. These richer, more precise labels enable Sapiens to learn fine-grained human structure and deliver significantly better pose-estimation performance.
-
-During finetuning, Sapiens uses an encoder–decoder architecture and follows a top-down pose-estimation approach. For optimization, Sapiens uses the AdamW optimizer, applying cosine annealing during pretraining and linear learning-rate decay during finetuning. 
 
 Similar to ViTPose, Sapiens incorporates a Pose Estimation Transformer (P), which detects keypoints using bounding-box inputs and heatmap prediction. In the top-down framework, the model aims to predict the locations of K keypoints in an input image, where K is a tunable hyperparameter that directly affects accuracy. The team experimented with these encoder–decoder variants for pose classification using K = 17, 133, and 308 keypoints. While ViTPose operated with at most 133 keypoints, Sapiens significantly expanded this value to 308 for whole-body skeletons. For face-pose tasks, previous models typically used 68 facial keypoints, but Sapiens found through hyperparameter testing that 243 facial keypoints yielded the best results. Achieving this required new annotations at these higher densities, and these richer labels ultimately drove the model’s substantial accuracy gains. 
 ![YOLO]({{ '/assets/images/team26/sapiens_annotations.png' | relative_url }})
@@ -416,7 +429,7 @@ Similar to ViTPose, Sapiens incorporates a Pose Estimation Transformer (P), whic
 
 For the 2D pose-estimation task, the team trained on 1 million images from the 3M dataset and evaluated performance on a 5,000-image test set. Because earlier models did not support Sapiens’ full set of 308 keypoints, the researchers evaluated accuracy using both the 114 keypoints that overlap with their 308-keypoint scheme and the standard 133-keypoint vocabulary from the COCO-WholeBody dataset(used as a tester in our prior models as well).
 
-The results show substantial improvements. Compared to ViTPose—which also uses MAE pretraining and an encoder–decoder architecture—Sapiens achieves significantly higher accuracy due to its higher-resolution inputs, larger and denser keypoint annotations, and broader training data. Specifically, Sapiens reports +5.6 P and +7.9 AP gains over the strongest prior ViTPose variants.
+The results show substantial improvements. Compared to ViTPose, which also uses MAE pretraining and an encoder–decoder architecture, Sapiens achieves significantly higher accuracy due to its higher-resolution inputs, larger and denser keypoint annotations, and broader training data. Specifically, Sapiens reports +5.6 P and +7.9 AP gains over the strongest prior ViTPose variants.
 
 ![YOLO]({{ '//assets/images/team26/sapiens_humans5k.png' | relative_url }})
 *Table 7: Results of Sapiens on Humans-5K test set compared to some other models*[4] 
