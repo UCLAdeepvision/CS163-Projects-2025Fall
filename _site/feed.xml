@@ -1,10 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-12T18:37:05-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Streetview Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Streetview Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
-  <p>In this project, we’ll delve into the topic of developing model and applying semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We will explore techniques to enhance the model performance</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-12T20:52:18-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Streetview Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Streetview Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+  <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
 <!--more-->
 <ul id="markdown-toc">
-  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
+      <li><a href="#dataset" id="markdown-toc-dataset">Dataset</a></li>
+      <li><a href="#evaluation-metrics" id="markdown-toc-evaluation-metrics">Evaluation Metrics</a></li>
+    </ul>
+  </li>
+  <li><a href="#model-segformer" id="markdown-toc-model-segformer">Model: Segformer</a>    <ul>
+      <li><a href="#baseline" id="markdown-toc-baseline">Baseline</a></li>
+    </ul>
+  </li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -17,7 +25,54 @@
 </ul>
 
 <h2 id="introduction">Introduction</h2>
-<p>Your survey starts here. You can refer to the <a href="https://github.com/lilianweng/lil-log/tree/master/_posts">source code</a> of <a href="https://lilianweng.github.io/lil-log/">lil’s blogs</a> for article structure ideas or Markdown syntax. We’ve provided a <a href="https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html">sample post</a> from Lilian Weng and you can find the source code <a href="https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md">here</a></p>
+<p>Understanding street-level things through segmentation is crucial to autonoumous driving, urban mapping, and robot perception. And it is especially important to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily misses detailed. So, here is the core question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?</p>
+
+<h3 id="dataset">Dataset</h3>
+<p>Cityscapes is a large-scale, widely used dataset for understanding complex urban environments, featuring diverse street scenes from many cities with high-quality pixel-level annotations for tasks like semantic segmentation and instance segmentation.</p>
+
+<p>In this project, we remapped all categories in cityscapes to a consistent six-class scheme - fence, car, vegetation, pole, traffic sign, and traffic light. All of the classes are fine-grained urban structures. We define an additional implicit background class which are default to ignore by setting their pixel values to zero.</p>
+
+<h3 id="evaluation-metrics">Evaluation Metrics</h3>
+<p>We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). The equation of calculating IoU is given as follows:</p>
+
+<p>[
+\mathrm{IoU}(A, B) = \frac{|A \cap B|}{|A \cup B|}
+]</p>
+
+<p>Where:</p>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>(</td>
+          <td>A \cap B</td>
+          <td>) is the area (or volume) of the overlap between <strong>A</strong> and <strong>B</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>(</td>
+          <td>A \cup B</td>
+          <td>) is the area (or volume) covered by <strong>A</strong> or <strong>B</strong> (their union)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Given <strong>C</strong> classes, the <strong>mean IoU (mIoU)</strong> is the average IoU across classes:</p>
+
+<p>[
+\mathrm{mIoU} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{IoU}_c
+]</p>
+
+<h2 id="model-segformer">Model: Segformer</h2>
+<h3 id="baseline">Baseline</h3>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>
@@ -75,7 +130,7 @@ print (torch.__version__)
 
 <p>[1] Redmon, Joseph, et al. “You only look once: Unified, real-time object detection.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
 
-<hr />]]></content><author><name>Team02</name></author><summary type="html"><![CDATA[In this project, we’ll delve into the topic of developing model and applying semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We will explore techniques to enhance the model performance]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+<hr />]]></content><author><name>Team02</name></author><summary type="html"><![CDATA[In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
   <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
 </blockquote>
 
