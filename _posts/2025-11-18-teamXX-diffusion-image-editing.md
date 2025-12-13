@@ -1,9 +1,10 @@
 ---
 layout: post
 comments: true
-title: Diffusion Models for Image Editing: A Study of SDEdit, Prompt-to-Prompt, and InstructPix2Pix
-author: Ananya Sampat
-date: 2025-11-18
+title: "Diffusion Models for Image Editing: A Study of SDEdit, Prompt-to-Prompt, and InstructPix2Pix"
+author: "Ananya Sampat"
+date: 2025-11-18 00:00:00
+tags:
 ---
 
 
