@@ -146,8 +146,6 @@ for mask_data in masks:
 
 Figure 3 illustrates the role of SAM in converting raw visual observations into structured object-level representations. As shown in Fig. 3a, the robot’s onboard RGB camera captures a cluttered indoor scene containing multiple objects with varying scales, occlusions, and lighting conditions. Fig. 3b demonstrates SAM’s ability to generate dense, class-agnostic instance segmentation masks, where each distinct object region is separated and highlighted. These masks provide precise spatial boundaries for candidate objects, enabling downstream modules, such as CLIP-based semantic matching, to operate on isolated object regions rather than the full image. By decoupling spatial localization from semantic labeling, SAM allows the system to robustly handle novel objects and complex scenes without relying on predefined category labels.
 
----
-
 ### 3. **Spatial Relationship Detection**
 
 We extend the system to detect relations like:
@@ -178,11 +176,13 @@ We thus implement a helper function called `get_spatial_context(controller, targ
 3. Map RGB colors to a Thor object ID
 4. Lookup the object metadata and parentReceptacles. 
 
-Intuitiviely, the SAM mask tells us which pixels are part of the target, the instance segmentation frame tells us which simulator object those pixels correspond to, and the metadata tells us what the object is residing on, such as a table, couch, drawer, etc. We can then use this location string to visualize detections, indicating a bounding box with a CLIP score and spatial context. 
+Intuitiviely, the SAM mask tells us which pixels are part of the target, the instance segmentation frame tells us which simulator object those pixels correspond to, and the metadata tells us what the object is residing on, such as a table, couch, drawer, etc. We can then use this location string to extract spatial context and better understand the locations of objects relative to our target object in the environment.
 
-WE MIGHT WANT TO INCLUDE A PICTURE OF IT FROM OUR COLLAB NOTEBOOK.
+INCLUDE PICTURE FROM COLAB
 
-## Navigating the Enviornment
+---
+
+## Navigating the Environment
 
 By providing the system with a natural language query, such as "find the blue cup", our model will decipher this message into a query that determines searching for a cup, in which afterwards RoboTHOR will explore the scene until the target is visible, in which we then can run our SAM / sliding window CLIP to find the object. We have two methods of navigation, one which relies on an existing API and another which uses a heuristic to calculate distance. 
 
@@ -210,9 +210,13 @@ If our navigation does not work, then we perform random navigation, in which we 
 
 If the object does not exist, and if repeated movement patterns fail to detect the object, then the system concludes that the object is not in the scene and will report failure. This failsure ensures that our algorithm doesn't infinitely search forever.
 
+---
+
 ## Example Demonstration
 
-## Conclusions
+---
+
+## Conclusion
 
 In this project, we presented an end-to-end robot navigation system that integrates modern foundation vision models with embodied AI simulation to enable object-centric perception, reasoning, and navigation. By combining SAM for class-agnostic instance segmentation and CLIP for open-vocabulary semantic matching, our system is able to robustly identify target objects in cluttered, realistic indoor environments without relying on predefined object categories or task-specific retraining.
 
@@ -224,15 +228,19 @@ Our navigation strategy combines simulator-provided shortest-path planning with 
 
 Overall, this project demonstrates how foundation models like CLIP and SAM can be effectively integrated into an embodied AI pipeline to enable flexible, generalizable robot navigation driven by natural language commands. Future work could explore tighter integration between perception and control, multi-step language instructions, memory-based exploration, or learning-based navigation policies that further exploit the rich semantic and spatial representations provided by these models.
 
+---
+
 ## Code
 
 Project Repo: [GitHub Repository](https://github.com/Land-dev/finalProject163)
 
-SAM repo:
+SAM repo: [Segment Anything](https://github.com/facebookresearch/segment-anything)
 
-CLIP repo: [Open CLIP](https://github.com/mlfoundations/open_clip)
+CLIP repo: [OpenCLIP](https://github.com/mlfoundations/open_clip)
 
 Ai2-Thor simulation (We use RoboThor): [RoboThor](https://ai2thor.allenai.org/robothor)
+
+---
 
 ## References
 
