@@ -28,7 +28,7 @@ We partition the Cityscapes dataset into three subsets from training, validation
 In this project, we build everything upon the Segformer model.
 Segformer is a transformer-based semantic segmentation model designed to be simple and accurate. It contains two main parts: encoder and decoder. 
 The encoder is MiT (Mix Transformer), a hierarchical Transformer that produces 4 multi-scale feature maps. It uses overlapped patch embeddings and an efficient attention design.
-The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4 feature maps to the same channel size, upsamples them to the same resolution, concatenates and fuses them with an MLP, then outputs per-pixel class scores
+The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4 feature maps to the same channel size, upsamples them to the same resolution, concatenates and fuses them with an MLP, then outputs per-pixel class scores.
 ![Segformer]({{ '/assets/images/team02/segformerArch.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 *Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
 
@@ -51,7 +51,7 @@ $$
 The higher the IoU and mIoU value is, the better is the model performance.
 
 ## Baseline Methods
-We fully fine-tuned a SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head, and we are going to use this fully-finetuned SegFormer-B0 as our **baseline model**. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
+We fully fine-tuned a SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head, and we are going to use this fully-finetuned SegFormer-B0 as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
 ```
 model_base = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
@@ -100,6 +100,8 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window. By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
 
 $$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
+
+where $$\mu_x$$ and $$\mu_y$$ are the mean for x and y, and $$\sigma_x$$, $$\sigma_y$$ are the standard deviation for x and y
 
 2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form:
 
@@ -340,9 +342,12 @@ Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
 
 ![SLC]({{ '/assets/images/team02/SLC.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
-The results here suggest that our Approach 2, which is the BASNet hyrbid loss + copy-paste augmentation, in general outperforms the other two approaches and has the best performance. Comparing with the baseline model, we found that except for the car and vegetation classes, approach 2 model performs better, and has overall a better mIoU value than the performance of baseline model. The reason is likely that small objects tend to receive disproportionally stronger gradients from SSIM and IoU losses, and at the meantime, while still counted as fine-grained urban structures, car and vegetations have relatively larger sizes than all other classes in the 6-class scheme. Therefore for car and vegetation objects in the image they will receive biased parameter updates, which causes the segmentation on these two classes to degrade. Similar reason can be applied to approach 1 and approach 3.
-Overall, all three approaches outperformed the baseline model from mIoU perspective, though for  all of them has a 
+### Compare to Baseline Model
+By comparing the results of all three approaches to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light gets increased, and the overall mIoU scores also get increased in all three approaches. However, the performance on both the car and vegetation classes get degraded slightly. Before we start to analyze, there is something we need to know at first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compare to other 4 classes. Then it becomes clear to analyze performance degradation issue on these two classes. The reason this will happen for all approaches are likely the same: the SSIM loss, IoU loss, and Losvasz loss can all create gradient imbalance - smaller objects can receive larger gradient from these three types of losses, and the larger objects can become suboptimal, and the performance on those larger object did not degrade too much because they are well protected by the original cross-entropy loss.
+Overall, we get better mIoU score for all three approaches because mIoU is the average score, we just win more than we lose. Though all 6 classes are counted as the fine-grained classes, but the performance on those really small objects get improved more than the performance on those relatively larger objects get worsened
 
+### Approach-to-Approach Comparison
+When we compare the three approaches from each other, we can observe that the approach 2, which is the BASNet hybrid loss + copy-paste augmentation generally have better performance compare to the other two approaches, both per-class IoU and mIoU. The only class
 
 
 ## Conclusion
