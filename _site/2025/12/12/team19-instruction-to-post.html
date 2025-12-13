@@ -177,6 +177,18 @@
 <!--more-->
 <ul id="markdown-toc">
   <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#planet-the-classification-approach-2016" id="markdown-toc-planet-the-classification-approach-2016">PlaNet: The Classification Approach (2016)</a>    <ul>
+      <li><a href="#the-concept-of-geocells" id="markdown-toc-the-concept-of-geocells">The Concept of Geocells</a></li>
+      <li><a href="#architecture-and-sequence-learning" id="markdown-toc-architecture-and-sequence-learning">Architecture and Sequence Learning</a></li>
+    </ul>
+  </li>
+  <li><a href="#pigeon-the-semantic-shift-2023" id="markdown-toc-pigeon-the-semantic-shift-2023">PIGEON: The Semantic Shift (2023)</a>    <ul>
+      <li><a href="#semantic-geocells" id="markdown-toc-semantic-geocells">Semantic Geocells</a></li>
+      <li><a href="#haversine-smoothing-loss" id="markdown-toc-haversine-smoothing-loss">Haversine Smoothing Loss</a></li>
+      <li><a href="#clip-pre-training--retrieval" id="markdown-toc-clip-pre-training--retrieval">CLIP Pre-training &amp; Retrieval</a></li>
+      <li><a href="#results" id="markdown-toc-results">Results</a></li>
+    </ul>
+  </li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -185,7 +197,7 @@
       <li><a href="#more-markdown-syntax" id="markdown-toc-more-markdown-syntax">More Markdown Syntax</a></li>
     </ul>
   </li>
-  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
 </ul>
 
 <h2 id="introduction">Introduction</h2>
@@ -195,6 +207,87 @@
 <p>Early approaches relied on matching images to databases of landmarks, but these failed in “in the wild” scenarios where no distinct landmark is visible (e.g., a random road in rural Norway). Deep learning has since shifted this paradigm by learning global feature distributions and characteristics around the world.</p>
 
 <p>In this survey, we explore how architectures have evolved from Convolutional Neural Networks (CNNs) to Transformers and CLIP-based models, specifically focusing on how they handle the partitioning of the Earth and the loss functions used to train them.</p>
+
+<h2 id="planet-the-classification-approach-2016">PlaNet: The Classification Approach (2016)</h2>
+
+<p>The pioneering paper <em>Photo Geolocation with Convolutional Neural Networks</em> [1], known as <em>PlaNet</em>, framed geolocation not as a regression problem (predicting raw coordinates), but as a classification problem.</p>
+
+<h3 id="the-concept-of-geocells">The Concept of Geocells</h3>
+<p>To treat the world as a classification target, PlaNet subdivides the Earth into discrete regions called <em>Geocells</em>.</p>
+
+<p>However, a uniform grid doesn’t work well because photo distribution is not uniform since there are millions of photos of Paris, but very few of the middle of the ocean for example. PlaNet thus introduces <em>adaptive partitioning</em>:</p>
+
+<ol>
+  <li>Start with an S2 geometry grid.</li>
+  <li>Recursively subdivide cells that contain too many photos.</li>
+  <li>Stop when a cell reaches a target photo count.</li>
+</ol>
+
+<p>This results in a map where dense urban areas have tiny, precise cells, while oceans and deserts have massive cells.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/planet_geocells.png" alt="PlaNet Geocells" /></p>
+<p><em>Fig 1. Adaptive partitioning of the world into Geocells based on photo density [1].</em></p>
+
+<h3 id="architecture-and-sequence-learning">Architecture and Sequence Learning</h3>
+<p>PlaNet utilizes an <em>Inception V3</em> architecture to classify images into one of these 26,263 geocells.</p>
+
+<p>A key innovation in PlaNet was the use of <em>LSTMs (Long Short-Term Memory)</em> networks. Geolocation often happens in the context of a photo album. Knowing that the previous photo was taken at the Eiffel Tower heavily implies the current photo of a generic croissant is likely in Paris.</p>
+
+<p>The model then outputs a probability distribution</p>
+
+\[P(c_i | I)\]
+
+<p>over all geocells using the features extracted by the CNN backbone.</p>
+
+<h2 id="pigeon-the-semantic-shift-2023">PIGEON: The Semantic Shift (2023)</h2>
+
+<p>The next leap forward comes from <em>PIGEON</em> (Pre-trained Image GEO-localization Network) [2]. This model was designed to compete against top human <em>GeoGuessr</em> players. Geoguessr is a popular browser game designed around humans guessing where you are in the world based on an image or 3D explorable space travelable via Google Streetview.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/pigeon_diagram.png" alt="Pigeon Geocells" /></p>
+<p><em>Fig 2. Prediction pipeline and main contributions of PIGEON.</em></p>
+
+<h3 id="semantic-geocells">Semantic Geocells</h3>
+<p>PIGEON refines the geocell concept. While PlaNet split cells based purely on photo density, PIGEON incorporates <em>administrative boundaries</em>.</p>
+
+<ul>
+  <li><em>PlaNet:</em> Splits a cell if it has too many photos, regardless of borders.</li>
+  <li><em>PIGEON:</em> Tries to respect country/region borders. This creates “Semantic Geocells,” preventing the model from confusing two neighboring countries that might look similar but have different road markings or signage.</li>
+</ul>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/naive_semantic_geocells.png" alt="Pigeon Diagram" /></p>
+<p><em>Fig 3.      a) Old Naive geocells           b) Pigeon’s semantic geocells [2].</em></p>
+
+<h3 id="haversine-smoothing-loss">Haversine Smoothing Loss</h3>
+<p>A major limitation of PlaNet’s classification approach is that it penalizes “near misses” just as harshly as “far misses.” If the model guesses a cell 1km away from the correct one, standard One-Hot encoding treats it the same as guessing a cell on a different continent.</p>
+
+<p>To fix this, PIGEON replaces standard labels with <em>Haversine Smoothing</em>. Instead of the correct cell being a <code class="language-plaintext highlighter-rouge">1</code> and all others <code class="language-plaintext highlighter-rouge">0</code>, neighboring cells get a partial label based on their physical distance to the image.</p>
+
+<p>First, they define the <strong>Haversine Distance</strong> between two points \(\mathbf{p}_1\) and \(\mathbf{p}_2\) on Earth:</p>
+
+\[\text{Hav}(\mathbf{p}_1, \mathbf{p}_2) = 2r \arcsin \left( \sqrt{\sin^2 \left( \frac{\phi_2 - \phi_1}{2} \right) + \cos(\phi_1) \cos(\phi_2) \sin^2 \left( \frac{\lambda_2 - \lambda_1}{2} \right)} \right)\]
+
+<p>They then generate a “smoothed” label \(y_{n,i}\) for every geocell \(i\) relative to the true image location \(\mathbf{x}_n\). Cells closer to the true location receive a higher value:</p>
+
+\[y_{n,i} = \exp \left( - \frac{\text{Hav}(\mathbf{g}_i, \mathbf{x}_n) - \text{Hav}(\mathbf{g}_n, \mathbf{x}_n)}{\tau} \right)\]
+
+<p>Finally, the Loss Function \(\mathcal{L}_n\) minimizes the difference between the predicted probability \(p_{n,i}\) and this smoothed distance label:</p>
+
+\[\mathcal{L}_n = - \sum_{g_i \in G} \log(p_{n,i}) \cdot y_{n,i}\]
+
+<p>This ensures that the gradient penalty is lower if the model predicts a location that is geographically close to the target, effectively teaching the model a continuous topology of the Earth.</p>
+
+<h3 id="clip-pre-training--retrieval">CLIP Pre-training &amp; Retrieval</h3>
+<p>PIGEON utilizes <em>CLIP (Contrastive Language-Image Pre-training)</em> from OpenAI as its backbone. CLIP is trained on 400 million image-text pairs, so it already possesses a deep understanding of visual concepts, even before it is fine-tuned for location. It also introduces <em>intra-cell retrieval</em> to refine the exact location by looking up similar images within the predicted geocell.</p>
+
+<h3 id="results">Results</h3>
+<p>After several other finetuning features discussed in the paper but not here, <em>PIGEON</em> achieved landmark results and near pefect accuracy on country and continent classification:</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/pigeon_results.png" alt="Pigeon Diagram" /></p>
+<p><em>Fig 4. PIGEON Model results on a holdout dataset of 5,000 Street View locations.</em></p>
+
+<p style="width: 800px; max-width: 100%;">While some may call the above results unimpressive, they then compare PIGEON’s results to ranked players on GeoGuessr to more fairly contextualize results:
+<img src="/CS163-Projects-2025Fall/assets/images/team19/geoguessr_context.png" alt="GeoGuessr Context" /></p>
+<p><em>Fig 4. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.</em></p>
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>
@@ -247,12 +340,11 @@ print (torch.__version__)
 <h3 id="more-markdown-syntax">More Markdown Syntax</h3>
 <p>You can find more Markdown syntax at <a href="https://www.markdownguide.org/basic-syntax/">this page</a>.</p>
 
-<h2 id="reference">Reference</h2>
-<p>Please make sure to cite properly in your work, for example:</p>
+<h2 id="references">References</h2>
 
-<p>[1] Redmon, Joseph, et al. “You only look once: Unified, real-time object detection.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
+<p>[1] Weyand, Tobias, Ilya Kostrikov, and James Philbin. “Planet-photo geolocation with convolutional neural networks.” <em>European Conference on Computer Vision</em>. Springer, Cham, 2016.</p>
 
-<hr />
+<p>[2] Haas, Lukas, et al. “PIGEON: Predicting Image Geolocations.” <em>arXiv preprint</em> arXiv:2307.05845, 2023. https://doi.org/10.48550/arXiv.2307.05845 (Accepted at CVPR 2024.)</p>
 
   </div>
 
