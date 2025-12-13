@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: super res title
+title: Team 01 - Deep Learning for Image Super-Resolution
 author: Thomas Peeler, Dylan Truong, Asher Christian, Daniel Chvat
 date: 2025-01-01
 ---
@@ -503,13 +503,27 @@ Specifically, in our experiment, we will be modifying the architecture of the HA
 
 ### Results
 
-[results table here ]
+Here is a comparison of average PSNR on benchmark datasets between the base HAT-S and our model:
+
+|                    	| \|  Set5  \| 	| \|  Set14  \| 	| \|  BSD100  \| 	| \|  Urban100  \| 	| \|  Manga109  \| 	|
+|--------------------	|:------------:	|:-------------:	|:--------------:	|:----------------:	|:----------------:	|
+| HAT-S (baseline)   	|     32.92    	|     29.15     	|      27.97     	|       27.87      	|       32.35      	|
+| HAT-S + AST        	|     32.46    	|     28.86     	|      27.74     	|       26.71      	|       31.21      	|
 
 Unfortunately, our modification to the HAT-S was unable to match the results of the regular HAT-S. A possible reason is that the sparse attention is not particularly useful for 4x upscaling; there are few pixels in the starting image compared to the output image, so each one is more likely to hold important information than if we were doing something like 2x upscaling. Additionally, the size of the overlap window may be an issue: we did not get the chance to experiment with other sizes, so it is possible that the smaller 0.5 ratio may have actually worked better for our model, still benefitting from the sparse attention mechanism.
 
-[sample upscaled images from model ]
+Here are a few samples from our validation sets:
 
-In any case, the sparse attention mechanism and FRFN are interesting modifications to the Transformer, and we hope that future research can come up with even more improvements on the architecture.
+| HR Image | 4x Bicubic | HAT-S | HAT-S + AST |
+| :---: | :---: | :---: | :---: |
+| {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/hatast.png", width="170">{:/} |
+| {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/hatast.png", width="170">{:/} |
+| {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/hatast.png", width="170">{:/} |
+| {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/hatast.png", width="170">{:/} |
+
+We see similar qualitative peformance between HAT-S and our modification, though a closer inspection does confirm that our model produces slightly blurrier results.
+
+In any case, the sparse attention mechanism and FRFN are interesting modifications to the Transformer; while our own experiment with the modification did not produce favorable results, we hope that future research can come up with new kinds of modifications to the Transformer that can produce better results.
 
 Our Colab training script for the experiment can be found [here](https://colab.research.google.com/drive/1izhn48tI3pAZmPG_GyJgbsLqqF8Rmbvk?usp=sharing), with supporting codebases [here](https://github.com/thom-1118/BasicSR) and [here](https://github.com/thom-1118/HAT_AST).
 
