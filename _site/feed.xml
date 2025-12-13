@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T03:00:56-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T03:17:24-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
   <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
@@ -71,9 +71,6 @@ The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4
     ignore_mismatched_sizes=True
 )
 
-model_base.cuda()
-print(model_base.device)
-
 training_args = TrainingArguments(
     output_dir="./segformer-thin-structures-v2",
     learning_rate=6e-5,
@@ -97,11 +94,9 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
 )
-print(training_args.device)
 
 trainer.train()
 trainer.save_model("./segformer-thin-structures-v2-final")
-print("Done!")
 </code></pre></div></div>
 <p>All methods we explored in the project will use same set of training_args as shown above for better comparison.</p>
 
@@ -298,9 +293,46 @@ class HybridLoss(nn.Module):
 
 <p>Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model_bas_aug = SegformerForSemanticSegmentation.from_pretrained(
+    "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+    num_labels=7,
+    ignore_mismatched_sizes=True
+)
+
+training_args = TrainingArguments(
+    output_dir="./segformer-thin-structures-ba_aug",
+    learning_rate=6e-5,
+    num_train_epochs=15,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    save_total_limit=1,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    logging_steps=25,
+    remove_unused_columns=False,
+    dataloader_num_workers=12,
+    fp16=torch.cuda.is_available(),
+    gradient_accumulation_steps=1,
+    report_to="none",
+)
+
+trainer = BATrainer(
+    model=model_bas_aug,
+    args=training_args,
+    train_dataset=train_dataset_aug,
+    eval_dataset=val_dataset,
+    ce_weight=1,
+    ssim_weight=0.4,
+    iou_weight=0.5,
+)
+
+trainer.train()
+trainer.save_model("./segformer-thin-structures-ba_aug-final")
+</code></pre></div></div>
+
 <h2 id="approach-2---basnet-hybrid-loss--copypaste-augmentation">Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation</h2>
 
-<p>Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
+<p>Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes</p>
 
 <h2 id="approach-3---ssim--lovasz-loss--copypaste-augmentation">Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation</h2>
 
@@ -309,60 +341,15 @@ class HybridLoss(nn.Module):
 
 <p>For Approach 1 - BASNet Hybrid Loss:</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Class</th>
-      <th style="text-align: right">Baseline</th>
-      <th style="text-align: right">BAS</th>
-      <th style="text-align: right">Improvement</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>fence</td>
-      <td style="text-align: right">0.3438</td>
-      <td style="text-align: right">0.3960</td>
-      <td style="text-align: right">+0.0522</td>
-    </tr>
-    <tr>
-      <td>car</td>
-      <td style="text-align: right">0.8964</td>
-      <td style="text-align: right">0.8943</td>
-      <td style="text-align: right">-0.0021</td>
-    </tr>
-    <tr>
-      <td>vegetation</td>
-      <td style="text-align: right">0.8968</td>
-      <td style="text-align: right">0.8948</td>
-      <td style="text-align: right">-0.0020</td>
-    </tr>
-    <tr>
-      <td>pole</td>
-      <td style="text-align: right">0.3119</td>
-      <td style="text-align: right">0.3379</td>
-      <td style="text-align: right">+0.0259</td>
-    </tr>
-    <tr>
-      <td>traffic sign</td>
-      <td style="text-align: right">0.5653</td>
-      <td style="text-align: right">0.5819</td>
-      <td style="text-align: right">+0.0166</td>
-    </tr>
-    <tr>
-      <td>traffic light</td>
-      <td style="text-align: right">0.4583</td>
-      <td style="text-align: right">0.4730</td>
-      <td style="text-align: right">+0.0147</td>
-    </tr>
-    <tr>
-      <td><strong>mIoU</strong></td>
-      <td style="text-align: right"><strong>0.5788</strong></td>
-      <td style="text-align: right"><strong>0.5963</strong></td>
-      <td style="text-align: right"><strong>+0.0176</strong></td>
-    </tr>
-  </tbody>
-</table>
+<p><img src="/CS163-Projects-2025Fall/assets/images/team02/BAS.png" alt="BAS" style="width: 400px; max-width: 100%;" /></p>
+
+<p>For Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team02/Aug.png" alt="Aug" style="width: 400px; max-width: 100%;" /></p>
+
+<p>For Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
 
 <h2 id="conclusion">Conclusion</h2>
 

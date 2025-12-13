@@ -59,9 +59,6 @@ model_base = SegformerForSemanticSegmentation.from_pretrained(
     ignore_mismatched_sizes=True
 )
 
-model_base.cuda()
-print(model_base.device)
-
 training_args = TrainingArguments(
     output_dir="./segformer-thin-structures-v2",
     learning_rate=6e-5,
@@ -85,11 +82,9 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
 )
-print(training_args.device)
 
 trainer.train()
 trainer.save_model("./segformer-thin-structures-v2-final")
-print("Done!")
 ```
 All methods we explored in the project will use same set of training_args as shown above for better comparison.
 
@@ -282,10 +277,50 @@ class BATrainer(Trainer):
 
 Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
 
+```
+model_bas_aug = SegformerForSemanticSegmentation.from_pretrained(
+    "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+    num_labels=7,
+    ignore_mismatched_sizes=True
+)
+
+training_args = TrainingArguments(
+    output_dir="./segformer-thin-structures-ba_aug",
+    learning_rate=6e-5,
+    num_train_epochs=15,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    save_total_limit=1,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    logging_steps=25,
+    remove_unused_columns=False,
+    dataloader_num_workers=12,
+    fp16=torch.cuda.is_available(),
+    gradient_accumulation_steps=1,
+    report_to="none",
+)
+
+trainer = BATrainer(
+    model=model_bas_aug,
+    args=training_args,
+    train_dataset=train_dataset_aug,
+    eval_dataset=val_dataset,
+    ce_weight=1,
+    ssim_weight=0.4,
+    iou_weight=0.5,
+)
+
+trainer.train()
+trainer.save_model("./segformer-thin-structures-ba_aug-final")
+```
+
 ## Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation
 
 
-Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
+Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
+
+
 
 ## Approach 3 - SSIM + Lovasz Loss + CopyPaste Augmentation
 
@@ -294,15 +329,16 @@ After all training and evaluations are done, we print the result, and compare it
 
 For Approach 1 - BASNet Hybrid Loss:
 
-| Class         | Baseline |  BAS   | Improvement |
-|--------------|---------:|-------:|------------:|
-| fence        |   0.3438 | 0.3960 |     +0.0522 |
-| car          |   0.8964 | 0.8943 |     -0.0021 |
-| vegetation   |   0.8968 | 0.8948 |     -0.0020 |
-| pole         |   0.3119 | 0.3379 |     +0.0259 |
-| traffic sign |   0.5653 | 0.5819 |     +0.0166 |
-| traffic light|   0.4583 | 0.4730 |     +0.0147 |
-| **mIoU**     | **0.5788** | **0.5963** | **+0.0176** |
+![BAS]({{ '/assets/images/team02/BAS.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+
+For Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
+
+![Aug]({{ '/assets/images/team02/Aug.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+
+For Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
+
+![SLC]({{ '/assets/images/team02/SLC.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+
 
 
 ## Conclusion
