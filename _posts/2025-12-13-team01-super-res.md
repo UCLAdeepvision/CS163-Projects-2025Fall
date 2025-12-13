@@ -430,14 +430,8 @@ d = \overline{\mathcal{F}(j)}\mathcal{F}(\vec y \uparrow_s) + \alpha_j \mathcal{
 
 $$
 
-$$
-\alpha_j := \mu_j\sigma^2
-$$
-
-and $$ \mathcal{F}( \centerdot ) $$ denotes the FFT and $$\odot_s$$ is the distinct block processing operator with element-wise multiplication.
-$$ \Downarrow_s $$ denotes the block downsampler and $$ \uparrow_s $$ denotes the upsampler.
-
-The derivation of which is too long to include here, but is detailed in [4].
+and $$ \mathcal{F}( \centerdot ) $$ denotes the discrete FFT and $$\odot_s$$ is the distinct block processing operator with element-wise multiplication.
+$$ \Downarrow_s $$ denotes the block downsampler and $$ \uparrow_s $$ denotes the upsampler. The derivation of this solution is too long to include here, but is detailed in [4].
 
 So, it remains to find 
 $$\vec x_j = \arg \min_{\vec x} \Phi(\vec x) + \frac {\mu_j} {2\lambda} ||\vec x - \vec z_j||_2^2$$. 
@@ -445,53 +439,54 @@ One can notice that this is similar to our very first optimization target; indee
 $$\beta_j = \sqrt{\frac{\lambda}{\mu_j}}$$
  (the standard deviation of the Gaussian noise), and we have that finding $$x_j$$ is equivalent to a Gaussian denoising problem with noise level $$\beta_j$$ (or, $$\sigma^2_\text{noise} = \beta_j^2$$).
 
-Given that this is a simple denoising task, we will opt for a denoising neural network. The paper in question uses a "ResUNet", which is a UNet with added residual blocks, similar to those from a ResNet. 
+Given that this is a simple denoising task, we can opt for a denoising neural network. The paper in question uses a "ResUNet", which is a variant of a UNet:
 
 ![Unfolding UNet]({{ '/assets/images/01/UNet.png' | relative_url }})
 {: style="max-width: 80%;"}
 *Fig 1. UNet architecture as depicted in  [6].*
 
-The network takes in the concatenated $$ \vec z_k $$ and noise level map and outputs the denoised image $$ x_k $$.
-The ResUNet involves four scales in which 2x2 strided convolutions and 2x2 transposed convolutions are adopted and residual blocks are added during both
-downscaling and upscaling.
+The network takes in $$ \vec z_k $$ and outputs the denoised image $$ \vec x_k $$. The ResUNet involves four scales, in which 2x2 strided convolutions and 2x2 transposed convolutions are adopted for down- and up-scaling, respectively, and residual blocks with the same structure as from ResNet are added during both downscaling and upscaling; of course, skip connections between downsampling and upsampling are also employed, as in the regular UNet.
 
-In order to ensure adaptibility and nonblind-ness of our method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The paper's method for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended on the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
+In order to ensure adaptibility and nonblind-ness of the method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The paper's method for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended on the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
+
 
 Now having created the strategy to accomplish the single image super resolution task, the paper makes the method explicit.
-To do this they first introduce the Data module $$ \mathcal{D} $$. This model computes the optimal solution to
+To do this they first introduce the Data module $$ \mathcal{D} $$, which is used to give us $$z_k = \mathcal{D}(\vec x_{k-1}, s, \vec k, \vec y, \alpha_k)$$, which is the optimal solution to
 
 $$
 \vec z_j = \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2 
 $$
 
-This module takes as input the scale factor $$ s $$ and blur kernel $$ k $$ This module contains no trainable parameters, which allows
-for greater generalizability, being able to adapt to any kernel, sigma, and downsample factor and will always minimize the objective.
-The prior module $$ \mathcal{P} $$ is trained to optimize the other objective
+Of course, this is achieved with the closed form solution detailed above, so this module has no learnable parameters and can explicitly adapt to any blurring kernel, scale factor and noise level $$\sigma$$ (through $$\alpha_j$$).
+
+The prior module $$ \mathcal{P} $$, which is used to give us $$x_k = \mathcal{P}(\vec z_k, \beta_j)$$, is trained to optimize the other objective
 
 $$
 \vec x_j = \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2
 $$
 
-lastly, the hyper-parameter module $$ \mathcal{H} $$ controls the outputs of the data and prior modules.
-This module takes in $$ \sigma, s $$  and predicts optimal $$ \lambda, \mu_j $$ which in turn affect $$ \alph_j, \beta_j
-This module consists of three fully connected layers.
+As alluded, this encapsulates the denoising ResUNet.
 
-Putting all of the modules together, the Deep Unfolding Network is trained by first synthesizing low resolution
+Lastly, the hyper-parameter module $$ \mathcal{H} $$ controls the outputs of the data and prior modules.
+This module takes in $$ \sigma, s $$ and uses a MLP to predict optimal $$\lambda$$ and $$\mu_1, ..., \mu_K$$ for the given problem, which can then be used to compute $$\alpha_1, ..., \alpha_K$$ and $$\beta_1, ..., \beta_K$$.
+
+With all of this, the authors note that the model is trained in a end-to-end fashion, where scaling factors, blurring kernels, and noise levels are chosen from a pool throughout training to generate LR samples. While certain portions of the network can explicitly adapt to these factors, the denoising network and hyperparameter module cannot do so as eaily, and so varying these values throughout training ensures that the network, as a whole, is robust and adaptable.
+
+<!-- Putting all of the modules together, the Deep Unfolding Network is trained by first synthesizing low resolution
 images from high resolution images, picking various scaling factors and Gaussian blur kernels. The L1 loss is used performance
 since it promotes sharper images. Later in training, VGG perceptual loss and relativistic adversarial loss are included.
-The model is optimized using batched gradient descent under the adam optimizer.
+The model is optimized using batched gradient descent under the adam optimizer. -->
 
-In order to provide a baseline for model performance, only select combinations of blur kernels, scale factors, and noise levels are chosen for evaluation against other methods.
+#### Results
 
-![Unfolding Performance]({{ '/assets/images/01/ast_arch.png' | relative_url }})
+![Unfolding Performance]({{ '/assets/images/01/dun_data.png' | relative_url }})
 {: style="max-width: 100%;"}
-*Fig 2. Average Peak Signal-to-Noise Ratio across evaluated methods, with best results shown in red and second-best in blue, along with visual comparisons from several super-resolution models [2].*
+*Fig 2. Average Peak Signal to Noise Ratio results of different methods, with the best results highlighted in red and second best in blue, as well as results of different image super resolution methods [2].*
 
+As shown, the model from this paper outperforms its state-of-the-art peers (from the time).
+Additionally, the qualitative results are favorable for the model; to note, the GAN variant of the model has generally sharper resolution, which can be attributed to the introduction of the more complex discriminator loss, compared to something like simple L1 loss.
 
-As shown in Figure 2 the model from this paper outperforms the other models which were picked to be state of the art models at the time.
-Additionally, the visual results are shown under the table with the models from this paper performing favorably, note that the GAN version has sharper resolution which is to be expected by the introduction of a discriminator loss.
-
-For the task at hand, the unfolding network model shows how powerful learning methods can be when paired with model based methods as seen in the data module being paired with the prior module.
+In all, the deep unfolding network is an interesting blend of model-based and learning-based methods; they can both be very useful in their own right, and can empower each other when combined. The efficient, learning-free data module makes the job of the learned prior module much easier, and attains an optimal solution that could have required many times more parameters to replicate in a learning-based method. Conversely, the prior module can give us an accurate approximation for a complex, statistical problem, which model-based methods can struggle with.
 
 
 <!-- -adv: 
@@ -503,41 +498,51 @@ For the task at hand, the unfolding network model shows how powerful learning me
 
 -more classical method can better adapt to diff blurring kernel, etc without extensive training; balance of learning based and model based method is good idk -->
 
-## An Extension of the Hybrid Attention Transformer
+## Experiments: An Extension of the Hybrid Attention Transformer
 
 ### Adaptive Sparse Transformer (AST)
 
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/01/ast_arch.png" alt="AST" /></p> *Fig 1. Overview of our Adaptive Sparse Transformer (AST) with Adaptive Sparse Self-Attention (ASSA) and the Feature Refinement Feed-Forward Network (FRFN) [7].*
+While Transformers have shown immense success in vision tasks due to their ability to model complex, long-range relationships, this can also be a detriment; for reconstructing a given portion of an image, there are likely many parts of the image that are not relevant, and trying to use information from those parts will only add noise to your reconstruction. The self-attention mechanism of the regular Transformer has all tokens attend to all other tokens, with (Softmax) attention weights that will always be greater than 0. While the Transformer can use very small attention scores as a way of giving less attention to irrelevant tokens, it is likely useful to give the model more direct flexibility in selecting relevant image regions that does not require weights and scores of large magnitude; for this, [7] proposes the Adaptive Sparse Transformer (AST).
 
-Adaptive Sparse Transformers extend the standard Transformer by introducing Adaptive Sparse Self-Attention (ASSA) and a Feature Refinement Feed-Forward Network (FRFN).
-Beyond the usual dense softmax attention (DSA), the ASSA block computes a sparse self-attention (SSA) map using a squared ReLU operation on the attention logits. The model then fuses dense and sparse attention through a learnable weighted sum:
+The AST changes the standard Transformer architecture in two ways: first, instead of just using Softmax on our attention scores to get attention weights, it introduces sparse score selection by using a weighted sum of the Softmax and squared-ReLU of the attention scores to get the attention weights, where the weight between the two schemes is a learnable parameter. With this, our Transformer has both "dense" (Softmax) attention weights, which allow all weights to be greater than 0, and "sparse" (squared ReLU) weights, where many weights will be exactly 0 and larger weights will be further amplified, and the model can learn how best to weigh these two methods for the task at hand. This self-attention mechanism is known as Adaptive Sparse Self-Attention (ASSA), and it is notable as a potentially powerful modification to the self-attention mechanism that requires just 1 extra parameter (as the weights can be computed as $$\text{sigmoid}(b), 1-\text{sigmoid}(b)$$ for $$b$$ learnable).
 
+![AST Architecture]({{ '/assets/images/01/assa.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 1. Adaptive Sparse Self-Attention (ASSA)*
 
-$$
-SSA = \mathrm{ReLU}^2\!\left(\frac{QK^\top}{\sqrt{d}} + B\right)
-$$
+Secondly, the AST replaces the standard MLP of the Transformer with what the authors call a Feature Refinement Feed-forward Network (FRFN).
 
-$$
-DSA = \mathrm{SoftMax}\!\left(\frac{QK^\top}{\sqrt{d}} + B\right)
-$$
+![AST Architecture]({{ '/assets/images/01/frfn.png' | relative_url }})
+{: style="max-width: 100%;"}
+*Fig 1. Feature Refinement Feed-forward Network (FRFN)*
 
-$$
-A = \left(w_1 \cdot SSA + w_2 \cdot DSA\right)V
-$$
-
-This attention mechanism allows the model to reduce noise in its output and amplify information from important tokens while 
-preserving most of the input information, all while introducing only two new parameters per transformer block.
+Aside from being a post-attention network with convolutions that takes advantage of the spatial nature of the image, the FRFN aims to address redundancy in the channel dimension after using ASSA. It utilizes partial convolutions, which only convolves on a portion of the channels, and depthwise convolutions, which convolves each channel independently, along with splitting the image along its channels and then combining the two halves via matrix multiplication to efficiently provide a post-ASSA transformation that can further attenuate the information features extracted from the self-attention while giving the model some flexilibity to clear uninformative channels.
 
 ### Putting it Together
-We propose integrating AST into OCA and increasing the size of the overlapping K/V windows. 
-Specifically, since the OCAB is designed to aggregate information from a wider portion of the image and also 
-acts as a gate at the end of each RHAG, incorporating AST into the OCAB may help reduce the noise that passes through the model. 
-To potentially further improve performance, we also introduce the new FRFN module proposed in the AST paper into the OCAB block.
-After making the proposed modifications, we will retrain the model on teh same test sets as introduced in HAT and which we hope 
-will perform beter on the benchmarks.
+
+Recall the structure of the Hybrid Attention Transformer (HAT):
+
+![HAT architecture]({{ '/assets/images/01/HAT_architecture.png' | relative_url }})
+{: style="max-width: 90%;"}
+*Fig 1. HAT Architecture Overview [1].*
+
+One can see that the OCAB at the end of each RHAG acts as a sort of "gate" between blocks. Additionally, given the large key and value windows for the OCA, part of the purpose of the OCAB is to give each portion of the image a chance to incorporate together information from a larger portion of the image all at once, without relying on window-shifting. However, it is likely that portions of these larger windows are not useful for the image reconstruction task, so this larger window allows for ample noise to seep through into our image tokens. So, we propose a modification to the HAT architecture that replaces the attention mechanism of the OCA with the sparse attention of the AST, and, subsequently, replaces the MLP of the OCAB with the FRFN. We hypothesize that this can temper the OCA and prevent too many issues from the larger windows, but can also act as a overall information gate for each window itself at the end of the RHAG, as the windows will perform cross-attention where the set of key and value pixels are a superset of the query pixels.
+
+Since we are giving the model this selective capability, we can likely afford to increase the size of the OCA window; in the original HAT paper, they had found that a overlap ratio of 0.5 was optimal (meaning that key and value windows were 1.5x as large as the query window in each dimension), but a value of 0.75 produced slightly worse results. So, we propose that increasing the overlap ratio to 0.75 will better utilize the sparse attention, giving the model access to more information that it can select from, while remaining computationally efficient.
+
+Specifically, in our experiment, we will be modifying the architecture of the HAT-S, the smallest HAT model, for practical reasons, and training it for doing 4x image upscaling.
 
 ### Results
 
+[results table here ]
+
+Unfortunately, our modification to the HAT was unable to match the results of the regular HAT-S. A possible reason is that the sparse attention is not particularly useful for 4x upscaling; there are few pixels in the starting image compared to the output image, so each one is more likely to hold important information than if we were doing something like 2x upscaling. Additionally, the size of the overlap window may be an issue: we did not get the chance to experiment with other sizes, so it is possible that the smaller 0.5 ratio may have actually worked better for our model, still benefitting from the sparse attention mechanism.
+
+[sample upscaled images from model ]
+
+In any case, the sparse attention mechanism and FRFN are interesting modifications to the Transformer, and we hope that future research can come up with even more improvements on the architecture.
+
+Our Colab training script for the experiment can be found here [LINK ], with supporting codebases here [LINK ] and here [LINK ].
 
 ## References
 
