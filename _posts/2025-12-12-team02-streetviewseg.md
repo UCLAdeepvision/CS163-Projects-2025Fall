@@ -15,7 +15,7 @@ date: 2025-12-12
 {:toc}
 
 ## Introduction
-Understanding street-level scenes through segmentation is crucial to autonoumous driving, urban mapping, and robot perception. And it is especially important when it comes to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily missed details. So, this naturally leads to the question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?
+Understanding street-level scenes through segmentation is crucial to autonomous driving, urban mapping, and robot perception. And it is especially important when it comes to segment fine-grained urban structures because a lot of what makes a street safe, legal, and navigable lives in small, easily missed details. So, this naturally leads to the question we want to investigate in this project: How to improve the semantic segmentation performance on those fine-grained urban structures?
 
 ## Dataset
 Cityscapes is a large-scale, widely used dataset for understanding complex urban environments, featuring diverse street scenes from many cities with high-quality pixel-level annotations for tasks like semantic segmentation and instance segmentation. It contains 30 classes and many of them are considered to be fine-grained urban structures, thus this dataset is a perfect choice for this project.
@@ -25,15 +25,15 @@ We remapped all categories in cityscapes to a consistent six-class scheme - fenc
 We partition the Cityscapes dataset into three subsets from training, validation, and testing. From the original Cityscapes training split, we sample 2000 images to form our training set, 250 images to form our validation set, and another 250 images to form our test set.
 
 ## Model: Segformer
-In this project, we build everything upon the Segformer model.
+In this project, we build everything upon the SegFormer model.
 Segformer is a transformer-based semantic segmentation model designed to be simple and accurate. It contains two main parts: encoder and decoder. 
-The encoder is MiT (Mix Transformer), a hierarchical Transformer that produces 4 multi-scale feature maps. It uses overlapped patch embeddings and an efficient attention design.
-The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4 feature maps to the same channel size, upsamples them to the same resolution, concatenates and fuses them with an MLP, then outputs per-pixel class scores.
+The encoder is MiT (Mix Transformer), a hierarchical Transformer that produces 4 multi-scale feature maps. It uses overlapped patch embeddings and an efficient attention design [1].
+The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4 feature maps to the same channel size, upsamples them to the same resolution, concatenates and fuses them with an MLP, then outputs per-pixel class scores [1].
 ![Segformer]({{ '/assets/images/team02/segformerArch.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 *Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
 
 ## Evaluation Metrics
-We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted bounding box and the ground truth bounding box. The equation of calculating IoU is given as follows:
+We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted region and the ground truth bounding box. The equation of calculating IoU is given as follows:
 
 $$\mathrm{IoU}(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
 
@@ -95,29 +95,29 @@ The performance of the baseline model is shown in below:
 ## Our Approach
 ### Approach 1 - BASNet Hybrid Loss
 In our first approach we implement a **boundary-aware supervision** strategy designed to improve the geometric precision of the baseline model without altering its underlying architecture. While standard semantic segmentation relies on pixel-wise classification, a "Boundary-Aware" mechanism redefines the optimization objective to prioritize structural fidelity.
-Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting a hybrid loss that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
+Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundary-aware supervision by adopting the hybrid loss, which is proposed in the BASNet, that combines three distinct supervisory signals to train the SegFormer. The three types of losses are described below:
 
 1.  **Structural Similarity (SSIM):** Unlike pixel-wise losses that treat neighbors as independent, SSIM evaluates the structural information within a local sliding window. By using Gaussian-weighted convolutions (`F.conv2d`), it penalizes predictions where the local variance—representing texture and edges—does not match the ground truth. This effectively forces the model to sharpen boundaries around objects. It has the following mathematical form:
 
     $$\ell_{ssim} = 1 - \frac{(2\mu_x \mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}$$
 
 
-    where $\mu_x$, $\mu_y$ are the mean for x and y, and $\sigma_x$, $\sigma_y$ are the standard deviations for x and y, $\sigma_{xy}$ is their covariance, $C_1 = 0.01^2$ and $C_2 = 0.03^2$ are used to avoid dividing by zero.
+    where $\mu_x$, $\mu_y$ are the mean for x and y, and $\sigma_x$, $\sigma_y$ are the standard deviations for x and y, $\sigma_{xy}$ is their covariance, $C_1 = 0.01^2$ and $C_2 = 0.03^2$ are used to avoid dividing by zero [2].
 
 
 2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form:
 
     $$\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}^{H} \sum_{c=1}^{W} \left[ S(r,c) + G(r,c) - S(r,c) G(r,c) \right]}$$
 
-    where G(r,c) is the ground truth label of the pixel (r,c) and S(r,c) is the predicted probability
+    where G(r,c) is the ground truth label of the pixel (r,c) and S(r,c) is the predicted probability [2].
 
 3.  **Cross-Entropy (CE):** We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.
 
-We combine the three types of losses in a weighted way, so we can have more flexibility.
+Build upon the original hybrid loss proposed in the BASNet, we combine the three types of losses in a weighted way, so we can have more flexibility.
 
 $$\ell_{hybrid} = \lambda_{ce} \cdot \ell_{ce} + \lambda_{ssim} \cdot \ell_{ssim} + \lambda_{iou} \cdot \ell_{iou}$$
 
-By defining this new loss function we shifted from a purely semantic focus to a hybrid focus. 
+By defining this new loss function we shifted from a purely semantic focus to a hybrid focus, and more focus is expected to be shifted to fine-grained things in the image because such loss is architecturally biased toward boundaries and those fine-grained urban structures have small interiors relative to their boundary.
 The hybrid loss implementation is shown below:
 
 ```
@@ -285,14 +285,14 @@ class BATrainer(Trainer):
 Then, we initialize another pretrained SegFormer-B0 model, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
 
 ```
-model_bas_aug = SegformerForSemanticSegmentation.from_pretrained(
+model_bas = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
     num_labels=7,
     ignore_mismatched_sizes=True
 )
 
 training_args = TrainingArguments(
-    output_dir="./segformer-thin-structures-ba_aug",
+    output_dir="./segformer-thin-structures-ba",
     learning_rate=6e-5,
     num_train_epochs=15,
     per_device_train_batch_size=2,
@@ -302,16 +302,16 @@ training_args = TrainingArguments(
     save_strategy="epoch",
     logging_steps=25,
     remove_unused_columns=False,
-    dataloader_num_workers=12,
+    dataloader_num_workers=8,
     fp16=torch.cuda.is_available(),
     gradient_accumulation_steps=1,
     report_to="none",
 )
 
 trainer = BATrainer(
-    model=model_bas_aug,
+    model=model_bas,
     args=training_args,
-    train_dataset=train_dataset_aug,
+    train_dataset=train_dataset,
     eval_dataset=val_dataset,
     ce_weight=1,
     ssim_weight=0.4,
@@ -319,17 +319,17 @@ trainer = BATrainer(
 )
 
 trainer.train()
-trainer.save_model("./segformer-thin-structures-ba_aug-final")
+trainer.save_model("./segformer-thin-structures-ba-final")
 ```
 
 ### Approach 2 - BASNet Hybrid Loss + Copy-Paste Augmentation
 Building upon the structural precision achieved by our Boundary-Aware (BA) approach, we further introduce **a Copy-Paste Augmentation** strategy that fundamentally alters the training data distribution. While the BA method refines *how* the model learns, this augmentation strategy refines *what* the model sees during training.
 
+The motivation for this copy-paste augmentation is that: While the Boundary-Aware (BA) method successfully mitigates over-smoothing by sharpening object edges, it remains constrained by the inherent class imbalance present in the original dataset. In typical street-view scenes, safety-critical objects such as traffic poles, distant lights, and road signs constitute only a small fraction of total pixels relative to dominant classes including road, sky, and building surfaces. Consequently, even a boundary-focused model may struggle to detect these objects due to their limited representation in the training data. To directly address this "long-tail" distribution problem without incurring the cost of manual data collection, we employ Copy-Paste augmentation. By synthetically transplanting instances of rare classes onto diverse background contexts, we encourage the model to decouple objects from their typical environmental associations and recognize them based on intrinsic visual features rather than contextual priors. This augmentation strategy primarily targets **recall**: whereas the BA method improves the *quality* of detected object boundaries, Copy-Paste augmentation improves the *likelihood* of successful detection by exposing the model to a high frequency of rare, spatially sparse structures throughout training.
+
 The core mechanism relies on an object-level augmentation technique that synthesizes new training samples dynamically. For each target image, the system randomly selects a source image from the dataset and identifies specific object classes within it. The identified objects are extracted and optionally transformed through geometric operations including resizing and horizontal flipping to introduce additional variance. These extracted objects are then composited onto the target image using alpha-blending, and the corresponding segmentation masks are updated simultaneously to reflect the newly transplanted objects. By combining extracted objects with realistic textures in a single image, this process creates training samples with increased object density and complexity. Importantly, the model is trained on these augmented samples using the same Hybrid Boundary-Aware loss function (SSIM + IoU + CE) described previously. This integrated approach ensures that the model not only encounters rare objects more frequently but also learns their precise boundaries with high fidelity.
 
 Then, we initialize another pretrained SegFormer-B0 model model_bas_aug, and use the same training_arg as the one we used for our baseline model training and test the per-class IoU and the mIoU across all classes
-
-The motivation for this copy-paste augmentation is that: While the Boundary-Aware (BA) method successfully mitigates over-smoothing by sharpening object edges, it remains constrained by the inherent class imbalance present in the original dataset. In typical street-view scenes, safety-critical objects such as traffic poles, distant lights, and road signs constitute only a small fraction of total pixels relative to dominant classes including road, sky, and building surfaces. Consequently, even a boundary-focused model may struggle to detect these objects due to their limited representation in the training data. To directly address this "long-tail" distribution problem without incurring the cost of manual data collection, we employ Copy-Paste augmentation. By synthetically transplanting instances of rare classes onto diverse background contexts, we encourage the model to decouple objects from their typical environmental associations and recognize them based on intrinsic visual features rather than contextual priors. This augmentation strategy primarily targets **recall**: whereas the BA method improves the *quality* of detected object boundaries, Copy-Paste augmentation improves the *likelihood* of successful detection by exposing the model to a high frequency of rare, spatially sparse structures throughout training.
 
 The copy-paste augmentation implementation is demonstrated in the code below:
 
@@ -485,7 +485,7 @@ By comparing the results of all three approaches to the baseline model, we can f
 Overall, we get better mIoU score for all three approaches because mIoU is the average score, we just win more than we lose. Though all 6 classes are counted as the fine-grained classes, but the performance on those really small objects get improved more than the performance on those relatively larger objects get worsened, which proves that the change-of-loss strategy for boundary-aware supervision and the augmentation technique applied are valid ways to improve the performance semantic segmentations on fine-grained urban structures.
 
 ### Approach-to-Approach Comparison
-When we compare the three approaches from each other, we can observe that the approach 2, which is the BASNet hybrid loss + copy-paste augmentation generally have better performance compare to the other two approaches, both per-class IoU and mIoU. The only class the approach did not win the other two is the fence class. In approach 1, which contains only BASNet hybrid loss has better per-class IoU than approach 2 for fence class. The reason is likely that copy-paste augmentation works well for self-contained objects, but fence is fundamentally different - it has a mesh grid structure and has high context dependency compare to other classes, and in copy-paste augmentation, we create binary masks that will treat fence as a solide blob, destroying the see-through mesh pattern, and pastes it in random locations where fences never natually appear, destroying the spatial context
+When we compare the three approaches from each other, we can observe that the approach 2, which is BASNet hybrid loss + copy-paste augmentation generally have better performance compare to the other two approaches, both per-class IoU and mIoU. The only class the approach did not win the other two is the fence class. In approach 1, which contains only BASNet hybrid loss has better per-class IoU than approach 2 for fence class. The reason is likely that copy-paste augmentation works well for self-contained objects, but fence is fundamentally different - it has a mesh grid structure and has high context dependency compare to other classes, and in copy-paste augmentation, we create binary masks that will treat fence as a solide blob, destroying the see-through mesh pattern, and pastes it in random locations where fences never natually appear, destroying the spatial context
 In general, we can say that the copy-paste augmentation can help to improve the model performance because it introduces variability (good for generalization), the only downside is that the variabiliy is artificial and includes unrealistic placements that add noise, so we did not get a very huge benefits from the augmentation.
 
 ### Visualization
@@ -507,7 +507,7 @@ Second visualization:
 ![Vis3]({{ '/assets/images/team02/a3.png' | relative_url }}){: style="width: 800px; max-width: 100%;"}
     *Fig 5. Example Visualization 2 of Approach 2 Model*.
 
-From the example visualizations above we can see that the approach 2 is indeed improving the performance of the semantic segmetation task on fine-grained urban structures
+From the example visualizations above we can see that the approach 2 is indeed improving the performance of the semantic segmentation task on fine-grained urban structures
 
 
 ## Conclusion
