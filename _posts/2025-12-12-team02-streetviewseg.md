@@ -1,13 +1,13 @@
 ---
 layout: post
 comments: true
-title: Post Template
-author: UCLAdeepvision
-date: 2024-01-01
+title: "Project Track: Project 8 - Streetview Semantic Segmentation"
+author: "Team02"
+date: 2025-12-12
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> In this project, we'll delve into the topic of developing model and applying semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We will explore techniques to enhance the model performance
 
 
 <!--more-->
@@ -15,7 +15,7 @@ date: 2024-01-01
 * TOC
 {:toc}
 
-## Main Content
+## Introduction
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
 
 ## Basic Syntax
