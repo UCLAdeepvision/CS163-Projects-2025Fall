@@ -9,11 +9,9 @@ date: 2025-11-19
 > This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
 
 <!--more-->
-
 {: class="table-of-content"}
-
--  TOC
-   {:toc}
+* TOC
+{:toc}
 
 ## 1. Introduction
 
@@ -175,6 +173,8 @@ Despite these changes, UFlow at its core uses a self-supervised training loop ac
 
 <img src="{{ site.baseurl }}/assets/images/team27/wcf-loop.png" />
 
+_Figure 6. Overview of the UFlow model architecture, showing the pyramid structure as well as the WCF block present at each level [3]._
+
 As previously mentioned, the unsupervised training objective is the photometric loss. While the team behind UFlow experimented with multiple different losses, the main one used was the generalized Charbonnier loss function, given by
 
 $$L_C = \frac{1}{n} \sum \left((I^{(1)} - w(I^{(2)}))^2 + \epsilon^2\right)^\alpha$$
@@ -187,7 +187,7 @@ With the base model established, the team behind UFlow aimed to determine exactl
 
 #### Occlusion Handling
 
-As previously mentioned, the UFlow model takes two images as input, and feeds them into a shared CNN for feature extraction. The issue of occlusions arises when specific features or regions of one image are not present in the partner image. If this is not accounted for and handled correctly, any photometric loss calculations would include garbage values. As such, all occlusions, along with any other pixels deemed invalid, need to somehow be detected and gracefully handled. The approach taken by UFlow is to use a “range map”, which stores information regarding the number of pixels in the partner image that are mapped to each pixel in a target image. This range map is then used to determine which pixels are not mapped to at all in the target image, and those pixels are deemed occlusions. Against the KITTI dataset specifically, the approach taken by UFlow is a forward-backward consistency check, which marks pixels as occlusions whenever the flow and back-projected flow disagree by more than some margin [3]. Thus, these pixels are “masked”, where this mask can be calculated by [THIS EQUATION]. In this latter approach, the team found that stopping the gradient at the occlusion mask improved performance.
+As previously mentioned, the UFlow model takes two images as input, and feeds them into a shared CNN for feature extraction. The issue of occlusions arises when specific features or regions of one image are not present in the partner image. If this is not accounted for and handled correctly, any photometric loss calculations would include garbage values. As such, all occlusions, along with any other pixels deemed invalid, need to somehow be detected and gracefully handled. The approach taken by UFlow is to use a “range map”, which stores information regarding the number of pixels in the partner image that are mapped to each pixel in a target image. This range map is then used to determine which pixels are not mapped to at all in the target image, and those pixels are deemed occlusions. Against the KITTI dataset specifically, the approach taken by UFlow is a forward-backward consistency check, which marks pixels as occlusions whenever the flow and back-projected flow disagree by more than some margin [3]. Thus, these pixels are “masked”. In this latter approach, the team found that stopping the gradient at the occlusion mask improved performance.
 
 #### Data Augmentation Strategies
 
@@ -204,6 +204,8 @@ where $$k$$ denotes the order of smoothness (first-order or second-order), $$c$$
 All together, a comparison of the estimated flow without each of these three components can be seen in the figure below.
 
 <img src="{{ site.baseurl }}/assets/images/team27/ablations-comparisons.png" />
+
+_Figure 7. A visual comparison of how ablating each individual component, while holding the others constant, impacts the results. Examples from both KITTI and SINTEL shown. [3]._
 
 ### Results And Performance
 
