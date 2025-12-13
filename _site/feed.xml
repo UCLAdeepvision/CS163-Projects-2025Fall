@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T03:17:24-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T03:23:14-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project 8 - Street-view Semantic Segmentation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html" rel="alternate" type="text/html" title="Project Track: Project 8 - Street-view Semantic Segmentation" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html"><![CDATA[<blockquote>
   <p>In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.</p>
 </blockquote>
 
@@ -339,17 +339,19 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 <h2 id="results-and-analysis">Results and Analysis</h2>
 <p>After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.</p>
 
-<p>For Approach 1 - BASNet Hybrid Loss:</p>
+<p>Approach 1 - BASNet Hybrid Loss:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/BAS.png" alt="BAS" style="width: 400px; max-width: 100%;" /></p>
 
-<p>For Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
+<p>Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/Aug.png" alt="Aug" style="width: 400px; max-width: 100%;" /></p>
 
-<p>For Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
+<p>Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
+
+<p>The results here suggest that our second approach, which is BASNet hyrbid loss + copypaste augmentation outperforms the other two approaches and has the best per-class IoU and mIoU</p>
 
 <h2 id="conclusion">Conclusion</h2>
 

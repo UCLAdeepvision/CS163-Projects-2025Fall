@@ -327,17 +327,19 @@ Then, we initialize another pretrained SegFormer-B0 model model_bas, and use the
 ## Results and Analysis
 After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
 
-For Approach 1 - BASNet Hybrid Loss:
+Approach 1 - BASNet Hybrid Loss:
 
 ![BAS]({{ '/assets/images/team02/BAS.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
-For Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
+Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
 
 ![Aug]({{ '/assets/images/team02/Aug.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
-For Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
+Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
 
 ![SLC]({{ '/assets/images/team02/SLC.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+
+The results here suggest that our second approach, which is BASNet hyrbid loss + copypaste augmentation outperforms the other two approaches and has the best per-class IoU and mIoU
 
 
 

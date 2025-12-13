@@ -511,17 +511,19 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 <h2 id="results-and-analysis">Results and Analysis</h2>
 <p>After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.</p>
 
-<p>For Approach 1 - BASNet Hybrid Loss:</p>
+<p>Approach 1 - BASNet Hybrid Loss:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/BAS.png" alt="BAS" style="width: 400px; max-width: 100%;" /></p>
 
-<p>For Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
+<p>Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/Aug.png" alt="Aug" style="width: 400px; max-width: 100%;" /></p>
 
-<p>For Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
+<p>Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
+
+<p>The results here suggest that our second approach, which is BASNet hyrbid loss + copypaste augmentation outperforms the other two approaches and has the best per-class IoU and mIoU</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
