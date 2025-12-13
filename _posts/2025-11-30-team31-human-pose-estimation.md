@@ -67,9 +67,7 @@ $$
 where $$f_\theta$$ is a CNN parameterized by $$theta$$. The loss function is usually defined as the mean squared error between predicted and ground-truth heatmaps: 
 
 $$
-\mathcal{L} =
-\frac{1}{K} \sum_{k=1}^{K}
-\left\| \hat{\mathbf{H}}_k - \mathbf{H}_k \right\|_2^2
+\mathcal{L} = \frac{1}{K} \sum_{i=1}^{K} \left\| H_i - \hat{H}_i \right\|_2^2
 $$
 
 ## Transformer-Based Pose Models 
@@ -92,7 +90,7 @@ $$
 P_\text{3D} = g_\phi(P_\text{2D})
 $$
 
-where $$g_phi$$ is a regression network. The loss is typically defined as the mean per-joint position error (MPJPE): 
+where $$g_\phi$$ is a regression network. The loss is typically defined as the mean per-joint position error (MPJPE): 
 
 $$
 \text{MPJPE} = \frac{1}{K} \sum_{i=1}^{K} \| \hat{p}^i - p^i \|_2
