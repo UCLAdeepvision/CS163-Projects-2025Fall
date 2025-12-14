@@ -7,7 +7,7 @@ date: 2025-12-12
 ---
 
 
-> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each.
+> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each. You can find the code [here](https://colab.research.google.com/drive/1CUOKGPm2ZYpiWqbqtRxhMxwPJwj-al6b#scrollTo=61x0fKAi5W3m)
 
 <!--more-->
 {: class="table-of-content"}
@@ -466,9 +466,9 @@ We inspect that a critical issue with this approach is that everything is calcul
 
 So we employ the Lovasz-Softmax loss, which serves as a convex surrogate for the IoU loss. It addresses the issue through two steps:
 
-1.  **Sorting ($e_{(1)} \ge e_{(2)} \dots$)** We rank every pixel by how confident the model is in its mistake.
+1.  **Sorting ($$e_{(1)} \ge e_{(2)} \dots$$)** We rank every pixel by how confident the model is in its mistake.
 
-2.  **Weighting ($\Delta J$)** We assign weights based on the marginal drop in IoU
+2.  **Weighting ($$\Delta J$$)** We assign weights based on the marginal drop in IoU
 
 By sorting and multiplying by corresponding IoU loss, we force a specific alignment which aligns biggest error with steepest penalty and smallest error with flat penalty. As a result this ensures that a small object, if completely misclassified, generates a large, sharp gradient that cuts through the noise of the background
 
@@ -723,18 +723,14 @@ From the example visualizations above we can see that the approach 2 is indeed i
 
 ## Conclusion
 In this project, we investigated methods to improve semantic segmentation performance on fine-grained urban structures using the SegFormer architecture. Starting from a fully fine-tuned SegFormer-B0 baseline, we explored three approaches that combined boundary-aware loss functions with data augmentation techniques.
-Our experiments demonstrated that boundary-aware supervision—achieved through hybrid losses incorporating SSIM and IoU/Lovász components—consistently improves segmentation quality for small, thin urban structures such as poles, traffic signs, and traffic lights. All three approaches outperformed the baseline in terms of overall mIoU, with Approach 2 (BASNet Hybrid Loss + Copy-Paste Augmentation) achieving the best balance across most classes.
-However, our results also revealed an inherent trade-off: the boundary-focused losses that benefit smaller objects can lead to slight performance degradation on larger structures like cars and vegetation due to gradient imbalance. This suggests that future work could explore class-aware loss weighting or adaptive loss scheduling to maintain performance across objects of varying scales.
-We also observed that copy-paste augmentation, while generally beneficial for improving generalization, has limitations for context-dependent structures like fences. Objects with mesh-like patterns or strong spatial dependencies may require more sophisticated augmentation strategies that preserve their structural characteristics.
-In summary, our findings confirm that shifting from purely pixel-wise supervision toward hybrid, boundary-aware objectives is a valid and effective strategy for improving segmentation of fine-grained urban structures—a capability critical for autonomous driving, urban mapping, and robotic perception systems. Future work could explore class-adaptive loss weighting, context-aware augmentation techniques, and scaling these methods to larger SegFormer variants to further improve performance across all object sizes.
 
-## Basic Syntax
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
+Our experiments demonstrated that boundary-aware supervision—achieved through hybrid losses incorporating SSIM and IoU/Lovász components—consistently improves segmentation quality for small, thin urban structures such as poles, traffic signs, and traffic lights. All three approaches outperformed the baseline in terms of overall mIoU, with Approach 2 (BASNet Hybrid Loss + Copy-Paste Augmentation) achieving the best balance across most classes.
+
+However, our results also revealed an inherent trade-off: the boundary-focused losses that benefit smaller objects can lead to slight performance degradation on larger structures like cars and vegetation due to gradient imbalance. This suggests that future work could explore class-aware loss weighting or adaptive loss scheduling to maintain performance across objects of varying scales.
+
+We also observed that copy-paste augmentation, while generally beneficial for improving generalization, has limitations for context-dependent structures like fences. Objects with mesh-like patterns or strong spatial dependencies may require more sophisticated augmentation strategies that preserve their structural characteristics.
+
+In summary, our findings confirm that shifting from purely pixel-wise supervision toward hybrid, boundary-aware objectives is a valid and effective strategy for improving segmentation of fine-grained urban structures—a capability critical for autonomous driving, urban mapping, and robotic perception systems. Future work could explore class-adaptive loss weighting, context-aware augmentation techniques, and scaling these methods to larger SegFormer variants to further improve performance across all object sizes.
 
 ### More Markdown Syntax
 You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
