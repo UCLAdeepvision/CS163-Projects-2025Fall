@@ -17,7 +17,7 @@ math: true
 
 ## Introduction
 
-For the past decade, the "holy grail" of computer vision was fully automated perception: teaching a machine to look at an image and assign a semantic label to every pixel. The 2024 survey defines this era as "Generic Image Segmentation" (GIS), which was dominated by supervised specialists. The pinnacle of this approach was Mask R-CNN, a framework that efficiently detected objects and generated high-quality masks in parallel. While powerful, these models were fundamentally limited by their training data. They were "closed-vocabulary" systems that could only see what they were explicitly taught to label.
+For the past decade, the "holy grail" of computer vision was fully automated perception: teaching a machine to look at an image and assign a semantic label to every pixel. The 2024 survey "Image Segmentation in Foundation Model Era: A Survey" by Zhou et al defines this era as "Generic Image Segmentation" (GIS), which was dominated by supervised specialists. One of the pinnacles of this approach was Mask R-CNN, a framework that efficiently detected objects and generated high-quality masks in parallel. While powerful, these models were fundamentally limited by their training data. They were "closed-vocabulary" systems that could only see what they were explicitly taught to label.
 
 To formalize this limitation, the 2024 survey introduces a unified formulation for the segmentation task:
 $$
