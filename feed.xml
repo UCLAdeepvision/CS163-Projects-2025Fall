@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T23:09:18+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T23:48:36+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
   <p>This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.</p>
 </blockquote>
 
@@ -1810,7 +1810,161 @@ $$
 
 <p>[11] Z. Li, J. Shi, S. Bi, R. Zhu, K. Sunkavalli, M. Hašan, Z. Xu, R. Ramamoorthi, and M. Chandraker, “Physically-Based Editing of Indoor Scene Lighting from a Single Image,” arXiv preprint arXiv:2205.09343, May 2022.</p>
 
-<hr />]]></content><author><name>Pavan Gudavalli, Kevin Nguyen, Brian Felipe Brito, Alex Chen</name></author><summary type="html"><![CDATA[Studio photography aims to produce aesthetically polished images. However, even in controlled environments, unwanted objects such as chairs, props, wires, etc., often appear in the scene. Further, lighting is altered tremendously by the addition / removal of these objetcs. Traditionally, these objects have been removed manually, requiring careful reconstruction of the background and its lighting conditions. This paper looks at modern models aimed at making this process easier.]]></summary></entry><entry><title type="html">Visuomotor Policy</title><link href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html" rel="alternate" type="text/html" title="Visuomotor Policy" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html"><![CDATA[<blockquote>
+<hr />]]></content><author><name>Pavan Gudavalli, Kevin Nguyen, Brian Felipe Brito, Alex Chen</name></author><summary type="html"><![CDATA[Studio photography aims to produce aesthetically polished images. However, even in controlled environments, unwanted objects such as chairs, props, wires, etc., often appear in the scene. Further, lighting is altered tremendously by the addition / removal of these objetcs. Traditionally, these objects have been removed manually, requiring careful reconstruction of the background and its lighting conditions. This paper looks at modern models aimed at making this process easier.]]></summary></entry><entry><title type="html">Instance Segmentation Paper Synthesis: Evolution and New Frontiers</title><link href="/CS163-Projects-2025Fall/2025/12/13/team17-instance-segmentation.html" rel="alternate" type="text/html" title="Instance Segmentation Paper Synthesis: Evolution and New Frontiers" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team17-instance-segmentation</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team17-instance-segmentation.html"><![CDATA[<blockquote class="table-of-content">
+  <p>Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.
+<!--more--></p>
+</blockquote>
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#segment-anything-model" id="markdown-toc-segment-anything-model">Segment Anything Model</a>    <ul>
+      <li><a href="#historical-context-and-motivation" id="markdown-toc-historical-context-and-motivation">Historical Context and Motivation</a></li>
+      <li><a href="#sam-architecture" id="markdown-toc-sam-architecture">SAM Architecture</a></li>
+      <li><a href="#sam2-memory-augmented-video-segmentation" id="markdown-toc-sam2-memory-augmented-video-segmentation">SAM2: Memory-Augmented Video Segmentation</a></li>
+      <li><a href="#sam3-structured-relational-reasoning-via-pcs-and-pvs" id="markdown-toc-sam3-structured-relational-reasoning-via-pcs-and-pvs">SAM3: Structured Relational Reasoning via PCS and PVS</a></li>
+    </ul>
+  </li>
+  <li><a href="#all-in-one-mask2former" id="markdown-toc-all-in-one-mask2former">All in One: Mask2Former</a>    <ul>
+      <li><a href="#unified-segmentation-architecture" id="markdown-toc-unified-segmentation-architecture">Unified Segmentation Architecture</a></li>
+      <li><a href="#performance-and-significance" id="markdown-toc-performance-and-significance">Performance and Significance</a></li>
+    </ul>
+  </li>
+  <li><a href="#new-frontiers-in-instance-segmentation-relation3d" id="markdown-toc-new-frontiers-in-instance-segmentation-relation3d">New Frontiers in Instance Segmentation: Relation3D</a>    <ul>
+      <li><a href="#better-scene-features-asam--clsr" id="markdown-toc-better-scene-features-asam--clsr">Better Scene Features (ASAM &amp; CLSR)</a></li>
+      <li><a href="#improved-query-interactions-with-relation-aware-self-attention-rsa" id="markdown-toc-improved-query-interactions-with-relation-aware-self-attention-rsa">Improved Query Interactions with Relation-Aware Self-Attention (RSA)</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+<p>Instance segmentation is a core computer vision task that separates each individual object in an image at the pixel level. In a sense, this computer vision task combines the problems of object detection, where the model identifies all the objects in an image, and semantic segmentation, where the model detects the pixels that belong to each object. Due to instance segmentation outlining every distinct object in an image, it is useful for a model to gain a deeper visual understanding of a complex scene. This makes it particularly essential for applications like self-driving cars, medical imaging, and robotics.</p>
+
+<p>Early research in instance segmentation adopted the approach of a two-stage detector by using defined object detection and semantic segmentation methods. This approach is primarily known through Mask R-CNN, which uses baseline object detection frameworks with an additional component for pixel level mask prediction. Specifically, Mask R-CNN uses Faster R-CNN as the object detector model, which includes a Region Proposal Network, RoI Align, and CNN layers in its structure. Mask R-CNN then adds a mask head branch that generates a mask for each object instance in parallel to the classification and bounding box regression heads. However, Mask R-CNN is slow, limiting its real-time use on complex or large objects. This motivated the development of one-stage instance segmentation methods, such as SOLO (Segmenting Objects by Locations), to focus on improving the slower speed of two-stage methods. One-stage methods, like SOLO, use a more direct approach of outputting instance masks and class probabilities in a single pass. This one-pass method eliminates the process of grouping, anchor boxes, and convolutions that were present in Mask R-CNN.</p>
+
+<p>Recent advances in deep learning have substantially influenced the landscape of instance segmentation. Significant examples of this are through transformer based architectures and large scale pretraining. Due to this, the realm of instance segmentation has been advancing year by year. In this paper, we synthesize three influential directions in instance segmentation research. These paper topics cover Segment Anything, which is a “promptable” image segmentation model, Mask2Former, which provides a universal, non-specialized architecture for image segmentation, and instance segmentation methods for point clouds, which extend visual data understanding to a 3D level.</p>
+
+<h2 id="segment-anything-model">Segment Anything Model</h2>
+
+<h3 id="historical-context-and-motivation">Historical Context and Motivation</h3>
+<p>The development of the Segment Anything Model (SAM) by Meta can be traced back to the company’s origins in 2004, when it was still known as Facebook. As a social media platform, Facebook rapidly evolved into one of the world’s largest repositories of visual data. This rapidly motivated early investment in computer vision, through applications such as automated photo tagging and content moderation, and later through more advanced machine learning systems. By the mid-2010s, the establishment of Facebook AI Research (FAIR) marked a shift toward foundational AI research, with FAIR becoming a leading contributor to advances in self-supervised learning, computer vision, and large-scale deep learning. After Facebook’s rebrand to Meta in 2021, the company’s long-term vision expanded toward spatial computing, AR/VR systems in the form of Meta glasses, increasing the demand for models capable of robustly understanding objects, scenes, and their interactions in the physical world. Soon, Meta introduced the Segment Anything Model (SAM) as a new model for image segmentation.</p>
+<h3 id="sam-architecture">SAM Architecture</h3>
+<p>SAM uses an encoder-decoder framework with separation between image encoding, prompt encoding, and mask decoding, enabling efficient reuse of image features across multiple segmentation queries. Essentially, SAM is a Vision Transformer (ViT) image encoder, which processes an input image \(I \in \mathbb{R}^{H \times W \times 3}\) into a dense latent representation \(E_I \in \mathbb{R}^{N \times D}\), where \(N\) is the number of image tokens and \(D\) the embedding dimension. With multi-head self-attention, the ViT captures long-range spatial dependencies, and allows SAM to model global context beyond local receptive fields from convolutional networks. SAM is pretrained on a large corpus of image–mask pairs and leverages masked autoencoding and self-supervised learning objectives to learn robust visual representations [1]. This allows for SAM to achieve strong generalization for many different objects and stronger reliability, from its trained inputs.
+User interaction is added via a prompt encoder, which embeds sparse and dense prompts into the same latent space as the image embeddings. Sparse prompts with small pieces of information, including background and foreground points, are encoded using positional embeddings and lightweight MLPs, while dense prompts, like low-resolution masks of objects, are embedded using convolutional layers. These influence the segmentation process while leaving the image encoder unchanged.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/17/Figure2.png" alt="YOLO" />
+Fig 1. SAM Overview [1]</p>
+
+<p>The mask decoder is implemented as a lightweight transformer that performs cross-attention between the prompt embeddings and image embeddings. Given query tokens derived from the prompts, the decoder looks at relevant spatial regions in \(E_I\) and predicts a set of candidate segmentation masks along with corresponding confidence scores. To handle ambiguity, SAM also outputs multiple mask hypotheses per prompt and ranks them using a predicted mask quality score, usually modeled as an estimated Intersection-over-Union (IoU). Formally, mask prediction can be expressed as:
+\(M = \text{Decoder}(E_I, E_P)\)<br />
+where \(E_P\)​ is the encoded prompts and \(M\) represents the predicted binary masks. By separating image encoding from prompt-based decoding, SAM stays computationally efficient while handling a wide range of segmentation tasks.
+Despite its strong generalization capabilities, SAM primarily models segmentation as an appearance-driven, prompt-conditioned task. Interactions between multiple instances are handled implicitly through attention over image tokens, without needing to enforce explicit relational or structural constraints. This limitation can result in overlapping or redundant masks in complex scenes, motivating subsequent extensions.</p>
+<h3 id="sam2-memory-augmented-video-segmentation">SAM2: Memory-Augmented Video Segmentation</h3>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/17/Figure3.png" alt="YOLO" />
+Fig 2. SAM 2 Overview [2]</p>
+
+<p>To address temporal consistency, SAM2 expands the original architecture to video and sequential data by introducing a memory-augmented segmentation framework. This stores and recalls features from previous time stamps to allow the model to maintain context and ensure consistent object segmentation across sequences. While keeping the same image encoder, prompt encoder, and mask decoder, SAM2 adds a temporal memory bank that stores embeddings, predicted masks, and object identity information from previous frames [2]. While inferring frames, the decoder simultaneously focuses on the current frame’s image embeddings and relevant memory entries, enabling information to propagate across time. For a frame at time tt, mask prediction can be written as:
+\(M_t=\text{Decoder}(E_{I_t},E_{P_t},M_{t−1})\)
+where \(M_{t−1}\)​ denotes stored memory from prior frames. This design enhances resilience to occlusion, motion, and changes in appearance, all while preserving amortized efficiency. However, SAM2’s relational reasoning is primarily temporal and does not explicitly model spatial relationships between multiple instances within a single frame.</p>
+<h3 id="sam3-structured-relational-reasoning-via-pcs-and-pvs">SAM3: Structured Relational Reasoning via PCS and PVS</h3>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/17/Figure4.png" alt="YOLO" />
+Fig 3. Illustration of supported initial and optional interactive refinement prompts in the PCS task [3]</p>
+
+<p>Building on this foundation, SAM3 further strengthens intra-frame relational modeling and expands the Segment Anything framework through two complementary tasks: Promptable Consistent Segmentation (PCS) and Promptable Video Segmentation (PVS). In PCS, SAM3 jointly refines multiple candidate masks using cross-mask attention, allowing the model to reason explicitly about overlap, redundancy, and spatial consistency between instances [3]. This structured decoding process reduces fragmented or conflicting predictions, particularly in crowded scenes or under ambiguous prompts.
+PVS extends this relational reasoning into the temporal domain. While SAM2 introduces memory for video segmentation, SAM3 combines temporal memory attention with intra-frame cross-mask interactions, enabling more stable and identity-preserving segmentation across frames. This unified treatment improves robustness to occlusions and object interactions while maintaining spatial coherence within each frame.
+Together, the progress from SAM to SAM2 and SAM3 reflects a shift from independent, appearance-driven segmentation toward increasingly structured and relation-aware modeling. Although SAM3 significantly improves spatial and temporal reasoning in 2D image and video domains, its relational understanding remains largely implicit and attention-based, lacking explicit geometric or physical priors. This limitation motivates further exploration of architectures that encode explicit relational structure, particularly in domains such as 3D instance segmentation, where spatial relationships and object geometry are fundamental to scene understanding.</p>
+
+<h2 id="all-in-one-mask2former">All in One: Mask2Former</h2>
+<p>As instance segmentation research has progressed from object-proposal based approaches such as Mask R-CNN to prompt driven systems like Segment Anything, a complementary research direction has focused on designing universal frameworks capable of solving semantic, instance, and panoptic segmentation within a single model. Meta’s Masked Attention Mask Transformer, or Mask2Former, represents a significant advancement in this direction [4]. It introduces a unified meta architecture that achieves state of the art performance across all major two dimensional segmentation tasks using a single, task agnostic formulation. Figure 4 illustrates the differences between semantic, instance, and panoptic segmentation tasks, highlighting the motivation and performance for a unified segmentation framework. 
+<img src="/CS163-Projects-2025Fall/assets/images/17/Figure5.png" alt="YOLO" />
+Fig 4: Comparison of semantic, instance, and panoptic segmentation tasks, motivating a unified segmentation formulation [4].</p>
+
+<h3 id="unified-segmentation-architecture">Unified Segmentation Architecture</h3>
+<p><img src="/CS163-Projects-2025Fall/assets/images/17/Figure6.png" alt="YOLO" />
+Fig 5: Overview of the Mask2Former meta architecture, consisting of a backbone, pixel decoder, and transformer decoder with masked attention [4].</p>
+
+<p>As shown in Figure 5, Mask2Former consists of a backbone network, pixel decoder, and a transformer decoder operating on a fixed set of learned queries. Mask2Former formulates segmentation as a direct set prediction problem, inspired by detection transformers but adapted for dense pixel-level output [4]. Instead of relying on task specific heads or heuristics, the model predicts a fixed size set of segmentation masks and corresponding class labels. These predictions can be interpreted uniformly for semantic, instance, or panoptic segmentation. The overall meta architecture is composed of three primary components.
+a. The backbone network extracts hierarchical and multi scale feature representations from the input image. Both convolutional and transformer based backbones can be used, with Swin Transformer being a common choice due to its strong multi-scale representations.
+b. The pixel decoder aggregates features from multiple backbone stages into a unified high resolution pixel embedding. This step preserves fine spatial details while efficiently combining contextual information across scales, which is critical for accurate mask prediction.
+c. The transformer decoder operates on a fixed set of learned query embeddings. Each query represents a potential segmentation region and is iteratively refined through attention mechanisms to predict both a segmentation mask and an associated class label. This design allows the same set of queries to support all segmentation tasks without requiring architectural changes.</p>
+<h4 id="masked-attention-mechanism">Masked Attention Mechanism</h4>
+<p>The primary contribution of Mask2Former is the introduction of masked attention within the transformer decoder [4]. In standard transformer based segmentation models, cross-attention is computed globally over all pixel features. This global attention can introduce irrelevant background information and reduce localization accuracy, particularly for small objects or complex shapes. Figure 6 contrasts standard global cross attention with the masked attention mechanism used in Mask2Former.<br />
+<img src="/CS163-Projects-2025Fall/assets/images/17/Figure7.png" alt="YOLO" />
+Fig 6: Comparison between global cross attention (on top) and masked attention (on bottom), where attention is restricted to predicted foreground regions [4].</p>
+
+<p>Masked attention addresses this limitation by restricting each query to attend only to the spatial regions corresponding to its predicted mask from the previous decoding stage. Formally, Mask2Former implements masked attention by modulating the standard cross-attention operation with a spatial mask derived from the previous decoder layer [4]. The masked cross-attention update at the layer \(l\) is defined as</p>
+
+\[X_l = \text{softmax}(M_{l-1} + Q_l K_l^\top) V_l + X_{l-1}\]
+
+\[M_{l-1}(x, y) = \begin{cases} 0, &amp; \text{if } \hat{M}_{l-1}(x, y) = 1 \\ -\infty, &amp; \text{otherwise} \end{cases}\]
+
+<p>Here, \(Q_l\), \(K_l\), and \(V_l\) denote the query, key, and value projections at decoder layer \(l\), and \(X_{l-1}\) represents the residual connection from the previous layer. The mask \(M_{l-1}\) is constructed from the predicted segmentation mask of the previous decoding stage and is added directly to the attention logits. Spatial locations outside the predicted foreground region are assigned a value of \(-\infty\), effectively suppressing their contribution after the softmax operation. As a result, each query attends only to features within its predicted object region.​​
+By constraining attention in this way, the model achieves two important benefits.
+First, masked attention encourages localized feature extraction. Each query focuses on features within its predicted foreground region, enabling the model to learn more discriminative and object specific representations. This results in faster convergence and improved segmentation accuracy.
+Next, masked attention improves computational efficiency by avoiding unnecessary attention computations over background regions. This reduction in redundant computation leads to more efficient training and inference compared to fully global attention.
+Mask2Former further incorporates several complementary design choices that contribute to its strong performance. These include the use of multi scale features in a round robin manner across decoder layers and a point based sampling strategy for mask loss computation [4]. The latter significantly reduces GPU memory usage during training while maintaining segmentation accuracy.</p>
+<h3 id="performance-and-significance">Performance and Significance</h3>
+<p>By combining masked attention with a unified set prediction formulation, Mask2Former becomes the first segmentation model to consistently outperform specialized task specific architectures across semantic, instance, and panoptic segmentation benchmarks. Its success demonstrates that a unified, query based approach can exceed the performance of fragmented pipelines designed for individual tasks. As a result, Mask2Former has established an influential framework for subsequent transformer based segmentation research and has reinforced the viability of universal segmentation architectures.</p>
+
+<h2 id="new-frontiers-in-instance-segmentation-relation3d">New Frontiers in Instance Segmentation: Relation3D</h2>
+
+<p>We’ve seen how instance segmentation has advanced in 2D, but we can apply similar principles to conduct instance segmentation in a 3D space as well, specifically in the more unordered, and sparse input of 3D point clouds. This kind of segmentation task has massive implications for rapidly growing technologies, including robotic spatial understanding and autonomous driving. To solve this problem, transformer-based methods have primarily been the focus due to the ubiquity of their pipelines and generally high performance. However, they primarily use mask attention to model external relationships between features, ignoring internal relationships i.e the connections between scene features and the spatial relationships between the queries. Other 2D segmentation methods have explored relation modeling and underscored its importance, but relation priors in 3D instance segmentation have been largely unexplored in research until now.</p>
+
+<p>Relation3D is a new architecture proposed in a titular CVPR 2025 paper that aims to better represent the missing links between these features and improve spatial understanding in transformer-based 3D point cloud instance segmentation.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/17/Figure8.png" alt="YOLO" />
+Fig 7. The overall framework of Relation3D, along with the proposed adaptive Superpoint Aggregation Module and Relation-aware self-attention mechanism [5].</p>
+
+<h3 id="better-scene-features-asam--clsr">Better Scene Features (ASAM &amp; CLSR)</h3>
+<p>First, we reevaluate traditional aggregation methods of point clouds into “superpoints,” which usually use simple pooling that ends up blurring out important details or mistakenly incorporating noise into the reduced point cloud space. The new proposed Adaptive Superpoint Aggregation Module (ASAM) in Relation3D calculates adaptive weights for each point within a group, comparing with the pooled max and mean to learn weights that emphasize edges and corners [5].</p>
+
+<p>Then a Contrastive Learning-guided Superpoint Refinement (CLSR) module is employed to act as a dual path loop for superpoint features and query features to interact with each other and update their information, improving superpoint features’ consistency within object instances and the differences between features of different instances. This process is guided using a contrastive loss function:</p>
+
+\[L_{cont} = BCE\left(\frac{\mathcal{S}+1}{2}, R_{super}^{GT}\right)\]
+
+<p>where \(\mathcal{S}\) is a similarity matrix of superpoint features and \(R_{super}^{GT}\)
+is ground truth relation matrix from instance annotations.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/17/Figure9.png" alt="YOLO" />
+Fig 8. Visualization of weights in the adaptive superpoint aggregation module [5].</p>
+
+<h3 id="improved-query-interactions-with-relation-aware-self-attention-rsa">Improved Query Interactions with Relation-Aware Self-Attention (RSA)</h3>
+<p>Typical self-attention mechanisms rely on position embeddings that often lack concrete spatial meaning. The proposed RSA injects explicit geometric priors into the attention mechanism to accelerate convergence and improve accuracy [5].</p>
+<ul>
+  <li>Geometric Priors: The model calculates the bounding box for each query’s predicted mask (center \(x,y,z\) and scale \(l,w,h\))20.</li>
+  <li>Relative Relationships: It computes explicit relationships between two queries \(i\) and \(j\). For example, the positional relationship is defined as:</li>
+</ul>
+
+\[\text{Pos}_{rel} = \left[ \log\left(\frac{|x_i - x_j|}{l_i} + 1\right), \dots \right]\]
+
+<p>Similar log-ratios are calculated for geometric scales (length, width, height)</p>
+<ul>
+  <li>Attention Mechanism: These relationships form an embedding \(R_q\) that is injected directly into the self-attention calculation:</li>
+</ul>
+
+\[RSA(Q) = \text{Softmax}\left(\frac{\mathcal{Q}\mathcal{K}^T}{\sqrt{d}} + R_q\right)\mathcal{V}\]
+
+<p>This allows the model to learn and attend to physical proximity and geometric similarity, in addition to just semantic similarity. 
+<img src="/CS163-Projects-2025Fall/assets/images/17/Figure10.png" alt="YOLO" />
+Fig 9. Attention maps for traditional self-attention vs. relation-aware self-attention, attention weight distributions for traditional self-attention vs. relation-aware self-attention, and effect of RSA on instance segmentation from bbox queries [5].</p>
+
+<p>Relation3D is noted as achieving better performance on standard benchmarks like ScanNetV2, ScanNet++, and S3DIS than previous transformer-based approaches, demonstrating the efficacy of relation-aware approaches to instance segmentation in the 3D space [5].</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>Through this paper, we have thoroughly examined three developments in instance segmentation research. Segment Anything demonstrates using large scale pretraining and prompt based interaction for better generalization performance on new tasks. However, SAM faces a limitation in its relational understanding between multiple instances being largely implicit. Relation 3D is a newly proposed architecture that brings instance segmentation to the unordered and sparse point cloud data domain. Here, Relation3D incorporates explicit geometric priors with relation-aware self-attention to encourage strong spatial understanding in 3D point cloud data. Mask2Former is a universal architecture that combines semantic, instance, and panoptic segmentation capabilities within a single model. It importantly adds a masked attention mechanism that helps improve computational efficiency and improves localization. The topics discussed in this paper report provide examples of a push toward methods that are more generalizable, universal, and applicable within instance segmentation problems.</p>
+
+<h2 id="references">References</h2>
+<p>[1] A. Kirillov et al., “Segment Anything,” Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2023.</p>
+
+<p>[2] Meta AI, “SAM2: Segment Anything in Video,” arXiv preprint, 2024.</p>
+
+<p>[3] Meta AI, “SAM3: Promptable Consistent and Video Segmentation,” arXiv preprint, 2024.</p>
+
+<p>[4] Cheng, B., Misra, I., Schwing, A. G., Kirillov, A., &amp; Girdhar, R. (2021). Masked-attention Mask Transformer for Universal Image Segmentation. arXiv. https://arxiv.org/abs/2112.01527</p>
+
+<p>[5] Lu, J., &amp; Deng, J. (2025). Relation3D: Enhancing Relation Modeling for Point Cloud Instance Segmentation. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).</p>]]></content><author><name>Kayla Hamakawa, Alyssa Leung, Meryl Mathew, Angela Quan</name></author><summary type="html"><![CDATA[Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.]]></summary></entry><entry><title type="html">Visuomotor Policy</title><link href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html" rel="alternate" type="text/html" title="Visuomotor Policy" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html"><![CDATA[<blockquote>
   <p>Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.</p>
 </blockquote>
 
@@ -2832,240 +2986,4 @@ E_{\textrm{smooth}}= \sum_i^N \sum_t^T \| \mathbf{J}^i_t - \mathbf{J}^i_{t+1} \|
 
 <p>[4] T. Ghosh, and E. Sazonov. “Improving Food Image Recognition with Noisy Vision Transformer.” arXiv preprint arXiv:2503.18997 (2025).</p>
 
-<hr />]]></content><author><name>Adrian Pu</name></author><summary type="html"><![CDATA[Food detection is a subset of image classification that is able to classify specific foods. As such, it requires the ability to learn finer-grain details to differentiate specific foods. In this paper, we investigate how three models, DeepFood, WISeR, and Noisy-ViT, built upon state-of-the-art (at the time) object classification models for food detection, along with a dataset built for food detection Food-101. On this dataset, DeepFood performed at a 77.40% accuracy, WISeR performed at a 90.27% accuracy, and Noisy-ViT performed at a 99.50% accuracy.]]></summary></entry><entry><title type="html">XAI in Facial Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html" rel="alternate" type="text/html" title="XAI in Facial Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html"><![CDATA[<blockquote>
-  <p>Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME [5] which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) [3], which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability [2], which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.</p>
-</blockquote>
-
-<!--more-->
-<ul id="markdown-toc">
-  <li><a href="#1-introduction" id="markdown-toc-1-introduction">1. Introduction</a></li>
-  <li><a href="#2-fast-diffusion-based-counterfactuals-for-shortcut-removal-and-generation" id="markdown-toc-2-fast-diffusion-based-counterfactuals-for-shortcut-removal-and-generation">2. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation</a>    <ul>
-      <li><a href="#21-introduction" id="markdown-toc-21-introduction">2.1 Introduction</a></li>
-      <li><a href="#22-shortcut-learning" id="markdown-toc-22-shortcut-learning">2.2 Shortcut Learning</a></li>
-      <li><a href="#23-fastdime-guided-diffusion-for-counterfactual-faces" id="markdown-toc-23-fastdime-guided-diffusion-for-counterfactual-faces">2.3 FastDiME: Guided Diffusion for Counterfactual Faces</a></li>
-      <li><a href="#24-self-optimized-masking-for-localized-image-edits" id="markdown-toc-24-self-optimized-masking-for-localized-image-edits">2.4 Self-Optimized Masking for Localized Image Edits</a></li>
-      <li><a href="#25-quantifying-shortcut-dependence" id="markdown-toc-25-quantifying-shortcut-dependence">2.5 Quantifying Shortcut Dependence</a></li>
-    </ul>
-  </li>
-  <li><a href="#3-explainable-face-verification-via-feature-guided-gradient-backpropagation-fggb" id="markdown-toc-3-explainable-face-verification-via-feature-guided-gradient-backpropagation-fggb">3. Explainable Face Verification via Feature-Guided Gradient Backpropagation (FGGB)</a>    <ul>
-      <li><a href="#31-introduction" id="markdown-toc-31-introduction">3.1 Introduction</a></li>
-      <li><a href="#32-methodology" id="markdown-toc-32-methodology">3.2 Methodology</a></li>
-      <li><a href="#33-quantitative-evaluation" id="markdown-toc-33-quantitative-evaluation">3.3 Quantitative Evaluation</a></li>
-    </ul>
-  </li>
-  <li><a href="#4-frequency-domain-based-explainability" id="markdown-toc-4-frequency-domain-based-explainability">4. Frequency-Domain Based Explainability</a>    <ul>
-      <li><a href="#41-introduction" id="markdown-toc-41-introduction">4.1 Introduction</a></li>
-      <li><a href="#42-methodology-frequency-masking-and-influence-scoring" id="markdown-toc-42-methodology-frequency-masking-and-influence-scoring">4.2 Methodology: Frequency Masking and Influence Scoring</a></li>
-      <li><a href="#43-key-insights-diagnosing-structural-bias" id="markdown-toc-43-key-insights-diagnosing-structural-bias">4.3 Key Insights: Diagnosing Structural Bias</a></li>
-    </ul>
-  </li>
-  <li><a href="#5-conclusion" id="markdown-toc-5-conclusion">5. Conclusion</a></li>
-  <li><a href="#references" id="markdown-toc-references">References</a></li>
-</ul>
-
-<h2 id="1-introduction">1. Introduction</h2>
-<p>As Deep Learning models achieve state-of-the-art performance in biometric security, the “black box” nature of Facial Recognition (FR) and Face Verification (FV) systems present a growing liability. Unlike general object classification, FR systems operate in high-risk sociological contexts where errors can lead to wrongful arrests, discriminatory access denial, and security breaches. The challenge is no longer accuracy but trustworthiness to ensure that a model can distinguish identities on robust biometric features rather than spurious “shortcuts” like background textures, lighting artifacts, or demographic biases.</p>
-
-<p>Historically, explainability in computer vision (CV) has relied on saliency methods, such as Grad-CAM [4]. While effective for localizing where a model looks, these methods are fundamentally correlational rather than causal. They often fail to explain why a decision was reached, like whether a match was driven by genuine identity features or coincidental pixel statistics. Furthermore, standard backpropagation methods suffer from noisy or vanishing gradients when applied to deep feature embeddings used in modern FV, rendering conventional heatmaps difficult to interpret for fine-grained verification tasks.</p>
-
-<p>Currently, the landscape of Explainable AI (XAI) is expanding rapidly to address these issues. Researchers are exploring diverse methodologies, ranging from logic-based formal verifications [1] that uses prime implicates to identify minimum sufficient reasons for a classification decision to interactive user interfaces. While these approaches offer promising theoretical guarantees, the need for CV practitioners is often direct feature level diagnostics that can visually and causally verify model behavior.</p>
-
-<p>To address these limitations, this report looks at three methodologies. FastDiME [5] is an approach that leverages diffusion probabilistic models to create counterfactuals. By removing specific attributes and observing a shift, FastDiME offers a causal mechanism for detecting shortcut learning. Feature-Guided Gradient Backpropagation (FGGB) [3], is a different method that shifts focus from final output score to the deep feature level. By normalizing gradients channel-wise, FGGB separates decision-making process into distinct similarity and dissimilarity maps that provide a clearer view of what features argue for or against a match. Frequency Domain Explainability [2] which challenges the spatial bias of human interpretation by analyzing how Convolutional Neural Networks (CNNs) rely on specific frequency bands. This approach reveals that models may rely on high-frequency noise or specific texture patterns offering a powerful tool for quantifying algorithmic bias across different demographics. Together, these methods represent a shift from simple visualization to rigorous feature aware model diagnostics.</p>
-
-<h2 id="2-fast-diffusion-based-counterfactuals-for-shortcut-removal-and-generation">2. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation</h2>
-
-<h3 id="21-introduction">2.1 Introduction</h3>
-<p>Saliency-based models are among the most popular methods for explainability in computer vision applications. Grad-CAM, for instance, highlights the regions that have the largest effects on model predictions, but doesn’t allow an assessment of how a prediction would change due to the addition or removal of a feature. Beyond saliency by occlusion, current methods cannot help determine whether altering a feature will affect model performance.</p>
-
-<p>This limitation is especially important in facial recognition tasks, where cues unrelated to facial structure, such as glasses or a mask, could affect model predictions. This methodology proposes a generative approach to explaining model behavior. Instead of relying on visual maps, counterfactual explanations apply a diffusion model to edit the input image to measure the resulting change in prediction. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation (FastDiME) generates counterfactuals and uses them to identify “shortcuts,” or features correlated with the label that are not causally relevant.</p>
-
-<h3 id="22-shortcut-learning">2.2 Shortcut Learning</h3>
-<p>Shortcut learning occurs when a vision model uses spurious features that happen to correlate with the label instead of information relevant to the task to identify a class. The paper focuses on medical imaging shortcuts, like pacemakers to correlate with heart disease labels. For facial recognition use cases, shortcuts can include background patterns, accessories, or artifacts from image processing. Objects or patterns unrelated to facial recognition can become correlated with identity.</p>
-
-<p>Shortcuts affect the model’s results when applied to real data where the shortcut is not present. For instance, a facial recognition model could learn to identify a person’s glasses instead of biometric or facial features. Saliency maps can suggest aspects of the face that the model focuses on, but cannot counterfactually confirm whether the model would still recognize the individual without the shortcut. Counterfactual explanations address this by enabling comparisons between model results with and without the shortcut feature.</p>
-
-<p>We can mathematically express shortcut dependence as the sensitivity of the model prediction \(f(x)\)to a shortcut feature\(s\):</p>
-
-\[\Delta_{s}=E_{x}[|f(x)-f(x^{(s\rightarrow\overline{s})})|]\]
-
-<p>where \(x^{(s\rightarrow\overline{s})}\)denotes a counterfactual image in which the shortcut feature\(s\) has been removed or altered.</p>
-
-<h3 id="23-fastdime-guided-diffusion-for-counterfactual-faces">2.3 FastDiME: Guided Diffusion for Counterfactual Faces</h3>
-<p>The FastDiME framework is built atop diffusion probabilistic models (DDPMs). In a typical DDPM, the model gradually adds Gaussian noise to an image in a forward process, and then learns a reverse process that progressively denoises the image. The forward diffusion process is defined as:</p>
-
-\[q(x_{t}|x_{t-1})=N(x_{t};\sqrt{1-\beta_{t}}x_{t-1},\beta_{t}I)\]
-
-<p>Equivalently, the noisy image at time step \(t\) can be written as:</p>
-
-\[x_{t}=\sqrt{\bar{\alpha}_{t}}x_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon, \quad \epsilon\sim \mathcal{N}(0,I)\]
-
-<p>With:</p>
-
-\[\bar{\alpha}_{t}=\prod_{i=1}^{t}(1-\beta_{i})\]
-
-<p>FastDiME changes the reverse process to make a counterfactual image instead of an identical copy. The high-level process is as follows: After noising the input image to an intermediate step, the reverse process is performed with a loss that encourages the removal of a specific feature. The guided mean of reverse diffusion is given by:</p>
-
-\[\mu_{g}(x_{t})=\mu(x_{t})-\Sigma(x_{t})\nabla_{x}\mathcal{L}_{CF}(x_{t})\]
-
-<p>The counterfactual is kept as close to the original as possible using a combined loss:</p>
-
-\[\mathcal{L}_{CF}=\lambda_{c}\mathcal{L}_{cls}+\lambda_{1}||x-x_{0}||_{1}+\lambda_{p}\mathcal{L}_{perc}\]
-
-<p>FastDiME has a time complexity of \(O(T)\), beating the original DiME with a time complexity of \(O(T^{2})\) by avoiding extraneous inner diffusion calculations that DiME performs during reconstruction.</p>
-
-<p style="width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team-39/paper1.png" alt="CelebA counterfactual explanations" /></p>
-
-<h3 id="24-self-optimized-masking-for-localized-image-edits">2.4 Self-Optimized Masking for Localized Image Edits</h3>
-<p>Using FastDiME to generate images creates the risk that the algorithm alters the facial structure or biometric information entirely as opposed to only the shortcut. Many shortcut features are spatially localized, and therefore, the method introduces a self-optimized mask to restrict changes.</p>
-
-<p>The high-level process is as follows:
-At each diffusion step, a binary mask is computed by comparing the denoised estimate to the original image:</p>
-
-\[M_{t}=\delta(\overline{x}_{t},x_{0})\]
-
-<p>The mask is used to constrain updates so only the masked regions may change:</p>
-
-\[x_{t}^{\prime}=x_{t}\odot M_{t}+x_{t}^{orig}\odot(1-M_{t})\]
-
-<p>The mask is updated throughout the diffusion process to encourage localized changes but remove the shortcut feature.</p>
-
-<h3 id="25-quantifying-shortcut-dependence">2.5 Quantifying Shortcut Dependence</h3>
-<p>The paper proposes a quantitative method for classifying the extent to which a classifier is correlated with a shortcut feature. The model is trained with datasets with varied degrees of shortcut-label correlations. Then, counterfactuals are generated based on a balanced test set. The impact is then measured by the change in model predictions between the original and counterfactual images, often using the mean absolute difference (MAD):</p>
-
-\[MAD=E_{x}[|f(x)-f(x^{c})|]\]
-
-<p>where \(x^{c}\) represents the removed counterfactual image.</p>
-
-<p>Overall, FastDiME presents a generative and causal approach to explainability for computer vision classifiers, serving as an alternative to saliency-based methods and enabling direct analysis of the features affecting predictions, shortcut dependence, and the robustness of a model.</p>
-
-<h2 id="3-explainable-face-verification-via-feature-guided-gradient-backpropagation-fggb">3. Explainable Face Verification via Feature-Guided Gradient Backpropagation (FGGB)</h2>
-
-<h3 id="31-introduction">3.1 Introduction</h3>
-<p>As Deep Learning models achieve state-of-the-art performance in Face Verification (FV), their lack of transparency remains a critical barrier to deployment. This report examines the landscape of Explainable Face Verification (XFV), specifically addressing the limitations of traditional gradient-based explanation methods. We highlight a novel approach, Feature-Guided Gradient Backpropagation (FGGB), which overcomes the “noisy gradient” problem by shifting the backpropagation focus from the final score to the deep feature level.</p>
-
-<p>This method generates sharper visualizations designed to offer interpretations from the user’s perspective. Specifically, the algorithm aims to explain why the system believes a pair of facial images is matching (“Accept”) or non-matching (“Reject”) by generating precise similarity maps for acceptance decisions and dissimilarity maps for rejection decisions.</p>
-
-<h3 id="32-methodology">3.2 Methodology</h3>
-<p>The FGGB method addresses the issue where derivatives of the output score fluctuate sharply or vanish. Instead of backpropagating from the final similarity score, FGGB operates at the deep feature level in a channel-wise manner. The process is divided into two phases:</p>
-
-<p><strong>Gradient Backpropagation &amp; Normalization</strong>
-First, the system extracts the deep face representations (embeddings) for the input images, denoted as \(F_{A}\) and \(F_{B}\) each with dimension \(N\).</p>
-
-<ul>
-  <li>
-    <p><strong>Gradient Extraction:</strong> The system backpropagates gradients from each channel of the feature vector \(F_{A}\). For the \(k\)-th dimension of the feature, the gradient map \(G_{A}^{k}\) is calculated as the derivative with respect to the input image \(I_{A}\):</p>
-
-\[G_{A}^{k}=\frac{\partial F_{A}^{k}}{\partial I_{A}}\]
-  </li>
-  <li>
-    <p><strong>Normalization:</strong> To mitigate local variations (such as vanishing gradients), each gradient map is normalized using the Frobenius norm to produce \(\overline{G}_{A}^{k}\):</p>
-
-\[\overline{G}_{A}^{k}=\frac{G_{A}^{k}}{\|G_{A}^{k}\|}\]
-  </li>
-</ul>
-
-<p><strong>Saliency Map Generation</strong>
-In the second phase, the system aggregates these \(N\) normalized gradient maps into a final saliency map. The aggregation is weighted by the actual contribution of each feature channel to the verification decision.</p>
-
-<ul>
-  <li>
-    <p><strong>Weight Calculation:</strong> A weight vector is defined as the element-wise cosine similarity between the two feature vectors \(F_{A}\) and \(F_{B}\):</p>
-
-\[weight=\frac{F_{A}\odot F_{B}}{||F_{A}||||F_{B}||}\]
-  </li>
-  <li>
-    <p><strong>Weighted Sum:</strong> The final saliency map \(S\) is computed by summing the normalized gradient maps. The weights are adjusted by subtracting the decision threshold to distinguish between positive and negative contributions:</p>
-
-\[S_{A}=\sum_{k=1}^{N}\overline{G}_{A}^{k}\cdot(weight_{k}-\frac{threshold}{N})\]
-  </li>
-  <li>
-    <p><strong>Map Decomposition:</strong> Finally, the map is split into two distinct visualizations:</p>
-    <ul>
-      <li><strong>Similarity Map (\(S_{A}^{+}\)):</strong> Contains positive values, highlighting features that contribute to a match.</li>
-      <li><strong>Dissimilarity Map (\(S_{A}^{-}\)):</strong> Contains negative values, highlighting features that cause a conflict or rejection.</li>
-    </ul>
-
-\[S_{A}^{+}=S_{A}[S_{A}\ge0] , \quad S_{A}^{-}=S_{A}[S_{A}&lt;0]\]
-  </li>
-</ul>
-
-<p style="width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team-39/paper2.png" alt="FGGB Verification and Explanation Flow" /></p>
-
-<h3 id="33-quantitative-evaluation">3.3 Quantitative Evaluation</h3>
-<p>Validation of the FGGB method was done using the Deletion &amp; Insertion metrics on three datasets (LFW, CPLFW, and CALFW). The “Deletion” metric measures the drop in verification accuracy when salient pixels are removed (lower score is better), while “Insertion” measures accuracy gain when pixels are added (higher is better).</p>
-
-<ul>
-  <li><strong>Performance:</strong> FGGB demonstrated superior performance, particularly in generating “Dissimilarity Maps”.</li>
-  <li>In the LFW dataset for Similarity Maps, FGGB achieved a Deletion score of <strong>24.18%</strong>, significantly outperforming the popular LIME method (35.82%) and performing comparably to perturbation methods like CorrRISE (24.51%) but with much greater efficiency.</li>
-  <li>For Dissimilarity Maps (explaining rejections), FGGB achieved a Deletion score of <strong>44.03%</strong> on LFW, outperforming the competing gradient-based method xSSAB, which scored 49.72%.</li>
-</ul>
-
-<p>The method’s robustness was validated across different architectures, including ArcFace (99.70% accuracy), AdaFace (99.27%), and MobileFaceNet (98.87%), showing consistent explainability scores across all three.</p>
-
-<p>FGGB bypasses the limitations of score-level backpropagation. By calculating gradients at the feature level and weighting them by their contribution to the cosine similarity, the method successfully generates distinct maps for both matching and non-matching faces. This approach allows for precise, pixel-level explanations of verification decisions without requiring model retraining or expensive iterative perturbations.</p>
-
-<h2 id="4-frequency-domain-based-explainability">4. Frequency-Domain Based Explainability</h2>
-
-<h3 id="41-introduction">4.1 Introduction</h3>
-<p>While methods like FGGB offer precision in the spatial domain, they still operate within a visualization framework that aligns with human intuition. However, a model’s reliance on features is often rooted in the structural information encoded by frequency components, which are invisible in a simple spatial heatmap. To achieve a deeper, mechanistic understanding of feature dependence and model robustness, we shift our focus from pixels and gradients to the frequency domain.</p>
-
-<p>This final method, Frequency Domain Explainability [2], challenges the spatial bias of traditional XAI by analyzing the relative influence of specific frequency bands on verification decisions. By moving beyond where the model looks to what kind of information is driving the decision, this approach offers a powerful new diagnostic tool, especially for quantifying algorithmic bias across different demographics.</p>
-
-<h3 id="42-methodology-frequency-masking-and-influence-scoring">4.2 Methodology: Frequency Masking and Influence Scoring</h3>
-<p>Mathematically, the convolution operation in the spatial domain is equivalent to element-wise multiplication in the frequency domain. Therefore, the learned kernels within a deep network act as filters that selectively emphasize or suppress different spatial frequencies in the input image. These frequencies encode distinct types of image information crucial for recognition, such as fine textures like face wrinkles (high frequency), identifiable features such as eyes and mouth (mid frequency), and overall shapes (low frequency).</p>
-
-<p>The methodology for quantifying frequency influence is perturbation-based and systematic:</p>
-
-<ol>
-  <li><strong>Transformation:</strong> The input spatial image is transformed into the frequency domain using the Discrete Fourier Transform (DFT).</li>
-  <li><strong>Masking:</strong> Specific radial frequency bands are masked (removing information present in those bands). This masked frequency image is then re-transformed back into the spatial domain in a lossless process.</li>
-  <li><strong>Scoring:</strong> The resulting frequency-masked image, along with the unaltered image, is passed through the FR model to create face embeddings and calculate new cosine similarity scores \(S_{masked}\).</li>
-  <li><strong>Influence Score:</strong> The importance of the masked frequency band is assessed by taking the difference between the unaltered baseline similarity score \(S_{unaltered}\) and the masked score \(S_{masked}\). This difference is interpreted as the direct influence of that frequency component on the verification decision.</li>
-  <li><strong>FHP Generation:</strong> The normalized influences are visualized as Frequency Heat Plots (FHPs). These can be <strong>Absolute FHPs</strong>, which display the magnitude of the performance drop caused by masking a frequency band, or <strong>Directed FHPs</strong>, showing whether the masking operation worsened the similarity score (positive influence) or improved the score (negative influence).</li>
-</ol>
-
-<p>The detection of negative influence is highly valuable, as it diagnoses scenarios where the model was relying on identity-irrelevant artifacts or noise, which, when removed, stabilizes the decision and increases similarity.</p>
-
-<h3 id="43-key-insights-diagnosing-structural-bias">4.3 Key Insights: Diagnosing Structural Bias</h3>
-<p>The application of this frequency-based approach in extensive experiments on FR models yielded crucial diagnostic insights:</p>
-
-<ul>
-  <li><strong>Differential Feature Reliance:</strong> The experiments showed that different frequencies are important to FR models depending on the ethnicity of the input samples. This finding explains algorithmic bias beyond superficial visual factors.</li>
-  <li><strong>Quantifying Bias:</strong> The differences in frequency importance across demographic groups were observed to increase proportionally with the degree of bias exhibited by the model. This means that frequency importance shifts serve as a measurable metric for diagnosing the structural feature dependencies driving discriminatory behavior.</li>
-  <li><strong>Model Vulnerability:</strong> The approach was also applied to scenarios like cross-resolution FR and morphing attacks, allowing researchers to understand precisely which frequency bands (e.g., high-frequency texture or low-frequency shape) a model fails to rely on when performance degrades in challenging scenarios.</li>
-</ul>
-
-<p>The research establishes the spatial frequency domain as an essential dimension for explaining the complex decision-making processes of deep learning systems. The introduction of FHPs provides a powerful, quantitative, and diagnostically potent alternative to traditional spatial explanations.</p>
-
-<p>Operationally, the current FHP generation methodology is computationally intensive. For the frequency-domain analysis to become a standard tool in high-throughput operational FR deployments, the field must pursue the development of lightweight, real-time frequency-domain explanation methods that can be integrated directly into the inference pipeline.</p>
-
-<h2 id="5-conclusion">5. Conclusion</h2>
-<p>The analysis reveals a key insight: modern FR models are sensitive to non-semantic cues that escape human notice. While classical models may imply that CNNs “look” at faces much like humans do, recent methods demonstrate that models frequently rely on fragile correlations and spurious shortcuts.</p>
-
-<p>FastDiME’s counterfactual generation proves causality by showing that removing a specific artifact (like glasses or mask) can flip a prediction, while FGGB exposes the precise deep features contributing to false acceptances, and Frequency Heat Plots reveal hidden structural biases across demographics.</p>
-
-<p>Moving forward, the integration of these XAI tools into the standard development pipeline is a must, in order for safe deployment. The shifts from post-hoc visualization to causal and structural analysis allows for detection of time where a model appears correct for the wrong reasons, because they can cause harm in the real world. However, challenges remain regarding computational efficiency. Methods like iterative frequency masking and diffusion-based generation are too expensive for real-time inference. Future research must focus on optimizing these tools to provide real-time feedback ensuring that robustness and fairness are not just retrospective metrics but active components of the recognition process.</p>
-
-<h2 id="references">References</h2>
-
-<p>[1] A. Darwiche, “Logic for explainable AI,” <em>arXiv:2305.05172</em>, May 2023. [Online]. Available: https://arxiv.org/abs/2305.05172</p>
-
-<p>[2] M. Huber, F. Boutros, and N. Damer, “Frequency matters: Explaining biases of face recognition in the frequency domain,” <em>arXiv:2501.16896</em>, Jan. 2025. [Online]. Available: https://arxiv.org/abs/2501.16896</p>
-
-<p>[3] Y. Lu, Z. Xu, and T. Ebrahimi, “Explainable face verification via feature-guided gradient backpropagation,” <em>arXiv:2403.04549</em>, Mar. 2024. [Online]. Available: https://arxiv.org/abs/2403.04549</p>
-
-<p>[4] R. R. Selvaraju et al., “Grad-CAM: Visual explanations from deep networks via gradient-based localization,” <em>International Journal of Computer Vision</em>, vol. 128, no. 2, pp. 336–359, Oct. 2019. [Online]. Available: https://dx.doi.org/10.1007/s11263-019-01228-7</p>
-
-<p>[5] N. Weng et al., “Fast diffusion-based counterfactuals for shortcut removal and generation,” <em>arXiv:2312.14223</em>, Dec. 2023. [Online]. Available: https://arxiv.org/abs/2312.14223</p>
-
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']]
-  }
-};
-</script>
-
-<script type="text/javascript" id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>]]></content><author><name>Erick Rosas Gonzalez, Maya Josifovska, Andrew Rubio, Wanda Barahona</name></author><summary type="html"><![CDATA[Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME [5] which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) [3], which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability [2], which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.]]></summary></entry></feed>
+<hr />]]></content><author><name>Adrian Pu</name></author><summary type="html"><![CDATA[Food detection is a subset of image classification that is able to classify specific foods. As such, it requires the ability to learn finer-grain details to differentiate specific foods. In this paper, we investigate how three models, DeepFood, WISeR, and Noisy-ViT, built upon state-of-the-art (at the time) object classification models for food detection, along with a dataset built for food detection Food-101. On this dataset, DeepFood performed at a 77.40% accuracy, WISeR performed at a 90.27% accuracy, and Noisy-ViT performed at a 99.50% accuracy.]]></summary></entry></feed>
