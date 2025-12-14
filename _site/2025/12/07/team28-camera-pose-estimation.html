@@ -213,15 +213,15 @@ that aims to determine the position (translation) and orientation (rotation) of 
 </ul>
 
 <p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
-<p><em>Fig 1. Overview of camera pose estimation.</em> [1].</p>
+<p><em>Fig 1. Overview of camera pose estimation.</em> [8].</p>
 
 <h2 id="camera-pose-estimation-methods">Camera Pose Estimation Methods</h2>
-<p>Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and depth-based estimatino with ICP.</p>
+<p>Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and depth-based estimation with ICP.</p>
 
 <h3 id="colmap">COLMAP</h3>
 
-<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/colmap.PNG" alt="YOLO" /></p>
-<p><em>Fig 1. Example: COLMAP used for 3D scene reconstruction</em> [1].</p>
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/colmap.PNG" alt="COLMAP" /></p>
+<p><em>Fig 1. Example: COLMAP used for 3D scene reconstruction</em> [2].</p>
 
 <p>COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camera poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene.</p>
 
@@ -236,9 +236,6 @@ that aims to determine the position (translation) and orientation (rotation) of 
 
 <p>After SfM, Multi-View Stereo (MVS) then takes that output to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points.</p>
 
-<p>https://demuc.de/colmap/
-https://colmap.github.io/tutorial.html</p>
-
 <div style="display: flex; gap: 20px; justify-content: center;">
   <div style="text-align: center;">
     <img src="/CS163-Projects-2025Fall/assets/images/team28/colmap_demo.gif" style="width: 400px; max-width: 100%;" />
@@ -251,13 +248,13 @@ https://colmap.github.io/tutorial.html</p>
   </div>
 </div>
 <p style="text-align: center;">
-<em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence.</em> [2].
+<em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence</em>
 </p>
 
 <h3 id="vggsfm-visual-geometry-grounded-deep-structure-from-motion">VGGSfM (Visual Geometry Grounded Deep Structure From Motion)</h3>
 
 <p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/vggsfm.png" alt="VGGSfM" /></p>
-<p><em>Fig num. Overview of VGGSfM pipeline.</em> [1].</p>
+<p><em>Fig 3. Overview of VGGSfM pipeline.</em> [9].</p>
 
 <p>VGGSfM is a fully differentiable, learning-based SfM (Structure-from-Motion) pipeline that jointly estimates camera poses and 3D scene reconstruction. Unlike classical SfM frameworks, which uses non-differentiable components and incremental reconstruction, VGGSfM is fully differentiable, and therefore can be trained end-to-end.</p>
 
@@ -269,8 +266,6 @@ https://colmap.github.io/tutorial.html</p>
   <li>Applies a bundle adjustment layer for reconstruction refinement</li>
 </ul>
 
-<p>https://vggsfm.github.io/</p>
-
 <h3 id="depth-based-estimation-with-icp-iterative-closest-point">Depth-based Estimation with ICP (Iterative Closest Point)</h3>
 
 <p>Unlike COLMAP and VGGSfM, this method does not directly operate on images/video data to estimate absolute camera positions. Instead, it uses a geometric approach that aligns two 3D points clouds and estimates the transformation (rotation and translation) between them. This transformation represents the relative camera motion between frames, which can be accumulated to form a camera trajectory.</p>
@@ -280,14 +275,10 @@ https://colmap.github.io/tutorial.html</p>
 <p>This estimated transformation represents the relative camera motion between frames, and accumulating these relative motions forms the camera trajectory. This process is related to RGB-Dodometry, which produces a sequence of relative poses instead of globally optimized absolute reconstruction.</p>
 
 <p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/icp.svg" alt="YOLO" /></p>
-<p><em>Fig 1. Overview of how ICP works.</em> [1].</p>
+<p><em>Fig 4. Overview of how ICP works.</em> [4].</p>
 
 <p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/icp2.gif" alt="YOLO" /></p>
-<p><em>Fig 1. Overview of how ICP works.</em> [1].</p>
-
-<p>By Biggerj1 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=88265436</p>
-
-<p>https://learnopencv.com/iterative-closest-point-icp-explained/</p>
+<p><em>Fig 5. Overview of how ICP works.</em> [5].</p>
 
 <p>Here is our code for going from the depth images to the point cloud:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def depth_to_pointcloud(depth_path, intrinsics):
@@ -318,11 +309,6 @@ https://colmap.github.io/tutorial.html</p>
 
 relative_transform = reg.transformation
 </code></pre></div></div>
-<p>https://learnopencv.com/iterative-closest-point-icp-explained/</p>
-
-<!--
-Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
--->
 
 <h2 id="metrics">Metrics</h2>
 <p>Now we will be going over the three key metrics that we used and what each of them are calculating.</p>
@@ -332,10 +318,7 @@ Your survey starts here. You can refer to the [source code](https://github.com/l
 <p>Absolute trajectory error (ATE) is a metric that is used to evaluate the accuracy of the estimated camera trajectory compared to the ground-truth trajectory. It measures the difference between the points of the true and estimated trajectory.</p>
 
 <p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/ate.png" alt="YOLO" /></p>
-<p><em>Fig 1. Overview of how ICP works.</em> [1].</p>
-
-<p>https://cvg.cit.tum.de/data/datasets/rgbd-dataset/tools
-https://docs.openvins.com/eval-metrics.html</p>
+<p><em>Fig 6. Example of absolute trajectory error.</em> [10].</p>
 
 <h3 id="relative-translation-error-rle">Relative Translation Error (RLE)</h3>
 
@@ -382,9 +365,26 @@ https://docs.openvins.com/eval-metrics.html</p>
 </table>
 
 <h2 id="reference">Reference</h2>
-<p>Please make sure to cite properly in your work, for example:</p>
 
-<p>[1] https://www.cs.cmu.edu/~16385/s17/Slides/11.3_Pose_Estimation.pdf</p>
+<p>[1] Schönberger, J. (n.d.). COLMAP - Structure-from-Motion and Multi-View Stereo. https://demuc.de/colmap/</p>
+
+<p>[2] Tutorial — COLMAP 3.14.0.dev0, 5b9a079a (2025-11-14) documentation. (n.d.). https://colmap.github.io/tutorial.html</p>
+
+<p>[3] VGGSFM: Visual Geometry Grounded deep structure from motion. (n.d.). https://vggsfm.github.io/</p>
+
+<p>[4] By Biggerj1 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=88265436</p>
+
+<p>[5] Jaykumaran, &amp; Jaykumaran. (2025, May 10). Iterative Closest Point (ICP) for 3D Explained with Code. LearnOpenCV – Learn OpenCV, PyTorch, Keras, Tensorflow With Code, &amp; Tutorials. https://learnopencv.com/iterative-closest-point-icp-explained/</p>
+
+<p>[6] Computer Vision Group - Useful tools for the RGB-D benchmark. (n.d.). https://cvg.cit.tum.de/data/datasets/rgbd-dataset/tools</p>
+
+<p>[7] System Evaluation » Filter Evaluation Metrics OpenVINS. (n.d.). https://docs.openvins.com/eval-metrics.html</p>
+
+<p>[8] Kitani, K. &amp; Carnegie Mellon University. (n.d.). Pose estimation [Lecture notes]. In 16-385 Computer Vision. https://www.cs.cmu.edu/~16385/s17/Slides/11.3_Pose_Estimation.pdf</p>
+
+<p>[9] Wang, J., Karaev, N., Rupprecht, C., &amp; Novotny, D. (2023, December 7). Visual geometry grounded deep structure from motion. arXiv.org. https://arxiv.org/abs/2312.04563</p>
+
+<p>[10] Zhang, Z., Scaramuzza, D., Robotics and Perception Group, University of Zürich, &amp; University of Zürich and ETH Zürich. (2021). A tutorial on Quantitative Trajectory Evaluation for Visual(-Inertial) odometry. Robotics and Perception Group. https://www.ifi.uzh.ch/dam/jcr:89d3db14-37b1-431d-94c3-8be9f37466d3/IROS18_Zhang.pdf</p>
 
 <hr />
 
