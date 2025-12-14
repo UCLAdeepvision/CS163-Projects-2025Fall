@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3
+title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3"
 author: Team 35
 date: 2025-12-13
 ---
