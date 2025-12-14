@@ -25,7 +25,7 @@ Our baseline model employs Fully Convolutional Networks (FCN) with a ResNet50 ba
 
 Training was performed with a batch size of 2 due to GPU memory constraints, using the Adam optimizer over 2 epochs. Images were resized to 512x1024 pixels and normalized using ImageNet statistics. After training, the baseline achieved a validation mIoU of approximately 0.234. When visualizing the results, we noticed that the model performed poorly on small, thin objects and when there is a slight gap between objects. Due to the CNN's architecture, downsampling causes thin structures to disappear in low-res feature maps.
 
-![YOLO]({{ '/assets/images/UCLAdeepvision/baseline_segmentation.png' | relative_url }})
+![YOLO]({{ '/assets/images/team21/baseline_segmentation.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 _Fig 1. Baseline Model (FCN-ResNet50) Results_.
 
@@ -44,15 +44,24 @@ To quantitatively evaluate whether SAM and SAM V2 improve segmentation performan
 The experimental results show that applying SAM and SAM V2 on top of the baseline CNN leads to higher mean IoU scores, indicating better alignment between predicted masks and ground truth. Among the tested approaches, the CNN combined with SAM V2 achieves the best overall performance, both qualitatively and quantitatively. These results suggest that SAM-based refinement is an effective way to enhance CNN-based semantic segmentation without retraining the original model.
 
 ## Apply CRF and Grounded SAM on Baseline CNN
+Another strategy that we experimented with was applying a Dense Conditional Random Field (Dense CRF) to our baseline CNN model. We applied Dense CRF following the approach described in [1] as a post-processing step on the softmax probability outputs to encourage spatial and appearance consistency in the predicted segmentation masks. Validation results showed a modest improvement, with the best mIoU increasing from 0.2336 without CRF to 0.2368 with CRF. While this suggests that CRF can help refine segmentation boundaries, the improvement was relatively small and came at the cost of significantly increased inference time during validation, with the validation time increasing from approximately 1.5 minutes per epoch without CRF to nearly 18 minutes per epoch with CRF. As a result, the practical benefits of Dense CRF appear limited when weighed against its computational overhead.
+
+Since Dense CRF primarily refines predictions that the model already produces, we hypothesized that it would be more effective if the underlying segmentation had stronger object detection. To test this idea, we introduced Grounded SAM [2] to provide additional supervision for smaller and harder-to-segment objects such as pedestrians, vehicles, poles, and traffic-related elements, including traffic lights and traffic signs. Grounded SAM was used to generate bounding boxes for a selected subset of classes, which served as prompts for the model. An example of the bounding boxes produced by Grounded SAM is shown in the figure given below:
+
+![image depicting bounding boxes](../assets/images/team21/bounding_boxes.png)
+
+These bounding boxes were then mapped to their corresponding Cityscapes labels and converted into coarse segmentation masks. The resulting pseudo-labels were combined with the original Cityscapes training data to augment the training set. Training with this augmented dataset led to a clear improvement over the baseline model. Without applying CRF, the model achieved a best validation mIoU of 0.2428, compared to 0.2336 when trained without the Grounded SAM pseudo-labels. This improvement suggests that the additional object-level cues helped the model better capture classes that are underrepresented or difficult to segment using pixel-level supervision alone. When Dense CRF was applied on top of the Grounded SAM–augmented model, the gains were again marginal, with the best validation mIoU reaching 0.2423, while incurring a significant increase in inference time.
+
+Overall, these results indicate that improving the training data through pseudo-labeling had a larger impact on performance than applying CRF as a post-processing step. While CRF can provide some boundary refinement, its benefits diminish once the model’s predictions are strengthened by better object detection. For this task, these findings suggest that focusing on improving label quality and coverage is more effective than relying on computationally expensive post-processing techniques.
 
 ## Real-World Testing
 
 <p>To further compare each model, we built a car and conducted a real-world test. As showcased below, we equipped the car with an ESP-32 cam, a Raspberry Pi Pico2w, and two pairs of L298N motors with attached wheels.</p>
 
 <p style="display:flex; gap:12px; margin:0;">
-  <img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/car1.jpg" style="width:33.33%; height:auto; display:block;" alt="">
-  <img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/car2.jpg" style="width:33.33%; height:auto; display:block;" alt="">
-  <img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/car3.jpg" style="width:33.33%; height:auto; display:block;" alt="">
+  <img src="/CS163-Projects-2025Fall/assets/images/team21/car1.jpg" style="width:33.33%; height:auto; display:block;" alt="">
+  <img src="/CS163-Projects-2025Fall/assets/images/team21/car2.jpg" style="width:33.33%; height:auto; display:block;" alt="">
+  <img src="/CS163-Projects-2025Fall/assets/images/team21/car3.jpg" style="width:33.33%; height:auto; display:block;" alt="">
 </p>
 <p><em>Fig 2. Car model from different angles</em>.</p>
 
@@ -86,10 +95,10 @@ Our tech interactions occured as follows:
 <p>However, even with these limitations, we were able to produce meaningful results. In the videos below, the car stopping represents us querying the virtual machine. Its next action is based on the results of applying one of our models.</p>
 
 <p style="display:flex; flex-wrap:wrap; gap:12px;">
-  <video src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/cnn_forward.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
-  <video src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/sam_forward.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
-  <video src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/cnn_turn.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
-  <video src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/sam_turn.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/cnn_forward.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/sam_forward.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/cnn_turn.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/sam_turn.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
 </p>
 <p><em>From top to bottom, left to right: CNN based model detecting no obstacles, SAM based model detecting no obstacles, CNN based model detecting a person, SAM based model detecting a person</em>.</p>
 
