@@ -202,48 +202,12 @@ To calculate coordinates form textual reasoning, ETHAN employs several strategie
 
 ETHAN performs strongly, with high accuracy in country and continent classification, on par with Pigeon. As compared to previous strategies, ETHAN benefits from increased interpretability, zero-shot generalization, but has higher computational costs as VLM inference is slower. Additionally, it can suffer from hallucination risks where generative model recognizes non-existent models or applies incorrect assumptions.
 
+## Conclusion
 
-## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
+The progression from PlaNet to ETHAN illustrates a fundamental shift in image geolocation architectures. Early CNN-based approaches like PlaNet established geocell classification as a viable framework, while TransLocator demonstrated the advantages of transformer architectures and multi-modal inputs through semantic segmentation. 
 
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
+Future work will likely focus on hybrid architectures that combine the computational efficiency of learned embeddings with the reasoning capabilities of VLMs. Possible research directions include developing loss functions that better capture hierarchical geographic relationships, improving geocell partitioning strategies that balance semantic coherence with training efficiency, and addressing the persistent challenge of performance degradation in underrepresented geographic regions where training data remains sparse.
 
-Please cite the image if it is taken from other people's work.
-
-
-### Table
-Here is an example for creating tables, including alignment syntax.
-
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
-
-
-
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
-
-
-### Formula
-Please use latex to generate formulas, such as:
-
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
-
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
 
 ## References
 
