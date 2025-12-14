@@ -6,25 +6,20 @@ author: Erick Rosas Gonzalez, Maya Josifovska, Andrew Rubio, Wanda Barahona
 date: 2025-12-13
 ---
 
-
 > Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME (Weng et al., 2023) which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) (Lu et al., 2024), which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability (Huber et al., 2024), which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.
 
-
-<!--more-->
 {: class="table-of-content"}
 * TOC
 {:toc}
 
 ## 1. Introduction
-<!-- Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md) -->
-
-As Deep learning Models achieve state of the art performance in biometric security, the “black box” nature of Facial Recognition (FR) and Face Verification (FV) systems present a growing liability. Unlike general object classification, FR systems operate in high-risk sociological contexts where errors can lead to wrongful arrests, discriminatory access denial, and security breaches. The challenge is no longer accuracy but trustworthiness to ensure that a model can distinguish identities on robust biometric features rather than spurious “shortcut” like background textures, lighting artifacts, or demographic biases.
+As Deep Learning models achieve state-of-the-art performance in biometric security, the “black box” nature of Facial Recognition (FR) and Face Verification (FV) systems present a growing liability. Unlike general object classification, FR systems operate in high-risk sociological contexts where errors can lead to wrongful arrests, discriminatory access denial, and security breaches. The challenge is no longer accuracy but trustworthiness to ensure that a model can distinguish identities on robust biometric features rather than spurious “shortcuts” like background textures, lighting artifacts, or demographic biases.
 
 Historically, explainability in computer vision (CV) has relied on saliency methods, such as Grad-CAM (Selvaraju et al., 2017). While effective for localizing where a model looks, these methods are fundamentally correlational rather than causal. They often fail to explain why a decision was reached, like whether a match was driven by genuine identity features or coincidental pixel statistics. Furthermore, standard backpropagation methods suffer from noisy or vanishing gradients when applied to deep feature embeddings used in modern FV, rendering conventional heatmaps difficult to interpret for fine-grained verification tasks.
 
-Currently, the landscape of Explainable AI (XAI) is currently expanding rapidly to address these issues. Researchers are exploring diverse methodologies, ranging from logic-based formal verifications (Darwiche, 2023) that uses prime implicates to identify minimum sufficient reasons for a classification decision to interactive user interfaces. While these approaches offer promising theoretical guarantees, the need for CV practitioners is often direct feature level diagnostics that can visually and causally verify model behavior. 
+Currently, the landscape of Explainable AI (XAI) is expanding rapidly to address these issues. Researchers are exploring diverse methodologies, ranging from logic-based formal verifications (Darwiche, 2023) that uses prime implicates to identify minimum sufficient reasons for a classification decision to interactive user interfaces. While these approaches offer promising theoretical guarantees, the need for CV practitioners is often direct feature level diagnostics that can visually and causally verify model behavior. 
 
-To address these limitations, this report looks at three methodologies. FastDiME (Weng et al., 2023) is an approach that leverages diffusion probabilistic models to create counterfactuals. By removing specific attributes and observing a shift, FastDiME offers a causal mechanism for detecting shortcut learning. Feature-Guide Gradient Backpropagation (FGGB) (Lu et al., 2024),  is a different method that shifts focus from final output score to the deep feature level. By normalizing gradients channel-w-ise, FGGB separates decision-making process into distinct similarity and dissimilar maps that provide a clearer view of what features argue for or against a match. Frequency Domain Explainability (Huber et al., 2024) which challenges the spatial bias of human interpretation by analyzing how Convolutional Neural Networks (CNNs) rely on specific frequency bands. This approach reveals that models may rely on high-frequency noise or specific texture patterns offering a powerful tool for quantifying algorithmic bias across different demographics. Together, these methods represent a shift from simple visualization to rigorous feature aware model diagnostics.
+To address these limitations, this report looks at three methodologies. FastDiME (Weng et al., 2023) is an approach that leverages diffusion probabilistic models to create counterfactuals. By removing specific attributes and observing a shift, FastDiME offers a causal mechanism for detecting shortcut learning. Feature-Guided Gradient Backpropagation (FGGB) (Lu et al., 2024), is a different method that shifts focus from final output score to the deep feature level. By normalizing gradients channel-wise, FGGB separates decision-making process into distinct similarity and dissimilarity maps that provide a clearer view of what features argue for or against a match. Frequency Domain Explainability (Huber et al., 2024) which challenges the spatial bias of human interpretation by analyzing how Convolutional Neural Networks (CNNs) rely on specific frequency bands. This approach reveals that models may rely on high-frequency noise or specific texture patterns offering a powerful tool for quantifying algorithmic bias across different demographics. Together, these methods represent a shift from simple visualization to rigorous feature aware model diagnostics.
 
 ## 2. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation
 
@@ -56,7 +51,7 @@ $$
 Equivalently, the noisy image at time step $$t$$ can be written as:
 
 $$
-x_{t}=\sqrt{\bar{\alpha}_{t}}x_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon, \quad \epsilon\sim N(0,I)
+x_{t}=\sqrt{\bar{\alpha}_{t}}x_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon, \quad \epsilon\sim\N(0,I)
 $$
 
 With:
@@ -81,10 +76,10 @@ FastDiME has a time complexity of $$O(T)$$, beating the original DiME with a tim
 
 ![CelebA counterfactual explanations]({{ '/assets/images/team-39/paper1.png' | relative_url }})
 {: style="width: 100%;"}
-*Fig 6: CelebA counterfactual explanations for the 'smile' attribute.*
+
 
 ### 2.4 Self-Optimized Masking for Localized Image Edits
-Using FastDiME to generate images creates the risk that the algorithm alters the facial structure or biometric information entirely as opposed to only the shortcut. Many shortcut features are spatially localized, and therefore, the method introduces a self-optimized mask to keep changes to restrict changes.
+Using FastDiME to generate images creates the risk that the algorithm alters the facial structure or biometric information entirely as opposed to only the shortcut. Many shortcut features are spatially localized, and therefore, the method introduces a self-optimized mask to restrict changes.
 
 The high-level process is as follows:
 At each diffusion step, a binary mask is computed by comparing the denoised estimate to the original image:
@@ -123,9 +118,9 @@ This method generates sharper visualizations designed to offer interpretations f
 The FGGB method addresses the issue where derivatives of the output score fluctuate sharply or vanish. Instead of backpropagating from the final similarity score, FGGB operates at the deep feature level in a channel-wise manner. The process is divided into two phases:
 
 **Gradient Backpropagation & Normalization**
-First, the system extracts the deep face representations (embeddings) for the input images, denoted as $$F_{A}$$and$$F_{B}$$each with dimension$$N$$.
+First, the system extracts the deep face representations (embeddings) for the input images, denoted as $$F_{A}$$ and $$F_{B}$$ each with dimension $$N$$.
 
-* **Gradient Extraction:** The system backpropagates gradients from each channel of the feature vector $$F_{A}$$. For the $$k$$-th dimension of the feature, the gradient map $$G_{A}^{k}$$is calculated as the derivative with respect to the input image$$I_{A}$$:
+* **Gradient Extraction:** The system backpropagates gradients from each channel of the feature vector $$F_{A}$$. For the $$k$$-th dimension of the feature, the gradient map $$G_{A}^{k}$$ is calculated as the derivative with respect to the input image $$I_{A}$$:
 
     $$
     G_{A}^{k}=\frac{\partial F_{A}^{k}}{\partial I_{A}}
@@ -134,13 +129,13 @@ First, the system extracts the deep face representations (embeddings) for the in
 * **Normalization:** To mitigate local variations (such as vanishing gradients), each gradient map is normalized using the Frobenius norm to produce $$\overline{G}_{A}^{k}$$:
 
     $$
-    \overline{G}_{A}^{k}=\frac{G_{A}^{k}}{||G_{A}^{k}||}
+    \overline{G}_{A}^{k}=\frac{G_{A}^{k}}{\|G_{A}^{k}\|}
     $$
 
 **Saliency Map Generation**
 In the second phase, the system aggregates these $$N$$ normalized gradient maps into a final saliency map. The aggregation is weighted by the actual contribution of each feature channel to the verification decision.
 
-* **Weight Calculation:** A weight vector is defined as the element-wise cosine similarity between the two feature vectors $$F_{A}$$and$$F_{B}$$:
+* **Weight Calculation:** A weight vector is defined as the element-wise cosine similarity between the two feature vectors $$F_{A}$$ and $$F_{B}$$:
 
     $$
     weight=\frac{F_{A}\odot F_{B}}{||F_{A}||||F_{B}||}
@@ -162,10 +157,9 @@ In the second phase, the system aggregates these $$N$$ normalized gradient maps 
 
 ![FGGB Verification and Explanation Flow]({{ '/assets/images/team-39/paper2.png' | relative_url }})
 {: style="width: 100%;"}
-*Fig 7. FGGB Verification and Explanation Flow.*
 
 ### 3.3 Quantitative Evaluation
-Validation of the FGGB methods was done using the Deletion & Insertion metrics on three datasets (LFW, CPLFW, and CALFW). The "Deletion" metric measures the drop in verification accuracy when salient pixels are removed (lower score is better), while "Insertion" measures accuracy gain when pixels are added (higher is better).
+Validation of the FGGB method was done using the Deletion & Insertion metrics on three datasets (LFW, CPLFW, and CALFW). The "Deletion" metric measures the drop in verification accuracy when salient pixels are removed (lower score is better), while "Insertion" measures accuracy gain when pixels are added (higher is better).
 
 * **Performance:** FGGB demonstrated superior performance, particularly in generating "Dissimilarity Maps".
 * In the LFW dataset for Similarity Maps, FGGB achieved a Deletion score of **24.18%**, significantly outperforming the popular LIME method (35.82%) and performing comparably to perturbation methods like CorrRISE (24.51%) but with much greater efficiency.
@@ -190,7 +184,7 @@ The methodology for quantifying frequency influence is perturbation-based and sy
 1.  **Transformation:** The input spatial image is transformed into the frequency domain using the Discrete Fourier Transform (DFT).
 2.  **Masking:** Specific radial frequency bands are masked (removing information present in those bands). This masked frequency image is then re-transformed back into the spatial domain in a lossless process.
 3.  **Scoring:** The resulting frequency-masked image, along with the unaltered image, is passed through the FR model to create face embeddings and calculate new cosine similarity scores $$S_{masked}$$.
-4.  **Influence Score:** The importance of the masked frequency band is assessed by taking the difference between the unaltered baseline similarity score $$S_{unaltered}$$and the masked score$$S_{masked}$$. This difference is interpreted as the direct influence of that frequency component on the verification decision.
+4.  **Influence Score:** The importance of the masked frequency band is assessed by taking the difference between the unaltered baseline similarity score $$S_{unaltered}$$ and the masked score $$S_{masked}$$. This difference is interpreted as the direct influence of that frequency component on the verification decision.
 5.  **FHP Generation:** The normalized influences are visualized as Frequency Heat Plots (FHPs). These can be **Absolute FHPs**, which display the magnitude of the performance drop caused by masking a frequency band, or **Directed FHPs**, showing whether the masking operation worsened the similarity score (positive influence) or improved the score (negative influence).
 
 The detection of negative influence is highly valuable, as it diagnoses scenarios where the model was relying on identity-irrelevant artifacts or noise, which, when removed, stabilizes the decision and increases similarity.
@@ -209,9 +203,9 @@ Operationally, the current FHP generation methodology is computationally intensi
 ## 5. Conclusion
 The analysis reveals a key insight: modern FR models are sensitive to non-semantic cues that escape human notice. While classical models may imply that CNNs "look" at faces much like humans do, recent methods demonstrate that models frequently rely on fragile correlations and spurious shortcuts.
 
-FastDiME's counterfactual generation proves that causality by showing that removing a specific artifact (like glasses or mask) can flip a prediction, while FGGB exposes the precise deep features contributing to false acceptances, and Frequency Heat Plots reveal hidden structural biases across demographics.
+FastDiME's counterfactual generation proves causality by showing that removing a specific artifact (like glasses or mask) can flip a prediction, while FGGB exposes the precise deep features contributing to false acceptances, and Frequency Heat Plots reveal hidden structural biases across demographics.
 
-Moving forward, the integration of these XAI tools into the standard development pipeline is a must, in order for safe deployment. The shifts from post-hoc visualization to causal and structural analysis allows for detection of time where a model appears correct for the wrong reasons, because they can cause harm in the real world. However, challenges remain regarding computational efficiency. Methods like iterative frequency masking and diffusion based generation are too expensive for real time inference. Future research must focus on optimizing these tools to provide real-time feedback ensuring that robustness and fairness are not just retrospective metrics but active components of the recognition process.
+Moving forward, the integration of these XAI tools into the standard development pipeline is a must, in order for safe deployment. The shifts from post-hoc visualization to causal and structural analysis allows for detection of time where a model appears correct for the wrong reasons, because they can cause harm in the real world. However, challenges remain regarding computational efficiency. Methods like iterative frequency masking and diffusion-based generation are too expensive for real-time inference. Future research must focus on optimizing these tools to provide real-time feedback ensuring that robustness and fairness are not just retrospective metrics but active components of the recognition process.
 
 ## References
 
