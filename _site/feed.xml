@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T21:00:50-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html" rel="alternate" type="text/html" title="Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T21:58:35-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html" rel="alternate" type="text/html" title="Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding" /><published>2025-12-12T00:00:00-08:00</published><updated>2025-12-12T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html"><![CDATA[<blockquote>
   <p>Spatial reasoning and object-centric perception are central to deploying Vision–Language Models (VLMs) in embodied systems, where agents must interpret fine-grained scene structure to support action and interaction. However, current VLMs continue to struggle with fine-grained visual reasoning, particularly in the object-centric tasks that demand visual understanding that requires dense visual perception. We introduced VLIMA, a guided fine-tuning framework that enhances VLMs by incorporating auxiliary visual supervision from external self-supervised vision encoders. Specifically, VLIMA adds an auxiliary alignment loss that encourages intermediate VLM representations to match features from encoders such as DINOv2, which exhibit emergent object-centricity and strong spatial correspondence. By transferring these spatially precise and object-aware inductive biases into the VLM representation space, VLIMA improves object-centric embodied scene understanding without calling external tools or modifying the VLM’s core architecture.</p>
 </blockquote>
 
@@ -19,6 +19,7 @@
     </ul>
   </li>
   <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
   <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
 </ul>
 
@@ -37,10 +38,13 @@
 
 <p>REPA [4] introduces a representation alignment regularizer for diffusion transformers that explicitly aligns noisy intermediate hidden states with clean features from a pretrained vision encoder, thereby encouraging models to preserve semantically meaningful visual structure throughout generation and improving downstream reasoning fidelity.</p>
 
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/repa.png" alt="REPA" /></p>
+<p>Fig 2. The demo figure for REPA architecture.</p>
+
 <h2 id="method">Method</h2>
 
 <p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/method_ver1.png" alt="VLIMA Method" /></p>
-<p>Fig 2. <strong>The Training Pipeline of VLIMA.</strong> VLIMA augments a vision–language model with a trainable continuous token block inserted after a special <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token as a marker. During training, the hidden states of this block are projected and aligned with frozen DINOv2 features via a reconstruction dino loss, while the model is jointly optimized with the standard language modeling objective. At inference time, the model emits <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> to trigger the insertion of the learned token block as DINO feature reasoning, after which generation resumes at <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code> to produce the final answer.</p>
+<p>Fig 3. <strong>The Training Pipeline of VLIMA.</strong> VLIMA augments a vision–language model with a trainable continuous token block inserted after a special <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token as a marker. During training, the hidden states of this block are projected and aligned with frozen DINOv2 features via a reconstruction dino loss, while the model is jointly optimized with the standard language modeling objective. At inference time, the model emits <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> to trigger the insertion of the learned token block as DINO feature reasoning, after which generation resumes at <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code> to produce the final answer.</p>
 
 <h3 id="overview">Overview</h3>
 
@@ -50,7 +54,7 @@
 
 \[Y = \mathcal{T}(\mathcal{V}(x_{\text{img}}), x_{\text{txt}})\]
 
-<p>As shown in Fig 2, VLIMA learns to produce a <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token that triggers insertion of a fixed-length trainable token block whose hidden states features are supervised to match projected DINOv2 features, after which generation resumes at <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code> to produce the final answer. Specifically,</p>
+<p>As shown in Fig 3, VLIMA learns to produce a <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token that triggers insertion of a fixed-length trainable token block whose hidden states features are supervised to match projected DINOv2 features, after which generation resumes at <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code> to produce the final answer. Specifically,</p>
 
 <ul>
   <li>
@@ -199,8 +203,8 @@
 
 <h4 id="demo">Demo</h4>
 
-<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/demo_ver1.png" alt="VLIMA Demo" /></p>
-<p>Fig 3. Qualitative Demo results on MetaVQA. VLIMA consistently outperforms the baseline on spatial and grounding questions by decoding aligned DINOv2 features through the <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token span, enabling object-centric and spatially grounded reasoning.</p>
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/demo_ver2.png" alt="VLIMA Demo" /></p>
+<p>Fig 3. Qualitative Demo results on MetaVQA [3]. VLIMA consistently outperforms the baseline on spatial and grounding questions by decoding aligned DINOv2 features through the <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token span, enabling object-centric and spatially grounded reasoning.</p>
 
 <h4 id="metavqa">MetaVQA</h4>
 
@@ -244,9 +248,9 @@
     <tr>
       <th style="text-align: left">Task   </th>
       <th style="text-align: right">  Average</th>
-      <th style="text-align: right">  BLINK</th>
-      <th style="text-align: right">  MMVP</th>
-      <th style="text-align: right">  MMStar</th>
+      <th style="text-align: right">  BLINK [8]</th>
+      <th style="text-align: right">  MMVP [9]</th>
+      <th style="text-align: right">  MMStar [10]</th>
     </tr>
   </thead>
   <tbody>
@@ -319,13 +323,40 @@
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>In this work, we introduced VLIMA, a framework for enhancing object-centric and spatial reasoning in vision–language models for embodied scene understanding. By inserting a trainable continuous-token block and aligning intermediate VLM representations with frozen DINOv2 features through an auxiliary alignment loss, VLIMA injects strong spatial and object-aware inductive biases without modifying the backbone architecture or relying on external tools at inference time.</p>
+<p>In this work, we introduced VLIMA, a framework for enhancing object-centric and spatial reasoning in vision–language models for embodied scene understanding. <strong>By inserting a trainable continuous-token block and aligning intermediate VLM representations with frozen DINOv2 features through an auxiliary alignment loss, VLIMA injects strong spatial and object-aware inductive biases without modifying the backbone architecture or relying on external tools at inference time.</strong></p>
 
 <p>Empirical results on MetaVQA and additional embodied benchmarks demonstrate that VLIMA consistently improves performance over strong baselines, with particularly notable gains on tasks requiring holistic object identification and spatial grounding. Ablation studies further confirm that the proposed feature-level alignment plays a critical role beyond standard fine-tuning or token-level supervision.</p>
 
 <p>Overall, VLIMA shows that explicit representation alignment is a promising direction for closing the integration gap between visual perception and language reasoning in VLMs. We believe this approach offers a scalable and generalizable pathway for equipping future multimodal models with stronger embodied and spatial understanding and opens up avenues for integrating other self-supervised visual priors into large multimodal systems.</p>
 
 <p>For future improvements, one limitation is that DINOv2 features are extracted at a fixed relative low resolution (\(224 \times 224\)), which can under-represent fine-grained details in large scenes and make the alignment less helpful for small or distant objects. A natural next step is to incorporate multi-scale and/or higher-resolution feature extraction so that the aligned continuous-token block can capture both global layout and small-object cues, improving robustness across diverse embodied viewpoints and scene scales.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Codebase Usage:
+    <ul>
+      <li>MetaVQA: https://github.com/metadriverse/MetaVQA.git</li>
+      <li>Qwen2.5VL (the code base is updated): https://github.com/QwenLM/Qwen3-VL.git
+        <ul>
+          <li>We impliment our idea on Qwen2.5VL</li>
+        </ul>
+      </li>
+      <li>VLMEvalKit: https://github.com/open-compass/VLMEvalKit.git
+        <ul>
+          <li>We impliment the MetaVQA testing on VLMEvalKit</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Contribution
+    <ul>
+      <li>Identified that current VLMs struggle with fine-grained, object-centric spatial reasoning required for embodied scene understanding, largely due to insufficient dense perceptual supervision.</li>
+      <li>Proposed VLIMA, a guided fine-tuning framework that aligns intermediate VLM features with frozen DINOv2 representations via an auxiliary loss, injecting object-centric and spatial priors without changing the base architecture.</li>
+      <li>Tested and proofed that VLIMA consistently improves performance on MetaVQA, BLINK, MMVP, and MMStar, and ablations show intermediate-state alignment outperforms output-only alignment.</li>
+    </ul>
+  </li>
+</ul>
 
 <h2 id="reference">Reference</h2>
 
@@ -342,6 +373,12 @@
 <p>[6] Chen, Zhe, et al. “Expanding Performance Boundaries of Open-Source Multimodal Models with Model, Data, and Test-Time Scaling.” (InternVL2) <em>arXiv:2412.05271</em>. 2024</p>
 
 <p>[7] Hu, Edward J., et al. “LoRA: Low-Rank Adaptation of Large Language Models.” <em>Proceedings of the International Conference on Learning Representations (ICLR)</em>. 2022.</p>
+
+<p>[8] Fu, Xingyu, et al. “BLINK: Multimodal Large Language Models Can See but Not Perceive.” <em>Proceedings of the European Conference on Computer Vision (ECCV)</em>. 2024.</p>
+
+<p>[9] Chen, Lin, et al. “Are We on the Right Way for Evaluating Large Vision-Language Models” <em>Neural Information Processing Systems</em>. 2024</p>
+
+<p>[10] Tong, Shengbang, et al. “Eyes Wide Shut? Exploring the Visual Shortcomings of Multimodal LLMs.” <em>Proceedings of the IEEE conference on Computer Vision and Pattern Recognition</em> 2024.</p>
 
 <hr />]]></content><author><name>Bomin Wei, Hanzhang Liu</name></author><summary type="html"><![CDATA[Spatial reasoning and object-centric perception are central to deploying Vision–Language Models (VLMs) in embodied systems, where agents must interpret fine-grained scene structure to support action and interaction. However, current VLMs continue to struggle with fine-grained visual reasoning, particularly in the object-centric tasks that demand visual understanding that requires dense visual perception. We introduced VLIMA, a guided fine-tuning framework that enhances VLMs by incorporating auxiliary visual supervision from external self-supervised vision encoders. Specifically, VLIMA adds an auxiliary alignment loss that encourages intermediate VLM representations to match features from encoders such as DINOv2, which exhibit emergent object-centricity and strong spatial correspondence. By transferring these spatially precise and object-aware inductive biases into the VLM representation space, VLIMA improves object-centric embodied scene understanding without calling external tools or modifying the VLM’s core architecture.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
   <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
