@@ -23,7 +23,7 @@ We will be surveying three of these recent methods, highlighting the very differ
 
 - The Hybrid Attention Transformer (HAT), a shifted-window Transformer-based method
 
-- Look-Up Table (LUT) methods, which use precomputed table of pixel estimates
+- Look-Up Table (LUT) methods, which use a precomputed table of pixel estimates
 
 - Unfolding networks, which combine classical model-based methods with learning-based methods
 
