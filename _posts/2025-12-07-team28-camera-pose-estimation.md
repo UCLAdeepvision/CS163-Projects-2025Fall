@@ -1,14 +1,12 @@
 ---
 layout: post
 comments: true
-title: Post Template
-author: UCLAdeepvision
-date: 2024-01-01
+title: Camera Pose Estimation
+author: Group 28
+date: 2025-12-07
 ---
 
-
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
-
+> Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ViPE) on video datasets using quantitative performance metrics. 
 
 <!--more-->
 {: class="table-of-content"}
