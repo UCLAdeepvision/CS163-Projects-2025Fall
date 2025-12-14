@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T23:14:34-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Vision Language Action Models for Robotics</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html" rel="alternate" type="text/html" title="Vision Language Action Models for Robotics" /><published>2025-12-13T00:00:00-08:00</published><updated>2025-12-13T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html"><![CDATA[<blockquote>
+  <p>The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.</p>
+</blockquote>
+
+<!--more-->
+
+<ul class="table-of-content">
+  <li>TOC</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. However, training models to understand the physical world has proven to be extremely difficult, with issues stemming from the lack of training embodied data (robot centric videos, human interactions in tasks). Models also struggle with relating semantic information to the physical world to conduct actions and generalizing or extending to new environments. Vision language action models recently emerged at the forefront of end-to-end models handling visual input, language instruction, and outputting robot actions.</p>
+
+<h2 id="background-on-vlas">Background on VLAs</h2>
+
+<p>Various models typically utilized at most two of these three components: vision, language and action. For example R3M which is a universal visual representation utilizing video and language during training, but only serves as a backbone and relies on training a separate downstream policy for robot action. Another example is Track2Act, which utilizes Vision and Action, with 2D track predictions for trajectories of objects without language/explicit goal set.</p>
+
+<p>Vision Language Action models utilize all 3 in a multimodal pipeline, to concurrently process image/video + language (captions) to output a robot action. Drawing inspiration from transformers, VLA models use a fine tuned vision language model to output actions instead of text answers. In this report, we discuss and compare RT-2 (55B param), OpenVLA (7B param) which use vision language backbones, with Octo, a compact (93M param) generalist robot policy that omits a vision language backbone.</p>
+
+<h2 id="rt-2-google-deepmind">RT-2 (Google Deepmind)</h2>
+
+<h3 id="overview">Overview</h3>
+
+<p>RT-2 was the first model to indicate success with using pretrained vision language models to directly output robot actions. RT-2 utilized PaLI-X (larger model, overall better performance) and PaLM-E (smaller, performed better on math reasoning) for its backbone. Building on its predecessor, RT-1, which directly trained on robot data, RT-2 draws inspiration from RT-1 on the concept of discretization of action as tokens, demonstrating that robot action can be represented similarly to how VLMs tokenize and process natural language for generation.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team05/RT-2_graphic.png" alt="RT-2 Architecture" /></p>
+<p><em>Fig 1. RT-2 Architecture: Vision Language Model adapted for robot action generation.</em></p>
+
+<h3 id="architecture">Architecture</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Component</th>
+      <th style="text-align: left">RT-2-PaLI-X-55B</th>
+      <th style="text-align: left">RT-2-PaLM-E-12B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Vision Encoder</td>
+      <td style="text-align: left">ViT-22B</td>
+      <td style="text-align: left">ViT-4B</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Language Model</td>
+      <td style="text-align: left">UL2 (32B encoder-decoder)</td>
+      <td style="text-align: left">PaLM (decoder-only)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Total Parameters</td>
+      <td style="text-align: left">55B</td>
+      <td style="text-align: left">12B</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="vision-encoder">Vision Encoder:</h4>
+
+<p>Processes robot camera images into patch embeddings (e.g., 16×16 pixel patches)
+Can accept sequences of n images, producing n × k tokens per image, k is number of patches per image which are passed into a projection layer
+Pretrained on web-scale image data</p>
+
+<h4 id="language-model-backbone">Language Model Backbone:</h4>
+
+<p>For PaLI-X, the projected image tokens and text tokens are jointly fed into encoder, and the decoder autoregressively generates output
+For PaLM-E, projected image tokens are concatenated directly with the text tokens, decoder processes the combined stream
+Pretrained on web-scale vision-language tasks</p>
+
+<h3 id="tokenization-method-and-action-output">Tokenization Method and Action Output</h3>
+
+<p>Drawing inspiration from discrete representations for action encodings in RT-1, RT-2 represents the range of motion, into 256 distinct steps, otherwise known as bins. The action space consists of 8 dimensions (6 positional, rotational displacement, extension of gripper, command for termination) are discretized into 256 bins uniformly excluding the termination command. These 256 action bins are mapped to existing tokens in the VLM’s token vocabulary. For example “128” could represent a quantity of speed, so when processing an instruction like “put the apple down” the VLM would output a string of 8 discrete tokens per timestep (e.g.”1 128 91 241 5 101 127 217”). This allows the model to be trained using the standard categorical cross-entropy loss used for text generation, without adding new “action heads” or changing the model architecture.</p>
+
+<h3 id="training-for-next-token-generation">Training for Next Token Generation</h3>
+
+<p>Utilized co-fine-tuning strategy where training batches mix original web data along with robot data for more generalizable policies since it exposes the policy to abstract visual concepts from web data and low level robot actions, instead of just robot actions like in RT-1. Vision language data comes from WebLI dataset, consisting of ~10 billion image-text pairs across 109 languages, filtered down to the top 10% (1 billion examples) based on cross-modal similarity.</p>
+
+<p>Robotics data comes from RT-1 dataset (Brohan et al., 2022), which includes demonstration episodes collected on a mobile manipulator. These episodes are annotated with natural language instructions covering seven core skills: “Pick Object,” “Move Object Near Object,” “Place Object Upright,” “Knock Object Over,” “Open Drawer,” “Close Drawer,” and “Place Object into Receptacle”.</p>
+
+<h3 id="training-configuration">Training Configuration</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Parameter</th>
+      <th style="text-align: left">Configuration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Loss Function</td>
+      <td style="text-align: left">Categorical Cross-Entropy (Next Token Prediction)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Optimization</td>
+      <td style="text-align: left">Gradient Descent (Backpropagation)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Learning Rate</td>
+      <td style="text-align: left">1e-3 (PaLI-X), 4e-4 (PaLM-E)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Batch Size</td>
+      <td style="text-align: left">2048 (PaLI-X), 512 (PaLM-E)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Gradient Steps</td>
+      <td style="text-align: left">80K (PaLI-X), 1M (PalM-E)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="openvla-stanford-uc-berkeley-toyota-research-institute">OpenVLA (Stanford, UC Berkeley, Toyota Research Institute)</h2>
+
+<h3 id="architecture-1">Architecture</h3>
+
+<p>OpenVLA uses a dual-encoder vision system combined with a large language model backbone to process visual inputs and generate robot actions.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team05/OpenVLA_graphic.png" alt="OpenVLA Architecture" /></p>
+<p><em>Fig 2. OpenVLA Architecture: Dual vision encoders with Llama 2 backbone for action generation.</em></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Component</th>
+      <th style="text-align: left">Specification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Vision Encoders</td>
+      <td style="text-align: left">DINOv2 (ViT-L/14) + SigLIP (So400m)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Projector</td>
+      <td style="text-align: left">2-layer MLP</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Language Model</td>
+      <td style="text-align: left">Llama 2 (7B)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Total Parameters</td>
+      <td style="text-align: left">~7B</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Dual Vision Encoders:</strong></p>
+
+<ul>
+  <li>DINOv2 (ViT-L/14): Self-supervised encoder for low-level spatial and geometric features (“where things are”)</li>
+  <li>SigLIP (So400m): Contrastive vision-language encoder for high-level semantic understanding (“what things are”)</li>
+  <li>Features from both encoders are concatenated channel-wise to create a rich visual representation</li>
+  <li>Both encoders pretrained on web-scale data</li>
+</ul>
+
+<p><strong>Projector:</strong></p>
+
+<ul>
+  <li>2-layer MLP</li>
+  <li>Maps fused visual features into the language model’s embedding space</li>
+</ul>
+
+<p><strong>Language Model Backbone:</strong></p>
+
+<ul>
+  <li>Llama 2 (7B parameters, decoder-only)</li>
+  <li>Processes concatenated visual tokens and text instruction tokens</li>
+  <li>Generates action tokens autoregressively</li>
+  <li>Pretrained on web-scale text data</li>
+</ul>
+
+<h3 id="action-representation">Action Representation</h3>
+
+<p>OpenVLA adopts RT-2’s “action-as-language” strategy of discretizing dimensions of robot actions into 256 bins. Since Llama’s tokenizer only reserves 100 “special” tokens, the authors chose to override the 256 least used tokens in the vocabulary for simplicity.</p>
+
+<p><strong>Dedicated Action Tokens:</strong></p>
+
+<ul>
+  <li>Each token represents a discrete bin of continuous motion, preventing semantic interference between “language words” and “action words”</li>
+  <li>Quantization: Same 256-bin uniform discretization per action dimension as RT-2</li>
+  <li>Output Format: Generates action tokens that are decoded back to continuous values</li>
+</ul>
+
+<h3 id="training">Training</h3>
+
+<p><strong>Dataset:</strong></p>
+
+<p>970,000 trajectories from Open X-Embodiment dataset</p>
+
+<p><strong>Data Curation:</strong></p>
+
+<p>Carefully filtered for high-quality subsets, removing idle actions and low-quality demonstrations to improve training efficiency and model performance.</p>
+
+<p><strong>Training Details:</strong></p>
+
+<ul>
+  <li>Fixed learning rate: 2e-5</li>
+  <li>AdamW optimizer with gradient descent (backpropagation)</li>
+  <li>Significantly more epochs (27) compared to typical VLMs (1-2 epochs)</li>
+  <li>Compute: 64 A100 GPUs for approximately 14 days</li>
+</ul>
+
+<p>Authors attributed increases in performance to fine-tuning the vision encoder, which captures more fine-grained spatial details about scenes for precise robotic control. Another notable change was utilizing 27 epochs at the final vision language model seeing improvement at each iteration, when in the past, vision language models typically trained on 1-2 epochs through the entire dataset.</p>
+
+<p><strong>Training Configuration:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Parameter</th>
+      <th style="text-align: left">Configuration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Loss Function</td>
+      <td style="text-align: left">Categorical Cross-Entropy (Next Token Prediction)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Optimization</td>
+      <td style="text-align: left">Gradient Descent (Backpropagation)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Learning Rate</td>
+      <td style="text-align: left">2e-5 (fixed)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Epochs</td>
+      <td style="text-align: left">27</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Compute</td>
+      <td style="text-align: left">64 A100 GPUs (~14 days)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="octo-uc-berkeley">Octo (UC Berkeley)</h2>
+
+<h3 id="overview-1">Overview</h3>
+
+<p>Octo is an open-source Generalist Robot Policy with a fundamentally different approach from VLAs like RT-2. Rather than adapting a massive pretrained VLM, Octo is trained from scratch as a compact transformer designed specifically for robot action. Octo aims to address the flaws of large robot policies trained on diverse datasets such as constrained downstream policies (e.g. restrictive inputs from single camera view) and serve as a “true” general robot policy, allowing different camera configurations, different robots, language vs goal images, and new robot setups.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team05/Octo_graphic.png" alt="Octo Architecture" /></p>
+<p><em>Fig 3. Octo Architecture: Compact transformer with diffusion-based action decoder.</em></p>
+
+<h3 id="architecture-2">Architecture</h3>
+
+<p>Octo features a custom transformer architecture with modular input-output mechanisms:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Component</th>
+      <th style="text-align: left">Octo-Small</th>
+      <th style="text-align: left">Octo-Base</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Transformer Parameters</td>
+      <td style="text-align: left">27M</td>
+      <td style="text-align: left">93M</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Vision Encoder</td>
+      <td style="text-align: left">ViT-Small (CNN Stem)</td>
+      <td style="text-align: left">ViT-Small (CNN Stem)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Language Encoder</td>
+      <td style="text-align: left">T5-Base (frozen)</td>
+      <td style="text-align: left">T5-Base (frozen)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Action Head</td>
+      <td style="text-align: left">Diffusion</td>
+      <td style="text-align: left">Diffusion</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Vision Encoder:</strong></p>
+
+<ul>
+  <li>Transformer Backbone (ViT-Style) with a lightweight CNN Stem (SmallStem16) for tokenization</li>
+  <li>Processes images into patch embeddings</li>
+  <li>Supports multiple camera views (e.g., third-person and wrist cameras)</li>
+  <li>Trained from scratch on robot trajectories</li>
+</ul>
+
+<p><strong>Language Encoder:</strong></p>
+
+<ul>
+  <li>Frozen T5-Base model (111M parameters)</li>
+  <li>Encodes natural language instructions into embeddings</li>
+  <li>Language conditioning is optional—Octo can also accept goal images</li>
+</ul>
+
+<p><strong>Transformer Backbone:</strong></p>
+
+<ul>
+  <li>Custom transformer (27M for Small, 93M for Base)</li>
+  <li>Processes concatenated vision and language tokens</li>
+  <li>Block-wise Attention Masking: Handles missing modalities (e.g., robots without wrist cameras) by masking specific input groups during training</li>
+  <li>Trained from scratch on robot data (no web pretraining)</li>
+</ul>
+
+<p><strong>Diffusion Action Head:</strong></p>
+
+<ul>
+  <li>Replaces the language modeling head with a diffusion decoder</li>
+  <li>Outputs continuous actions rather than discrete tokens</li>
+  <li>Iteratively denoises Gaussian noise into precise action trajectories</li>
+</ul>
+
+<h3 id="action-representation-1">Action Representation</h3>
+
+<p>Octo converts language instructions ℓ, goals g, and observation sequences o₁,…,oₕ into tokens [Tₗ, Tᵧ, Tₒ] using modality-specific tokenizers which are processed by the transformer backbone and fed into a readout head to output desired actions. The block-wise masking forces tokens to attend to tokens from same or earlier timesteps, and tokens corresponding to non-existing observations are completely masked to handle missing modalities. Unlike RT-2 and OpenVLA which discretize actions into tokens, Octo outputs continuous actions via diffusion, utilizing denoising for action decoding for the prediction of action “chunks” ( e.g., chunk of 4 timesteps).</p>
+
+<h3 id="training-1">Training</h3>
+
+<p>Unlike RT-2 and OpenVLA which fine-tune massive pretrained VLMs, Octo is trained entirely from scratch on robot data. This design choice trades web-scale semantic knowledge for:</p>
+
+<ul>
+  <li>Faster training (14 hours vs. days/weeks for VLAs)</li>
+  <li>Smaller compute requirements (single TPUv4-128 podvs. multi-pod setups)</li>
+  <li>Full control over the learned representations</li>
+</ul>
+
+<p><strong>Dataset:</strong></p>
+
+<p>800,000 trajectories from Open X-Embodiment dataset covering 9 distinct robot embodiments</p>
+
+<p><strong>Training Details:</strong></p>
+
+<ul>
+  <li>AdamW optimizer, inverse square root learning rate decay</li>
+  <li>Weight decay 0.1, gradient clipping 1.0</li>
+  <li>300k steps, batch size 2048 on TPUv4-128 (~14 hours)</li>
+</ul>
+
+<p style="width: 800px; max-width: 100%;">Diffusion denoising process for action generation
+<img src="/CS163-Projects-2025Fall/assets/images/team05/Octo_denoising.png" alt="Octo Diffusion Denoising" /></p>
+
+<p>The action head is trained with the standard denoising objective loss function:</p>
+
+\[\mathcal{L}(\theta) = \mathbb{E}_{t, x_0, \epsilon} \left[ \|\epsilon - \epsilon_\theta(x_t, t)\|^2 \right]\]
+
+<p>This trains the model to predict the noise \(\epsilon\) added to clean actions \(x_0\), enabling iterative denoising at inference time. The diffusion formulation for action generation is:</p>
+
+\[X^{k+1} = \alpha X^k - \gamma \epsilon_\theta(X^k, e) + \sigma z\]
+
+<p>where \(X^k\) is the result of the previous denoised stage of the action, \(k\) is the current denoising step, \(e\) is the output embedding from the transformer, and \(\alpha\), \(\gamma\), \(\sigma\) are hyperparameters for the noise schedule.</p>
+
+<p><strong>Why Diffusion Over Alternatives:</strong></p>
+
+<p>Simple MSE was also tried but didn’t perform as well since it incentivizes the robot to an “average” behavior, and can’t handle uncertainty or scenarios with multiple correct choices. Likewise, with discretization/cross-entropy, the robot was observed with less precision, moving to the nearest predefined bin. Diffusion treats actions as continuous values to retain precision and force the denoising process into a specific valid action.</p>
+
+<h2 id="discussion">Discussion</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Aspect</th>
+      <th style="text-align: left">RT-2-X (55B)</th>
+      <th style="text-align: left">OpenVLA (7B)</th>
+      <th style="text-align: left">Octo (93M)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Parameters</strong></td>
+      <td style="text-align: left">55B</td>
+      <td style="text-align: left">7B</td>
+      <td style="text-align: left">93M (Base)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Architecture</strong></td>
+      <td style="text-align: left">VLM (PaLI-X)</td>
+      <td style="text-align: left">VLM (Llama 2)</td>
+      <td style="text-align: left">Transformer (Scratch)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Vision Encoder</strong></td>
+      <td style="text-align: left">ViT-22B (Pre-trained)</td>
+      <td style="text-align: left">SigLIP + DINOv2 (Fused)</td>
+      <td style="text-align: left">CNN + Transformer (Scratch)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Action Output</strong></td>
+      <td style="text-align: left">Discrete (256 bins)</td>
+      <td style="text-align: left">Discrete (256 bins)</td>
+      <td style="text-align: left">Continuous (Diffusion)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Training Data</strong></td>
+      <td style="text-align: left">130k Robot + Web</td>
+      <td style="text-align: left">970k Robot (OXE)</td>
+      <td style="text-align: left">800k Robot (OXE)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Open Source</strong></td>
+      <td style="text-align: left">No</td>
+      <td style="text-align: left">Yes</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Overall Success Rate (tasks on WidowX Robot)</strong></td>
+      <td style="text-align: left">50.6%</td>
+      <td style="text-align: left"><strong>70.6%</strong></td>
+      <td style="text-align: left">20.0%</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Key Strength</strong></td>
+      <td style="text-align: left">Semantic Generalization</td>
+      <td style="text-align: left">Physical Generalization</td>
+      <td style="text-align: left">Inference Speed / Motion</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="performance-vs-scale">Performance vs Scale</h3>
+
+<p>The comparison of 3 models with various different parameter counts demonstrates that scaling parameter count alone doesn’t necessarily determine model performance the most, as architectural decisions and fine-tuning, and other strategies still play an important role. For leveled comparisons, since RT-2 is significantly larger and trained on a different dataset, comparisons are made against the RT-2-X model (trained on 350k trajectories in Open-X-Embodiment) so all 3 models use the same dataset. For example, in OpenVLA fine-tuning the weights in vision encoder portion and uses much more epochs, whereas RT-2 keeps the frozen weights in vision encoder, and although undisclosed, likely used significantly less epochs due to model size, yet Open-VLA on overall performed 20% better than RT-2-X. Another factor that could be considered between these two models was OpenVLA’s data curation strategy from the Open-X-Embodiment compared to RT-2’s co-mixing of robot and web scale data.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team05/BridgeDataChart.png" alt="BridgeChart " /></p>
+<p><em>Out-of-the-Box-Evals.</em></p>
+
+<h3 id="discrete-tokens-for-actions-vs-continous-diffusion">Discrete Tokens for Actions vs Continous Diffusion</h3>
+
+<p>The decision represents a tradeoff primarily between high-level semantic reasoning with a large vision language model backbone and precise low-level control with a diffusion policy. Octo was also evluated using goal image conditioning and found it had 25% higher success rate than when being evaluated with language conditioning.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team05/OctoCharts.png" alt="" /></p>
+<p><em>Comparisons between Octo and other models.</em></p>
+
+<p>Since RT-2-X is closed-source comparisons required a hybrid approach where RT-2-X metrics were directly sourced from literature, Octo’s authors collabed with Google Deepmind to run Octo on the RT-1 robot. Another factor is the evaluated tasks were seen during pre-training, which likely explains the strong performance here compared to RT-2-X compared to the out-of-the-box evaluations shown earlier. Regardless, Octo still demonstrates the ability of flexibility running on various different robots, as well as it’s efficiency with 93M params compared to 55B in RT-2-X.</p>
+
+<h3 id="accessibility">Accessibility</h3>
+
+<p>A key distinction between these models is accessibility. RT-2 remains closed-source
+with no public weights, training code, or fine-tuning support—limiting its use to
+Google’s internal research. On the other hand, OpenVLA and Octo released full model
+weights, training pipelines, and fine-tuning scripts with public github repositories. OpenVLA additionally supports
+LoRA fine-tuning on consumer GPUs (single RTX 4090) and 4-bit quantization for
+deployment, reducing the barrier to entry for robotics researchers without
+datacenter-scale compute.</p>
+
+<h2 id="limitations">Limitations</h2>
+
+<p>For RT-2, despite incorporating web-scale data along with its robot data, it is still unable to learn any new motions and is limited to skills seen in the robot data, rather learning new ways to apply those skills. Computations in real-time inference can become a bottleneck due to the sheer size of the model and requires direct integration with TPU-specific hardware.</p>
+
+<p>For OpenVLA, the authors discuss only being able to process single-image input, despite most modern robots having multiple camera views so surrounding spatial awareness is actually limited despite having Dinov2 as an additional image encoder. Inference time was another cited issue especially in high-frequency setups, same as RT-2. Both RT-2 and OpenVLA also share the issue of quantization error for extremely fine-grained and precise movements that can’t be represented in the 256 bins.</p>
+
+<p>For Octo, the authors attributed issues to fine tuning due to the characteristics of training data, performing better in specific camera views despite being general purpose. As illustrated earlier, another limitation was it’s lack of semantioc reasoning capabilities that come from web-scale pretrained VLMs, greatly affecting its performance on language conditioned policy compared to goal conditioned policy.</p>
+
+<p>Some shared limitations include all three models primarily being evluated on tabletop manipulation with 7-DoF arms, but generalizations to other robot embodiments remains unexplored, (humanoids, quadrupeds, mobile manipulators)</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] Kim, Moo Jin, et al. “OpenVLA: An Open-Source Vision-Language-Action Model.” arXiv preprint arXiv:2406.09246 (2024).</p>
+
+<p>[2] Octo Model Team, et al. “Octo: An Open-Source Generalist Robot Policy.” arXiv preprint arXiv:2405.12213 (2024).</p>
+
+<p>[3] Brohan, Anthony, et al. “RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control.” arXiv preprint arXiv:2307.15818 (2023).</p>
+
+<p>[4] Sapkota, Ranjan, et al. “Vision-Language-Action Models: Concepts, Progress, Applications and Challenges.” arXiv preprint arXiv:2505.04769 (2025).</p>
+
+<hr />]]></content><author><name>Brian Liu</name></author><summary type="html"><![CDATA[The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+  <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#main-content" id="markdown-toc-main-content">Main Content</a></li>
+  <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
+      <li><a href="#image" id="markdown-toc-image">Image</a></li>
+      <li><a href="#table" id="markdown-toc-table">Table</a></li>
+      <li><a href="#code-block" id="markdown-toc-code-block">Code Block</a></li>
+      <li><a href="#formula" id="markdown-toc-formula">Formula</a></li>
+      <li><a href="#more-markdown-syntax" id="markdown-toc-more-markdown-syntax">More Markdown Syntax</a></li>
+    </ul>
+  </li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<h2 id="main-content">Main Content</h2>
+<p>Your survey starts here. You can refer to the <a href="https://github.com/lilianweng/lil-log/tree/master/_posts">source code</a> of <a href="https://lilianweng.github.io/lil-log/">lil’s blogs</a> for article structure ideas or Markdown syntax. We’ve provided a <a href="https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html">sample post</a> from Lilian Weng and you can find the source code <a href="https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md">here</a></p>
+
+<h2 id="basic-syntax">Basic Syntax</h2>
+<h3 id="image">Image</h3>
+<p>Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.</p>
+
+<p style="width: 400px; max-width: 100%;">You can add an image to your survey like this:
+<img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/object_detection.png" alt="YOLO" /></p>
+<p><em>Fig 1. YOLO: An object detection method in computer vision</em> [1].</p>
+
+<p>Please cite the image if it is taken from other people’s work.</p>
+
+<h3 id="table">Table</h3>
+<p>Here is an example for creating tables, including alignment syntax.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: center">column 1</th>
+      <th style="text-align: right">column 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">row1</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">row2</td>
+      <td style="text-align: center">Text</td>
+      <td style="text-align: right">Text</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="code-block">Code Block</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block
+import torch
+print (torch.__version__)
+</code></pre></div></div>
+
+<h3 id="formula">Formula</h3>
+<p>Please use latex to generate formulas, such as:</p>
+
+\[\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}\]
+
+<p>or you can write in-text formula \(y = wx + b\).</p>
+
+<h3 id="more-markdown-syntax">More Markdown Syntax</h3>
+<p>You can find more Markdown syntax at <a href="https://www.markdownguide.org/basic-syntax/">this page</a>.</p>
+
+<h2 id="reference">Reference</h2>
+<p>Please make sure to cite properly in your work, for example:</p>
+
+<p>[1] Redmon, Joseph, et al. “You only look once: Unified, real-time object detection.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
+
+<hr />]]></content><author><name>UCLAdeepvision</name></author><summary type="html"><![CDATA[This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.]]></summary></entry></feed>
