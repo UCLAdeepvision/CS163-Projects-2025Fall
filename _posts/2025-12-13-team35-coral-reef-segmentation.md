@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3"
 Project Track: Project 1
-author: Team 35
+author: Team 35 - Cara Burgess, Maria Campo Martins, Kevin Valencia
 date: 2025-12-13
 ---
 
@@ -20,7 +20,7 @@ this project, we focus on semantic segmentation of coral reef imagery using the 
 dataset. Starting from a pretrained SegFormer-B5 model, we design a coral-specific training
 pipeline that combines tiling, augmentations, and a CE+Dice loss. This yields a modest but
 consistent improvement in mIoU and qualitative boundary sharpness over the original
-checkpoint. We also run exploratory experiments with DeepLabv3, CNet, and SAM3, and
+checkpoint. We also run exploratory experiments with DeepLabv3 and SAM3, and
 discuss practical limitations due to the absence of coral-specific pretraining and limited
 compute.
 
@@ -133,7 +133,7 @@ and complex boundaries.
 DeepLabV3+ combines a CNN backbone with atrous/dilated convolutions (ASPP) for multi-scale
 context, followed by a decoder for boundary refinement.
 
-![DeepLabV3+ Architecture]({{ '/assets/images/team35/cs163_final_project_im_3.png' | relative_url }})
+![DeepLabV3+ Architecture]({{ '/assets/images/team35/cs163_final_project_im_4.png' | relative_url }})
 {: style="width: 700px; max-width: 100%;"}
 
 **Results.**
@@ -157,7 +157,7 @@ SAM3 is originally built for prompt-driven instance segmentation. To repurpose i
 - Attach a lightweight per-pixel semantic head  
 - Train in a prompt-free dense prediction mode with the same CE+Dice objective
 
-![SAM3 Architecture]({{ '/assets/images/team35/cs163_final_project_im_4.png' | relative_url }})
+![SAM3 Architecture]({{ '/assets/images/team35/cs163_final_project_im_3.png' | relative_url }})
 {: style="width: 700px; max-width: 100%;"}
 
 **Results.**
