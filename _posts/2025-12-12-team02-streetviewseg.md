@@ -460,7 +460,7 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 
 
 ### Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation
-In the BASNet hybrid loss, the IoU loss attempts to approximate the Jaccard index directly by aggregating softmax probabilities across the entire image. Instead of discrete counts ($0$ or $1$), it uses continuous probability predictions.
+In the BASNet hybrid loss, the IoU loss attempts to approximate the Jaccard index directly by aggregating softmax probabilities across the entire image. Instead of discrete counts ($$0$$ or $$1$$), it uses continuous probability predictions.
 
 We inspect that a critical issue with this approach is that everything is calculated inside global sums. Consequently, there is no explicit mechanism to "fix the worst pixels first,", and small or thin objects can be washed out by larger classes. More specifically, for a very small object like poles, the contribution to the global loss numerator/denominator is negligible compare to the bacground even if the model is 100% wrong. As a result, gradient is tiny and the optimizer effectively ignores the mistakes on the small object because it is drowned out by the correctly classified background pixels.
 
