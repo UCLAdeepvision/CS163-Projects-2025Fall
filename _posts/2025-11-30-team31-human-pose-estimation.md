@@ -90,7 +90,7 @@ Single-person pose estimation assumes the presence of one dominant subject in th
 Multi-person pose estimation, on the other hand, introduces the challenge of associating detected keypoints with the correct individuals. Top-down approaches first detect bounding boxes for each person and then apply a single-person pose estimator to each crop. Bottom-up approaches detect all keypoints in the image simultaneously and then group them into individual skeletons. 
 
 <div style="text-align: center;">
-  <img src="{{ '/assets/images/assets/images/905972224/multi.png' | relative_url }}" 
+  <img src="{{ '/assets/images/assets/images/905972224/multi.jpg' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
   <p><em>Fig 6. Results of CMU-Pose (a–c) and SE-ResNet-OKHM-CMU-Pose(Ours) (d–f). The joint points in the red circle were not recognized by CMU-Pose.  [6].</em></p>
