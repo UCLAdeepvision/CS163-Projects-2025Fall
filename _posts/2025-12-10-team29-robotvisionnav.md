@@ -154,27 +154,17 @@ We extend the system to detect relations like:
 - *"X is next to Y"*
 - *"X is inside Y"*
 
-Using metadata from AI2-THOR combined with SAM masks:
-
-```
-def get_spatial_context(controller, target_mask):
-    """
-    Uses AI2-THOR metadata + instance segmentation
-    to determine which object the target is on or inside.
-    """
-```
-
-Beyond simply finding what object matches the query, we also want to know where it is in the scene and whether it is on another object or on something else. Thus, to do so, we combine
+Beyond simply finding what object matches the query, we also want to know where it is in the scene and whether it is on another object or on something else. Thus, to do so, we combine:
 
 1. SAM's pixel level mask for the target object.
 2. Ai2-THOR's instance segmentation, telling us which object each pixel belongs to.
 
-We thus implement a helper function called `get_spatial_context(controller, target_mask)` that allows us to
+We thus implement a helper function called `get_spatial_context(controller, target_mask)` that allows us to:
 
-1. Read the latest event from the controller
-2. Extract pixels inside the SAM mask
-3. Map RGB colors to a Thor object ID
-4. Lookup the object metadata and parentReceptacles. 
+1. Read the latest event from the controller.
+2. Extract pixels corresponding to the target object within the SAM mask from the instance segmentation frame.
+3. Determine the most frequent AI2-THOR object ID within those pixels.
+4. Lookup the metadata of the identified object to find its parent receptacles. 
 
 Intuitiviely, the SAM mask tells us which pixels are part of the target, the instance segmentation frame tells us which simulator object those pixels correspond to, and the metadata tells us what the object is residing on, such as a table, couch, drawer, etc. We can then use this location string to extract spatial context and better understand the locations of objects relative to our target object in the environment.
 
@@ -183,11 +173,13 @@ Intuitiviely, the SAM mask tells us which pixels are part of the target, the ins
 
 ## Navigating the Environment
 
-By providing the system with a natural language query, such as "find the blue cup", our model will decipher this message into a query that determines searching for a cup, in which afterwards RoboTHOR will explore the scene until the target is visible, in which we then can run our SAM / sliding window CLIP to find the object. We have two methods of navigation, one which relies on an existing API and another which uses a heuristic to calculate distance. 
+By providing the system with a natural language query, such as "find the blue cup," our model will decipher this message into a target object type that the navigation module searches for. We employ a hybrid appraoch:
 
-GetShortestPath.
+### 1. Smart Navigation (AI2-THOR API)
 
-1. By using [GetShortestPath](https://ai2thor.allenai.org/robothor/documentation/#sub-shortest-path) with the AI2-THOR, we can feed parameters of the object type we are looking for, such as cup, our current position, and the allowed error. If the object exists and is achievable, then we can get the path event from the start to the end object. One limitation of our API is that it is unable to distinguish between two objects, thus if a query supplies "apple" and there exist two apples on the simulation, it will naturally navigate to the closest one. GetShortestPath provides us with the corner paths on the path, so by setting them as waypoints, our robot can follow the action until it reaches the desired object. 
+We use [GetShortestPath](https://ai2thor.allenai.org/robothor/documentation/#sub-shortest-path) with the AI2-THOR controller, feeding it the object type (e.g. "Cup") and the agent's current position. If a path is found, the action returns a list of coordinates (corners) which our agent follows as waypoints. 
+
+One limitation of the API is that it cannot distinguish between multiple objects of the same type in the scene, so the system will naturally navigate towards the closest instance. The smart navigation attempts to move and rotate at the destination to ensure the object is visible.
 
 ```
 from ai2thor.util.metrics import (
@@ -205,18 +197,22 @@ path = get_shortest_path_to_object_type(
 )
 ```
 
-If our navigation does not work, then we perform random navigation, in which we consider four different directions (left, right, forward, backwards), and essentially like a maze, follow the right side of the wall until we reach the desired object. We may also perform a full rotation, and if it fails to reveal the object, it can move until it finds a new vantage point.
+### 2. Visual Exploration (Heuristic Fallback)
 
-If the object does not exist, and if repeated movement patterns fail to detect the object, then the system concludes that the object is not in the scene and will report failure. This failsure ensures that our algorithm doesn't infinitely search forever.
+If the smart navigation module fails (e.g. object not in metadata, ambiguity error, etc.), then the system automatically switches to a heuristic visual exploration strategy. This involves:
+
+- Rotating in place up to 270 degrees in 90 degree increments to scan the room.
+- If the object is not found after rotation, the agent attempts to `MoveAhead` to find a new vantage point.
+- If movement fails (e.g. hitting a wall), the agent rotates and tries to move again.
+
+If the object does not exist or the visual exploration fails to detect the object within a predetermined step limit, then the system concludes that the object is not in the scene and reports failure.
 
 ---
 
-
-
 ## Experiments and Findings
-We evaluated our pipeline in the `FloorPlan_Train1_3` scene of AI2-THOR to test the integration of our navigation and vision systems. In our primary test case, the agent was tasked with the query "Find the laptop." At the initial state in the center of the room, the global frame score for the laptop was low at 0.262, correctly indicating that the object was likely far away or small. The Smart Nav module successfully generated a path with one waypoint to the appropriate coordinates, which effectively brought the agent to the correct location. 
+We evaluated our pipeline in the `FloorPlan_Train1_3` scene of AI2-THOR to test the integration of our navigation and vision systems. In our primary test case, the agent was tasked with the query "Find the laptop." At the initial state in the center of the room, the global CLIP score for "laptop" was **0.262**, which was above the global score cutoff of `0.18` but insufficient for a direct detection. The Smart Nav module successfully generated a path with one waypoint to the appropriate coordinates, effectively bringing the agent to a location where the object fully visible for detection. 
 
-Upon reaching the destination, the vision pipeline triggered and SAM generated 32 candidate masks for the scene. CLIP scored the best crop with a confidence of 0.346, which was sufficient to distinguish the laptop from the table and background noise. The system successfully resolved the context, identifying that the target was located at a specific receptacle ID and confirming the relationship "Laptop on Surface." 
+Upon reaching the destination, the vision pipeline triggered and SAM generated 32 candidate masks for the scene. CLIP scored the best crop with a confidence of 0.346, which was sufficient to distinguish the laptop from the table and background noise.
 
 ```
 Starting Active Search for: laptop
@@ -241,17 +237,14 @@ Laptop|+01.67|+00.32|-01.49
 *Fig 4. Example of laptop detected by SAM, with bounding box and accuracy prediction.*
 
 
-We also observed that raw CLIP thresholds can be noisy, so we implemented a dynamic confidence threshold of 0.23. Scores below this are treated as noise, prompting the agent to rotate or move away rather than hallucinating a detection. This combination of heuristic navigation and threshold-based verification resulted in a robust agent capable of locating objects without prior training on the specific environment. 
-
----
+### Additional Search Experiments and Failure Analysis
 
 
-## Additional Search Experiments and Failure Analysis
+To rigorously test the generalization capabilities of our agent, we conducted a series of experiments on a diverse set of objects. These tests revealed specific strengths in our hybrid navigation approach, as well as distinct challenges regarding object scale, confidence thresholds, and visual ambiguity. For all experiments, we utilized a strict confidence threshold of 0.23 for positive visual verification. Scores below this are treated as noise, prompting the agent to rotate or move away rather than confirming a detection.
 
+The "Bed" experiment was an example of successful semantic navigation. After a short Smart Navigation path and a single step of visual exploration, the bed was successfully identified with a score of 0.3, highlighting the benefit of navigation-guided search for large, well-defined objects.
 
-To rigorously test the generalization capabilities of our agent, we conducted a series of experiments on a diverse set of objects including a cup, chair, book, microwave, and apple. These tests revealed specific strengths in our hybrid navigation approach as well as distinct challenges regarding object scale and confidence thresholds.
-
-The search for the "Chair" highlighted a critical limitation in the simulator's metadata-based navigation API, which threw an ambiguity error because multiple (5) chairs existed in the scene. However, once the "Smart Nav" crashed, the agent automatically switched to visual exploration. By wandering the room and applying the sliding window CLIP mechanism, the agent successfully located a chair with a high confidence score of 0.279. 
+Similarly, the search for the "Chair" successfully demonstrated the fallback mechanism of our hybrid navigation architecture. The initial Smart Navigation failed because the underlying pathfinding function `GetShortestPath` requires a unique object identifier. This is impossible when multiple instances of the target object (five chairs in this case) are present in the environment metadata.
 
 ```
 ============================================================
@@ -268,16 +261,15 @@ GetShortestPath failed: ArgumentException: Multiple objects of type Chair were f
   at System.Reflection.MonoMethod.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00032] in <695d1cc93cca45069c528c15c9fdd749>:0 
 Starting visual exploration...
 ```
+However, the agent automatically switched to the Visual Exploration phase as designed. By navigating the room and applying the sliding window CLIP mechanism, a chair was successfully located with a high confidence score of 0.295. This confirms the robustness of the Visual Exploration phase as a necessary complement to the potentially brittle metadata-based approach.
+
 <img src="{{ '/assets/images/29/chairfound.png' | relative_url }}" alt="SAM Demonstration of finding chair" style="width: 100%; max-width: 500px; height: auto;"> 
 
 *Fig 5. Example of chair detected, after switching to visual navigation*
 
+Conversely, the experiments with small objects like "Apple" illustrated the delicate balance required when selecting a confidence threshold. While the Smart Navigation successfully brought the agent to the correct location, the visual verification score of 0.146 was deemed too low. The subsequent visual exploration phase ran for the maximum limit of 20 steps without confirming the object. This demonstrates that while our high threshold ensures high precision, it can significantly reduce recall for small or partially occluded objects that occupy few pixels in the frame. Future improvements would involve implementing a dynamic threshold that scales based on the expected size of the target object relative to the camera's field of view. 
 
-Similarly, the "Microwave" was not present in the scene's metadata list, yet the visual system autonomously located it with a score of 0.261. These instances validate that our system is capable of "open-world" discovery and does not strictly rely on the simulator's internal ground truth to function.
-
-Conversely, the experiments with small objects like "Cup" and "Apple" illustrated the delicate balance of confidence thresholding. In the case of the cup, the agent navigated near the target, but the global clip score hovered around 0.16. The sliding window fallback detected a potential candidate with a score of 0.219. However, because our system enforces a strict confidence threshold of 0.23 to prevent hallucinations, this detection was rejected, and the agent reported a failure. A similar situation occurred with the apple; the agent arrived at the correct location, but the visual verification score of 0.146 was deemed too low. These false negatives demonstrate that while our high threshold ensures high precision, it reduces recall for small or partially occluded objects that occupy few pixels in the frame. Future improvements would involve implementing a dynamic threshold that scales based on the expected size of the target object relative to the camera's field of view. 
-
-Finally, the "Book" experiment demonstrated the system's resilience to navigation errors. During this trial, the "Smart Nav" heuristic generated a valid path but timed out before reaching the final waypoint. Despite the mechanical failure, the visual perception loop remained active. As the agent drifted during the timeout, the visual scanner identified the book with a score of 0.265. This confirms that decoupling the vision pipeline from the navigation logic creates a more robust system, where a failure in path planning does not necessarily result in a failure to perceive the environment. 
+Finally, the tests also revealed multiple cases of false positives upon ground-truth inspection. The algorithm identified an object as a "Microwave" with a score of 0.275, but the object was actually a digital alarm clock. Similarly, the algorithm identified a "Television" object with a score of 0.233, but it was actually a painting on the wall. These are both classic visual ambiguity issues that likely resulted from similarity in appearance. The agent was forced to rely on visual cues during visual exploration, leading to the misidentifications. To address this, a future improvement could be the integration of a contextual verification step for high-scoring visual detections, where high-scoring visual detections are cross-referenced with scene context. For example, if a microwave is detected next to a bed, the positive detection can be vetoed and the agent can continue its search for the microwave. This would serve as a robust solution for avoiding high-level false positives, especially in structured indoor environments.
 
 
 ## Conclusion
@@ -290,7 +282,7 @@ Beyond object detection, we extend perception to spatial relationship reasoning 
 
 Our navigation strategy combines simulator-provided shortest-path planning with heuristic exploration and closed-loop perception. This allows the agent to actively reposition itself when initial detections are ambiguous or incomplete, demonstrating the importance of embodied interaction for reliable visual understanding. When the target object is not present, the system terminates gracefully rather than searching indefinitely, ensuring practical behavior in failure cases.
 
-Overall, this project demonstrates how foundation models like CLIP and SAM can be effectively integrated into an embodied AI pipeline to enable flexible, generalizable robot navigation driven by natural language commands. Future work could explore tighter integration between perception and control, multi-step language instructions, memory-based exploration, or learning-based navigation policies that further exploit the rich semantic and spatial representations provided by these models.
+Overall, this project demonstrates how foundation models like CLIP and SAM can be effectively integrated into an embodied AI pipeline to enable flexible, generalizable robot navigation driven by natural language commands. Future work could address current failures and explore tighter integration between perception and control, multi-step language instructions, memory-based exploration, or learning-based navigation policies that further exploit the rich semantic and spatial representations provided by these models.
 
 ---
 
