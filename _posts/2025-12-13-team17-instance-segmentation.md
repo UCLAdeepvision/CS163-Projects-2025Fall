@@ -7,7 +7,7 @@ date: 2025-12-13
 ---
 
 > Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.
-
+<!--more-->
 {: class="table-of-content"}
 * TOC
 {:toc}
