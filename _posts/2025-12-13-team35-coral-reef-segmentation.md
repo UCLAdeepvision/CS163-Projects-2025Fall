@@ -105,6 +105,7 @@ compute.
   imbalance  
 
 **Results.**
+Under our constrained training schedule, our fine-tuned SegFormer model underperforms the released SegFormer-B5 checkpoint:
 - FULL: Val mIoU 0.5906, Test mIoU 0.4788  
 - TILED: Val mIoU 0.5821, Test mIoU 0.4767  
 
@@ -126,12 +127,12 @@ DeepLabV3+ combines a CNN backbone with atrous/dilated convolutions (ASPP) for m
 context, followed by a decoder for boundary refinement.
 
 **Results.**
+With limited training time, DeepLabV3+ performs below SegFormer:
 - FULL: Val mIoU 0.3591, Test mIoU 0.4548  
 - TILED: Val mIoU 0.3333, Test mIoU 0.4260  
 
 **Interpretation.**  
-CNN models can require careful tuning of LR schedules and longer training to be competitive on
-fine-grained multi-class segmentation.
+The DeepLab result is similar to our SegFormer result as we could optimize and get better results with more time/compute. CNN models can require careful tuning of LR schedules and longer training to be competitive on fine-grained multi-class segmentation.
 
 ### SAM3 Fine-Tuning (Foundation Model)
 
@@ -141,20 +142,20 @@ explore whether its large-scale pretraining can transfer to coral reef semantic 
 minimal adaptation.
 
 **Adaptation for Semantic Segmentation.**
+SAM3 is originally built for prompt-driven instance segmentation. To repurpose it for dense multi-class segmentation, we:
 - Use SAM3 as an image feature backbone  
 - Attach a lightweight per-pixel semantic head  
 - Train in a prompt-free dense prediction mode with the same CE+Dice objective  
 
 **Results.**
+SAM3 performs poorly in this prompt-free, dense multi-class setup:
 - FULL: Val mIoU 0.1428, Test mIoU 0.1833  
 - TILED: Val mIoU 0.1919, Test mIoU 0.2352  
 
 **Interpretation.**  
 There are two main reasons for poor performance:
-1. Task mismatch: SAM3 is optimized for prompted instance segmentation, not dense multi-
-   class semantic labeling.
-2. Compute/time constraints: SAM3 is extremely large, so the fine-tuning budget was
-   necessarily short.
+1. SAM3 is optimized for prompted instance masks (“segment the object I indicate”), not specific multi class dense semantic labeling.
+2. SAM3 is extremely large, so our fine-tuning budget was necessarily short. Under short training, the model is unlikely to adapt fully to the coral-specific label space and underwater domain shift.
 
 **Takeaway.**  
 In our constrained setting, a dataset-tuned semantic segmentation model (SegFormer)
@@ -162,38 +163,32 @@ transfers far better than a large promptable foundation model adapted with a sma
 head.
 
 ## Model Comparison
-Transformer-based segmentation models demonstrate the strongest performance on the
-CoralScapes dataset under limited compute and training time. SegFormer consistently
-outperformed both CNN and foundation model approaches, likely because it captures global
-context without losing fine spatial detail.
+Transformed-based segmentation models demonstrate the strongest performance on the CoralScapes dataset, while operating under limited compute and training time. SegFormer consistently outperformed both the CNN and foundation model approaches, likely because it captures global context without losing fine spatial detail. This matters for benthic segmentation, where visually similar classes must be separated despite varying lightings and reef structure.
 
-DeepLabV3 focuses on more local texture through convolutional features and may be less
-effective at separating fine-grained benthic classes without longer training or careful tuning.
-SAM3 performs poorly due to its prompt-based pretraining and difficulty assigning correct class
-labels under limited fine-tuning.
+DeepLabV3 focuses on more local texture through convolutional features. While this performs well for many image segmentation tasks, it may be less effective at separating fine-grained benthic classes without longer training or careful tuning. This suggests that CNN-based models may need additional optimization or task-specific pretraining to perform well on underwater images.
+
+SAM3 performs poorly in this project, likely because it was pre-trained for prompt-based instance segmentation rather than semantic segmentation. While it can produce spatially coherent masks, it has difficulty assigning the correct class labels to fine-grained coral categories, especially with limited fine tuning. This suggests that large foundation models do not translate well to semantic segmentation tasks without task-specific adaptations.
 
 ## Conclusion
-In this project, we evaluated multiple modern segmentation architectures on the CoralScapes
-dataset while operating under limited compute. Our results show that models explicitly designed
-and fine-tuned for semantic segmentation, particularly transformer-based architectures like
-SegFormer, perform best on fine-grained coral reef images compared to CNN or adapted
-foundation models with a semantic head. However, model performance may differ significantly
-under less constrained training regimes.
+In this project, we evaluated multiple modern segmentation architectures on the CoralScapes dataset while operating under limited compute. Our results show that models explicitly designed and fine-tuned for semantic segmentation, particularly transformer-based architectures like SegFormer, perform best on fine-grained coral reef images compared to CNN or adapted foundation models with a semantic head. However, performance of models may be vastly different without the time and compute limitations we faced.
 
 ## Limitations and Future Work
-A key limitation of this study is compute and time. Large models such as SegFormer-B5 and
-SAM3 typically require long training schedules, careful hyperparameter tuning, and potentially
-prompt-aware training strategies to reach their full potential.
+A key limitation of this study is compute and time. Large models such as SegFormer-B5 and SAM3 typically require long training schedules, careful hyperparameter tuning, and (in SAM3’s case) potentially prompt-aware training strategies to reach their full potential. Our experiments instead reflect a realistic small-budget regime, so results for the fine-tuned models (SegFormer FT, DeepLab FT, SAM3 FT) should be interpreted as lower bounds on what these approaches could achieve.
 
 Future work includes:
-1. Longer fine-tuning schedules with tuned learning rates and warmup  
-2. Layer-freezing or gradual unfreezing  
-3. Coral-domain or underwater-specific pretraining  
-4. Prompt-aware SAM3 training instead of prompt-free dense prediction  
+1. Longer fine-tuning schedules with tuned learning rates/warmup/weight decat  
+2. Layer-freezing or gradual unfreezing to reduce catastrophic forgetting
+3. Coral-domain pretraining or underwater-specific augmentation strategies
+4. SAM3 experiments that incorporate prompts or prompt-like conditioning instead of forcing a prompt-free dense prediction mode
 
 ## References
-Carion, N., et al. (2025). *SAM 3: Segment anything with concepts*. arXiv:2511.16719.  
-Chen, L.-C., et al. (2017). *DeepLab: Semantic image segmentation with deep convolutional
-nets*. IEEE TPAMI.  
-Sauder, J., et al. (2025). *The CoralScapes dataset*. arXiv:2503.20000.  
-Xie, E., et al. (2021). *SegFormer*. NeurIPS.
+
+## References
+
+Carion, N., et al. (2025). *SAM 3: Segment anything with concepts*. arXiv preprint arXiv:2511.16719.
+
+Chen, L.-C., et al. (2017). *DeepLab: Semantic image segmentation with deep convolutional nets, atrous convolution, and fully connected CRFs*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 40(4), 834–848.
+
+Sauder, J., et al. (2025). *The CoralScapes dataset: Semantic scene understanding in coral reefs*. arXiv preprint arXiv:2503.20000.
+
+Xie, E., et al. (2021). *SegFormer: Simple and efficient design for semantic segmentation with transformers*. Advances in Neural Information Processing Systems, 34, 12077–12090.
