@@ -176,7 +176,10 @@
 
 <!--more-->
 <ul id="markdown-toc">
-  <li><a href="#main-content" id="markdown-toc-main-content">Main Content</a></li>
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
+      <li><a href="#camera-pose-estimation" id="markdown-toc-camera-pose-estimation">Camera Pose Estimation</a></li>
+    </ul>
+  </li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
       <li><a href="#image" id="markdown-toc-image">Image</a></li>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
@@ -188,8 +191,27 @@
   <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
 </ul>
 
-<h2 id="main-content">Main Content</h2>
-<p>Your survey starts here. You can refer to the <a href="https://github.com/lilianweng/lil-log/tree/master/_posts">source code</a> of <a href="https://lilianweng.github.io/lil-log/">lil’s blogs</a> for article structure ideas or Markdown syntax. We’ve provided a <a href="https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html">sample post</a> from Lilian Weng and you can find the source code <a href="https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md">here</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>Camera pose estimation has become a fundamental task in Computer Vision 
+that aims to determine the position (translation) and orientation (rotation) of a camera relative to a scene using image or extracted video data. Accurately estimating the absolute pose of a camera has widespread applications in 3D reconstruction, world models, and augmented reality.</p>
+
+<p>In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ViPE on the same dataset with a set of quantitative metrics. We describe each approach and analyze their relative strengths and limitations.</p>
+
+<h3 id="camera-pose-estimation">Camera Pose Estimation</h3>
+<p>For camera pose estimation, there are 3D-2D correspondences between a 3D point in the world (scene geometry) and the 2D pixel location where that point appears in the image or video frame.</p>
+
+<p>Camera pose estimation predicts the pose of a camera with these two components:</p>
+<ul>
+  <li>A translation vector: which describes where the camera is in the world coordinate system</li>
+  <li>A rotation: which describes the camera’s orientation relative to the world</li>
+</ul>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
+<p><em>Fig 1. Pose estimation formula</em> [1].</p>
+
+<!--
+Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+-->
 
 <h2 id="basic-syntax">Basic Syntax</h2>
 <h3 id="image">Image</h3>
@@ -245,7 +267,7 @@ print (torch.__version__)
 <h2 id="reference">Reference</h2>
 <p>Please make sure to cite properly in your work, for example:</p>
 
-<p>[1] Redmon, Joseph, et al. “You only look once: Unified, real-time object detection.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
+<p>[1] https://www.cs.cmu.edu/~16385/s17/Slides/11.3_Pose_Estimation.pdf</p>
 
 <hr />
 

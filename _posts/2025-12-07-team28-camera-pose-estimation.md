@@ -13,8 +13,28 @@ date: 2025-12-07
 * TOC
 {:toc}
 
-## Main Content
+## Introduction
+Camera pose estimation has become a fundamental task in Computer Vision 
+that aims to determine the position (translation) and orientation (rotation) of a camera relative to a scene using image or extracted video data. Accurately estimating the absolute pose of a camera has widespread applications in 3D reconstruction, world models, and augmented reality.
+
+In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ViPE on the same dataset with a set of quantitative metrics. We describe each approach and analyze their relative strengths and limitations. 
+
+### Camera Pose Estimation
+For camera pose estimation, there are 3D-2D correspondences between a 3D point in the world (scene geometry) and the 2D pixel location where that point appears in the image or video frame. 
+
+Camera pose estimation predicts the pose of a camera with these two components:
+- A translation vector: which describes where the camera is in the world coordinate system
+- A rotation: which describes the camera's orientation relative to the world
+
+![YOLO]({{ '/assets/images/team28/pose_estimation.PNG' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 1. Pose estimation formula* [1].
+
+
+
+<!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+-->
 
 ## Basic Syntax
 ### Image
@@ -61,6 +81,6 @@ You can find more Markdown syntax at [this page](https://www.markdownguide.org/b
 ## Reference
 Please make sure to cite properly in your work, for example:
 
-[1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2016.
+[1] https://www.cs.cmu.edu/~16385/s17/Slides/11.3_Pose_Estimation.pdf
 
 ---
