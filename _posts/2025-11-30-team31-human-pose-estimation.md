@@ -158,9 +158,9 @@ where $$Q$$, $$K$$, and $$V$$, are query, key, and value matrices derived from f
 
 <div style="text-align: center;">
   <img src="{{ '/assets/images/assets/images/905972224/3D.webp' | relative_url }}" 
-       alt="YOLO UMAP" 
+       alt="3D Human Pose Estimation Baseline" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 9. A baseline model for 3d human pose estimation by Martinez et al.  [9].</em></p>
+  <p><em>Fig 9. A baseline model for 3D human pose estimation by Martinez et al. (Image source: <a href="https://link.springer.com/chapter/10.1007/978-3-030-98457-1_10">Springer</a>)</em></p>
 </div>
 
 A common formulation predicts 3D joints ($$x_i$$, $$y_i$$, $$z_i$$) from 2D detections: 
