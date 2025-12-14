@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Advances in Medical Image Segmentation</title>
+
+    <meta name="description" content="This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, the...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Advances in Medical Image Segmentation" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear..." property="og:description">
+    
+    
+        <meta content="/2025/12/13/team13-medical-image-segmentation.html" property="og:url">
+    
+<!--
+    
+        <meta content="Megan Jacob" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/13/team13-medical-image-segmentation.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Advances in Medical Image Segmentation">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Advances in Medical Image Segmentation</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Megan Jacob</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team13-medical-image-segmentation.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#what-is-medical-image-segmentation" id="markdown-toc-what-is-medical-image-segmentation">What is Medical Image Segmentation?</a></li>
+  <li><a href="#v-net-fully-convolutional-neural-networks-for-volumetric-medical-image-segmentation" id="markdown-toc-v-net-fully-convolutional-neural-networks-for-volumetric-medical-image-segmentation">V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation</a>    <ul>
+      <li><a href="#implementation" id="markdown-toc-implementation">Implementation</a></li>
+      <li><a href="#training-and-results" id="markdown-toc-training-and-results">Training and Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#transunet-transformers-make-strong-encoders-for-medical-image-segmentation" id="markdown-toc-transunet-transformers-make-strong-encoders-for-medical-image-segmentation">TransUNet: Transformers make Strong Encoders for Medical Image Segmentation</a>    <ul>
+      <li><a href="#implementation-1" id="markdown-toc-implementation-1">Implementation</a></li>
+      <li><a href="#training-and-results-1" id="markdown-toc-training-and-results-1">Training and Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#segment-anything-in-medical-images" id="markdown-toc-segment-anything-in-medical-images">Segment Anything in Medical Images</a>    <ul>
+      <li><a href="#implementation-2" id="markdown-toc-implementation-2">Implementation</a></li>
+      <li><a href="#training-and-results-2" id="markdown-toc-training-and-results-2">Training and Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="what-is-medical-image-segmentation">What is Medical Image Segmentation?</h2>
+<p>Medical image segmentation is a part of the medical image analysis process for images like CT scans and MRIs. It refers to the process of identifying pixels in medical images that correspond to organs, lesions, or other medical regions. 
+The goal is to extract information about the shape and volume of organs, tissues, and other identified regions. Tackling this task with deep learning is a challenge as there is a high level of complexity and diversity with medical images [4]. This report will serve as a literature review of the advances in medical image segmentation over the past few years.</p>
+
+<h2 id="v-net-fully-convolutional-neural-networks-for-volumetric-medical-image-segmentation">V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation</h2>
+<p>At the time that this model was developed, deep learning was growing rapidly in popularity and CNNs were being applied to solve a variety of problems. However, a lot of the models were designed to work with 2D image slices, which results in a significant data loss for medical image segmentation tasks. The goal of V-Net was to be a CNN that was trained and developed to handle 3D image segmentation [3].</p>
+
+<h3 id="implementation">Implementation</h3>
+<p>V-Net is a fully convolutional neural network. The network is divided into stages that each have one to three convolutional layers. Convolutions are performed using kernels of the size 5x5x5. As stages progress, the path is compressed with 2x2x2 kernels being used (this decreases the feature map size). Downsampling is also used to reduce the size of the signals and increase the receptive field of the features. Instead of max pooling, V-Net uses strided convolutions [3]. This decreases memory usage and improves model interpretability.
+The model introduces a novel function, optimized using the Dice coefficient (measures similarity between datasets). This loss function was added to address the imbalance in foreground and background pixels that is commonly found in medical image segmentation tasks. The Dice coefficient measures the overlap between predicted and ground truth segmentations. This allows for the foreground and background to then be balanced.</p>
+
+\[D = \frac{2 \sum (p_i g_i)}{\sum (p_i^2) + \sum (g_i^2)}\]
+
+<h3 id="training-and-results">Training and Results</h3>
+<p>V-Net was trained on a dataset of prostate scans in MRI. Since there aren’t many annotated medical images available for training, the model was also trained on deformed versions of the training dataset.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/vnet.png" alt="V-Net Image Results" /></p>
+<p><em>Fig 1. Image segmentation results on prostate MRI scans from the PROMISE 2012 dataset</em> [3].</p>
+
+<p>The trained model, V-Net, performs the image segmentation tasks on the dataset with a higher accuracy and less processing time than previous methods. The results can be seen in the table below where V-Net with Dice loss has the highest score.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/vnet-score.png" alt="V-Net Challenge Score" /></p>
+<p><em>Table 1. V-Net’s performance on the PROMISE 2012 dataset compared to other methods</em> [3].</p>
+
+<h2 id="transunet-transformers-make-strong-encoders-for-medical-image-segmentation">TransUNet: Transformers make Strong Encoders for Medical Image Segmentation</h2>
+<p>A few years after the discussed work with CNNs in medical imaging, U-Net become a popular model for medical image segmentation. TransUNet takes a hybrid approach, taking parts of the U-Net and Transformer model architectures [1].</p>
+
+<h3 id="implementation-1">Implementation</h3>
+<p>U-Nets and CNNs have proven to be extremely useful for detail retention. A core limitation, however, is the inability to handle long-range relations. The transformer architecture addresses this with attention mechanisms that are designed to store long-range relations for sequence-to-sequence prediction.
+ResNet-50 is used first as a CNN encoder for initial feature extraction. Then a Vision Transformer (ViT) layer is used. This order allows high-resolution CNN feature maps to be leveraged and performs better than just using a pure Transformer for the decoder.
+After this, a cascade upsampler is used to output the final segmentation mask. Multiple upsampling blocks are cascaded until the full correct resolution is reached [1].</p>
+
+<h3 id="training-and-results-1">Training and Results</h3>
+<p>The model was trained on a multi-organ segmentation dataset called the MICCAI 2025 Multi-Altas Abdomen Labeling Challenge.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/transunet.png" alt="TransUNet Results" /></p>
+<p><em>Fig 2. Comparison of results from different architecture approaches</em> [1].</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/transunet-score.png" alt="TransUNet Challenge Score" /></p>
+<p><em>Table 2. TransUNet’s performance on the dataset compared to other methods</em> [1].</p>
+
+<h2 id="segment-anything-in-medical-images">Segment Anything in Medical Images</h2>
+<p>Up until this point, many of the models and advances in medical image segmentation were focused on developing models that needed to be tailored towards specific modalities or conditions. However, in practice, it is valuable to have generalizability across different types of medical image segmentation tasks. MedSAM addresses this as a model for universal medical image segmentation [2].</p>
+
+<h3 id="implementation-2">Implementation</h3>
+<p>The model is based on the vision transformer architecture. The model was initialized with a pre-trained SAM model and masked autoencoder modeling. Then it was trained with fully supervised training. The loss function is a combination of the Dice loss and cross-entropy loss. The AdamW optimizer was used for parameter optimization.
+MedSAM is also unique with a promptable interface. Compared to the previous automatic segmentation processes, MedSAM allows users to identify targets with bounding boxes [2]. This is an important feature for handling multiple types of medical images.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/medsam.png" alt="MedSAM Architecture" /></p>
+<p><em>Fig 3. A diagram of the MedSAM architecture, including the prompt encoder</em> [2].</p>
+
+<h3 id="training-and-results-2">Training and Results</h3>
+<p>One of the major issues that the other specialist models had was the lack of data availability for training. The researchers working on MedSAM curated their own set of images and 3d datasets from public sources. Images were converted and normalized to ensure uniformity and compatibility.
+MedSAM performance is on par with specialist models, even though it works with a much larger range of medical images.</p>
+
+<p style="width: 700px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/medsam-score.png" alt="MedSAM Performance Comparison" /></p>
+<p><em>Fig 4. MedSAM performance compared against SAM, U-Net, and DeepLabV3</em> [2].</p>
+
+<h2 id="references">References</h2>
+<p>[1] Chen, Jieneng, et al. “TransUNet: Transformers Make Strong Encoders for Medical Image Segmentation”. arXiv preprint arXiv:2102.04306 (2021)</p>
+
+<p>[2] Ma, Jun, et al. “Segment anything”. arXiv preprint arXiv:2304.02643 (2023)</p>
+
+<p>[3] Milletari, Fausto, et al. “V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation”. arXiv preprint arXiv:1606.04797 (2016)</p>
+
+<p>[4] Yao, Wenjian “From CNN to Transformer: A Review of Medical Image Segmentation Models”. arXiv preprint arXiv:2308.05305 (2023)</p>
+
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars.html">&larr; Center Pillars - Anchor-Free Object Detection in 3D </a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html">Visuomotor Policy &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>

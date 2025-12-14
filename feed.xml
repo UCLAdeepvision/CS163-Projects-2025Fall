@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T22:46:08+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T22:49:22+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
   <p>This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.</p>
 </blockquote>
 
@@ -1450,7 +1450,97 @@ VoxelNet: End-to-end learning for point cloud based 3D object detection.<br />
 In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR).<br />
 https://arxiv.org/abs/1711.06396</p>
 
-<p>Source Repository: <a href="https://github.com/HuangEric22/PointPillars">https://github.com/HuangEric22/PointPillars</a></p>]]></content><author><name>Eric Huang, Julia Wang, Zhiyi Chen, Boyan Yu</name></author><summary type="html"><![CDATA[[Project Track: Project 8] This project implements a LiDAR-based 3D object detection pipeline that uses PointPillars to encode raw point clouds into a bird’s-eye-view (BEV) pseudo-image, enabling efficient convolutional feature extraction. On top of this representation, the CenterPoint framework decodes BEV features by predicting object centers and regressing bounding box attributes in an anchor-free manner. This design removes the need for predefined anchors while maintaining accurate spatial localization and computational efficiency.]]></summary></entry><entry><title type="html">Visuomotor Policy</title><link href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html" rel="alternate" type="text/html" title="Visuomotor Policy" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html"><![CDATA[<blockquote>
+<p>Source Repository: <a href="https://github.com/HuangEric22/PointPillars">https://github.com/HuangEric22/PointPillars</a></p>]]></content><author><name>Eric Huang, Julia Wang, Zhiyi Chen, Boyan Yu</name></author><summary type="html"><![CDATA[[Project Track: Project 8] This project implements a LiDAR-based 3D object detection pipeline that uses PointPillars to encode raw point clouds into a bird’s-eye-view (BEV) pseudo-image, enabling efficient convolutional feature extraction. On top of this representation, the CenterPoint framework decodes BEV features by predicting object centers and regressing bounding box attributes in an anchor-free manner. This design removes the need for predefined anchors while maintaining accurate spatial localization and computational efficiency.]]></summary></entry><entry><title type="html">Advances in Medical Image Segmentation</title><link href="/CS163-Projects-2025Fall/2025/12/13/team13-medical-image-segmentation.html" rel="alternate" type="text/html" title="Advances in Medical Image Segmentation" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team13-medical-image-segmentation</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team13-medical-image-segmentation.html"><![CDATA[<blockquote>
+  <p>This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#what-is-medical-image-segmentation" id="markdown-toc-what-is-medical-image-segmentation">What is Medical Image Segmentation?</a></li>
+  <li><a href="#v-net-fully-convolutional-neural-networks-for-volumetric-medical-image-segmentation" id="markdown-toc-v-net-fully-convolutional-neural-networks-for-volumetric-medical-image-segmentation">V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation</a>    <ul>
+      <li><a href="#implementation" id="markdown-toc-implementation">Implementation</a></li>
+      <li><a href="#training-and-results" id="markdown-toc-training-and-results">Training and Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#transunet-transformers-make-strong-encoders-for-medical-image-segmentation" id="markdown-toc-transunet-transformers-make-strong-encoders-for-medical-image-segmentation">TransUNet: Transformers make Strong Encoders for Medical Image Segmentation</a>    <ul>
+      <li><a href="#implementation-1" id="markdown-toc-implementation-1">Implementation</a></li>
+      <li><a href="#training-and-results-1" id="markdown-toc-training-and-results-1">Training and Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#segment-anything-in-medical-images" id="markdown-toc-segment-anything-in-medical-images">Segment Anything in Medical Images</a>    <ul>
+      <li><a href="#implementation-2" id="markdown-toc-implementation-2">Implementation</a></li>
+      <li><a href="#training-and-results-2" id="markdown-toc-training-and-results-2">Training and Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="what-is-medical-image-segmentation">What is Medical Image Segmentation?</h2>
+<p>Medical image segmentation is a part of the medical image analysis process for images like CT scans and MRIs. It refers to the process of identifying pixels in medical images that correspond to organs, lesions, or other medical regions. 
+The goal is to extract information about the shape and volume of organs, tissues, and other identified regions. Tackling this task with deep learning is a challenge as there is a high level of complexity and diversity with medical images [4]. This report will serve as a literature review of the advances in medical image segmentation over the past few years.</p>
+
+<h2 id="v-net-fully-convolutional-neural-networks-for-volumetric-medical-image-segmentation">V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation</h2>
+<p>At the time that this model was developed, deep learning was growing rapidly in popularity and CNNs were being applied to solve a variety of problems. However, a lot of the models were designed to work with 2D image slices, which results in a significant data loss for medical image segmentation tasks. The goal of V-Net was to be a CNN that was trained and developed to handle 3D image segmentation [3].</p>
+
+<h3 id="implementation">Implementation</h3>
+<p>V-Net is a fully convolutional neural network. The network is divided into stages that each have one to three convolutional layers. Convolutions are performed using kernels of the size 5x5x5. As stages progress, the path is compressed with 2x2x2 kernels being used (this decreases the feature map size). Downsampling is also used to reduce the size of the signals and increase the receptive field of the features. Instead of max pooling, V-Net uses strided convolutions [3]. This decreases memory usage and improves model interpretability.
+The model introduces a novel function, optimized using the Dice coefficient (measures similarity between datasets). This loss function was added to address the imbalance in foreground and background pixels that is commonly found in medical image segmentation tasks. The Dice coefficient measures the overlap between predicted and ground truth segmentations. This allows for the foreground and background to then be balanced.</p>
+
+\[D = \frac{2 \sum (p_i g_i)}{\sum (p_i^2) + \sum (g_i^2)}\]
+
+<h3 id="training-and-results">Training and Results</h3>
+<p>V-Net was trained on a dataset of prostate scans in MRI. Since there aren’t many annotated medical images available for training, the model was also trained on deformed versions of the training dataset.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/vnet.png" alt="V-Net Image Results" /></p>
+<p><em>Fig 1. Image segmentation results on prostate MRI scans from the PROMISE 2012 dataset</em> [3].</p>
+
+<p>The trained model, V-Net, performs the image segmentation tasks on the dataset with a higher accuracy and less processing time than previous methods. The results can be seen in the table below where V-Net with Dice loss has the highest score.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/vnet-score.png" alt="V-Net Challenge Score" /></p>
+<p><em>Table 1. V-Net’s performance on the PROMISE 2012 dataset compared to other methods</em> [3].</p>
+
+<h2 id="transunet-transformers-make-strong-encoders-for-medical-image-segmentation">TransUNet: Transformers make Strong Encoders for Medical Image Segmentation</h2>
+<p>A few years after the discussed work with CNNs in medical imaging, U-Net become a popular model for medical image segmentation. TransUNet takes a hybrid approach, taking parts of the U-Net and Transformer model architectures [1].</p>
+
+<h3 id="implementation-1">Implementation</h3>
+<p>U-Nets and CNNs have proven to be extremely useful for detail retention. A core limitation, however, is the inability to handle long-range relations. The transformer architecture addresses this with attention mechanisms that are designed to store long-range relations for sequence-to-sequence prediction.
+ResNet-50 is used first as a CNN encoder for initial feature extraction. Then a Vision Transformer (ViT) layer is used. This order allows high-resolution CNN feature maps to be leveraged and performs better than just using a pure Transformer for the decoder.
+After this, a cascade upsampler is used to output the final segmentation mask. Multiple upsampling blocks are cascaded until the full correct resolution is reached [1].</p>
+
+<h3 id="training-and-results-1">Training and Results</h3>
+<p>The model was trained on a multi-organ segmentation dataset called the MICCAI 2025 Multi-Altas Abdomen Labeling Challenge.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/transunet.png" alt="TransUNet Results" /></p>
+<p><em>Fig 2. Comparison of results from different architecture approaches</em> [1].</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/transunet-score.png" alt="TransUNet Challenge Score" /></p>
+<p><em>Table 2. TransUNet’s performance on the dataset compared to other methods</em> [1].</p>
+
+<h2 id="segment-anything-in-medical-images">Segment Anything in Medical Images</h2>
+<p>Up until this point, many of the models and advances in medical image segmentation were focused on developing models that needed to be tailored towards specific modalities or conditions. However, in practice, it is valuable to have generalizability across different types of medical image segmentation tasks. MedSAM addresses this as a model for universal medical image segmentation [2].</p>
+
+<h3 id="implementation-2">Implementation</h3>
+<p>The model is based on the vision transformer architecture. The model was initialized with a pre-trained SAM model and masked autoencoder modeling. Then it was trained with fully supervised training. The loss function is a combination of the Dice loss and cross-entropy loss. The AdamW optimizer was used for parameter optimization.
+MedSAM is also unique with a promptable interface. Compared to the previous automatic segmentation processes, MedSAM allows users to identify targets with bounding boxes [2]. This is an important feature for handling multiple types of medical images.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/medsam.png" alt="MedSAM Architecture" /></p>
+<p><em>Fig 3. A diagram of the MedSAM architecture, including the prompt encoder</em> [2].</p>
+
+<h3 id="training-and-results-2">Training and Results</h3>
+<p>One of the major issues that the other specialist models had was the lack of data availability for training. The researchers working on MedSAM curated their own set of images and 3d datasets from public sources. Images were converted and normalized to ensure uniformity and compatibility.
+MedSAM performance is on par with specialist models, even though it works with a much larger range of medical images.</p>
+
+<p style="width: 700px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/13/medsam-score.png" alt="MedSAM Performance Comparison" /></p>
+<p><em>Fig 4. MedSAM performance compared against SAM, U-Net, and DeepLabV3</em> [2].</p>
+
+<h2 id="references">References</h2>
+<p>[1] Chen, Jieneng, et al. “TransUNet: Transformers Make Strong Encoders for Medical Image Segmentation”. arXiv preprint arXiv:2102.04306 (2021)</p>
+
+<p>[2] Ma, Jun, et al. “Segment anything”. arXiv preprint arXiv:2304.02643 (2023)</p>
+
+<p>[3] Milletari, Fausto, et al. “V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation”. arXiv preprint arXiv:1606.04797 (2016)</p>
+
+<p>[4] Yao, Wenjian “From CNN to Transformer: A Review of Medical Image Segmentation Models”. arXiv preprint arXiv:2308.05305 (2023)</p>]]></content><author><name>Megan Jacob</name></author><summary type="html"><![CDATA[This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.]]></summary></entry><entry><title type="html">Visuomotor Policy</title><link href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html" rel="alternate" type="text/html" title="Visuomotor Policy" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html"><![CDATA[<blockquote>
   <p>Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.</p>
 </blockquote>
 
@@ -3322,313 +3412,4 @@ Instead of forcing the student (DSCLoRA) to mimic the teacher’s (Large SPAN) r
 
 <p><a id="2">[2]</a> C. Wan, H. Yu, Z. Li, Y. Chen, Y. Zou, Y. Liu, X. Yin, and K. Zuo, “Swift Parameter-free Attention Network for Efficient Super-Resolution,” in <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>, 2024, pp. 6246–6256.</p>
 
-<p><a id="3">[3]</a> X. Chai, Y. Zhang, Y. Zhang, Z. Cheng, Y. Qin, Y. Yang, and L. Song, “Distillation-Supervised Convolutional Low-Rank Adaptation for Efficient Image Super-Resolution,” <em>arXiv preprint arXiv:2504.11271</em>, 2025. [Online]. Available: https://arxiv.org/abs/2504.11271</p>]]></content><author><name>Anthony Yu</name></author><summary type="html"><![CDATA[Super-resolution has long faced a fundamental tension: the highest-quality models require billions of operations, while edge devices demand sub-100ms inference. This article examines three recent methods—SPAN, EFDN, and DSCLoRa—that challenge this tradeoff through architectural innovation, training-time tricks, and efficient adaptation. We’ll see how rethinking the upsampling operation, leveraging structural reparameterization, and applying low-rank decomposition can each dramatically improve efficiency without sacrificing output quality.]]></summary></entry><entry><title type="html">Representation and Prediction for Generalizable Robot Control</title><link href="/CS163-Projects-2025Fall/2025/12/13/team50-control-from-vision.html" rel="alternate" type="text/html" title="Representation and Prediction for Generalizable Robot Control" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team50-control-from-vision</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team50-control-from-vision.html"><![CDATA[<blockquote>
-  <p>Vision-based learning has become a central paradigm for enabling robots to operate in complex, unstructured environments. Rather than relying on hand-engineered perception pipelines or task-specific supervision, recent work increasingly leverages large-scale video data to learn transferable visual representations and predictive models for control. This survey reviews a sequence of recent approaches that illustrate this progression: learning control directly from video demonstrations, pretraining universal visual representations, incorporating predictive dynamics through visual point tracking, and augmenting learning with synthetic visual data. Together, these works highlight how representation learning and prediction from video are enabling increasingly generalizable robot manipulation capabilities.</p>
-</blockquote>
-
-<!--more-->
-<ul id="markdown-toc">
-  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
-  <li><a href="#video-learning" id="markdown-toc-video-learning">Video Learning</a>    <ul>
-      <li><a href="#real-to-sim-to-real-from-monocular-video" id="markdown-toc-real-to-sim-to-real-from-monocular-video">Real-to-Sim-to-Real from Monocular Video</a></li>
-      <li><a href="#joint-humanscene-reconstruction" id="markdown-toc-joint-humanscene-reconstruction">Joint Human–Scene Reconstruction</a></li>
-      <li><a href="#motion-retargeting-and-physics-aware-imitation" id="markdown-toc-motion-retargeting-and-physics-aware-imitation">Motion Retargeting and Physics-Aware Imitation</a></li>
-      <li><a href="#context-aware-control-via-policy-distillation" id="markdown-toc-context-aware-control-via-policy-distillation">Context-Aware Control via Policy Distillation</a></li>
-    </ul>
-  </li>
-  <li><a href="#generalizable-visual-representations" id="markdown-toc-generalizable-visual-representations">Generalizable Visual Representations</a>    <ul>
-      <li><a href="#problem-setup" id="markdown-toc-problem-setup">Problem Setup</a></li>
-      <li><a href="#learning-objectives" id="markdown-toc-learning-objectives">Learning Objectives</a></li>
-      <li><a href="#full-training-objective" id="markdown-toc-full-training-objective">Full Training Objective</a></li>
-      <li><a href="#downstream-policy-learning" id="markdown-toc-downstream-policy-learning">Downstream Policy Learning</a></li>
-      <li><a href="#empirical-results-and-implications" id="markdown-toc-empirical-results-and-implications">Empirical Results and Implications</a></li>
-    </ul>
-  </li>
-  <li><a href="#context-expansion" id="markdown-toc-context-expansion">Context Expansion</a>    <ul>
-      <li><a href="#predicting-object-motion-via-point-tracks" id="markdown-toc-predicting-object-motion-via-point-tracks">Predicting Object Motion via Point Tracks</a></li>
-      <li><a href="#from-2d-tracks-to-3d-rigid-motion" id="markdown-toc-from-2d-tracks-to-3d-rigid-motion">From 2D Tracks to 3D Rigid Motion</a></li>
-      <li><a href="#open-loop-execution" id="markdown-toc-open-loop-execution">Open-Loop Execution</a></li>
-      <li><a href="#residual-policies-for-closed-loop-correction" id="markdown-toc-residual-policies-for-closed-loop-correction">Residual Policies for Closed-Loop Correction</a></li>
-    </ul>
-  </li>
-  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
-  <li><a href="#acknowledgements" id="markdown-toc-acknowledgements">Acknowledgements</a></li>
-  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
-</ul>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>Vision has become a primary interface through which robots perceive, reason, and act in the physical world. As robots leave structured factory floors and enter human environments, hand-engineered perception pipelines and narrowly specified rewards increasingly fail to scale. Recent research instead treats video as a unifying supervision signal, leveraging its richness to learn perception, dynamics, and control jointly or modularly.</p>
-
-<p>This post surveys a sequence of representative approaches that illustrate this trajectory. We begin with methods that directly convert human videos into executable robot behaviors, then move toward approaches that decouple perception from control through reusable visual representations. We conclude by examining predictive, object-centric models that anticipate future scene evolution. Together, these works outline a shift toward generalizable, context-aware robot control grounded in visual experience.</p>
-
-<h2 id="video-learning">Video Learning</h2>
-
-<p>A natural starting point for learning robot behavior from vision is direct imitation from video. Rather than decomposing perception and control into separate modules, recent work investigates whether robots can acquire complex, environment-aware skills simply by observing humans act in the world. <strong>VideoMimic</strong> represents a strong instantiation of this paradigm, demonstrating that monocular human videos can be converted into transferable, context-aware humanoid control policies.</p>
-
-<h3 id="real-to-sim-to-real-from-monocular-video">Real-to-Sim-to-Real from Monocular Video</h3>
-
-<p>VideoMimic introduces a real-to-sim-to-real pipeline that transforms casually recorded RGB videos into whole-body control policies for humanoid robots. Given a monocular video, the system jointly reconstructs <strong>4D human motion</strong> and <strong>static scene geometry</strong> in a common world frame. Unlike earlier approaches that reconstruct only the person or assume simplified environments, VideoMimic explicitly recovers both the human trajectory and the surrounding physical context, such as stairs, furniture, or uneven terrain, at metric scale.</p>
-
-<p>This joint reconstruction enables downstream learning to reason about <strong>environment-conditioned behavior</strong>, rather than memorizing isolated motion patterns.</p>
-
-<hr />
-
-<h3 id="joint-humanscene-reconstruction">Joint Human–Scene Reconstruction</h3>
-
-<p>Given an input video, VideoMimic estimates per-frame human pose using a parametric body model and reconstructs scene geometry via monocular structure-from-motion. The key challenge is <strong>metric alignment</strong>: monocular reconstructions are inherently scale-ambiguous.</p>
-
-<p>VideoMimic resolves this by jointly optimizing human motion and scene scale using a human-height prior. Let</p>
-<ul>
-  <li>\(\gamma_t\) denote the global human translation at time \(t\),</li>
-  <li>\(\phi_t\) the global orientation,</li>
-  <li>\(\theta_t\) the local joint angles,</li>
-  <li>and \(\alpha\) the global scene scale.</li>
-</ul>
-
-<p>The optimization objective is:</p>
-
-\[\min_{\alpha, \gamma_{1:T}, \phi_{1:T}, \theta_{1:T}}
-\; w_{3D} \mathcal{L}_{3D}
-+ w_{2D} \mathcal{L}_{2D}
-+ \mathcal{L}_{\text{smooth}}\]
-
-<p>where:</p>
-<ul>
-  <li>\(\mathcal{L}_{3D}\) enforces consistency between reconstructed and lifted 3D joints,</li>
-  <li>\(\mathcal{L}_{2D}\) penalizes reprojection error in image space,</li>
-  <li>\(\mathcal{L}_{\text{smooth}}\) regularizes temporal motion jitter.</li>
-</ul>
-
-<p>This optimization yields <strong>world-frame human trajectories</strong> and <strong>gravity-aligned scene meshes</strong> suitable for physics simulation.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/mimic_pipeline.png" alt="VideoMimic Pipeline" /></p>
-<p><em>Fig. 1. VideoMimic real-to-sim-to-real pipeline. Monocular videos are reconstructed into human motion and scene geometry, retargeted to a humanoid, and used to train a single context-aware control policy.</em> [1]</p>
-
-<hr />
-
-<h3 id="motion-retargeting-and-physics-aware-imitation">Motion Retargeting and Physics-Aware Imitation</h3>
-
-<p>The reconstructed human motion is retargeted to a humanoid robot under kinematic and physical constraints, including joint limits, collision avoidance, and foot-contact consistency. These retargeted trajectories serve as reference motions for reinforcement learning in simulation.</p>
-
-<p>Policy learning follows a DeepMimic-style formulation, where the robot tracks reference motion while respecting physics. The reward is defined entirely through <strong>data-driven tracking terms</strong>, avoiding handcrafted task rewards:</p>
-
-\[r_t =
-w_p \| p_t - p_t^{*} \|
-+ w_q \| q_t - q_t^{*} \|
-+ w_{\dot{q}} \| \dot{q}_t - \dot{q}_t^{*} \|
-+ w_c \, \mathbb{I}_{\text{contact}}
-- w_a \| a_t - a_{t-1} \|\]
-
-<p>where starred quantities denote reference motion targets. An action-rate penalty discourages exploiting simulator artifacts and promotes physically plausible behavior.</p>
-
-<p>To improve stability, policies are <strong>pretrained on motion-capture data</strong>, then fine-tuned on reconstructed video motions, mitigating noise and embodiment mismatch.</p>
-
-<hr />
-
-<h3 id="context-aware-control-via-policy-distillation">Context-Aware Control via Policy Distillation</h3>
-
-<p>A central contribution of VideoMimic is the distillation of multiple motion-specific policies into a <strong>single unified controller</strong>. After imitation training, the policy is distilled using DAgger into a form that no longer depends on target joint angles.</p>
-
-<p>At test time, the controller observes only:</p>
-<ul>
-  <li>Proprioceptive state,</li>
-  <li>A local \(11 \times 11\) height-map centered on the torso,</li>
-  <li>A desired root direction in the robot’s local frame.</li>
-</ul>
-
-<p>Formally, the deployed policy is:</p>
-
-\[\pi(a_t \mid s_t, h_t, d_t)\]
-
-<p>where \(s_t\) is proprioception, \(h_t\) is the terrain height-map, and \(d_t\) is the root-direction command. This enables the robot to <strong>autonomously select behaviors</strong> like walking, climbing, sitting purely from environmental context, without explicit task labels or skill switching.</p>
-
-<p style="width: 700px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/mimic_policy.png" alt="Policy Training" /></p>
-<p><em>Fig. 2. Scene-conditioned imitation learning and policy distillation.</em> [1]</p>
-
-<hr />
-
-<h2 id="generalizable-visual-representations">Generalizable Visual Representations</h2>
-
-<p>While VideoMimic shows that robots can learn context-aware control directly from reconstructed video demonstrations, its policies remain closely tied to the specific motions and environments observed during training. A complementary direction asks whether vision can be separated from control by learning reusable visual representations that transfer efficiently across tasks, robots, and environments.</p>
-
-<p>R3M (Reusable Representations for Robotic Manipulation) represents a clean instantiation of this idea. Rather than learning actions, rewards, or dynamics, R3M focuses exclusively on perception. It learns a frozen visual embedding from large-scale human video that can be reused across downstream robot learning problems. This separation of representation learning from control enables strong generalization while remaining easy to integrate into standard imitation or reinforcement learning pipelines.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/r3m_pretraining.png" alt="R3M Overview" /></p>
-<p><em>Fig. 3. R3M pre-training pipeline. Visual representations are learned from large-scale egocentric human video using temporal and semantic objectives, then reused as frozen perception modules for downstream robot manipulation.</em> [2]</p>
-
-<h3 id="problem-setup">Problem Setup</h3>
-
-<p>R3M assumes access to a dataset of human videos paired with natural language descriptions. Each video consists of RGB frames</p>
-
-\[[I_0, I_1, \dots I_T]\]
-
-<p>and an associated text annotation describing the activity. The goal is to learn a single image encoder</p>
-
-\[F_\phi : I \to z\]
-
-<p>that maps an image \(I\) to a continuous embedding \(z\). After pre-training, \(F_\phi\) is frozen and reused across downstream tasks. Robot policies consume the visual embedding concatenated with proprioceptive state rather than raw pixels.</p>
-
-<p>This formulation intentionally isolates representation learning from control and dynamics.</p>
-
-<h3 id="learning-objectives">Learning Objectives</h3>
-
-<p>R3M is trained on Ego4D, a large-scale egocentric video dataset covering diverse everyday activities. The representation is optimized using three complementary objectives that target properties useful for robotic manipulation.</p>
-
-<h4 id="temporal-contrastive-learning">Temporal Contrastive Learning</h4>
-
-<p>To encourage the representation to encode scene dynamics rather than static appearance, R3M uses time-contrastive learning. Frames close in time are encouraged to map to nearby embeddings, while temporally distant frames or frames from different videos are pushed apart.</p>
-
-<p>The temporal contrastive loss has the following formulation:</p>
-
-\[\mathcal{L}_{\text{TCN}} =
-- \sum_{b \in \mathcal{B}}
-\log
-\frac{\exp(S(z_i^b, z_j^b))}
-{\exp(S(z_i^b, z_j^b)) + \exp(S(z_i^b, z_k^b)) + \exp(S(z_i^b, z_{i'}))}\]
-
-<p>where \(z = F_\phi(I)\), indices \(i, j, k\) correspond to frames with increasing temporal distance, \(z_{i'}\) is a negative sample from a different video, and \(S(\cdot,\cdot)\) denotes similarity computed via negative L2 distance.</p>
-
-<p>This objective biases the embedding toward encoding how scenes evolve over time.</p>
-
-<h4 id="videolanguage-alignment">Video–Language Alignment</h4>
-
-<p>Temporal structure alone is insufficient. A useful representation must focus on semantically meaningful elements such as objects, interactions, and task-relevant state changes. R3M therefore aligns visual embeddings with natural language descriptions.</p>
-
-<p>Given an initial frame \(I_0\), a future frame \(I_t\), and a language instruction \(l\), a scoring function \(G_\theta\) predicts whether the transition from \(I_0\) to \(I_t\) completes the described activity. Training uses a contrastive objective:</p>
-
-\[\mathcal{L}_{\text{Lang}} =
-- \sum_{b \in \mathcal{B}}
-\log
-\frac{\exp(G_\theta(z_0^b, z_t^b, l^b))}
-{\exp(G_\theta(z_0^b, z_t^b, l^b)) + \exp(G_\theta(z_0^b, z_i^b, l^b)) + \exp(G_\theta(z_0', z_t', l^b))}\]
-
-<p>This objective encourages embeddings to capture objects and relations referenced by language, which are directly relevant to manipulation.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/r3m_learning.png" alt="R3M Overview" /></p>
-<p><em>Fig. 4. R3M pretraining. R3M is trained on Ego4D video–language pairs using temporal contrastive learning and video–language alignment to produce semantically grounded, temporally coherent visual embeddings for robotic manipulation.</em> [2]</p>
-
-<h4 id="sparsity-and-compactness">Sparsity and Compactness</h4>
-
-<p>R3M additionally encourages compact embeddings through explicit regularization. Sparse representations reduce sensitivity to background clutter and improve robustness in low-data imitation settings.</p>
-
-<p>This is enforced via L1 and L2 penalties:</p>
-
-\[\mathcal{L}_{\text{Reg}} = \lambda_3 \| z \|_1 + \lambda_4 \| z \|_2\]
-
-<h3 id="full-training-objective">Full Training Objective</h3>
-
-<p>The complete pre-training objective combines all components:</p>
-
-\[\mathcal{L}(\phi, \theta) =
-\mathbb{E}_{I \sim \mathcal{D}}
-\left[
-\lambda_1 \mathcal{L}_{\text{TCN}}
-+ \lambda_2 \mathcal{L}_{\text{Lang}}
-+ \lambda_3 \|F_\phi(I)\|_1
-+ \lambda_4 \|F_\phi(I)\|_2
-\right]\]
-
-<p>The encoder \(F_\phi\) is implemented as a ResNet backbone and trained on Ego4D. After training, the encoder is frozen and reused without further adaptation.</p>
-
-<h3 id="downstream-policy-learning">Downstream Policy Learning</h3>
-
-<p>For downstream tasks, R3M embeddings are concatenated with robot proprioceptive state and used as input to a policy trained via behavior cloning:</p>
-
-\[\mathcal{L}_{\text{BC}} = \| a_t - \pi([z_t, p_t]) \|_2^2\]
-
-<p>where \(z_t = F_\phi(I_t)\) and \(p_t\) denotes proprioceptive features.</p>
-
-<h3 id="empirical-results-and-implications">Empirical Results and Implications</h3>
-
-<p>Across manipulation benchmarks such as MetaWorld, Franka Kitchen, and Adroit, R3M substantially improves data efficiency relative to training from scratch and outperforms prior visual backbones such as CLIP and ImageNet-pretrained models. These gains hold despite R3M never observing robot data during pre-training.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/r3m_results.png" alt="R3M Overview" /></p>
-<p><em>Fig. 5. Data-efficient imitation learning. Success rates on 12 unseen manipulation tasks show that R3M consistently outperforms MoCo (PVR), CLIP, supervised ImageNet features, and training from scratch, with standard error bars reported.</em> [2]</p>
-
-<p>In real-world experiments on a Franka Panda robot, R3M enables complex tasks such as towel folding and object placement in clutter with significantly fewer demonstrations. The results show that large-scale human video can serve as a strong perceptual prior for robotics.</p>
-
-<p>However, the representation remains static. It encodes the current scene but does not explicitly model future evolution or action-conditioned dynamics. This limitation motivates subsequent work on predictive visual representations, such as Track2Act, which explicitly reason about how scenes change over time to support generalizable robot manipulation.</p>
-
-<h2 id="context-expansion">Context Expansion</h2>
-
-<p>The progression from VideoMimic to R3M reflects a shift from direct imitation toward reusable visual representations. However, both approaches primarily reason about the present: VideoMimic reconstructs a demonstrated trajectory, and R3M encodes the current scene into a static embedding. Neither explicitly models how a scene will evolve under interaction. Track2Act addresses this limitation by introducing predictive, object-centric representations that enable generalizable robot manipulation.</p>
-
-<p>Rather than predicting actions or generating RGB video, Track2Act learns to predict future point trajectories that describe how objects move when manipulated. This abstraction captures the geometric and temporal structure necessary for manipulation while avoiding the brittleness of full video synthesis. As a result, Track2Act occupies an intermediate position between static visual embeddings and full world models: it anticipates future states without modeling pixels directly.</p>
-
-<h3 id="predicting-object-motion-via-point-tracks">Predicting Object Motion via Point Tracks</h3>
-
-<p>Track2Act takes as input an initial image \(I_0\), a goal image \(I_G\), and a set of two-dimensional points specified on the object in the initial frame. Given \(p\) points and a prediction horizon \(H\), the model outputs a trajectory for each point, producing a set of object motion tracks:</p>
-
-\[\tau_{\text{obj}} =
-\left\{
-(x_t^i, y_t^i)
-\;\middle|\;
-i = 1,\ldots,p,\;
-t = 1,\ldots,H
-\right\}\]
-
-<p>These tracks form a correspondence-preserving representation of how the object should move to satisfy the goal. Because supervision is obtained from passive web videos using off-the-shelf tracking algorithms, the model scales naturally with diverse, uncurated data. By predicting motion instead of appearance, the representation abstracts away texture and lighting while retaining physically meaningful dynamics.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/t2a_predict.png" alt="Track2Act Point Tracks" /></p>
-<p><em>Fig. 6. Predicted point trajectories between an initial and goal image.</em> [3]</p>
-
-<h3 id="from-2d-tracks-to-3d-rigid-motion">From 2D Tracks to 3D Rigid Motion</h3>
-
-<p>To convert predicted tracks into an executable manipulation plan, Track2Act lifts the two-dimensional motion into three dimensions. Given a set of 3D object points from the first frame \(P_0^{3D}\) and camera intrinsics \(K\), the method solves for a sequence of rigid transforms \(\{T_t\}_{t=1}^H\) such that:</p>
-
-\[K \, T_t \, P_0^{3D}
-\;\approx\;
-\{(x_t^i, y_t^i)\}_{i=1}^p\]
-
-<p>This optimization can be solved using standard Perspective-n-Point solvers and is well-constrained because a single rigid transform must explain the motion of multiple points. The resulting transforms describe how the object should move in the scene, independent of any specific robot embodiment.</p>
-
-<h3 id="open-loop-execution">Open-Loop Execution</h3>
-
-<p>After bringing the robot end-effector into contact with the object and executing a grasp, the predicted rigid transforms are converted into an open-loop end-effector trajectory. The nominal action at time step \(t\) is defined as:</p>
-
-\[\bar{a}_t = T_t \, e_1\]
-
-<p>where \(e_1\) denotes the end-effector pose at the moment of grasp. This produces a complete manipulation trajectory without requiring any robot-specific training data. However, open-loop execution is sensitive to prediction errors, imperfect grasps, and unmodeled contact dynamics.</p>
-
-<h3 id="residual-policies-for-closed-loop-correction">Residual Policies for Closed-Loop Correction</h3>
-
-<p>To improve robustness, Track2Act introduces a residual policy that corrects the open-loop plan during execution. Instead of predicting full actions, the policy outputs a correction term added to the nominal action:</p>
-
-\[\hat{a}_t = \bar{a}_t + \Delta a_t\]
-
-<p>where the residual action is given by:</p>
-
-\[\Delta a_t =
-\pi_{\text{res}}
-\left(
-I_t,\;
-G,\;
-\tau_{\text{obj}},\;
-[\bar{a}]_{1:H}
-\right)\]
-
-<p>The residual policy is trained using behavior cloning on a small amount of embodiment-specific data. Because it only learns to correct deviations from a predicted plan, the policy generalizes effectively across unseen objects, scenes, and task configurations.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team50/t2a_residual_correction.png" alt="Residual Policy Execution" /></p>
-<p><em>Fig. 7. Open-loop execution from predicted rigid transforms with closed-loop residual correction.</em> [3]</p>
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>Across these approaches, a clear progression emerges in how vision supports robot control. VideoMimic demonstrates that richly structured behaviors can be transferred directly from monocular human videos when reconstruction and physics-aware learning are tightly integrated. R3M shows that large-scale video can instead be used to pretrain perceptual representations that generalize broadly across tasks, improving data efficiency without entangling vision with action learning. Track2Act bridges these paradigms by introducing prediction as a first-class component, using object-centric motion forecasts to guide manipulation while remaining agnostic to embodiment.</p>
-
-<p>Taken together, these methods suggest that generalization arises not from a single monolithic model, but from carefully chosen abstractions aligned with physical interaction. Future progress will likely come from unifying these abstractions into systems that reason about uncertainty, contact, and long-horizon consequences while remaining deployable on real robots.</p>
-
-<h2 id="acknowledgements">Acknowledgements</h2>
-
-<p>We thank the TAs of the Computer Vision this course for providing the class with relevant materials to supplement all of our chosen topics for the final project.</p>
-
-<h2 id="reference">Reference</h2>
-
-<p>[1] Arthur Allshire, Hongsuk Choi, Junyi Zhang, David McAllister, Anthony Zhang, Chung Min Kim, Trevor Darrell, Pieter Abbeel, Jitendra Malik, Angjoo Kanazawa: “Visual Imitation Enables Contextual Humanoid Control”, 2025; [https://arxiv.org/abs/2505.03729 arXiv:2505.03729].</p>
-
-<p>[2] Suraj Nair, Aravind Rajeswaran, Vikash Kumar, Chelsea Finn, Abhinav Gupta: “R3M: A Universal Visual Representation for Robot Manipulation”, 2022; [https://arxiv.org/abs/2203.12601 arXiv:2203.12601].</p>
-
-<p>[3] Homanga Bharadhwaj, Roozbeh Mottaghi, Abhinav Gupta, Shubham Tulsiani: “Track2Act: Predicting Point Tracks from Internet Videos enables Generalizable Robot Manipulation”, 2024; [https://arxiv.org/abs/2405.01527 arXiv:2405.01527].</p>
-
-<hr />]]></content><author><name>Anirudh Kannan</name></author><summary type="html"><![CDATA[Vision-based learning has become a central paradigm for enabling robots to operate in complex, unstructured environments. Rather than relying on hand-engineered perception pipelines or task-specific supervision, recent work increasingly leverages large-scale video data to learn transferable visual representations and predictive models for control. This survey reviews a sequence of recent approaches that illustrate this progression: learning control directly from video demonstrations, pretraining universal visual representations, incorporating predictive dynamics through visual point tracking, and augmenting learning with synthetic visual data. Together, these works highlight how representation learning and prediction from video are enabling increasingly generalizable robot manipulation capabilities.]]></summary></entry></feed>
+<p><a id="3">[3]</a> X. Chai, Y. Zhang, Y. Zhang, Z. Cheng, Y. Qin, Y. Yang, and L. Song, “Distillation-Supervised Convolutional Low-Rank Adaptation for Efficient Image Super-Resolution,” <em>arXiv preprint arXiv:2504.11271</em>, 2025. [Online]. Available: https://arxiv.org/abs/2504.11271</p>]]></content><author><name>Anthony Yu</name></author><summary type="html"><![CDATA[Super-resolution has long faced a fundamental tension: the highest-quality models require billions of operations, while edge devices demand sub-100ms inference. This article examines three recent methods—SPAN, EFDN, and DSCLoRa—that challenge this tradeoff through architectural innovation, training-time tricks, and efficient adaptation. We’ll see how rethinking the upsampling operation, leveraging structural reparameterization, and applying low-rank decomposition can each dramatically improve efficiency without sacrificing output quality.]]></summary></entry></feed>
