@@ -6,7 +6,7 @@ author: Group 28
 date: 2025-12-07
 ---
 
-> Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ICP) on video datasets using quantitative performance metrics. 
+> Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP. 
 
 <!--more-->
 {: class="table-of-content"}
@@ -17,8 +17,6 @@ date: 2025-12-07
 Camera pose estimation has become a fundamental task in Computer Vision 
 that aims to determine the position (translation) and orientation (rotation) of a camera relative to a scene using image or extracted video data. Accurately estimating the absolute pose of a camera has widespread applications in 3D reconstruction, world models, and augmented reality.
 
-In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ICP on the [TUM RGB-D Dataset](https://cvg.cit.tum.de/data/datasets/rgbd-dataset/download#freiburg2_metallic_sphere2) of video sequences. This dataset consists of RGB and depth images with ground-truth camera trajectories. We describe each camera pose estimation methods, our choice of quantitative metrics, and analyze their relative strengths and limitations. 
-
 ### Camera Pose Estimation
 For camera pose estimation, there are 3D-2D correspondences between a 3D point in the world (scene geometry) and the 2D pixel location where that point appears in the image or video frame. 
 
@@ -28,10 +26,10 @@ Camera pose estimation predicts the pose of a camera with these two components:
 
 ![YOLO]({{ '/assets/images/team28/pose_estimation.PNG' | relative_url }})
 {: style="width: 600px; max-width: 100%;"}
-*Fig 1. Overview of camera pose estimation. * [1].
+*Fig 1. Overview of camera pose estimation.* [1].
 
 ## Camera Pose Estimation Methods
-Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and ICP. 
+Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and depth-based estimatino with ICP. 
 
 ### COLMAP
 
@@ -50,10 +48,8 @@ For the feature matching and geometric verification, we employ sequential matchi
 
 After SfM, Multi-View Stereo (MVS) then takes that output to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points. 
 
-
 https://demuc.de/colmap/
 https://colmap.github.io/tutorial.html 
-
 
 <div style="display: flex; gap: 20px; justify-content: center;">
   <div style="text-align: center;">
@@ -74,6 +70,10 @@ https://colmap.github.io/tutorial.html
 
 ### VGGSfM (Visual Geometry Grounded Deep Structure From Motion)
 
+![VGGSfM]({{ '/assets/images/team28/vggsfm.png' | relative_url }})
+{: style="width: 600px; max-width: 100%;"}
+*Fig num. Overview of VGGSfM pipeline.* [1].
+
 VGGSfM is a fully differentiable, learning-based SfM (Structure-from-Motion) pipeline that jointly estimates camera poses and 3D scene reconstruction. Unlike classical SfM frameworks, which uses non-differentiable components and incremental reconstruction, VGGSfM is fully differentiable, and therefore can be trained end-to-end. 
 
 The pipeline works by:
@@ -83,6 +83,37 @@ The pipeline works by:
 - Applies a bundle adjustment layer for reconstruction refinement
 
 https://vggsfm.github.io/
+
+### Depth-based Estimation with ICP (Iterative Closest Point)
+
+Unlike COLMAP and VGGSfM, this method does not directly operate on images/video data to estimate absolute camera positions. Instead, it uses a geometric approach that aligns two 3D points clouds and estimates the transformation (rotation and translation) between them. This transformation represents the relative camera motion between frames, which can be accumulated to form a camera trajectory. 
+
+Given the depth images from our dataset, each depth image can be projected back into a 3D point cloud using the known camera intrinsics. Iterative Closest Point (ICP) is then applied to each pair of consecutive point clouds by estimating the transformation that minimizes the spatial discrepances/sum of square errors. 
+
+This estimated transformation represents the relative camera motion between frames, and accumulating these relative motions forms the camera trajectory. This process is related to RGB-Dodometry, which produces a sequence of relative poses instead of globally optimized absolute reconstruction. 
+
+### Code Block
+```
+def depth_to_pointcloud(depth_path, intrinsics):
+    depth = cv2.imread(depth_path, cv2.IMREAD_ANYDEPTH)
+    h, w = depth.shape
+    fx, fy, cx, cy = intrinsics
+
+    u, v = np.meshgrid(np.arange(w), np.arange(h))
+    z = depth.astype(float) / 5000.0
+    x = (u - cx) * z / fx
+    y = (v - cy) * z / fy
+
+    valid = z > 0
+    points = np.stack([x[valid], y[valid], z[valid]], axis=1)
+
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(points)
+    return pcd.voxel_down_sample(0.02)
+```
+
+
+https://learnopencv.com/iterative-closest-point-icp-explained/ 
 
 <!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
