@@ -45,6 +45,16 @@ The experimental results show that applying SAM and SAM V2 on top of the baselin
 
 ## Apply CRF and Grounded SAM on Baseline CNN
 
+Another strategy that we experimented with was applying a Dense Conditional Random Field (Dense CRF) to our baseline CNN model. We applied Dense CRF following the approach described in [1] as a post-processing step on the softmax probability outputs to encourage spatial and appearance consistency in the predicted segmentation masks. Validation results showed a modest improvement, with the best mIoU increasing from 0.2336 without CRF to 0.2368 with CRF. While this suggests that CRF can help refine segmentation boundaries, the improvement was relatively small and came at the cost of significantly increased inference time during validation, with the validation time increasing from approximately 1.5 minutes per epoch without CRF to nearly 18 minutes per epoch with CRF. As a result, the practical benefits of Dense CRF appear limited when weighed against its computational overhead.
+
+Since Dense CRF primarily refines predictions that the model already produces, we hypothesized that it would be more effective if the underlying segmentation had stronger object detection. To test this idea, we introduced Grounded SAM [2] to provide additional supervision for smaller and harder-to-segment objects such as pedestrians, vehicles, poles, and traffic-related elements, including traffic lights and traffic signs. Grounded SAM was used to generate bounding boxes for a selected subset of classes, which served as prompts for the model. An example of the bounding boxes produced by Grounded SAM is shown in the figure given below:
+
+![image depicting bounding boxes](../assets/images/team21/bounding_boxes.png)
+
+These bounding boxes were then mapped to their corresponding Cityscapes labels and converted into coarse segmentation masks. The resulting pseudo-labels were combined with the original Cityscapes training data to augment the training set. Training with this augmented dataset led to a clear improvement over the baseline model. Without applying CRF, the model achieved a best validation mIoU of 0.2428, compared to 0.2336 when trained without the Grounded SAM pseudo-labels. This improvement suggests that the additional object-level cues helped the model better capture classes that are underrepresented or difficult to segment using pixel-level supervision alone. When Dense CRF was applied on top of the Grounded SAM–augmented model, the gains were again marginal, with the best validation mIoU reaching 0.2423, while incurring a significant increase in inference time.
+
+Overall, these results indicate that improving the training data through pseudo-labeling had a larger impact on performance than applying CRF as a post-processing step. While CRF can provide some boundary refinement, its benefits diminish once the model’s predictions are strengthened by better object detection. For this task, these findings suggest that focusing on improving label quality and coverage is more effective than relying on computationally expensive post-processing techniques.
+
 ## Conclusion
 
 ## Reference
