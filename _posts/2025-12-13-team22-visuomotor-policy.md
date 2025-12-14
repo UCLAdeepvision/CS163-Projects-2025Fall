@@ -171,6 +171,92 @@ Together, these results suggest that the effectiveness of policy pretraining dep
 
 ### Konstantin Section
 
+# CS 163 Project
+
+# Diffusion Policy
+
+Diffusion Policy is new paradigm introduced in 2023 by [] et al [3]. It reframes visuomotor policy as a conditional diffusion process [3] over action sequences, conditioned on a short history of observations. By generating actions using iterative denoising, this new approach allows for more expressive multi-modal, high-dimensional manipulation, while improving temporal consistency in closed-loop control. In fact, the authors found that Diffusion Policy outperformed previous SoTA policies by 46.9% on average.
+
+## Problem formulation
+
+Diffusion Policy is formulated as an offline visuomotor imitation learning problem. The goal is to learn a policy which maps camera observations to actions.
+
+Diffusion Policy makes use of three distinct horizons: the **observation horizon** $T_o$, the **prediction horizon** $T_p$, and the **action execution horizon** $T_a$.
+
+At some time $t$, Diffusion Policy doesn’t predict a single action $a_t$, but instead an action sequence $A_t$, conditioned on a recent observation history. More specifically, the model learns to predict
+
+$$
+A_t=(a_t,a_{t+1}, ...,a_{t+T_p-1})
+$$
+
+given
+
+$$
+O_t=(o_{t-T_o},o_{t-T_o+1},...,o_t)
+$$
+
+However, at inference time, only the first $T_a$ actions from $A_t$ are executed.
+
+More formally, Diffusion Policy trains a conditional denoising diffusion model to learn the conditional distribution $p(A_t|O_t)$, where $A_t$ is in action space.
+
+Prior research [3] has shown that standard supervised policies struggle with the multi-modal and temporally correlated action distributions introduced by manipulation demonstrations in imitation learning. Diffusion Policy improves on that, due to DDPM’s inherent capabilities with high-dimensional outputs [3], as well as predicting action sequences instead of individual actions.
+
+## Model architecture overview
+
+![Ablation_3D_Representation]({{ '/assets/images/team22/DiffusionPolicyArchitecture.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 5. Diffusion Policy Model Architecture* [3].
+
+At a high level, at each time step $t$, Diffusion Policy does the following:
+
+1. The **visual encoder** takes in the history of observations (images) $O_t$, and produces latent features $z_t$.
+2. The **diffusion model** diffuses the action sequence ${A_t}^{(k)}$, which at each denoising iteration $k$ is conditioned on $z_t$. It is worth noting that the same latents are reused for each diffusion time step $k$, because unlike some previous methods [3], Diffusion Policy is not predicting the joint distribution $p(A_t, O_t)$.
+
+The controller then executes the first $T_a$ actions from $A_t$.
+
+Let’s now do a deep dive into the two main components of Diffusion Policy.
+
+## Visual encoder deep dive
+
+At each time step $t$, the visual encoder takes in the history of images $O_t$, and produces a sequence of embeddings $z_t$ which will be used as conditioning for the diffusion model.
+
+The authors found that a slightly modified ResNet-18, without pre-training, performed the best for the visual encoder module. The model used differs from the regular ResNet-18 in the following ways:
+
+1. It uses spatial SoftMax pooling instead of global average pooling, to maintain spatial information [3].
+2. It replaces BatchNorm with GroupNorm, to stabilize training [3].
+
+The outputs $z_t$ from the visual encoder are then fed into the diffusion model as conditioning.
+
+## Diffusion model deep dive
+
+The diffusion model is the backbone of Diffusion Policy. At each **diffusion time step** $k$, the diffusion model takes in a noisy action sequence ${A_t}^{(k)}$, the diffusion time step $k$, and the conditioning features $z_t$ from the encoder. It then produces the predicted noise $\hat{\varepsilon}_{\theta}$, which is used to de-noise ${A_t}^{(k)}$ and obtain the next sample ${A_t}^{(k-1)}$.
+
+The authors evaluated two backbone architectures for the diffusion model: CNN and time-series transformer.
+
+### CNN-based diffusion
+
+The CNN-based diffusion uses a 1D temporal CNN as its backbone, adapted from previous work on using diffusion for sequence generation [3].
+
+A method called FiLM is then used to condition the CNN on the conditioning latents $z_t$ [3]. FiLM generates a per-layer scale $\gamma(z_t)$ and shift $\beta(z_t)$, which are then applied to the layer’s activations. More specifically, at each layer, we apply the following transformation:
+
+$$
+h \leftarrow \gamma(z_t) \circ h
+$$
+
+The authors recommend using this approach as a starting point, as well as for more basic tasks, as it is easy to set-up and requires little tuning. It does have performance limitations, however, as it struggles with fast-changing action.
+
+### Time-series diffusion transformer
+
+The time-series diffusion transformer solves the issues with fast-changing action experienced by the CNN-based diffusion model.
+
+In short, the noisy actions ${A_t}^{(k)}$ are passed in as input tokens to the transformer decoder blocks. The diffusion time step $k$ is also passed in as a token. The conditioning latents $z_t$ are embedded by an MLP, and passed in as conditioning features to the decoder. Each output token then corresponds to a component of $\hat{\varepsilon}_{\theta}$, which is used to de-noise ${A_t}^{(k)}$ into ${A_t}^{(k-1)}$.
+
+The authors recommend using this approach if the CNN-based diffusion doesn’t lead to satisfactory results, or if the task at hand is more complex, as it is harder to set up and tune the transformer backbone.
+
+## Results & Limitations
+
+Diffusion Policy significantly outperforms previous SoTA policies across a variety of tasks. On average, Diffusion Policy increased performance by 46.9%.
+
 ## 3D Diffusion Policy (DP3) [4]
 
 ### Issues with Previous Work
@@ -180,8 +266,6 @@ The breakthrough work in Diffusion Policy [3] achieved near-human or human level
 ### Solution
 
 The authors of 3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations hypothesized that with a 3D aware diffusion policy one could achieve much better results. Rather than using multi-view 2D images fed through a ResNet backbone to condition the action diffusion process, they cleverly converted the visual input from a single camera into a point cloud representation followed by an efficient point encoder. They found that with far fewer demonstrations (as few as 10), DP3 is able to handle tasks, surpass previous baselines, and commit far fewer safety violations.
-
-INSERT ARCHITECTURE IMAGE
 
 #### The Perception Module [4]
 
@@ -212,7 +296,7 @@ where $\beta_k$ and $\bar{\alpha}_k$ are, again, functions of k from the noise s
 
 ![DP3_Architecture]({{ '/assets/images/team22/DP3Architecture.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 5. Overview of 3D Diffusion Policy. In the training phase, DP3 simultaneously trains its perception module and decision-making process end-to-end with expert demonstrations. During evaluation, DP3 determines actions based on visual observations from the environment.* [4].
+*Fig 6. Overview of 3D Diffusion Policy. In the training phase, DP3 simultaneously trains its perception module and decision-making process end-to-end with expert demonstrations. During evaluation, DP3 determines actions based on visual observations from the environment.* [4].
 
 
 ### Ablation Studies [4]
@@ -221,18 +305,18 @@ The authors also performed several ablation studies to assess their design choic
 
 ![Ablation_3D_Representation]({{ '/assets/images/team22/3dRepAbl.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 6. Ablation on the choice of 3D representations. Point clouds perform the best.* [4].
+*Fig 7. Ablation on the choice of 3D representations. Point clouds perform the best.* [4].
 
 ![Ablation_Design]({{ '/assets/images/team22/DesignChoiceAbl.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 7. Ablation on some design choices. * [4].
+*Fig 8. Ablation on some design choices. * [4].
 
 
 Surprisingly, the lightweight MLP Encoder greatly outperformed even pre-trained models such as PointNet and Point Transformer. Through careful analysis, the authors made modifications to PointNet and achieved competitive accuracy (72.3%) with their MLP decoder. Here are the original ablation results below:
 
 ![Ablation_Encoder]({{ '/assets/images/team22/EncoderAbl.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 8. Ablation on choice of point cloud encoder. Surprisingly, the lightweight MLP encoder outperforms larger pre-trained models. * [4].
+*Fig 9. Ablation on choice of point cloud encoder. Surprisingly, the lightweight MLP encoder outperforms larger pre-trained models. * [4].
 
 
 ### Results [4]
@@ -241,7 +325,7 @@ DP3 was benchmarked on a wide range of tasks spanning rigid, articulated, and de
 
 ![ResultsTable]({{ '/assets/images/team22/TableI.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 9. Main simulation results. Averaged over 72 tasks, DP3 achieves 24.2% relative improvement compared to Diffusion Policy, with a smaller variance.  * [4].
+*Fig 10. Main simulation results. Averaged over 72 tasks, DP3 achieves 24.2% relative improvement compared to Diffusion Policy, with a smaller variance.  * [4].
 
 DP3 also excelled in real robot tasks with greater generality. In particular, the real robot tasks were: 
 1. **Roll-up**: The Allegro hand wraps the plasticine multiple times to make a roll-up.
@@ -253,21 +337,21 @@ For the sake of time, there were 40 demonstrations per task. See the table below
 
 ![RealRobotResults]({{ '/assets/images/team22/TableVIII.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 10. Results on real robot experiments with 10 tasks per trial. * [4].
+*Fig 11. Results on real robot experiments with 10 tasks per trial. * [4].
 
 To further assess generalization capabilities, they studied spatial generalization with the Pour task, instance generalization on drill, and more. Here are some of their exciting results:
 
 ![SpatialGeneralization]({{ '/assets/images/team22/TableIX.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 11. Spatial Generalization on Pour: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].
+*Fig 12. Spatial Generalization on Pour: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].
 
 ![ColorGeneralization]({{ '/assets/images/team22/TableX.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 12. Color/Appearance Generalization on Drill: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].
+*Fig 13. Color/Appearance Generalization on Drill: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].
 
 ![InstanceGeneralizatoin]({{ '/assets/images/team22/TableXI.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 13. Instance generalization on Drill. The authors replaced the cube used in Drill with five objects in varied sizes from our daily life. Each instance is evaluated with one trial. * [4].
+*Fig 14. Instance generalization on Drill. The authors replaced the cube used in Drill with five objects in varied sizes from our daily life. Each instance is evaluated with one trial. * [4].
 
 This generalizability of the model is perhaps the most crucial aspect, as robots will have to handle many different conditions in real-world applications. The instance generalization is an especially promising result, as it suggests possibilities for 0-shot learning on very similar tasks to training data.
 
@@ -275,7 +359,7 @@ Finally, the authors also present encouraging results about safety. They define 
 
 ![SafetyViolations]({{ '/assets/images/team22/TableXIV.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 14. Average safety violation rates. DP3 rarely committed any safety violations, in contrast to the other models. * [4].
+*Fig 15. Average safety violation rates. DP3 rarely committed any safety violations, in contrast to the other models. * [4].
 
 They found that DP3 rarely makes safety violations, and suspect this is due to its 3D awareness, though further work needs to be carried out in this direction. 
 
