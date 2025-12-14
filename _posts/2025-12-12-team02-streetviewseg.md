@@ -370,7 +370,7 @@ class CopyPasteAugmentation:
         num_to_paste = random.randint(1, len(available_classes))
         classes_to_paste = random.sample(available_classes, num_to_paste)
 
-        # Create mask and blend: I1 × α + I2 × (1 − α)
+        # Create mask and blend: I1 * alpha + I2 * (1 − alpha)
         alpha = np.isin(source_label, classes_to_paste).astype(np.float32)
         alpha_3d = alpha[:, :, np.newaxis]
 
