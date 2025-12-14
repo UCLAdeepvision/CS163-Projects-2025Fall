@@ -10,52 +10,63 @@ date: 2025-12-11
 
 ### <u> 3D Gaussian Splatting </u>
 
-Before 3D Gaussian Splatting (3DGS) was introduced, the dominant paradigm in novel view synthesis was Neural Radiance Fields (NeRF). 3DGS introduced a new, explicit scene representation that is fast enough to support rendering in real time.
+Before 3D Gaussian Splatting (3DGS) [6] was introduced, the dominant paradigm in novel view synthesis was Neural Radiance Fields (NeRF) [5]. NeRF showed strong performance, but its training optimization and rendering were slow. 3DGS introduced a new, explicit scene representation that is fast enough to support rendering in real time.
 
 #### Method
 
 ##### Differentiable 3D Gaussian Splatting
 
-Previous neural point-based methods computed the color $$C$$ of a pixel by blending the colors of the points in the scene representation overlapping the pixel through the equation
+Previous neural point-based methods, such as [9], computed the color $$C$$ of a pixel by blending the colors of the points in the scene representation overlapping the pixel through the equation
 <center>
-$$C = \sum_{i=1}^{N} c_i \alpha_i \prod_{j=1}^{i-1} (1-\alpha_j)$$.
+$$C = \sum_{i=1}^{N} c_i \alpha_i \prod_{j=1}^{i-1} (1-\alpha_j).$$
 </center>
 Here, $$c_i$$ is the color of a point and $$\alpha_i$$ is its rendering opacity. This is similar to the formulation used in Neural Radiance Fields. Notably, the point-based approach is discrete and doesn't require the expensive random sampling approach to calculate color that NeRF requires. 
-3DGS uses the same rendering equation, does not rely on neural networks, which are expensive to query, and it models the scene with anisotropic 3D Gaussians instead of points. Each 3D Gaussian is defined by a full 3D covariance matrix in the world coordinate system
+3DGS uses the same rendering equation as [9], but does not rely on neural networks, which are expensive to query, and it models the scene with anisotropic 3D Gaussians instead of points. Each 3D Gaussian is defined by a full 3D covariance matrix in the world coordinate system
 <center>
-$$G(x) = e^{-\frac{1}{2}(x)^{T}\sigma^{-1}(x)}$$
+$$G(x) = e^{-\frac{1}{2}(x)^{T}\Sigma^{-1}(x)}.$$
 </center>
-They also have their own associated opacity $$\alpha$$ which they are multipled by during rendering. 
+They also have their own associated opacity $$\alpha$$, which they are multiplied by during rendering. 
 
-The 3D Gaussians need to be projected to 2D for rendering, and the covariance matrix after this projection must be calculated. However, due to the fact that covariance matrices need to be positive semi-definite to have physical meaning, they are not optimized directly. Instead, the scaling matrix $$S$$ and rotation matrix $$R$$, which may be converted into the covariance matrix through the equation
+The 3D Gaussians need to be projected to 2D for rendering, and the covariance matrices after this projection must be calculated. However, due to the fact that covariance matrices need to be positive semi-definite to have physical meaning, they are not optimized directly. Instead, the scaling matrix $$S$$ and rotation matrix $$R$$ for each Gaussian, which may be converted into the covariance matrix through the equation
 <center>
 $$ \Sigma = RSS^{T}R^{T},$$
 </center>
-are optimized. The scaling is stored in a 3D vector $$s$$ and the rotation matrix is stored in a quaterionr $$q$$ during optimization.
+are optimized. The scaling is stored in a 3D vector $$s$$ and the rotation is stored in a quaternion $$q$$ during optimization.
+
+<img src="{{ '/assets/images/09/3dgs_framework.png' | relative_url }}" 
+     style="width: 100%;">
+*Fig 1. The 3D Gaussian Splatting Framework. The 3D Gaussians are initialized with SfM and repeatedly updated by rendering the training views, comparing them to the ground truth, and applying Stochastic Gradient Descent.*
+
 
 ##### Optimization with Adaptive Density Control of 3D Gaussians
 
-In addition to the position $$p$$, opacity $$\alpha$$ and covariance $$\Sigma$$ of each 3D Gaussian, Spherical Harmonic (SH) coefficients that capture the view-dependent color of each Gaussian are optimized. During the optimization algorithm, the 3D Gaussians are rendered with alpha-blending at each iteration. They are then compared to the training views, and the parameters of the scene are updated through backpropogation with Stochastic Gradient Descent.
-
-The sparse pointcloud from SfM is used to initialize the centers of the Gaussians. Gaussians with opacity below a certain threshold that are essentially transparent are removed every 100 iterations. Additionally, to allow the amount of scene covered by the Gaussians to expand, a densify operation is performed every 100 iterations. This involves two strategies. First, in regions missing geometric features, small Gaussians are cloned to expand the scene geometry covered in this region. secondly, in regions with Gaussians that are too large to represent its high variance, the large Gaussians are split into smaller Gaussians. To handle "floaters", which are Gaussians close to the camera that not correspond to scene geometry, the opacity of the Gaussians is set close to $$0$$ every 3000 iterations. The optimization then increases the opacity of Gaussians where necessary, but keeps the opacity of the floaters low. The operation that deletes with low opacity every 100 iterations then removes them.
+In addition to the position $$p$$, opacity $$\alpha$$ and covariance $$\Sigma$$ of each 3D Gaussian, Spherical Harmonic (SH) coefficients that capture the view-dependent color of each Gaussian are optimized. During the optimization algorithm, the 3D Gaussians are rendered with alpha-blending at each iteration. They are then compared to the training views, and the parameters of the scene are updated through backpropagation with Stochastic Gradient Descent. The sparse pointcloud from SfM is used to initialize the centers of the Gaussians. Gaussians with opacity below a certain threshold that are essentially transparent are removed every 100 iterations. Additionally, to allow the amount of scene covered by the Gaussians to expand, a densify operation is performed every 100 iterations. This involves two strategies. First, small Gaussians in regions not adequately covered are cloned to expand the scene geometry covered. Secondly, in regions with Gaussians that are too large to represent its high variance, the large Gaussians are split into smaller Gaussians. To handle "floaters", which are Gaussians close to the camera that do not correspond to scene geometry, the opacity of the Gaussians is set close to $$0$$ every 3000 iterations. The optimization then increases the opacity of Gaussians where necessary, but keeps the opacity of the floaters low. The operation that deletes with low opacity every 100 iterations then removes them.
 
 ##### Fast Differentiable Rasterization
 
-To allow fast rendering of the 3D Gaussians, a custom tile-based render is used. The screen is first divided into 16x16 tiles. Gaussians outside of the view frustum or at extreme positions are removed. Since Gaussians may overlap with multiple tiles, an instance of each Gaussian is created for every tile it touches. Each instance is then assigned a key, which combines its depth in the view space with its tile ID. The instances are then sorted with a single GPU Radix sort by their depth. A list of the Gaussians for each tile is generated. During rasterization, a thread block is launched for each tile. For every pixel in the tile, the block traverses the list, accumulating the color and $\alpha$ values and stopping once a sufficiently high cumulative $$\alpha$$ has been reached. 
+To allow fast rendering of the 3D Gaussians, a custom tile-based renderer is used. The screen is first divided into 16x16 tiles. Gaussians outside of the view frustum or at extreme positions are removed. Since Gaussians may overlap with multiple tiles, an instance of each Gaussian is created for every tile it touches. Each instance is then assigned a key, which combines its depth in the view space with its tile ID. The instances are then sorted with a single GPU Radix sort by their depth. A list of the Gaussians for each tile is generated. During rasterization, a thread block is launched for each tile. For every pixel in the tile, the block traverses the list, accumulating the color and $$\alpha$$ values and stopping once a sufficiently high cumulative opacity has been reached. 
 
 #### Results
 
-The rendering quality of 3D Gaussian Splatting is comparable to those of work before it. However, its training time is much faster. The paper notes that Mip-NeRF360, at the time a state of the art method, took on average 48 hours to optimize a scene and rendered at 0.1 FPS, while 3DGS took on average 35-45 minutes, and rendered at over 130 FPS. 
+<img src="{{ '/assets/images/09/3dgs.png' | relative_url }}" 
+     style="width: 100%;">
+*Fig 2. 3D Gaussian Splatting greatly outperforms previous work in terms of training optimization and rendering speed.*
 
-#### Discussions
+The rendering quality of 3D Gaussian Splatting is comparable to those of work before it. However, its training time is much faster. The paper notes that Mip-NeRF360 [10], at the time a state of the art method, took on average 48 hours to optimize a scene and rendered at 0.1 FPS during evaluation, while 3DGS took on average 35-45 minutes, and rendered at over 130 FPS. 
 
-3D Gaussian Splatting is a landmark paper in novel view synthesis. While it represented a significant step forward from NeRF because of its real-time rendering, its explicit representation has also been useful for future work, which has associated attributes beyond those used for rendering, such as semantic information and motion, with the Gaussians.  
+#### Discussion
+
+3D Gaussian Splatting is a landmark paper in novel view synthesis. While it represented a significant step forward from NeRF because of its real-time rendering, its explicit representation has also been useful for future work, which has associated attributes beyond those used for rendering, such as semantic information [11] and motion [12], with the Gaussians.  
  
 ### <u>LVSM: A Large View Synthesis Model With Minimal 3D Inductive Bias</u>
 
 Most existing novel view synthesis methods rely on explicit 3D scene representations, such as NeRF-style volumetric fields [5] or 3D Gaussian Splatting [6]. While effective, these approaches impose strong geometric inductive biases through predefined 3D structures and handcrafted rendering equations. LVSM proposes a fundamentally different approach by minimizing 3D inductive bias and reformulating novel view synthesis as a direct image-to-image prediction task conditioned on camera poses.
 
 #### Method
+
+<img src="{{ '/assets/images/09/lvsm.png' | relative_url }}" 
+     style="width: 100%;">
+*Fig 3. The LVSM Decoder-only and Encoder-Decoder architectures.*
 
 ##### Token-Based Representation
 
@@ -95,6 +106,10 @@ Both architectures regress RGB values using $$\hat{I}^t_j = \text{Sigmoid}(\text
 
 #### Results
 
+<img src="{{ '/assets/images/09/lvsm_qual.png' | relative_url }}" 
+     style="width: 400px; max-width: 100%;">
+*Fig 4. A qualitative comparison between LVSM and GS-LRM on single and multi-view image input.*
+
 LVSM achieves state-of-the-art performance on object-level (ABO, GSO) and scene-level (RealEstate10K) datasets, improving PSNR by 1.5–3.5 dB over GS-LRM [2], particularly excelling on specular materials, thin structures, and fine textures. The decoder-only model shows strong zero-shot generalization: trained with four views, it continues improving up to sixteen views. Conversely, the encoder-decoder model plateaus beyond eight views due to its fixed latent representation. Notably, even small LVSM models trained on limited resources outperform prior methods.
 
 #### Discussion
@@ -109,21 +124,20 @@ Overall, LVSM demonstrates that learned representations without structural const
 
 The dominant paradigm in studies on novel view synthesis has been to train models on datasets with COLMAP [3] annotations. However, there are several notable drawbacks to this approach. COLMAP is slow, struggles in sparse-view and dynamic scenarios and may produce noisy annotations. RayZer introduces a groundbreaking new approach to novel view synthesis that is entirely self-supervised (e.g. it does not use any camera pose annotations during training or testing) and thus avoids COLMAP entirely.
 
-Along with SRT [4] and LVSM [1], RayZer falls into the group of novel view synthesis methods employing a purely learned latent scene representation and a neural network to render it. This is in contrast to most state-of-the-art methods, which primarily rely on NeRF [5] or 3D Gaussian [6] Representations. These two techniques carry a strong inductive bias through their use of volumetric rendering.
+Along with SRT [4] and LVSM [1], RayZer falls into the group of novel view synthesis methods employing a purely learned latent scene representation and a neural network to render it. This is in contrast to most state-of-the-art methods, which primarily rely on NeRF [5] or 3D Gaussian [6] representations. These two techniques carry a strong inductive bias through their use of volumetric rendering.
  
 #### Method
 
 ##### Self-Supervised Learning
-RayZer is a self-supervised method that takes in a set of unposed multiview images and outputs geometric and positional information (e.g camera poses and camera intrinsics), as well as the latent scene representation. The input images are split into two subsets $$I_A$$ and $$I_B$$. $$I_A$$ is used to predict the scene representation, and $$I_B$$ supervises this prediction by producing a loss between the predicted renders of the scene representation from $$I_B$$ and the ground truth. 
 
-<div style="text-align: center;"> 
-![YOLO]({{ '/assets/images/9/RAYZER.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. The RayZer framework consists of three stages: Camera Estimation, Latent Scene Reconstruction and Rendering
-</div>
+<img src="{{ '/assets/images/09/rayzer.png' | relative_url }}" 
+     style="width: 100%;">
+*Fig 5. RayZer first predicts camera parameters, then generates a latent scene representation and finally renders novel views.*
 
+RayZer is a self-supervised method that takes in a set of unposed, multiview images and outputs camera poses and camera intrinsics, as well as the latent scene representation. The input images are split into two subsets, $$I_A$$ and $$I_B$$. $$I_A$$ is used to predict the scene representation, and $$I_B$$ supervises this prediction by producing a loss between the predicted renders of the scene representation corresponding to the predicted camera poses of $$I_B$$ and the ground truth.
+ 
 ##### Camera Estimation
-RayZer first patchifies the image and converts the patches into tokens with a linear layer. Both intra-frame spatial positional encodings and inter-frame image index positional encodings are employed. To predict the pose of each camera (with respect to a chosen canonical view), RayZer allows information to flow from the image tokens to camera tokens, one for each image, by integrating both of them into a transformer, and then decodes them with an MLP. Specifically, the camera tokens are initialized with a learnable value $$\mathbb{R}^{1 \times d}$$. An image index positional encoding is added to them to inform the model which image each camera token corresponds to. The camera estimator consists of several full self-attention layers. Each layer can be written like so: 
+RayZer first patchifies the image and converts the patches into tokens with a linear layer. Both intra-frame spatial positional encodings and inter-frame image index positional encodings are employed. To predict the pose of each camera (with respect to a chosen canonical view), RayZer allows information to flow from the image tokens to camera tokens, with one camera token for each image, by integrating both of them into a transformer, and then decodes them with an MLP. Specifically, the camera tokens are initialized with a learnable value in $$\mathbb{R}^{1 \times d}$$. An image index positional encoding is added to them to inform the model which image each camera token corresponds to. The camera estimator consists of several full self-attention layers. Each layer can be written like so: 
 <center>
 $$
 y^0 = \{f, p\}
@@ -135,7 +149,7 @@ $$
 \{f^{*}, p^{*} \} = \text{split}(y^{l_T}) 
 $$
 </center>
-The first equation describes how the the state $$y$$ is initialized as the concatenation of $$f$$, the initial image tokens, and $$p$$, the intial camera tokens. The second equation describes the how $$y$$ is repeatedly updated by passing it through a self-attention transformer layer. The third equation describes how $$f^{*}$$ and $$p^{*}$$ are extracted from the final $$y$$ value, $$y^{l_T}$$.
+The first equation describes how the state $$y$$ is initialized as the concatenation of $$f$$, the initial image tokens, and $$p$$, the initial camera tokens. The second equation describes how $$y$$ is repeatedly updated by passing it through a self-attention transformer layer. The third equation describes how $$f^{*}$$ and $$p^{*}$$ are extracted from the final $$y$$ value, $$y^{l_T}$$.
 
 Finally, the relative pose for each image is estimated with a MLP like so: 
 <center>
@@ -145,7 +159,7 @@ where $$p_i$$ is the camera token for image $$I_i$$ and $$p_c$$ is the camera to
 
 ##### Scene Reconstructor
 
-We can generate a Plucker Ray map [7], a common technique to represent cameras, for each image in $$A$$ by combining the predicted SE(3) pose $$P_i$$ and intrinsic matrix $$K$$ (which is derived from the predicted focal length). The Plucker ray maps are patchified and then combined with the image tokens of $$A$$ along the feature dimension using an MLP. The result of this fusing process is $$x_A$$. 
+We can generate a Plücker ray map [7] for each image in $$A$$ by combining the predicted SE(3) pose $$P_i$$ and intrinsic matrix $$K$$ (which is derived from the predicted focal length) associated with it. The Plücker ray maps are patchified and then combined with the image tokens of $$A$$ along the feature dimension using an MLP. The result of this fusing process is $$x_A$$. 
 
 In the scene reconstructor, learnable tokens representing the scene reconstruction, $$z \in \mathbb{R}^{L \times d}$$, are updated through several transformer layers along with $$x_A$$. This mechanism is identical to the one used in the camera estimation module and can be expressed as 
 
@@ -153,11 +167,11 @@ In the scene reconstructor, learnable tokens representing the scene reconstructi
 $${z^{*}, x_{A}^{*}} = {\large\epsilon}_{\text{scene}}(\{z, x_A\}).$$
 </center>
 
-$$x_A$$ is discarded at the end of the sequence and $$z^{*}$$ is the latent scene representation.
+$$z^{*}$$ is the latent scene representation. $$x_A$$ is discarded at the end of the sequence. 
 
 ##### Rendering Decoder
 
-The goal of the rendering decoder is to render the scene from novel viewpoints using the latent scene representation. The architecture is inspired by LVSM. To render a target camera, we represent the target camera as a Plucker ray map, tokenize it and use the the rule
+The goal of the rendering decoder is to render the scene from novel viewpoints using the latent scene representation. The architecture is inspired by LVSM. To render a target camera, we represent the target camera as a Plücker ray map, tokenize it and use the rule
 <center>
 $${r^{*}, z'} = D_{\text{render}}(\{r, z^{*}\})$$
 </center>   
@@ -168,12 +182,16 @@ $$\hat{I} = \text{MLP}_{\text{rgb}}(r^{*}).$$
 
 ##### Results
 
-Despite not using any ground truth camera annotations during training or testing, RayZer achieves state of the art performance. It achieves a 2.82% better PSNR, 4.70% better SSIM and 13.6% better LPIPS on the DL3DV-10K dataset [8] compared to LVSM, a leading method in novel view synthesis. The paper highlights how this may be in part due to the noisy nature of COLMAP annotations; by learning from the raw data itself, RayZer may have a higher ceiling than methods supervised by inaccurate camera pose data.
+<img src="{{ '/assets/images/09/rayzer_qual.png' | relative_url }}" 
+     style="width: 400px; max-width: 100%;">
+*Fig 6. A qualitative comparison between GS-LRM, LVSM and RayZer.*
+
+Despite not using any ground truth camera annotations during training or testing, RayZer achieves state of the art performance. It achieves a 2.82% better PSNR, 4.70% better SSIM and 13.6% better LPIPS on the DL3DV-10K dataset [8] compared to LVSM, a leading method in novel view synthesis. The paper highlights how this may be in part due to the noisy nature of COLMAP pose annotations; by avoiding using camera pose data as input, which may be inaccurate, RayZer may have a higher ceiling than methods that rely on them.
 
   
-##### Discussion
+#### Discussion
 
-Perhaps the most compelling and fascinating part about RayZer is that it is able to estimate camera poses without ever being shown ground truth camera pose data. Neural networks tend to work with high-dimensional, abstract features, and it is uncommon to see them estimate simple, understandable values withotu supervision. RayZer is in this case is guided by the dimension of the output; if the 6 DoF parametrization was never forced to be a bottleneck of information flow in the network, it would likely never adopt such a simple representation. This technique of forcing a neural network to conver its abstract, latent representation to an useful, understandable value by constraining its dimensions, almost like an autoencoder, is promising.  
+Perhaps the most compelling and fascinating part about RayZer is that it is able to estimate camera poses without ever being shown ground truth camera pose data. Neural networks tend to work with high-dimensional, abstract features, and it is uncommon to see them estimate simple, understandable values without supervision. This result shows that self-supervised methods have applications to 3D computer vision beyond being used as pre-training strategy  
 
 ### References
 
@@ -192,3 +210,11 @@ Perhaps the most compelling and fascinating part about RayZer is that it is able
 [7] Zhang, Jason Y., et al. "Cameras as rays: Pose estimation via ray diffusion." arXiv preprint arXiv:2402.14817 (2024).
 
 [8] Ling, Lu, et al. "Dl3dv-10k: A large-scale scene dataset for deep learning-based 3d vision." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024.
+
+[9] Kopanas, Georgios, et al. "Neural point catacaustics for novel-view synthesis of reflections." ACM Transactions on Graphics (TOG) 41.6 (2022): 1-15.
+
+[10] Barron, Jonathan T., et al. "Mip-nerf 360: Unbounded anti-aliased neural radiance fields." Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. 2022.
+
+[11] Zhou, Shijie, et al. "Feature 3dgs: Supercharging 3d gaussian splatting to enable distilled feature fields." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024.
+
+[12] Lin, Chenguo, et al. "MoVieS: Motion-aware 4D dynamic view synthesis in one second." arXiv preprint arXiv:2507.10065 (2025).
