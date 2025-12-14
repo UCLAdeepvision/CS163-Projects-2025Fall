@@ -17,6 +17,13 @@ date: 2025-12-12
 ## Introduction
 Human pose estimation is the computational task of detecting and localizing predefined keypoints, such as joints or landmarks, on one or more objects in images or videos. These keypoints are typically represented as 2D or 3D coordinates (e.g., [x, y] or [x, y, visibility]), often accompanied by confidence scores indicating the model’s certainty for each point. By capturing the spatial arrangement of the body parts, pose estimation enables fine-grained applications such as motion analysis, gesture recognition, animation, biomechanics, surveillance, and human-computer interaction.   
 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/print.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 1. Graphical Skeleton [1].</em></p>
+</div>
+
 The field of pose estimation has grown tremendously in the past few years, driven by advances in deep learning, the availability of large annotated datasets, and the development of flexible, production toolkits. Out of all of these, MMPose stands out as an open-source and extensible framework build on PyTorch that supports a wide array of tasks. Some of these tasks include 2D multi-person human pose estimation, hand keypoint detection, face landmarks, full-body pose estimation including body, hands, face, and feet, animal pose estimations, and so much more. 
 
 The advantages of MMPose is its comprehensive "model zoo" that includes both accuracy-oriented and real-time lightweight architectures, pertained weights on strandard datasets, and configurable pipelines for dataset loading, data augmentations, and evaluation. This versatility makes MMPose suitable for both academic research and real-world production systems, whether the task is single-person pose detection, multi-person tracking, or whole-body landmark detection. 
@@ -25,7 +32,7 @@ The advantages of MMPose is its comprehensive "model zoo" that includes both acc
   <img src="{{ '/assets/images/assets/images/905972224/map.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 1. YOLO: UMAP of datasets with root subtraction [1].</em></p>
+  <p><em>Fig 1. UMAP of datasets with root subtraction [1].</em></p>
 </div>
 
 
