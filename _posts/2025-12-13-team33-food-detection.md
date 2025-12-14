@@ -90,5 +90,7 @@ Food detection is a growing problem that has high upside in its applications. Fr
 
 [3] Martinel, Niki, Gian Luca Foresti, and Christian Micheloni. "Wide-slice residual networks for food recognition." 2018 IEEE Winter conference on applications of computer vision (WACV). IEEE, 2018.
 
-[4] Ghosh, Tonmoy, and Edward Sazonov. "Improving Food Image Recognition with Noisy Vision Transformer." arXiv preprint arXiv:2503.18997 (2025).
+[4] T. Ghosh, and E. Sazonov. "Improving Food Image Recognition with Noisy Vision Transformer." arXiv preprint arXiv:2503.18997 (2025).
+
+
 ---
