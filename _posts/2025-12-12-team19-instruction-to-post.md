@@ -55,18 +55,50 @@ $$
 
 over all geocells using the features extracted by the CNN backbone.
 
-## Translocator: A New Architecture
+## TransLocator: A New Architecture
 
 The next major advancement in tackling geolocation as a classification problem is introduced in the paper *Where in the World is this Image?
 Transformer-based Geo-localization in the Wild*. The paper proposes TransLocator, a fundamentally different model architecture to PlaNet that makes use of transformers and semantic segmentation maps [2].
 
 ### Transformers + Segmentaion
 
-The Translocator uses a vision transformer as the backbone of the model, and contains two parallel vision transformer branches. One branch's input is the RGB image, and the other's is a semantic segmentation map of the image, obtained from  HRNet pretrained on ADE20K.
+The TransLocator uses a vision transformer (ViT) as the backbone of the model, and contains two parallel ViT branches. One branch's input is the RGB image, and the other's is a semantic segmentation map of the image, obtained from HRNet pretrained on ADE20K.
 
-![Translocator]({{ '/assets/images/team19/translocator.png' | relative_url }})
+![TransLocator]({{ '/assets/images/team19/translocator.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig 2. Overview of the proposed model TransLocator* [2].
+
+Both the RGB image and segmentation map are first divided into 16x16 pixel patches and passed into a trainable linear layer to create a sequence of tokens with added positional embeddings and a CLS token. Then, the token sequences are passed into two parallel 12-layer transformer encoders which interact with each other through Multimodal Feature Fusion (MFF). In MFF, after each layer, the CLS tokens from each branch are summed together before being passed back into the patch tokens of subsequent layers. After passing through all 12-layers, the representations from each branch are combined together using an attentive fusion mechanism called global attention. The final representation is then fed into 4 parallel classifier heads, where 3 of them predict the image's location at 3 different resolutions (coarse, middle, fine) and 1 of them predicts the image's scene category (e.g. indoor, urban, rural). Cross-entropy loss is used for each head, and the model is trained end to end with a weighted sum of losses from each of the four heads as follows: 
+
+$$
+\mathcal{L}_{total}=(1-\alpha-\beta)\mathcal{L}_{geo}^{coarse}+\alpha\mathcal{L}_{geo}^{middle}+\beta\mathcal{L}_{geo}^{fine}+\gamma\mathcal{L}_{scene}
+$$
+
+This approach of adding complementary tasks (coarse and middle resolution prediction, scene prediction) to the main task (fine resolution prediction) has been known to improve the results of the main task [2].
+
+### Comparison to PlaNet
+
+The backbone of the PlaNet model, as mentioned earlier, utilizes the *Inception V3*, a CNN based architecture with fixed receptor field sizes. The authors argue that in the TransLocator, the self attention mechanism in the ViT layers gives TransLocator the ability to aggregate information from the entire image, allowing it to learn small but essential visual cues often missed by CNNs. PlaNet also trains on geo-tagged RGB images alone, while TransLocator's additional semantic approach allows it to be more robust to extreme differences in appearance not necessarily caused by location (e.g. weather or time of day). These theoretical improvements are backed up by the clear outperformance of PlaNet by TransLocator across every dataset and distance scale [2].
+
+| Dataset | Method | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2500 km) |
+| :--- | :----: | ---: | ---: | ---: | ---: | ---: |
+| **Im2GPS** | PlaNet | 8.4% | 24.5% | 37.6% | 53.6% | 71.3% |
+| **Im2GPS** | TransLocator | **19.9%** | **48.1%** | **64.6%** | **75.6%** | **86.7%** |
+| **Im2GPS3k** | PlaNet | 8.5% | 24.8% | 34.3% | 48.4% | 64.6% |
+| **Im2GPS3k** | TransLocator | **11.8%** | **31.1%** | **46.7%** | **58.9%** | **80.1%** |
+| **YFCC4k** | PlaNet | 5.6% | 14.3% | 22.2% | 36.4% | 55.8% |
+| **YFCC4k** | TransLocator | **8.4%** | **18.6%** | **27.0%** | **41.1%** | **60.4%** |
+| **YFCC26k** | PlaNet | 4.4% | 11.0% | 16.9% | 28.5% | 47.7% |
+| **YFCC26k** | TransLocator | **7.2%** | **17.8%** | **28.0%** | **41.3%** | **60.6%** |
+*Table 1. Geolocational accuracy of PlaNet vs TransLocator compared to several datasets and distance scales* [2].
+
+### Persisting Limitations
+
+Upon analyzing the errors made by TransLocator, the authors found that the model could not properly locate images without enough geo-locating clues. For example, images of just a cherry blossom tree were not accurately located by TransLocator, as there are many major locations around the world where cherry blossom trees reside. Likewise, images without sufficient background clues, such as plain beaches or desserts, cannot be consistently accurately predicted [2].
+
+![TransLocator Error Examples]({{ '/assets/images/team19/translocator_errors.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+*Fig 6. Some examples of incorrectly geo-located images* [2].
 
 ## PIGEON: The Semantic Shift (2023)
 
