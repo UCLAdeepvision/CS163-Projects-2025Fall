@@ -21,7 +21,7 @@ The field of pose estimation has grown tremendously in the past few years, drive
 
 The advantages of MMPose is its comprehensive "model zoo" that includes both accuracy-oriented and real-time lightweight architectures, pertained weights on strandard datasets, and configurable pipelines for dataset loading, data augmentations, and evaluation. This versatility makes MMPose suitable for both academic research and real-world production systems, whether the task is single-person pose detection, multi-person tracking, or whole-body landmark detection. 
 
-![MAP]({{ '/assets/images/905972224/map.png' | relative_url }})
+![MAP]({{ '/assets/images/assets/images/905972224/map.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
 *Fig 1. MAP: UMAP of datasets with root subtraction* [1].
 
