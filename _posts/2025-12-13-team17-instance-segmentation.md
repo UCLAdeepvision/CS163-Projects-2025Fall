@@ -8,25 +8,9 @@ date: 2025-12-13
 
 > Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for point cloud instance segmentation in this paper report.
 
-
-- [Table of Contents](#table-of-contents)
-- [Introduction](#introduction)
-- [Segment Anything Model](#segment-anything-model)
-  - [Historical Context and Motivation](#historical-context-and-motivation)
-  - [SAM Architecture](#sam-architecture)
-  - [SAM2: Memory-Augmented Video Segmentation](#sam2-memory-augmented-video-segmentation)
-  - [SAM3: Structured Relational Reasoning via PCS and PVS](#sam3-structured-relational-reasoning-via-pcs-and-pvs)
-- [All in One: Mask2Former](#all-in-one-mask2former)
-  - [Unified Segmentation Architecture](#unified-segmentation-architecture)
-  - [Masked Attention Mechanism](#masked-attention-mechanism)
-  - [Performance and Significance](#performance-and-significance)
-- [New Frontiers in Instance Segmentation: Relation3D](#new-frontiers-in-instance-segmentation-relation3d)
-  - [Better Scene Features (ASAM & CLSR)](#better-scene-features-asam--clsr)
-  - [Improved Query Interactions with Relation-Aware Self-Attention (RSA)](#improved-query-interactions-with-relation-aware-self-attention-rsa)
-- [Conclusion](#conclusion)
-- [References](#references)
-
-
+{: class="table-of-content"}
+* TOC
+{:toc}
 
 ## Introduction
 Instance segmentation is a core computer vision task that separates each individual object in an image at the pixel level. In a sense, this computer vision task combines the problems of object detection, where the model identifies all the objects in an image, and semantic segmentation, where the model detects the pixels that belong to each object. Due to instance segmentation outlining every distinct object in an image, it is useful for a model to gain a deeper visual understanding of a complex scene. This makes it particularly essential for applications like self-driving cars, medical imaging, and robotics. 
@@ -37,9 +21,9 @@ Recent advances in deep learning have substantially influenced the landscape of 
 
 ## Segment Anything Model
 
-# Historical Context and Motivation
+### Historical Context and Motivation
 The development of the Segment Anything Model (SAM) by Meta can be traced back to the company’s origins in 2004, when it was still known as Facebook. As a social media platform, Facebook rapidly evolved into one of the world’s largest repositories of visual data. This rapidly motivated early investment in computer vision, through applications such as automated photo tagging and content moderation, and later through more advanced machine learning systems. By the mid-2010s, the establishment of Facebook AI Research (FAIR) marked a shift toward foundational AI research, with FAIR becoming a leading contributor to advances in self-supervised learning, computer vision, and large-scale deep learning. After Facebook’s rebrand to Meta in 2021, the company’s long-term vision expanded toward spatial computing, AR/VR systems in the form of Meta glasses, increasing the demand for models capable of robustly understanding objects, scenes, and their interactions in the physical world. Soon, Meta introduced the Segment Anything Model (SAM) as a new model for image segmentation.
-# SAM Architecture
+### SAM Architecture
 SAM uses an encoder-decoder framework with separation between image encoding, prompt encoding, and mask decoding, enabling efficient reuse of image features across multiple segmentation queries. Essentially, SAM is a Vision Transformer (ViT) image encoder, which processes an input image $$I \in \mathbb{R}^{H \times W \times 3} $$ into a dense latent representation $$ E_I \in \mathbb{R}^{N \times D}$$, where $$N$$ is the number of image tokens and $$D$$ the embedding dimension. With multi-head self-attention, the ViT captures long-range spatial dependencies, and allows SAM to model global context beyond local receptive fields from convolutional networks. SAM is pretrained on a large corpus of image–mask pairs and leverages masked autoencoding and self-supervised learning objectives to learn robust visual representations [1]. This allows for SAM to achieve strong generalization for many different objects and stronger reliability, from its trained inputs.
 User interaction is added via a prompt encoder, which embeds sparse and dense prompts into the same latent space as the image embeddings. Sparse prompts with small pieces of information, including background and foreground points, are encoded using positional embeddings and lightweight MLPs, while dense prompts, like low-resolution masks of objects, are embedded using convolutional layers. These influence the segmentation process while leaving the image encoder unchanged.
 
@@ -50,7 +34,7 @@ The mask decoder is implemented as a lightweight transformer that performs cross
 $$M = \text{Decoder}(E_I, E_P)$$  
 where $$E_P$$​ is the encoded prompts and $$M$$ represents the predicted binary masks. By separating image encoding from prompt-based decoding, SAM stays computationally efficient while handling a wide range of segmentation tasks.
 Despite its strong generalization capabilities, SAM primarily models segmentation as an appearance-driven, prompt-conditioned task. Interactions between multiple instances are handled implicitly through attention over image tokens, without needing to enforce explicit relational or structural constraints. This limitation can result in overlapping or redundant masks in complex scenes, motivating subsequent extensions.
-# SAM2: Memory-Augmented Video Segmentation
+### SAM2: Memory-Augmented Video Segmentation
 
 ![YOLO]({{ '/assets/images/17/Figure3.png' | relative_url }})
 Fig 2. SAM 2 Overview
@@ -58,7 +42,7 @@ Fig 2. SAM 2 Overview
 To address temporal consistency, SAM2 expands the original architecture to video and sequential data by introducing a memory-augmented segmentation framework. This stores and recalls features from previous time stamps to allow the model to maintain context and ensure consistent object segmentation across sequences. While keeping the same image encoder, prompt encoder, and mask decoder, SAM2 adds a temporal memory bank that stores embeddings, predicted masks, and object identity information from previous frames [2]. While inferring frames, the decoder simultaneously focuses on the current frame’s image embeddings and relevant memory entries, enabling information to propagate across time. For a frame at time tt, mask prediction can be written as:
 $$M_t=\text{Decoder}(E_{I_t},E_{P_t},M_{t−1})$$
 where $$M_{t−1}$$​ denotes stored memory from prior frames. This design enhances resilience to occlusion, motion, and changes in appearance, all while preserving amortized efficiency. However, SAM2’s relational reasoning is primarily temporal and does not explicitly model spatial relationships between multiple instances within a single frame.
-# SAM3: Structured Relational Reasoning via PCS and PVS
+### SAM3: Structured Relational Reasoning via PCS and PVS
 
 ![YOLO]({{ '/assets/images/17/Figure4.png' | relative_url }})
 Fig 3. Illustration of supported initial and optional interactive refinement prompts in the PCS task
@@ -73,15 +57,15 @@ As instance segmentation research has progressed from object-proposal based appr
 ![YOLO]({{ '/assets/images/17/Figure5.png' | relative_url }})
 Fig 4: Comparison of semantic, instance, and panoptic segmentation tasks, motivating a unified segmentation formulation [4]. 
 
-# Unified Segmentation Architecture 
+### Unified Segmentation Architecture 
 ![YOLO]({{ '/assets/images/17/Figure6.png' | relative_url }})
 Fig 5: Overview of the Mask2Former meta architecture, consisting of a backbone, pixel decoder, and transformer decoder with masked attention [4]. 
 
-As shown in FIgure 5, Mask2Former consists of a backbone network, pixel decoder, and a transformer decoder operating on a fixed set of learned queries. Mask2Former formulates segmentation as a direct set prediction problem, inspired by detection transformers but adapted for dense pixel-level output [4]. Instead of relying on task specific heads or heuristics, the model predicts a fixed size set of segmentation masks and corresponding class labels. These predictions can be interpreted uniformly for semantic, instance, or panoptic segmentation. The overall meta architecture is composed of three primary components.
+As shown in Figure 5, Mask2Former consists of a backbone network, pixel decoder, and a transformer decoder operating on a fixed set of learned queries. Mask2Former formulates segmentation as a direct set prediction problem, inspired by detection transformers but adapted for dense pixel-level output [4]. Instead of relying on task specific heads or heuristics, the model predicts a fixed size set of segmentation masks and corresponding class labels. These predictions can be interpreted uniformly for semantic, instance, or panoptic segmentation. The overall meta architecture is composed of three primary components.
 a. The backbone network extracts hierarchical and multi scale feature representations from the input image. Both convolutional and transformer based backbones can be used, with Swin Transformer being a common choice due to its strong multi-scale representations.
 b. The pixel decoder aggregates features from multiple backbone stages into a unified high resolution pixel embedding. This step preserves fine spatial details while efficiently combining contextual information across scales, which is critical for accurate mask prediction.
 c. The transformer decoder operates on a fixed set of learned query embeddings. Each query represents a potential segmentation region and is iteratively refined through attention mechanisms to predict both a segmentation mask and an associated class label. This design allows the same set of queries to support all segmentation tasks without requiring architectural changes.
-## Masked Attention Mechanism
+#### Masked Attention Mechanism
 The primary contribution of Mask2Former is the introduction of masked attention within the transformer decoder [4]. In standard transformer based segmentation models, cross-attention is computed globally over all pixel features. This global attention can introduce irrelevant background information and reduce localization accuracy, particularly for small objects or complex shapes. Figure 6 contrasts standard global cross attention with the masked attention mechanism used in Mask2Former.  
 ![YOLO]({{ '/assets/images/17/Figure7.png' | relative_url }})
 Fig 6: Comparison between global cross attention (on top) and masked attention (on bottom), where attention is restricted to predicted foreground regions [4]. 
@@ -91,12 +75,12 @@ Masked attention addresses this limitation by restricting each query to attend o
 $$ X_l = \text{softmax}(M_{l-1} + Q_l K_l^\top) V_l + X_{l-1} $$
 
 $$ M_{l-1}(x, y) = \begin{cases} 0, & \text{if } \hat{M}_{l-1}(x, y) = 1 \\ -\infty, & \text{otherwise} \end{cases} $$
-Here, $$Q_l$$, $$K_l$$, and $$V_l$$ denote the query, key, and value projections at decoder layer $$l$$, and $$X_{l-1}$$ represents the residual connection from the previous layer. The mask $$M_{l-1}$$ is constructed from the predicted segmentation mask of the previous decoding stage and is added directly to the attention logits. Spatial locations outside the predicted foreground region are assigned a value of $-\infty$, effectively suppressing their contribution after the softmax operation. As a result, each query attends only to features within its predicted object region.​​
+Here, $$Q_l$$, $$K_l$$, and $$V_l$$ denote the query, key, and value projections at decoder layer $$l$$, and $$X_{l-1}$$ represents the residual connection from the previous layer. The mask $$M_{l-1}$$ is constructed from the predicted segmentation mask of the previous decoding stage and is added directly to the attention logits. Spatial locations outside the predicted foreground region are assigned a value of $$-\infty$$, effectively suppressing their contribution after the softmax operation. As a result, each query attends only to features within its predicted object region.​​
 By constraining attention in this way, the model achieves two important benefits.
 First, masked attention encourages localized feature extraction. Each query focuses on features within its predicted foreground region, enabling the model to learn more discriminative and object specific representations. This results in faster convergence and improved segmentation accuracy.
 Next, masked attention improves computational efficiency by avoiding unnecessary attention computations over background regions. This reduction in redundant computation leads to more efficient training and inference compared to fully global attention.
 Mask2Former further incorporates several complementary design choices that contribute to its strong performance. These include the use of multi scale features in a round robin manner across decoder layers and a point based sampling strategy for mask loss computation [4]. The latter significantly reduces GPU memory usage during training while maintaining segmentation accuracy. 
-# Performance and Significance 
+### Performance and Significance 
 By combining masked attention with a unified set prediction formulation, Mask2Former becomes the first segmentation model to consistently outperform specialized task specific architectures across semantic, instance, and panoptic segmentation benchmarks. Its success demonstrates that a unified, query based approach can exceed the performance of fragmented pipelines designed for individual tasks. As a result, Mask2Former has established an influential framework for subsequent transformer based segmentation research and has reinforced the viability of universal segmentation architectures.
 
 
@@ -110,25 +94,31 @@ Relation3D is a new architecture proposed in a titular CVPR 2025 paper that aims
 ![YOLO]({{ '/assets/images/17/Figure8.png' | relative_url }})
 Fig 7. The overall framework of Relation3D, along with the proposed adaptive Superpoint Aggregation Module and Relation-aware self-attention mechanism [5].
 
-# Better Scene Features (ASAM & CLSR)
+### Better Scene Features (ASAM & CLSR)
 First, we reevaluate traditional aggregation methods of point clouds into “superpoints,” which usually use simple pooling that ends up blurring out important details or mistakenly incorporating noise into the reduced point cloud space. The new proposed Adaptive Superpoint Aggregation Module (ASAM) in Relation3D calculates adaptive weights for each point within a group, comparing with the pooled max and mean to learn weights that emphasize edges and corners [5].
 
 Then a Contrastive Learning-guided Superpoint Refinement (CLSR) module is employed to act as a dual path loop for superpoint features and query features to interact with each other and update their information, improving superpoint features’ consistency within object instances and the differences between features of different instances. This process is guided using a contrastive loss function:
 
 $$L_{cont} = BCE\left(\frac{\mathcal{S}+1}{2}, R_{super}^{GT}\right)$$
 
-where $\mathcal{S}$ is a similarity matrix of superpoint features and $R_{super}^{GT}$
+where $$\mathcal{S}$$ is a similarity matrix of superpoint features and $$R_{super}^{GT}$$
 is ground truth relation matrix from instance annotations.
 
 ![YOLO]({{ '/assets/images/17/Figure9.png' | relative_url }})
 Fig 8. Visualization of weights in the adaptive superpoint aggregation module [5].
 
-# Improved Query Interactions with Relation-Aware Self-Attention (RSA)
+### Improved Query Interactions with Relation-Aware Self-Attention (RSA)
 Typical self-attention mechanisms rely on position embeddings that often lack concrete spatial meaning. The proposed RSA injects explicit geometric priors into the attention mechanism to accelerate convergence and improve accuracy [5].
 - Geometric Priors: The model calculates the bounding box for each query's predicted mask (center $$x,y,z$$ and scale $$l,w,h$$)20.
-- Relative Relationships: It computes explicit relationships between two queries $$i$$ and $$j$$. For example, the positional relationship is defined as:$$\text{Pos}_{rel} = \left[ \log\left(\frac{|x_i - x_j|}{l_i} + 1\right), \dots \right]$$Similar log-ratios are calculated for geometric scales (length, width, height)
+- Relative Relationships: It computes explicit relationships between two queries $$i$$ and $$j$$. For example, the positional relationship is defined as:
+
+$$\text{Pos}_{rel} = \left[ \log\left(\frac{|x_i - x_j|}{l_i} + 1\right), \dots \right]$$
+
+Similar log-ratios are calculated for geometric scales (length, width, height)
 - Attention Mechanism: These relationships form an embedding $$R_q$$ that is injected directly into the self-attention calculation:
+
 $$RSA(Q) = \text{Softmax}\left(\frac{\mathcal{Q}\mathcal{K}^T}{\sqrt{d}} + R_q\right)\mathcal{V}$$
+
 This allows the model to learn and attend to physical proximity and geometric similarity, in addition to just semantic similarity. 
 ![YOLO]({{ '/assets/images/17/Figure10.png' | relative_url }})
 Fig 9. Attention maps for traditional self-attention vs. relation-aware self-attention, attention weight distributions for traditional self-attention vs. relation-aware self-attention, and effect of RSA on instance segmentation from bbox queries [5].
