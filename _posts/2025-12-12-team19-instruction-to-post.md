@@ -7,9 +7,7 @@ date: 2025-12-12
 ---
 
 
-## Abstract
-
-Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator (2022), which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN (2024), a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.
+> Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator (2022), which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN (2024), a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.
 
 <!--more-->
 {: class="table-of-content"}
@@ -151,14 +149,25 @@ PIGEON utilizes *CLIP (Contrastive Language-Image Pre-training)* from OpenAI as 
 ### Results
 After several other finetuning features discussed in the paper but not here, *PIGEON* achieved landmark results and near pefect accuracy on country and continent classification:
 
-![Pigeon Diagram]({{ '/assets/images/team19/pigeon_results.png' | relative_url }}) 
-{: style="width: 800px; max-width: 100%;"}
-*Fig 6. PIGEON Model results on a holdout dataset of 5,000 Street View locations.*
+| Ablation Configuration | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2,500 km) |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| *`PIGEON (Full Model)`* | *`5.36`* | *`40.36`* | 78.28 | 94.52 | *`98.56`* |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| - Freezing Last CLIP Layer | 4.84 | 39.86 | *`78.98`* | 94.76 | 98.48 |
+| - Hierarchical Refinement | 1.32 | 34.96 | 78.48 | *`94.82`* | 98.48 |
+| - Contrastive Pretraining | 1.24 | 34.54 | 76.36 | 93.36 | 97.94 |
+| - Semantic Geocells | 1.18 | 33.22 | 75.42 | 93.42 | 98.16 |
+| - Multi-task Prediction | 1.10 | 32.74 | 75.14 | 93.00 | 97.98 |
+| - Fine-tuning Last Layer | 1.10 | 32.50 | 75.32 | 92.92 | 98.00 |
+| - Four-image Panorama | 0.92 | 24.18 | 59.04 | 82.84 | 92.76 |
+| - Haversine Smoothing | 1.28 | 24.08 | 55.38 | 80.20 | 92.00 |
+
+*Table 2. PIGEON Model results on a holdout dataset of 5,000 Street View locations [3]. *
 
 While some may call the above results unimpressive, they then compare PIGEON's results to ranked players on GeoGuessr to more fairly contextualize results:
 ![GeoGuessr Context]({{ '/assets/images/team19/geoguessr_context.png' | relative_url }}) 
 {: style="width: 800px; max-width: 100%;"}
-*Fig 7. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.*
+*Fig 6. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.*
 
 ## ETHAN (2024)
 
@@ -229,9 +238,23 @@ To calculate coordinates form textual reasoning, ETHAN employs several strategie
 
 ### Results
 
-![Ethan Results]({{ '/assets/images/team19/ethan_results.png' | relative_url }})
-{: style="width: 800px; max-width: 100%;"}
-*Fig 8. Results of ETHAN Prompting framework with SOTA LVLMs on custom dataset[4].*
+| Method | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2,500 km) | Avg Dist (km) | Avg Score |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| StreetClip | 4.9 | 39.5 | *`77.8`* | *`93.0`* | 97.5 | 120.5 | 3500.0 |
+| GeoClip | 3.6 | 38.4 | 75.2 | 92.4 | 97.2 | 135.2 | 3700.0 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| GPT-4o (Zero-shot) | 5.5 | 40.8 | 71.0 | 85.0 | 93.0 | 160.3 | 3800.0 |
+| GPT-4o (Few-shot) | 6.2 | 41.5 | 72.5 | 86.5 | 94.5 | 155.0 | 3900.0 |
+| GPT-4o (CoT) | 6.0 | 42.0 | 73.0 | 87.0 | 95.0 | 150.7 | 4000.0 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| LLaVA (Zero-shot) | 7.0 | 43.2 | 74.0 | 88.0 | 96.0 | 140.7 | 4100.0 |
+| LLaVA (Few-shot) | 6.5 | 42.8 | 74.5 | 89.5 | 97.5 | 137.5 | 4200.0 |
+| LLaVA (CoT) | 7.2 | 44.5 | 76.0 | 90.0 | 98.0 | 135.2 | 4300.0 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| GeoSpy | 25.5 | 53.7 | 74.1 | 89.4 | 98.3 | 110.3 | 4400.0 |
+| *`ETHAN`* | *`27.0`* | *`55.0`* | 75.5 | 91.2 | *`99.0`* | *`105.0`* | *`4600.0`* |
+
+*Table 3. Results of ETHAN Prompting framework with SOTA LVLMs on custom dataset[4].*
 
 
 ETHAN performs strongly, with high accuracy in country and continent classification, on par with Pigeon. As compared to previous strategies, ETHAN benefits from increased interpretability, zero-shot generalization, but has higher computational costs as VLM inference is slower. Additionally, it can suffer from hallucination risks where generative model recognizes non-existent models or applies incorrect assumptions.
