@@ -413,6 +413,15 @@ Here, L_seg denotes the primary segmentation loss from before, implemented as a 
 | bicycle     | 0.0010 |
 
 mIoU: 0.3817
+
+![Boundary-aware training graph]({{ '/assets/images/44/boundary_graph.png' | relative_url }})
+*Training and validation metrics for the boundary-aware model.*
+
+Note that the validation graph indicates optimization instability with its mild fluctuations.
+
+![Boundary-aware segmentation results]({{ '/assets/images/44/boundary.png' | relative_url }})
+*Sample segmentation outputs from the boundary-aware model showing improved boundary preservation.*
+
 The boundary-aware model improves overall performance, increasing mIoU from **0.3592** (DeepLabv3 baseline) to **0.3817**. The largest gains occur for boundary-sensitive classes, most notably **pole**, which improves from **0.0105** to **0.2958**, demonstrating the effectiveness of explicit boundary supervision for thin structures. Improvements are also observed for **vegetation** (0.6153 → 0.7590), **car** (0.7371 → 0.8043), and **person** (0.4454 → 0.4829). Note that our additions seemed to improve for large objects as well, 
 
 Performance on **motorcycle** remains largely unchanged, while **bicycle** exhibits a decrease in IoU. This suggests that although boundary supervision improves localization, it may overemphasize edges for extremely sparse objects without sufficiently reinforcing interior regions. Overall, these results validate boundary-aware auxiliary supervision as an effective and lightweight improvement over the baseline, particularly for thin and boundary-sensitive classes.
