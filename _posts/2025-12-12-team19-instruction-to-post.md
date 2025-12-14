@@ -149,7 +149,7 @@ PIGEON utilizes *CLIP (Contrastive Language-Image Pre-training)* from OpenAI as 
 ### Results
 After several other finetuning features discussed in the paper but not here, *PIGEON* achieved landmark results and near pefect accuracy on country and continent classification:
 
-| Ablation Configuration | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2,500 km) |
+| Ablation Configuration [Distance (% @ km)] | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2,500 km) |
 | :--- | ---: | ---: | ---: | ---: | ---: |
 | *`PIGEON (Full Model)`* | *`5.36`* | *`40.36`* | 78.28 | 94.52 | *`98.56`* |
 | :--- | ---: | ---: | ---: | ---: | ---: |
@@ -243,13 +243,15 @@ To calculate coordinates form textual reasoning, ETHAN employs several strategie
 | StreetClip | 4.9 | 39.5 | *`77.8`* | *`93.0`* | 97.5 | 120.5 | 3500.0 |
 | GeoClip | 3.6 | 38.4 | 75.2 | 92.4 | 97.2 | 135.2 | 3700.0 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| GPT-4o (Zero-shot) | 5.5 | 40.8 | 71.0 | 85.0 | 93.0 | 160.3 | 3800.0 |
-| GPT-4o (Few-shot) | 6.2 | 41.5 | 72.5 | 86.5 | 94.5 | 155.0 | 3900.0 |
-| GPT-4o (CoT) | 6.0 | 42.0 | 73.0 | 87.0 | 95.0 | 150.7 | 4000.0 |
+| *`-GPT4o-`* | | | | | | | |
+| Zero-shot | 5.5 | 40.8 | 71.0 | 85.0 | 93.0 | 160.3 | 3800.0 |
+| Few-shot | 6.2 | 41.5 | 72.5 | 86.5 | 94.5 | 155.0 | 3900.0 |
+| CoT | 6.0 | 42.0 | 73.0 | 87.0 | 95.0 | 150.7 | 4000.0 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| LLaVA (Zero-shot) | 7.0 | 43.2 | 74.0 | 88.0 | 96.0 | 140.7 | 4100.0 |
-| LLaVA (Few-shot) | 6.5 | 42.8 | 74.5 | 89.5 | 97.5 | 137.5 | 4200.0 |
-| LLaVA (CoT) | 7.2 | 44.5 | 76.0 | 90.0 | 98.0 | 135.2 | 4300.0 |
+| *`-LLaVA-`* | | | | | | | |
+| Zero-shot | 7.0 | 43.2 | 74.0 | 88.0 | 96.0 | 140.7 | 4100.0 |
+| Few-shot | 6.5 | 42.8 | 74.5 | 89.5 | 97.5 | 137.5 | 4200.0 |
+| CoT | 7.2 | 44.5 | 76.0 | 90.0 | 98.0 | 135.2 | 4300.0 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | GeoSpy | 25.5 | 53.7 | 74.1 | 89.4 | 98.3 | 110.3 | 4400.0 |
 | *`ETHAN`* | *`27.0`* | *`55.0`* | 75.5 | 91.2 | *`99.0`* | *`105.0`* | *`4600.0`* |
