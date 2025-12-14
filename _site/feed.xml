@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T21:11:34-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
-  <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ViPE) on video datasets using quantitative performance metrics.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T21:48:37-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
+  <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ICP) on video datasets using quantitative performance metrics.</p>
 </blockquote>
 
 <!--more-->
@@ -10,6 +10,7 @@
   </li>
   <li><a href="#camera-pose-estimation-methods" id="markdown-toc-camera-pose-estimation-methods">Camera Pose Estimation Methods</a>    <ul>
       <li><a href="#colmap" id="markdown-toc-colmap">COLMAP</a></li>
+      <li><a href="#vggsfm-visual-geometry-grounded-deep-structure-from-motion" id="markdown-toc-vggsfm-visual-geometry-grounded-deep-structure-from-motion">VGGSfM (Visual Geometry Grounded Deep Structure From Motion)</a></li>
     </ul>
   </li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
@@ -27,7 +28,7 @@
 <p>Camera pose estimation has become a fundamental task in Computer Vision 
 that aims to determine the position (translation) and orientation (rotation) of a camera relative to a scene using image or extracted video data. Accurately estimating the absolute pose of a camera has widespread applications in 3D reconstruction, world models, and augmented reality.</p>
 
-<p>In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ViPE on the same dataset with a set of quantitative metrics. We describe each approach and analyze their relative strengths and limitations.</p>
+<p>In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ICP on the <a href="https://cvg.cit.tum.de/data/datasets/rgbd-dataset/download#freiburg2_metallic_sphere2">TUM RGB-D Dataset</a> of video sequences. This dataset consists of RGB and depth images with ground-truth camera trajectories. We describe each camera pose estimation methods, our choice of quantitative metrics, and analyze their relative strengths and limitations.</p>
 
 <h3 id="camera-pose-estimation">Camera Pose Estimation</h3>
 <p>For camera pose estimation, there are 3D-2D correspondences between a 3D point in the world (scene geometry) and the 2D pixel location where that point appears in the image or video frame.</p>
@@ -39,10 +40,10 @@ that aims to determine the position (translation) and orientation (rotation) of 
 </ul>
 
 <p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
-<p><em>Fig 1. Pose estimation formula</em> [1].</p>
+<p>*Fig 1. Overview of camera pose estimation. * [1].</p>
 
 <h2 id="camera-pose-estimation-methods">Camera Pose Estimation Methods</h2>
-<p>This is an overview of the camera pose methods that we are working on.</p>
+<p>Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and ICP.</p>
 
 <h3 id="colmap">COLMAP</h3>
 
@@ -79,6 +80,20 @@ https://colmap.github.io/tutorial.html</p>
 <p style="text-align: center;">
 <em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence.</em> [2].
 </p>
+
+<h3 id="vggsfm-visual-geometry-grounded-deep-structure-from-motion">VGGSfM (Visual Geometry Grounded Deep Structure From Motion)</h3>
+
+<p>VGGSfM is a fully differentiable, learning-based SfM (Structure-from-Motion) pipeline that jointly estimates camera poses and 3D scene reconstruction. Unlike classical SfM frameworks, which uses non-differentiable components and incremental reconstruction, VGGSfM is fully differentiable, and therefore can be trained end-to-end.</p>
+
+<p>The pipeline works by:</p>
+<ul>
+  <li>Extracting 2D tracks from input images</li>
+  <li>Reconstructing cameras using image and track features</li>
+  <li>Initializing a point cloud based on those tracks and camera parameters</li>
+  <li>Applies a bundle adjustment layer for reconstruction refinement</li>
+</ul>
+
+<p>https://vggsfm.github.io/</p>
 
 <!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
@@ -140,7 +155,7 @@ print (torch.__version__)
 
 <p>[1] https://www.cs.cmu.edu/~16385/s17/Slides/11.3_Pose_Estimation.pdf</p>
 
-<hr />]]></content><author><name>Group 28</name></author><summary type="html"><![CDATA[Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ViPE) on video datasets using quantitative performance metrics.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+<hr />]]></content><author><name>Group 28</name></author><summary type="html"><![CDATA[Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ICP) on video datasets using quantitative performance metrics.]]></summary></entry><entry><title type="html">Post Template</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00-08:00</published><updated>2024-01-01T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
   <p>This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
 </blockquote>
 

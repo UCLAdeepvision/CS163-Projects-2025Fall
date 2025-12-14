@@ -6,7 +6,7 @@ author: Group 28
 date: 2025-12-07
 ---
 
-> Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ViPE) on video datasets using quantitative performance metrics. 
+> Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ICP) on video datasets using quantitative performance metrics. 
 
 <!--more-->
 {: class="table-of-content"}
@@ -17,7 +17,7 @@ date: 2025-12-07
 Camera pose estimation has become a fundamental task in Computer Vision 
 that aims to determine the position (translation) and orientation (rotation) of a camera relative to a scene using image or extracted video data. Accurately estimating the absolute pose of a camera has widespread applications in 3D reconstruction, world models, and augmented reality.
 
-In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ViPE on the same dataset with a set of quantitative metrics. We describe each approach and analyze their relative strengths and limitations. 
+In this project, we are evaluating three camera pose estimation methods: COLMAP, VGGSfM, and ICP on the [TUM RGB-D Dataset](https://cvg.cit.tum.de/data/datasets/rgbd-dataset/download#freiburg2_metallic_sphere2) of video sequences. This dataset consists of RGB and depth images with ground-truth camera trajectories. We describe each camera pose estimation methods, our choice of quantitative metrics, and analyze their relative strengths and limitations. 
 
 ### Camera Pose Estimation
 For camera pose estimation, there are 3D-2D correspondences between a 3D point in the world (scene geometry) and the 2D pixel location where that point appears in the image or video frame. 
@@ -28,10 +28,10 @@ Camera pose estimation predicts the pose of a camera with these two components:
 
 ![YOLO]({{ '/assets/images/team28/pose_estimation.PNG' | relative_url }})
 {: style="width: 600px; max-width: 100%;"}
-*Fig 1. Pose estimation formula* [1].
+*Fig 1. Overview of camera pose estimation. * [1].
 
 ## Camera Pose Estimation Methods
-This is an overview of the camera pose methods that we are working on. 
+Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and ICP. 
 
 ### COLMAP
 
@@ -72,8 +72,17 @@ https://colmap.github.io/tutorial.html
 <em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence.</em> [2].
 </p>
 
+### VGGSfM (Visual Geometry Grounded Deep Structure From Motion)
 
+VGGSfM is a fully differentiable, learning-based SfM (Structure-from-Motion) pipeline that jointly estimates camera poses and 3D scene reconstruction. Unlike classical SfM frameworks, which uses non-differentiable components and incremental reconstruction, VGGSfM is fully differentiable, and therefore can be trained end-to-end. 
 
+The pipeline works by:
+- Extracting 2D tracks from input images
+- Reconstructing cameras using image and track features
+- Initializing a point cloud based on those tracks and camera parameters
+- Applies a bundle adjustment layer for reconstruction refinement
+
+https://vggsfm.github.io/
 
 <!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
