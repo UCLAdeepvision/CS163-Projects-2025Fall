@@ -51,7 +51,7 @@ $$
 Equivalently, the noisy image at time step $$t$$ can be written as:
 
 $$
-x_{t}=\sqrt{\bar{\alpha}_{t}}x_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon, \quad \epsilon\sim\N(0,I)
+x_{t}=\sqrt{\bar{\alpha}_{t}}x_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon, \quad \epsilon\sim N(0,I)
 $$
 
 With:
