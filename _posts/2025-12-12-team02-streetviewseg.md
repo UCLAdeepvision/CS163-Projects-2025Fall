@@ -109,7 +109,7 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 
     $$\ell_{iou} = 1 - \frac{1}{C} \sum_{c=1}^{C} \frac{\sum_{r,w} S_c(r,w) G_c(r,w) + \epsilon}{\sum_{r,w} S_c(r,w) + \sum_{r,w} G_c(r,w) - \sum_{r,w} S_c(r,w) G_c(r,w) + \epsilon}$$
 
-    where $$G_c(r,c)$$ is the ground truth label of the pixel (r,c) and $$S_c(r,c)$$ is the predicted probability [2]. 
+    where $$G_c(r,w)$$ is the one-hot ground truth label of the pixel (r,w) and $$S_c(r,w)$$ is the predicted probability for class c at pixel (r,w) [2]. 
 
 3.  **Cross-Entropy (CE):** We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.
 
