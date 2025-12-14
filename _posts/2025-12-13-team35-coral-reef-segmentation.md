@@ -52,6 +52,8 @@ realistic segmentation setting.
 ![Qualitative comparison of segmentation outputs]({{ '/assets/images/team35/cs163_final_project_im_1.png' | relative_url }})
 {: style="width: 700px; max-width: 100%;"}
 
+Segmentation Overlay Video: https://drive.google.com/file/d/119cAD7lq9Zfyn4leEki5gl8dGJ9USxdg/view?ts=693df8e8
+
 ### Full Results (Quantitative)
 
 | Model           | Data  | Split | Pixel Acc | mIoU  |
