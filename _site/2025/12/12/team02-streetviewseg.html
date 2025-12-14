@@ -909,9 +909,119 @@ trainer.save_model("./segformer-thin-structures-hybrid-final")
 
 <p>Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
 
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Baseline</th>
+      <th style="text-align: center">BAS + Aug</th>
+      <th style="text-align: center">Improvement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">fence</td>
+      <td style="text-align: center">0.3438</td>
+      <td style="text-align: center">0.3880</td>
+      <td style="text-align: center">+0.0442</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">car</td>
+      <td style="text-align: center">0.8964</td>
+      <td style="text-align: center">0.8960</td>
+      <td style="text-align: center">-0.0005</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">vegetation</td>
+      <td style="text-align: center">0.8968</td>
+      <td style="text-align: center">0.8951</td>
+      <td style="text-align: center">-0.0017</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">pole</td>
+      <td style="text-align: center">0.3119</td>
+      <td style="text-align: center">0.3385</td>
+      <td style="text-align: center">+0.0266</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">traffic sign</td>
+      <td style="text-align: center">0.5653</td>
+      <td style="text-align: center">0.5894</td>
+      <td style="text-align: center">+0.0242</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">traffic light</td>
+      <td style="text-align: center">0.4583</td>
+      <td style="text-align: center">0.4775</td>
+      <td style="text-align: center">+0.0191</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>mIoU</strong></td>
+      <td style="text-align: center"><strong>0.5788</strong></td>
+      <td style="text-align: center"><strong>0.5974</strong></td>
+      <td style="text-align: center"><strong>+0.0187</strong></td>
+    </tr>
+  </tbody>
+</table>
+
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/Aug.png" alt="Aug" style="width: 400px; max-width: 100%;" /></p>
 
 <p>Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: center">Baseline</th>
+      <th style="text-align: center">SLC</th>
+      <th style="text-align: center">Improvement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">fence</td>
+      <td style="text-align: center">0.3438</td>
+      <td style="text-align: center">0.3786</td>
+      <td style="text-align: center">+0.0348</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">car</td>
+      <td style="text-align: center">0.8964</td>
+      <td style="text-align: center">0.8947</td>
+      <td style="text-align: center">-0.0017</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">vegetation</td>
+      <td style="text-align: center">0.8968</td>
+      <td style="text-align: center">0.8913</td>
+      <td style="text-align: center">-0.0055</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">pole</td>
+      <td style="text-align: center">0.3119</td>
+      <td style="text-align: center">0.3314</td>
+      <td style="text-align: center">+0.0195</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">traffic sign</td>
+      <td style="text-align: center">0.5653</td>
+      <td style="text-align: center">0.5787</td>
+      <td style="text-align: center">+0.0134</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">traffic light</td>
+      <td style="text-align: center">0.4583</td>
+      <td style="text-align: center">0.4724</td>
+      <td style="text-align: center">+0.0140</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>mIoU</strong></td>
+      <td style="text-align: center"><strong>0.5788</strong></td>
+      <td style="text-align: center"><strong>0.5912</strong></td>
+      <td style="text-align: center"><strong>+0.0124</strong></td>
+    </tr>
+  </tbody>
+</table>
 
 <p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
 

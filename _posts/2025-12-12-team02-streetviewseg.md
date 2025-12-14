@@ -683,9 +683,29 @@ Approach 1 - BASNet Hybrid Loss:
 
 Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
 
+| Class | Baseline | BAS + Aug | Improvement |
+| :--- | :---: | :---: | :---: |
+| fence | 0.3438 | 0.3880 | +0.0442 |
+| car | 0.8964 | 0.8960 | -0.0005 |
+| vegetation | 0.8968 | 0.8951 | -0.0017 |
+| pole | 0.3119 | 0.3385 | +0.0266 |
+| traffic sign | 0.5653 | 0.5894 | +0.0242 |
+| traffic light | 0.4583 | 0.4775 | +0.0191 |
+| **mIoU** | **0.5788** | **0.5974** | **+0.0187** |
+
 ![Aug]({{ '/assets/images/team02/Aug.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
 Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
+
+| Class | Baseline | SLC | Improvement |
+| :--- | :---: | :---: | :---: |
+| fence | 0.3438 | 0.3786 | +0.0348 |
+| car | 0.8964 | 0.8947 | -0.0017 |
+| vegetation | 0.8968 | 0.8913 | -0.0055 |
+| pole | 0.3119 | 0.3314 | +0.0195 |
+| traffic sign | 0.5653 | 0.5787 | +0.0134 |
+| traffic light | 0.4583 | 0.4724 | +0.0140 |
+| **mIoU** | **0.5788** | **0.5912** | **+0.0124** |
 
 ![SLC]({{ '/assets/images/team02/SLC.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
