@@ -157,19 +157,19 @@ Here is a table comparing the three methods using the metrics above.
 | ICP     | 0.0842 | 0.0172        | 1.5116       |
 | COLMAP  | 0.0477 m | 0.0073 m/frame | 0.9050 °/frame |
 
+### Analysis
+
+### Absolute Trajectory Error (ATE)
+ATE captures how accurately each method reconstructs the global camera trajectory, which is critical for long web videos where drift can accumulate. VGGSfM achieves the lowest ATE, showing strong global consistency due to its end-to-end optimization of camera poses and scene structure. COLMAP performs moderately well but is more sensitive to unreliable feature matches that commonly occur in web videos. ICP performs worst, as it only estimates relative motion and lacks global optimization, causing small errors to compound over time.
+
+### Relative Translation Error (RTE)
+RTE measures local frame-to-frame translation accuracy and reflects how well each method handles short-term camera motion. VGGSfM again performs best, suggesting that learned motion representations help stabilize local translation estimates under challenging visual conditions. COLMAP’s performance depends heavily on feature quality and overlap between frames, leading to higher error when these assumptions break down. ICP shows the largest error, likely due to depth noise and incomplete point cloud overlap between consecutive frames.
+
+### Relative Orientation Error (ROE)
+ROE evaluates the accuracy of relative camera rotations, which is especially important in videos with abrupt or irregular motion. VGGSfM achieves the lowest rotational error, indicating stable orientation tracking across diverse scenes. COLMAP shows moderate rotational error, which can arise from weak geometric constraints in feature-based matching. ICP performs worst, as small rotational errors in each alignment step accumulate without any global correction mechanism.
+
 ### Summary
-
-Absolute Trajectory Error (ATE)
--- ATE captures how accurately each method reconstructs the global camera trajectory, which is critical for long web videos where drift can accumulate. VGGSfM achieves the lowest ATE, showing strong global consistency due to its end-to-end optimization of camera poses and scene structure. COLMAP performs moderately well but is more sensitive to unreliable feature matches that commonly occur in web videos. ICP performs worst, as it only estimates relative motion and lacks global optimization, causing small errors to compound over time.
-
-Relative Translation Error (RTE)
--- RTE measures local frame-to-frame translation accuracy and reflects how well each method handles short-term camera motion. VGGSfM again performs best, suggesting that learned motion representations help stabilize local translation estimates under challenging visual conditions. COLMAP’s performance depends heavily on feature quality and overlap between frames, leading to higher error when these assumptions break down. ICP shows the largest error, likely due to depth noise and incomplete point cloud overlap between consecutive frames.
-
-Relative Orientation Error (ROE)
--- ROE evaluates the accuracy of relative camera rotations, which is especially important in videos with abrupt or irregular motion. VGGSfM achieves the lowest rotational error, indicating stable orientation tracking across diverse scenes. COLMAP shows moderate rotational error, which can arise from weak geometric constraints in feature-based matching. ICP performs worst, as small rotational errors in each alignment step accumulate without any global correction mechanism.
-
-Summary
--- Overall, the results support the project’s motivation that pose estimation accuracy varies significantly across methods when applied to web videos. VGGSfM consistently performs best due to its learning-based and globally optimized design, COLMAP provides a strong but scene-sensitive classical baseline, and ICP struggles with accumulated drift over long sequences. These differences highlight the importance of choosing pose estimation methods that are well-suited to the variability and noise present in real-world video data.
+Overall, the results support the project’s motivation that pose estimation accuracy varies significantly across methods when applied to web videos. VGGSfM consistently performs best due to its learning-based and globally optimized design, COLMAP provides a strong but scene-sensitive classical baseline, and ICP struggles with accumulated drift over long sequences. These differences highlight the importance of choosing pose estimation methods that are well-suited to the variability and noise present in real-world video data.
 
 
 ## Reference
