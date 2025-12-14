@@ -8,6 +8,8 @@ date: 2025-12-13
 
 > This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.
 
+<!--more-->
+
 {: class="table-of-content"}
 
 Table of contents
