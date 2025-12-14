@@ -97,7 +97,7 @@ $$
 }{3}
 $$
 
-where \(\mathcal{L}^{U}_{cls}\) and \(\mathcal{L}^{U}_{reg}\) are adopted from the UMMAFormer head, while \(\mathcal{L}^{U}_{rec}\) and \(\mathcal{L}^{U}_{scls}\) correspond to the reconstruction loss and video-level focal loss, respectively.
+where $$(\mathcal{L}^{U}_{cls})$$ and $$(\mathcal{L}^{U}_{reg})$$ are adopted from the UMMAFormer head, while $$(\mathcal{L}^{U}_{rec})$$ and $$(\mathcal{L}^{U}_{scls})$$ correspond to the reconstruction loss and video-level focal loss, respectively.
 
 ---
 
