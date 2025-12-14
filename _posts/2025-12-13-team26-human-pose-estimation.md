@@ -22,13 +22,15 @@ Human pose estimation is the process of identifying key human joints (known as k
 
 ### 1.2. Challenges
 
-Some of the challenges to human pose estimation include occlusions which means that algorithms can struggle to infer the location of joints if they are hidden by other objects(other bodies or surroundings). Other challenges include variations in images from different camera angles, amount of people in the scene, and differences in human appearance. Additionally poses occur in various scenarios inculding, sports, classes etc, and if not trained on these scenarios a model could fail on new data. Lighting and weather conditions can also change models. It is important that models think about all these challenges to have high accuracies. 
+Some of the challenges to human pose estimation include occlusions, which means that algorithms can struggle to infer the location of joints if they are hidden by other bodies or surroundings. Other challenges include variations in images from different camera angles, amount of people in the scene, and differences in human appearance. Additionally, poses occur in various scenarios inculding, sports and colleges etc. If not trained on these scenarios a model could fail on new data. Lighting and weather conditions can also change models. It is important that models think about all these challenges to have high accuracies. 
 
 ### 1.3. Approaches
 
 There are two main approaches that define the way a human pose model estimates and figures out key points to make a skeleton. The first method known as the topdown method is the process of detecting the person first using bounding boxes and then estimating the pose by figuring out their keypoints. 
 
-The second method is known as the bottom-up approach. With this approach all key-points are detected first then the keypoints are grouped into different poses. This method is usually faster than the top-down because pose estimation doesn’t have to be repeated per person. It is also usually faster at handling crowded scenes as well because it doesn’t rely on a separate person detector. 
+The second method is known as the bottom-up approach. With this approach all key-points are detected first. Then the keypoints are grouped into different poses. 
+
+This method is usually faster than the top-down because pose estimation doesn’t have to be repeated per person. It is also usually faster at handling crowded scenes because it doesn’t rely on a separate person detector. 
 
 
 ![YOLO]({{ '/assets/images/team26/approaches.png' | relative_url }})
@@ -36,7 +38,7 @@ The second method is known as the bottom-up approach. With this approach all key
 
 ### 1.4. Current Methods
 
-Some prominent models of human pose estimation are OpenPose from 2019, AlphaPose from 2022, and ViTPose from 2022. There are many comparisons and contrasts to how they figure out human poses. Another model that improved these prior models is known as Sapiens (2024). 
+Some prominent models of human pose estimation are OpenPose from 2019, AlphaPose from 2022, and ViTPose from 2022. There are many comparisions and contrasts to how they figure out human poses. A model that improved these prior models is known as Sapiens (2024). 
 
 
 ## 2. Datasets
@@ -293,7 +295,7 @@ As a top-down approach, inference time for AlphaPose increases linearly with the
 
 ### 5.1. Approach
 
-ViT uses a top-down approach, meaning it will first detect the human instances and then use ViTPose to estimate the keypoints of each human.
+ViTPose uses a top-down approach, meaning it will first detect the human instances and then use ViT to estimate the keypoints of each human.
 
 ### 5.2. Pretraining
 
