@@ -6,7 +6,7 @@ author: Kayla Hamakawa, Alyssa Leung, Meryl Mathew, Angela Quan
 date: 2025-12-13
 ---
 
-> Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for point cloud instance segmentation in this paper report.
+> Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.
 
 {: class="table-of-content"}
 * TOC
@@ -24,11 +24,11 @@ Recent advances in deep learning have substantially influenced the landscape of 
 ### Historical Context and Motivation
 The development of the Segment Anything Model (SAM) by Meta can be traced back to the company’s origins in 2004, when it was still known as Facebook. As a social media platform, Facebook rapidly evolved into one of the world’s largest repositories of visual data. This rapidly motivated early investment in computer vision, through applications such as automated photo tagging and content moderation, and later through more advanced machine learning systems. By the mid-2010s, the establishment of Facebook AI Research (FAIR) marked a shift toward foundational AI research, with FAIR becoming a leading contributor to advances in self-supervised learning, computer vision, and large-scale deep learning. After Facebook’s rebrand to Meta in 2021, the company’s long-term vision expanded toward spatial computing, AR/VR systems in the form of Meta glasses, increasing the demand for models capable of robustly understanding objects, scenes, and their interactions in the physical world. Soon, Meta introduced the Segment Anything Model (SAM) as a new model for image segmentation.
 ### SAM Architecture
-SAM uses an encoder-decoder framework with separation between image encoding, prompt encoding, and mask decoding, enabling efficient reuse of image features across multiple segmentation queries. Essentially, SAM is a Vision Transformer (ViT) image encoder, which processes an input image $$I \in \mathbb{R}^{H \times W \times 3} $$ into a dense latent representation $$ E_I \in \mathbb{R}^{N \times D}$$, where $$N$$ is the number of image tokens and $$D$$ the embedding dimension. With multi-head self-attention, the ViT captures long-range spatial dependencies, and allows SAM to model global context beyond local receptive fields from convolutional networks. SAM is pretrained on a large corpus of image–mask pairs and leverages masked autoencoding and self-supervised learning objectives to learn robust visual representations [1]. This allows for SAM to achieve strong generalization for many different objects and stronger reliability, from its trained inputs.
+SAM uses an encoder-decoder framework with separation between image encoding, prompt encoding, and mask decoding, enabling efficient reuse of image features across multiple segmentation queries. Essentially, SAM is a Vision Transformer (ViT) image encoder, which processes an input image $$I \in \mathbb{R}^{H \times W \times 3} $$ into a dense latent representation $$E_I \in \mathbb{R}^{N \times D}$$, where $$N$$ is the number of image tokens and $$D$$ the embedding dimension. With multi-head self-attention, the ViT captures long-range spatial dependencies, and allows SAM to model global context beyond local receptive fields from convolutional networks. SAM is pretrained on a large corpus of image–mask pairs and leverages masked autoencoding and self-supervised learning objectives to learn robust visual representations [1]. This allows for SAM to achieve strong generalization for many different objects and stronger reliability, from its trained inputs.
 User interaction is added via a prompt encoder, which embeds sparse and dense prompts into the same latent space as the image embeddings. Sparse prompts with small pieces of information, including background and foreground points, are encoded using positional embeddings and lightweight MLPs, while dense prompts, like low-resolution masks of objects, are embedded using convolutional layers. These influence the segmentation process while leaving the image encoder unchanged.
 
 ![YOLO]({{ '/assets/images/17/Figure2.png' | relative_url }})
-Fig 1. SAM Overview
+Fig 1. SAM Overview [1]
 
 The mask decoder is implemented as a lightweight transformer that performs cross-attention between the prompt embeddings and image embeddings. Given query tokens derived from the prompts, the decoder looks at relevant spatial regions in $$E_I$$ and predicts a set of candidate segmentation masks along with corresponding confidence scores. To handle ambiguity, SAM also outputs multiple mask hypotheses per prompt and ranks them using a predicted mask quality score, usually modeled as an estimated Intersection-over-Union (IoU). Formally, mask prediction can be expressed as:
 $$M = \text{Decoder}(E_I, E_P)$$  
@@ -37,7 +37,7 @@ Despite its strong generalization capabilities, SAM primarily models segmentatio
 ### SAM2: Memory-Augmented Video Segmentation
 
 ![YOLO]({{ '/assets/images/17/Figure3.png' | relative_url }})
-Fig 2. SAM 2 Overview
+Fig 2. SAM 2 Overview [2]
 
 To address temporal consistency, SAM2 expands the original architecture to video and sequential data by introducing a memory-augmented segmentation framework. This stores and recalls features from previous time stamps to allow the model to maintain context and ensure consistent object segmentation across sequences. While keeping the same image encoder, prompt encoder, and mask decoder, SAM2 adds a temporal memory bank that stores embeddings, predicted masks, and object identity information from previous frames [2]. While inferring frames, the decoder simultaneously focuses on the current frame’s image embeddings and relevant memory entries, enabling information to propagate across time. For a frame at time tt, mask prediction can be written as:
 $$M_t=\text{Decoder}(E_{I_t},E_{P_t},M_{t−1})$$
@@ -45,7 +45,7 @@ where $$M_{t−1}$$​ denotes stored memory from prior frames. This design enha
 ### SAM3: Structured Relational Reasoning via PCS and PVS
 
 ![YOLO]({{ '/assets/images/17/Figure4.png' | relative_url }})
-Fig 3. Illustration of supported initial and optional interactive refinement prompts in the PCS task
+Fig 3. Illustration of supported initial and optional interactive refinement prompts in the PCS task [3]
 
 Building on this foundation, SAM3 further strengthens intra-frame relational modeling and expands the Segment Anything framework through two complementary tasks: Promptable Consistent Segmentation (PCS) and Promptable Video Segmentation (PVS). In PCS, SAM3 jointly refines multiple candidate masks using cross-mask attention, allowing the model to reason explicitly about overlap, redundancy, and spatial consistency between instances [3]. This structured decoding process reduces fragmented or conflicting predictions, particularly in crowded scenes or under ambiguous prompts.
 PVS extends this relational reasoning into the temporal domain. While SAM2 introduces memory for video segmentation, SAM3 combines temporal memory attention with intra-frame cross-mask interactions, enabling more stable and identity-preserving segmentation across frames. This unified treatment improves robustness to occlusions and object interactions while maintaining spatial coherence within each frame.
@@ -72,9 +72,11 @@ Fig 6: Comparison between global cross attention (on top) and masked attention (
 
 Masked attention addresses this limitation by restricting each query to attend only to the spatial regions corresponding to its predicted mask from the previous decoding stage. Formally, Mask2Former implements masked attention by modulating the standard cross-attention operation with a spatial mask derived from the previous decoder layer [4]. The masked cross-attention update at the layer $$l$$ is defined as 
 
-$$ X_l = \text{softmax}(M_{l-1} + Q_l K_l^\top) V_l + X_{l-1} $$
+$$X_l = \text{softmax}(M_{l-1} + Q_l K_l^\top) V_l + X_{l-1} $$
 
-$$ M_{l-1}(x, y) = \begin{cases} 0, & \text{if } \hat{M}_{l-1}(x, y) = 1 \\ -\infty, & \text{otherwise} \end{cases} $$
+$$M_{l-1}(x, y) = \begin{cases} 0, & \text{if } \hat{M}_{l-1}(x, y) = 1 \\ -\infty, & \text{otherwise} \end{cases} $$
+
+
 Here, $$Q_l$$, $$K_l$$, and $$V_l$$ denote the query, key, and value projections at decoder layer $$l$$, and $$X_{l-1}$$ represents the residual connection from the previous layer. The mask $$M_{l-1}$$ is constructed from the predicted segmentation mask of the previous decoding stage and is added directly to the attention logits. Spatial locations outside the predicted foreground region are assigned a value of $$-\infty$$, effectively suppressing their contribution after the softmax operation. As a result, each query attends only to features within its predicted object region.​​
 By constraining attention in this way, the model achieves two important benefits.
 First, masked attention encourages localized feature extraction. Each query focuses on features within its predicted foreground region, enabling the model to learn more discriminative and object specific representations. This results in faster convergence and improved segmentation accuracy.
