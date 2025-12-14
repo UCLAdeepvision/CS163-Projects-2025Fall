@@ -7,8 +7,7 @@ date: 2025-12-13
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
-
+> Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.
 
 <!--more-->
 {: class="table-of-content"}
@@ -17,13 +16,82 @@ date: 2025-12-13
 
 ## Introduction
 
-### Problem Setup
+Visuomotor policy learning aims to learn a control policy directly from visual inputs, enabling an agent to perceive its environment and take actions that accomplish a task. Compared with classical pipelines that rely on modular perception, planning, and control, end-to-end visuomotor learning offers a unified framework that can, in principle, learn task-relevant features automatically and handle complex sensor observations.
+
+However, learning from pixels is challenging: visual observations are high-dimensional, supervision is often limited or expensive to collect, and errors can compound over time as the agent visits states not covered by training data. These challenges are especially pronounced in real-world robotics and driving, where interaction data can be costly, slow, or safety-critical. As a result, recent work has emphasized data-efficient learning, including stronger IL/RL baselines, better augmentations, and pretraining strategies that improve downstream policy learning.
+
+## Problem Setup
+
+We model visuomotor control as a sequential decision-making problem. Let the environment evolve over discrete time steps $$t = 1,2,\dots,T$$. The agent receives an observation $$o_t \in \mathcal{O}$$ (e.g., an RGB image or stacked frames), chooses an action $$a_t \in \mathcal{A}$$ (e.g., steering/throttle or robot joint commands), and the environment transitions to the next state while emitting reward $$r_t$$ (for RL) or providing supervision via expert actions (for IL).
+
+### Interaction and Trajectories
+
+A (partial-observation) trajectory can be written as:
+
+$$$$
+\tau = {(o_1, a_1, r_1), (o_2, a_2, r_2), \dots, (o_T, a_T, r_T)}.
+$$$$
+
+A parametrized policy $$\pi_\theta(a_t \mid o_t)$$ maps observations to either:
+
+* **Deterministic actions**: $$a_t = \pi_\theta(o_t)$$, or
+* **Stochastic actions**: $$a_t \sim \pi_\theta(\cdot \mid o_t).$$
+
+### Objectives
+
+**Reinforcement Learning (RL).** The goal is to maximize expected discounted return:
+
+$$$$
+\max_\theta ; \mathbb{E}*{\tau \sim \pi*\theta}\left[\sum_{t=1}^{T} \gamma^{t-1} r_t\right],
+$$$$
+
+where $$\gamma \in (0,1]$$ is the discount factor.
+
+**Imitation Learning (IL).** Given an offline dataset of expert demonstrations
+$$\mathcal{D} = {(o_i, a_i^{*})}_{i=1}^{N}$$, behavior cloning typically minimizes a supervised loss:
+
+$$$$
+\min_\theta ; \mathbb{E}*{(o,a^*) \sim \mathcal{D}}\left[\mathcal{L}\big(\pi*\theta(o), a^*\big)\right],
+$$$$
+
+where $$\mathcal{L}$$ is often MSE (continuous control) or cross-entropy (discrete actions).
 
 ## Approaches
 
+Broadly, modern visuomotor policy learning can be organized into three families: imitation learning, reinforcement learning, and pretraining-based methods that improve either of the above.
+
+### Imitation Learning
+
+Imitation learning learns directly from expert behavior (e.g., human driving or teleoperated robot demonstrations). The simplest and most common approach is behavior cloning (BC), which treats policy learning as supervised learning from $$o \mapsto a^*$$.
+
+A key limitation is distribution shift: small errors can cause the policy to drift into states not represented in the dataset, leading to compounding mistakes. Methods such as dataset aggregation (e.g., iteratively collecting corrections) and stronger regularization/augmentation are often used to improve robustness, especially in driving-like settings where stable, human-aligned behavior is preferred.
+
+### Reinforcement Learning
+
+Reinforcement learning optimizes behavior through interaction, using reward feedback to explore and improve. RL can achieve superhuman performance in principle, but often suffers from:
+
+* high sample complexity (many environment interactions),
+* sensitivity to reward design,
+* instability during training (especially from pixels).
+
+In robotics, RL is widely used in simulation and increasingly combined with offline data, strong augmentations, and representation learning to reduce real-world interaction requirements.
+
+### Policy and Representation Pretraining
+
+Because real-world interaction is expensive, many recent methods pretrain visual representations or policy components before downstream IL/RL. Pretraining can leverage:
+
+* large-scale unlabeled videos/images,
+* self-supervised objectives (e.g., contrastive learning),
+* action-aware objectives when actions (or pseudo-actions) are available.
+
+This project’s later section (“Policy Pretraining”) focuses on two representative perspectives:
+
+1. Action-conditioned contrastive pretraining that explicitly aligns representations with control-relevant semantics, and
+2. A critical re-evaluation showing that strong learning-from-scratch baselines (with proper augmentation and architecture choices) can match or exceed frozen pretraining in many settings—highlighting that *when* pretraining helps depends heavily on domain alignment and experimental controls.
+
 ## Policy Pretraining
 
-Learning visuomotor policies directly from interaction data is often prohibitively expensive, particularly in real-world robotic and autonomous driving settings. As a result, many approaches seek to improve sample efficiency by pretraining visual representations or policy components prior to downstream imitation or reinforcement learning. However, existing methods differ substantially in both how pretraining is performed and whether it consistently benefits policy learning.
+Learning visuomotor policies directly from interaction data is often expensive, particularly in real-world robotic and autonomous driving settings. As a result, many approaches seek to improve sample efficiency by pretraining visual representations or policy components prior to downstream imitation or reinforcement learning. However, existing methods differ substantially in both how pretraining is performed and whether it consistently benefits policy learning.
 
 In this section, we examine two complementary perspectives on policy pretraining. The first presents an action-conditioned contrastive learning framework that explicitly aligns representation learning with control objectives [1]. The second revisits the effectiveness of visual pretraining by comparing it against strong learning-from-scratch baselines, providing a critical assessment of when and why pretraining improves visuomotor policy learning [2].
 
@@ -42,11 +110,11 @@ ACO extends standard contrastive learning by combining two types of positive pai
 * Instance Contrastive Pairs (ICP): as in MoCo, two augmented views of the same image form a positive pair, encouraging general visual discriminability.
 * Action Contrastive Pairs (ACP): two different images are treated as a positive pair if their associated actions are sufficiently similar (e.g., steering angles within a predefined threshold), regardless of visual similarity.
 
-By jointly optimizing ICP and ACP objectives, ACO encourages representations that preserve general visual structure while emphasizing action-consistent features. This dual-objective design allows the model to retain the benefits of instance discrimination while mitigating its tendency to overfit to appearance-level cues.
+By jointly optimizing ICP and ACP objectives, ACO encourages representations that preserve general visual structure while emphasizing action-consistent features. This dual-objective design allows the model to retain the benefits of instance discrimination while mitigating its tendency to overfit to appearance-level features.
 
 #### Pseudo Action Label Generation
 
-A central challenge in applying ACP at scale is the lack of action annotations in in-the-wild data such as YouTube videos. To address this, Zhang et al. train an inverse dynamics model on the NuScenes dataset, where ground-truth ego-motion actions are available. Given consecutive frames $$ (o_t, o_{t+1}) $$, the inverse dynamics model predicts the corresponding control action
+A challenge in applying ACP at scale is the lack of action annotations in in-the-wild data such as YouTube videos. To address this, Zhang et al. train an inverse dynamics model on the NuScenes dataset, where ground-truth ego-motion actions are available. Given consecutive frames $$ (o_t, o_{t+1}) $$, the inverse dynamics model predicts the corresponding control action
 
 $$
 \hat{a}*t = h(o_t, o*{t+1}),
@@ -168,16 +236,11 @@ In contrast, Hansen et al. [2] provide a critical re-evaluation of visual policy
 
 Together, these results suggest that the effectiveness of policy pretraining depends not only on dataset scale, but more critically on the alignment between the pretraining objective and downstream control tasks. While action-aware and task-aligned pretraining objectives show clear promise, future work must carefully consider domain gaps, finetuning strategies, and strong baseline comparisons to fully realize the benefits of pretraining in visuomotor learning.
 
+## Diffusion Policy
 
-### Konstantin Section
+Diffusion Policy is new paradigm introduced in 2023 by Chi et al [3]. It reframes visuomotor policy as a conditional diffusion process [3] over action sequences, conditioned on a short history of observations. By generating actions using iterative denoising, this new approach allows for more expressive multi-modal, high-dimensional manipulation, while improving temporal consistency in closed-loop control. In fact, the authors found that Diffusion Policy outperformed previous SoTA policies by 46.9% on average.
 
-# CS 163 Project
-
-# Diffusion Policy
-
-Diffusion Policy is new paradigm introduced in 2023 by [] et al [3]. It reframes visuomotor policy as a conditional diffusion process [3] over action sequences, conditioned on a short history of observations. By generating actions using iterative denoising, this new approach allows for more expressive multi-modal, high-dimensional manipulation, while improving temporal consistency in closed-loop control. In fact, the authors found that Diffusion Policy outperformed previous SoTA policies by 46.9% on average.
-
-## Problem formulation
+### Problem formulation
 
 Diffusion Policy is formulated as an offline visuomotor imitation learning problem. The goal is to learn a policy which maps camera observations to actions.
 
@@ -201,7 +264,7 @@ More formally, Diffusion Policy trains a conditional denoising diffusion model t
 
 Prior research [3] has shown that standard supervised policies struggle with the multi-modal and temporally correlated action distributions introduced by manipulation demonstrations in imitation learning. Diffusion Policy improves on that, due to DDPM’s inherent capabilities with high-dimensional outputs [3], as well as predicting action sequences instead of individual actions.
 
-## Model architecture overview
+### Model architecture overview
 
 ![Ablation_3D_Representation]({{ '/assets/images/team22/DiffusionPolicyArchitecture.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
@@ -216,7 +279,7 @@ The controller then executes the first $T_a$ actions from $A_t$.
 
 Let’s now do a deep dive into the two main components of Diffusion Policy.
 
-## Visual encoder deep dive
+### Visual encoder deep dive
 
 At each time step $t$, the visual encoder takes in the history of images $O_t$, and produces a sequence of embeddings $z_t$ which will be used as conditioning for the diffusion model.
 
@@ -227,13 +290,13 @@ The authors found that a slightly modified ResNet-18, without pre-training, perf
 
 The outputs $z_t$ from the visual encoder are then fed into the diffusion model as conditioning.
 
-## Diffusion model deep dive
+### Diffusion model deep dive
 
 The diffusion model is the backbone of Diffusion Policy. At each **diffusion time step** $k$, the diffusion model takes in a noisy action sequence ${A_t}^{(k)}$, the diffusion time step $k$, and the conditioning features $z_t$ from the encoder. It then produces the predicted noise $\hat{\varepsilon}_{\theta}$, which is used to de-noise ${A_t}^{(k)}$ and obtain the next sample ${A_t}^{(k-1)}$.
 
 The authors evaluated two backbone architectures for the diffusion model: CNN and time-series transformer.
 
-### CNN-based diffusion
+#### CNN-based diffusion
 
 The CNN-based diffusion uses a 1D temporal CNN as its backbone, adapted from previous work on using diffusion for sequence generation [3].
 
@@ -245,7 +308,7 @@ $$
 
 The authors recommend using this approach as a starting point, as well as for more basic tasks, as it is easy to set-up and requires little tuning. It does have performance limitations, however, as it struggles with fast-changing action.
 
-### Time-series diffusion transformer
+#### Time-series diffusion transformer
 
 The time-series diffusion transformer solves the issues with fast-changing action experienced by the CNN-based diffusion model.
 
@@ -253,7 +316,7 @@ In short, the noisy actions ${A_t}^{(k)}$ are passed in as input tokens to the t
 
 The authors recommend using this approach if the CNN-based diffusion doesn’t lead to satisfactory results, or if the task at hand is more complex, as it is harder to set up and tune the transformer backbone.
 
-## Results & Limitations
+### Results & Limitations
 
 Diffusion Policy significantly outperforms previous SoTA policies across a variety of tasks. On average, Diffusion Policy increased performance by 46.9%.
 
