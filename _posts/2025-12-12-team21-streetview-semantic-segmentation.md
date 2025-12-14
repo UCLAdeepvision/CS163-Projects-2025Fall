@@ -108,7 +108,7 @@ Our tech interactions occured as follows:
 
 
 ## Conclusion
-<p>Through this project, we explored several differences between the models used. The baseline CNN was quick to implement but still took some time to train. The SAM/SAM V2 models were also quick to implement and came pretrained. They performed similar to baseline when comparing segmentation label quality, but they performed worse during our real-world test. The CNN with CRF/Grounding modifications produced the best results when it came to preserving thin features during segmentation. On the other hand, it was complicated to implement and performed relatively similar to the baseline in our real-world test. These results demonstrate several considerations, including the speed of implementation, performace, and type of problem, that must be made when determining a model to use. </p>
+<p>Through this project, we explored several differences between the models used. The baseline CNN was quick to implement but still took some time to train. The SAM/SAM V2 models were also quick to implement and came pretrained. SAM performed similar to baseline when comparing segmentation label quality, and SAM V2 outperformed the baseline. However, they performed worse during our real-world test. The CNN with CRF/Grounding modifications improved on the baseline when it came to preserving thin features during segmentation. On the other hand, it was complicated to implement and performed relatively similar to the baseline in our real-world test. These results demonstrate several considerations, including the speed of implementation, performace, and type of problem, that must be made when determining a model to use. </p>
 
 ## Reference
 
