@@ -253,7 +253,7 @@ Overall, the LVSM bypasses 3D representations, minimizing 3D inductive bias by u
 
 #### Running the Codebase
 
-Using the paper's [Github](https://github.com/haian-jin/LVSM) repository, we tried running the LVSM ourselves within Google Colab. However, we ran into a few issues with Colab package installation, outdated NumPy code, and related dependency conflicts. In the end, we ran the inference step on 30 inputted images, but the output rendered view consisting of the synthesized views turned out to be a lot blurrier than expected. Some possibilties include sparse inputs, improper
+Using the paper's [Github](https://github.com/haian-jin/LVSM) repository, we tried running the LVSM ourselves within Google Colab, modifying the code to suit the Colab environment. However, we ran into a few issues with Colab package installation, outdated NumPy code, and related dependency conflicts. In the end, we ran the inference step on 30 inputted images, but the output rendered view consisting of the synthesized views turned out to be a lot blurrier than expected. Some possibilties include sparse inputs, incorrect COLMAP generated images, and low resolution outputs.
 
 Here is the rendered video output for a scene containing a long desk at the library. As you can see, the video shows blurriness as it transitions from one input image to the next input image while attempting to synthesize novel views. [Video Link](https://drive.google.com/file/d/1P8BDGMR9Ng-7UjQemSg4WXGn3MvCJdV3/view?usp=sharing)
 
