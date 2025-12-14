@@ -1,9 +1,9 @@
 ---
 layout: post
 comments: true
-title: Post Template
-author: UCLAdeepvision
-date: 2024-01-01
+title: Visuomotor Policy
+author: Haoran Li
+date: 2025-12-13
 ---
 
 
