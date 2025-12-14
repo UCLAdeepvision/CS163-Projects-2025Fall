@@ -679,7 +679,6 @@ Approach 1 - BASNet Hybrid Loss:
 | traffic light | 0.4583 | 0.4730 | +0.0147 |
 | **mIoU** | **0.5788** | **0.5963** | **+0.0176** |
 
-
 Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
 
 | Class | Baseline | BAS + Aug | Improvement |
@@ -691,7 +690,6 @@ Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
 | traffic sign | 0.5653 | 0.5894 | +0.0242 |
 | traffic light | 0.4583 | 0.4775 | +0.0191 |
 | **mIoU** | **0.5788** | **0.5974** | **+0.0187** |
-
 
 Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
 
