@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>XAI in Facial Recognition</title>
+
+    <meta name="description" content="Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concern...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="XAI in Facial Recognition" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis..." property="og:description">
+    
+    
+        <meta content="/2025/12/13/team39-XAI-Face.html" property="og:url">
+    
+<!--
+    
+        <meta content="Erick Rosas Gonzalez, Maya Josifovska, Andrew Rubio, Wanda Barahona" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="XAI in Facial Recognition">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME [5] which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) [3], which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability [2], which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">XAI in Facial Recognition</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Erick Rosas Gonzalez, Maya Josifovska, Andrew Rubio, Wanda Barahona</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team39-XAI-Face.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME [5] which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) [3], which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability [2], which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#1-introduction" id="markdown-toc-1-introduction">1. Introduction</a></li>
+  <li><a href="#2-fast-diffusion-based-counterfactuals-for-shortcut-removal-and-generation" id="markdown-toc-2-fast-diffusion-based-counterfactuals-for-shortcut-removal-and-generation">2. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation</a>    <ul>
+      <li><a href="#21-introduction" id="markdown-toc-21-introduction">2.1 Introduction</a></li>
+      <li><a href="#22-shortcut-learning" id="markdown-toc-22-shortcut-learning">2.2 Shortcut Learning</a></li>
+      <li><a href="#23-fastdime-guided-diffusion-for-counterfactual-faces" id="markdown-toc-23-fastdime-guided-diffusion-for-counterfactual-faces">2.3 FastDiME: Guided Diffusion for Counterfactual Faces</a></li>
+      <li><a href="#24-self-optimized-masking-for-localized-image-edits" id="markdown-toc-24-self-optimized-masking-for-localized-image-edits">2.4 Self-Optimized Masking for Localized Image Edits</a></li>
+      <li><a href="#25-quantifying-shortcut-dependence" id="markdown-toc-25-quantifying-shortcut-dependence">2.5 Quantifying Shortcut Dependence</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-explainable-face-verification-via-feature-guided-gradient-backpropagation-fggb" id="markdown-toc-3-explainable-face-verification-via-feature-guided-gradient-backpropagation-fggb">3. Explainable Face Verification via Feature-Guided Gradient Backpropagation (FGGB)</a>    <ul>
+      <li><a href="#31-introduction" id="markdown-toc-31-introduction">3.1 Introduction</a></li>
+      <li><a href="#32-methodology" id="markdown-toc-32-methodology">3.2 Methodology</a></li>
+      <li><a href="#33-quantitative-evaluation" id="markdown-toc-33-quantitative-evaluation">3.3 Quantitative Evaluation</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-frequency-domain-based-explainability" id="markdown-toc-4-frequency-domain-based-explainability">4. Frequency-Domain Based Explainability</a>    <ul>
+      <li><a href="#41-introduction" id="markdown-toc-41-introduction">4.1 Introduction</a></li>
+      <li><a href="#42-methodology-frequency-masking-and-influence-scoring" id="markdown-toc-42-methodology-frequency-masking-and-influence-scoring">4.2 Methodology: Frequency Masking and Influence Scoring</a></li>
+      <li><a href="#43-key-insights-diagnosing-structural-bias" id="markdown-toc-43-key-insights-diagnosing-structural-bias">4.3 Key Insights: Diagnosing Structural Bias</a></li>
+    </ul>
+  </li>
+  <li><a href="#5-conclusion" id="markdown-toc-5-conclusion">5. Conclusion</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="1-introduction">1. Introduction</h2>
+<p>As Deep Learning models achieve state-of-the-art performance in biometric security, the “black box” nature of Facial Recognition (FR) and Face Verification (FV) systems present a growing liability. Unlike general object classification, FR systems operate in high-risk sociological contexts where errors can lead to wrongful arrests, discriminatory access denial, and security breaches. The challenge is no longer accuracy but trustworthiness to ensure that a model can distinguish identities on robust biometric features rather than spurious “shortcuts” like background textures, lighting artifacts, or demographic biases.</p>
+
+<p>Historically, explainability in computer vision (CV) has relied on saliency methods, such as Grad-CAM [4]. While effective for localizing where a model looks, these methods are fundamentally correlational rather than causal. They often fail to explain why a decision was reached, like whether a match was driven by genuine identity features or coincidental pixel statistics. Furthermore, standard backpropagation methods suffer from noisy or vanishing gradients when applied to deep feature embeddings used in modern FV, rendering conventional heatmaps difficult to interpret for fine-grained verification tasks.</p>
+
+<p>Currently, the landscape of Explainable AI (XAI) is expanding rapidly to address these issues. Researchers are exploring diverse methodologies, ranging from logic-based formal verifications [1] that uses prime implicates to identify minimum sufficient reasons for a classification decision to interactive user interfaces. While these approaches offer promising theoretical guarantees, the need for CV practitioners is often direct feature level diagnostics that can visually and causally verify model behavior.</p>
+
+<p>To address these limitations, this report looks at three methodologies. FastDiME [5] is an approach that leverages diffusion probabilistic models to create counterfactuals. By removing specific attributes and observing a shift, FastDiME offers a causal mechanism for detecting shortcut learning. Feature-Guided Gradient Backpropagation (FGGB) [3], is a different method that shifts focus from final output score to the deep feature level. By normalizing gradients channel-wise, FGGB separates decision-making process into distinct similarity and dissimilarity maps that provide a clearer view of what features argue for or against a match. Frequency Domain Explainability [2] which challenges the spatial bias of human interpretation by analyzing how Convolutional Neural Networks (CNNs) rely on specific frequency bands. This approach reveals that models may rely on high-frequency noise or specific texture patterns offering a powerful tool for quantifying algorithmic bias across different demographics. Together, these methods represent a shift from simple visualization to rigorous feature aware model diagnostics.</p>
+
+<h2 id="2-fast-diffusion-based-counterfactuals-for-shortcut-removal-and-generation">2. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation</h2>
+
+<h3 id="21-introduction">2.1 Introduction</h3>
+<p>Saliency-based models are among the most popular methods for explainability in computer vision applications. Grad-CAM, for instance, highlights the regions that have the largest effects on model predictions, but doesn’t allow an assessment of how a prediction would change due to the addition or removal of a feature. Beyond saliency by occlusion, current methods cannot help determine whether altering a feature will affect model performance.</p>
+
+<p>This limitation is especially important in facial recognition tasks, where cues unrelated to facial structure, such as glasses or a mask, could affect model predictions. This methodology proposes a generative approach to explaining model behavior. Instead of relying on visual maps, counterfactual explanations apply a diffusion model to edit the input image to measure the resulting change in prediction. Fast Diffusion-Based Counterfactuals for Shortcut Removal and Generation (FastDiME) generates counterfactuals and uses them to identify “shortcuts,” or features correlated with the label that are not causally relevant.</p>
+
+<h3 id="22-shortcut-learning">2.2 Shortcut Learning</h3>
+<p>Shortcut learning occurs when a vision model uses spurious features that happen to correlate with the label instead of information relevant to the task to identify a class. The paper focuses on medical imaging shortcuts, like pacemakers to correlate with heart disease labels. For facial recognition use cases, shortcuts can include background patterns, accessories, or artifacts from image processing. Objects or patterns unrelated to facial recognition can become correlated with identity.</p>
+
+<p>Shortcuts affect the model’s results when applied to real data where the shortcut is not present. For instance, a facial recognition model could learn to identify a person’s glasses instead of biometric or facial features. Saliency maps can suggest aspects of the face that the model focuses on, but cannot counterfactually confirm whether the model would still recognize the individual without the shortcut. Counterfactual explanations address this by enabling comparisons between model results with and without the shortcut feature.</p>
+
+<p>We can mathematically express shortcut dependence as the sensitivity of the model prediction \(f(x)\)to a shortcut feature\(s\):</p>
+
+\[\Delta_{s}=E_{x}[|f(x)-f(x^{(s\rightarrow\overline{s})})|]\]
+
+<p>where \(x^{(s\rightarrow\overline{s})}\)denotes a counterfactual image in which the shortcut feature\(s\) has been removed or altered.</p>
+
+<h3 id="23-fastdime-guided-diffusion-for-counterfactual-faces">2.3 FastDiME: Guided Diffusion for Counterfactual Faces</h3>
+<p>The FastDiME framework is built atop diffusion probabilistic models (DDPMs). In a typical DDPM, the model gradually adds Gaussian noise to an image in a forward process, and then learns a reverse process that progressively denoises the image. The forward diffusion process is defined as:</p>
+
+\[q(x_{t}|x_{t-1})=N(x_{t};\sqrt{1-\beta_{t}}x_{t-1},\beta_{t}I)\]
+
+<p>Equivalently, the noisy image at time step \(t\) can be written as:</p>
+
+\[x_{t}=\sqrt{\bar{\alpha}_{t}}x_{0}+\sqrt{1-\bar{\alpha}_{t}}\epsilon, \quad \epsilon\sim \mathcal{N}(0,I)\]
+
+<p>With:</p>
+
+\[\bar{\alpha}_{t}=\prod_{i=1}^{t}(1-\beta_{i})\]
+
+<p>FastDiME changes the reverse process to make a counterfactual image instead of an identical copy. The high-level process is as follows: After noising the input image to an intermediate step, the reverse process is performed with a loss that encourages the removal of a specific feature. The guided mean of reverse diffusion is given by:</p>
+
+\[\mu_{g}(x_{t})=\mu(x_{t})-\Sigma(x_{t})\nabla_{x}\mathcal{L}_{CF}(x_{t})\]
+
+<p>The counterfactual is kept as close to the original as possible using a combined loss:</p>
+
+\[\mathcal{L}_{CF}=\lambda_{c}\mathcal{L}_{cls}+\lambda_{1}||x-x_{0}||_{1}+\lambda_{p}\mathcal{L}_{perc}\]
+
+<p>FastDiME has a time complexity of \(O(T)\), beating the original DiME with a time complexity of \(O(T^{2})\) by avoiding extraneous inner diffusion calculations that DiME performs during reconstruction.</p>
+
+<p style="width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team-39/paper1.png" alt="CelebA counterfactual explanations" /></p>
+
+<h3 id="24-self-optimized-masking-for-localized-image-edits">2.4 Self-Optimized Masking for Localized Image Edits</h3>
+<p>Using FastDiME to generate images creates the risk that the algorithm alters the facial structure or biometric information entirely as opposed to only the shortcut. Many shortcut features are spatially localized, and therefore, the method introduces a self-optimized mask to restrict changes.</p>
+
+<p>The high-level process is as follows:
+At each diffusion step, a binary mask is computed by comparing the denoised estimate to the original image:</p>
+
+\[M_{t}=\delta(\overline{x}_{t},x_{0})\]
+
+<p>The mask is used to constrain updates so only the masked regions may change:</p>
+
+\[x_{t}^{\prime}=x_{t}\odot M_{t}+x_{t}^{orig}\odot(1-M_{t})\]
+
+<p>The mask is updated throughout the diffusion process to encourage localized changes but remove the shortcut feature.</p>
+
+<h3 id="25-quantifying-shortcut-dependence">2.5 Quantifying Shortcut Dependence</h3>
+<p>The paper proposes a quantitative method for classifying the extent to which a classifier is correlated with a shortcut feature. The model is trained with datasets with varied degrees of shortcut-label correlations. Then, counterfactuals are generated based on a balanced test set. The impact is then measured by the change in model predictions between the original and counterfactual images, often using the mean absolute difference (MAD):</p>
+
+\[MAD=E_{x}[|f(x)-f(x^{c})|]\]
+
+<p>where \(x^{c}\) represents the removed counterfactual image.</p>
+
+<p>Overall, FastDiME presents a generative and causal approach to explainability for computer vision classifiers, serving as an alternative to saliency-based methods and enabling direct analysis of the features affecting predictions, shortcut dependence, and the robustness of a model.</p>
+
+<h2 id="3-explainable-face-verification-via-feature-guided-gradient-backpropagation-fggb">3. Explainable Face Verification via Feature-Guided Gradient Backpropagation (FGGB)</h2>
+
+<h3 id="31-introduction">3.1 Introduction</h3>
+<p>As Deep Learning models achieve state-of-the-art performance in Face Verification (FV), their lack of transparency remains a critical barrier to deployment. This report examines the landscape of Explainable Face Verification (XFV), specifically addressing the limitations of traditional gradient-based explanation methods. We highlight a novel approach, Feature-Guided Gradient Backpropagation (FGGB), which overcomes the “noisy gradient” problem by shifting the backpropagation focus from the final score to the deep feature level.</p>
+
+<p>This method generates sharper visualizations designed to offer interpretations from the user’s perspective. Specifically, the algorithm aims to explain why the system believes a pair of facial images is matching (“Accept”) or non-matching (“Reject”) by generating precise similarity maps for acceptance decisions and dissimilarity maps for rejection decisions.</p>
+
+<h3 id="32-methodology">3.2 Methodology</h3>
+<p>The FGGB method addresses the issue where derivatives of the output score fluctuate sharply or vanish. Instead of backpropagating from the final similarity score, FGGB operates at the deep feature level in a channel-wise manner. The process is divided into two phases:</p>
+
+<p><strong>Gradient Backpropagation &amp; Normalization</strong>
+First, the system extracts the deep face representations (embeddings) for the input images, denoted as \(F_{A}\) and \(F_{B}\) each with dimension \(N\).</p>
+
+<ul>
+  <li>
+    <p><strong>Gradient Extraction:</strong> The system backpropagates gradients from each channel of the feature vector \(F_{A}\). For the \(k\)-th dimension of the feature, the gradient map \(G_{A}^{k}\) is calculated as the derivative with respect to the input image \(I_{A}\):</p>
+
+\[G_{A}^{k}=\frac{\partial F_{A}^{k}}{\partial I_{A}}\]
+  </li>
+  <li>
+    <p><strong>Normalization:</strong> To mitigate local variations (such as vanishing gradients), each gradient map is normalized using the Frobenius norm to produce \(\overline{G}_{A}^{k}\):</p>
+
+\[\overline{G}_{A}^{k}=\frac{G_{A}^{k}}{\|G_{A}^{k}\|}\]
+  </li>
+</ul>
+
+<p><strong>Saliency Map Generation</strong>
+In the second phase, the system aggregates these \(N\) normalized gradient maps into a final saliency map. The aggregation is weighted by the actual contribution of each feature channel to the verification decision.</p>
+
+<ul>
+  <li>
+    <p><strong>Weight Calculation:</strong> A weight vector is defined as the element-wise cosine similarity between the two feature vectors \(F_{A}\) and \(F_{B}\):</p>
+
+\[weight=\frac{F_{A}\odot F_{B}}{||F_{A}||||F_{B}||}\]
+  </li>
+  <li>
+    <p><strong>Weighted Sum:</strong> The final saliency map \(S\) is computed by summing the normalized gradient maps. The weights are adjusted by subtracting the decision threshold to distinguish between positive and negative contributions:</p>
+
+\[S_{A}=\sum_{k=1}^{N}\overline{G}_{A}^{k}\cdot(weight_{k}-\frac{threshold}{N})\]
+  </li>
+  <li>
+    <p><strong>Map Decomposition:</strong> Finally, the map is split into two distinct visualizations:</p>
+    <ul>
+      <li><strong>Similarity Map (\(S_{A}^{+}\)):</strong> Contains positive values, highlighting features that contribute to a match.</li>
+      <li><strong>Dissimilarity Map (\(S_{A}^{-}\)):</strong> Contains negative values, highlighting features that cause a conflict or rejection.</li>
+    </ul>
+
+\[S_{A}^{+}=S_{A}[S_{A}\ge0] , \quad S_{A}^{-}=S_{A}[S_{A}&lt;0]\]
+  </li>
+</ul>
+
+<p style="width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team-39/paper2.png" alt="FGGB Verification and Explanation Flow" /></p>
+
+<h3 id="33-quantitative-evaluation">3.3 Quantitative Evaluation</h3>
+<p>Validation of the FGGB method was done using the Deletion &amp; Insertion metrics on three datasets (LFW, CPLFW, and CALFW). The “Deletion” metric measures the drop in verification accuracy when salient pixels are removed (lower score is better), while “Insertion” measures accuracy gain when pixels are added (higher is better).</p>
+
+<ul>
+  <li><strong>Performance:</strong> FGGB demonstrated superior performance, particularly in generating “Dissimilarity Maps”.</li>
+  <li>In the LFW dataset for Similarity Maps, FGGB achieved a Deletion score of <strong>24.18%</strong>, significantly outperforming the popular LIME method (35.82%) and performing comparably to perturbation methods like CorrRISE (24.51%) but with much greater efficiency.</li>
+  <li>For Dissimilarity Maps (explaining rejections), FGGB achieved a Deletion score of <strong>44.03%</strong> on LFW, outperforming the competing gradient-based method xSSAB, which scored 49.72%.</li>
+</ul>
+
+<p>The method’s robustness was validated across different architectures, including ArcFace (99.70% accuracy), AdaFace (99.27%), and MobileFaceNet (98.87%), showing consistent explainability scores across all three.</p>
+
+<p>FGGB bypasses the limitations of score-level backpropagation. By calculating gradients at the feature level and weighting them by their contribution to the cosine similarity, the method successfully generates distinct maps for both matching and non-matching faces. This approach allows for precise, pixel-level explanations of verification decisions without requiring model retraining or expensive iterative perturbations.</p>
+
+<h2 id="4-frequency-domain-based-explainability">4. Frequency-Domain Based Explainability</h2>
+
+<h3 id="41-introduction">4.1 Introduction</h3>
+<p>While methods like FGGB offer precision in the spatial domain, they still operate within a visualization framework that aligns with human intuition. However, a model’s reliance on features is often rooted in the structural information encoded by frequency components, which are invisible in a simple spatial heatmap. To achieve a deeper, mechanistic understanding of feature dependence and model robustness, we shift our focus from pixels and gradients to the frequency domain.</p>
+
+<p>This final method, Frequency Domain Explainability [2], challenges the spatial bias of traditional XAI by analyzing the relative influence of specific frequency bands on verification decisions. By moving beyond where the model looks to what kind of information is driving the decision, this approach offers a powerful new diagnostic tool, especially for quantifying algorithmic bias across different demographics.</p>
+
+<h3 id="42-methodology-frequency-masking-and-influence-scoring">4.2 Methodology: Frequency Masking and Influence Scoring</h3>
+<p>Mathematically, the convolution operation in the spatial domain is equivalent to element-wise multiplication in the frequency domain. Therefore, the learned kernels within a deep network act as filters that selectively emphasize or suppress different spatial frequencies in the input image. These frequencies encode distinct types of image information crucial for recognition, such as fine textures like face wrinkles (high frequency), identifiable features such as eyes and mouth (mid frequency), and overall shapes (low frequency).</p>
+
+<p>The methodology for quantifying frequency influence is perturbation-based and systematic:</p>
+
+<ol>
+  <li><strong>Transformation:</strong> The input spatial image is transformed into the frequency domain using the Discrete Fourier Transform (DFT).</li>
+  <li><strong>Masking:</strong> Specific radial frequency bands are masked (removing information present in those bands). This masked frequency image is then re-transformed back into the spatial domain in a lossless process.</li>
+  <li><strong>Scoring:</strong> The resulting frequency-masked image, along with the unaltered image, is passed through the FR model to create face embeddings and calculate new cosine similarity scores \(S_{masked}\).</li>
+  <li><strong>Influence Score:</strong> The importance of the masked frequency band is assessed by taking the difference between the unaltered baseline similarity score \(S_{unaltered}\) and the masked score \(S_{masked}\). This difference is interpreted as the direct influence of that frequency component on the verification decision.</li>
+  <li><strong>FHP Generation:</strong> The normalized influences are visualized as Frequency Heat Plots (FHPs). These can be <strong>Absolute FHPs</strong>, which display the magnitude of the performance drop caused by masking a frequency band, or <strong>Directed FHPs</strong>, showing whether the masking operation worsened the similarity score (positive influence) or improved the score (negative influence).</li>
+</ol>
+
+<p>The detection of negative influence is highly valuable, as it diagnoses scenarios where the model was relying on identity-irrelevant artifacts or noise, which, when removed, stabilizes the decision and increases similarity.</p>
+
+<h3 id="43-key-insights-diagnosing-structural-bias">4.3 Key Insights: Diagnosing Structural Bias</h3>
+<p>The application of this frequency-based approach in extensive experiments on FR models yielded crucial diagnostic insights:</p>
+
+<ul>
+  <li><strong>Differential Feature Reliance:</strong> The experiments showed that different frequencies are important to FR models depending on the ethnicity of the input samples. This finding explains algorithmic bias beyond superficial visual factors.</li>
+  <li><strong>Quantifying Bias:</strong> The differences in frequency importance across demographic groups were observed to increase proportionally with the degree of bias exhibited by the model. This means that frequency importance shifts serve as a measurable metric for diagnosing the structural feature dependencies driving discriminatory behavior.</li>
+  <li><strong>Model Vulnerability:</strong> The approach was also applied to scenarios like cross-resolution FR and morphing attacks, allowing researchers to understand precisely which frequency bands (e.g., high-frequency texture or low-frequency shape) a model fails to rely on when performance degrades in challenging scenarios.</li>
+</ul>
+
+<p>The research establishes the spatial frequency domain as an essential dimension for explaining the complex decision-making processes of deep learning systems. The introduction of FHPs provides a powerful, quantitative, and diagnostically potent alternative to traditional spatial explanations.</p>
+
+<p>Operationally, the current FHP generation methodology is computationally intensive. For the frequency-domain analysis to become a standard tool in high-throughput operational FR deployments, the field must pursue the development of lightweight, real-time frequency-domain explanation methods that can be integrated directly into the inference pipeline.</p>
+
+<h2 id="5-conclusion">5. Conclusion</h2>
+<p>The analysis reveals a key insight: modern FR models are sensitive to non-semantic cues that escape human notice. While classical models may imply that CNNs “look” at faces much like humans do, recent methods demonstrate that models frequently rely on fragile correlations and spurious shortcuts.</p>
+
+<p>FastDiME’s counterfactual generation proves causality by showing that removing a specific artifact (like glasses or mask) can flip a prediction, while FGGB exposes the precise deep features contributing to false acceptances, and Frequency Heat Plots reveal hidden structural biases across demographics.</p>
+
+<p>Moving forward, the integration of these XAI tools into the standard development pipeline is a must, in order for safe deployment. The shifts from post-hoc visualization to causal and structural analysis allows for detection of time where a model appears correct for the wrong reasons, because they can cause harm in the real world. However, challenges remain regarding computational efficiency. Methods like iterative frequency masking and diffusion-based generation are too expensive for real-time inference. Future research must focus on optimizing these tools to provide real-time feedback ensuring that robustness and fairness are not just retrospective metrics but active components of the recognition process.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] A. Darwiche, “Logic for explainable AI,” <em>arXiv:2305.05172</em>, May 2023. [Online]. Available: https://arxiv.org/abs/2305.05172</p>
+
+<p>[2] M. Huber, F. Boutros, and N. Damer, “Frequency matters: Explaining biases of face recognition in the frequency domain,” <em>arXiv:2501.16896</em>, Jan. 2025. [Online]. Available: https://arxiv.org/abs/2501.16896</p>
+
+<p>[3] Y. Lu, Z. Xu, and T. Ebrahimi, “Explainable face verification via feature-guided gradient backpropagation,” <em>arXiv:2403.04549</em>, Mar. 2024. [Online]. Available: https://arxiv.org/abs/2403.04549</p>
+
+<p>[4] R. R. Selvaraju et al., “Grad-CAM: Visual explanations from deep networks via gradient-based localization,” <em>International Journal of Computer Vision</em>, vol. 128, no. 2, pp. 336–359, Oct. 2019. [Online]. Available: https://dx.doi.org/10.1007/s11263-019-01228-7</p>
+
+<p>[5] N. Weng et al., “Fast diffusion-based counterfactuals for shortcut removal and generation,” <em>arXiv:2312.14223</em>, Dec. 2023. [Online]. Available: https://arxiv.org/abs/2312.14223</p>
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+
+<script type="text/javascript" id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html">&larr; From Labeling to Prompting: The Paradigm Shift in Image Segmentation</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team48-efficient-super-resolution.html">Efficient Super-Resolution: Bridging Quality and Computation &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
