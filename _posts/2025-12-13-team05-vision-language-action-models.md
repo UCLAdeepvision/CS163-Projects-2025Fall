@@ -77,6 +77,10 @@ Robotics data comes from RT-1 dataset (Brohan et al., 2022), which includes demo
 
 ## OpenVLA (Stanford, UC Berkeley, Toyota Research Institute)
 
+### Overview
+
+OpenVLA is an open-source alternative to RT-2, employs the same architectural structure, utilizing a VLM backbone repurposed to handle action tokens, but at a smaller scale. However, notable differences include training purely on the Open-X-Embodiment dataset which contains 1.3M robot trajectories, utilizing a duel vision encoder structure to capture spatial features. OpenVLA also explores fine-tuning strategies for it's components unlike RT-2, which kept the backbone pretrained weights frozen.
+
 ### Architecture
 
 OpenVLA uses a dual-encoder vision system combined with a large language model backbone to process visual inputs and generate robot actions.
@@ -260,7 +264,7 @@ _Out-of-the-Box-Evals._
 
 ### Discrete Tokens for Actions vs Continous Diffusion
 
-The decision represents a tradeoff primarily between high-level semantic reasoning with a large vision language model backbone and precise low-level control with a diffusion policy. Octo was also evluated using goal image conditioning and found it had 25% higher success rate than when being evaluated with language conditioning.
+The decision represents a tradeoff primarily between high-level semantic reasoning with a large vision language model backbone and precise low-level control with a diffusion policy. Octo was also evaluated using goal image conditioning and found it had 25% higher success rate than when being evaluated with language conditioning.
 
 ![]({{ '/assets/images/team05/OctoCharts.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
@@ -286,7 +290,7 @@ For OpenVLA, the authors discuss only being able to process single-image input, 
 
 For Octo, the authors attributed issues to fine tuning due to the characteristics of training data, performing better in specific camera views despite being general purpose. As illustrated earlier, another limitation was it's lack of semantioc reasoning capabilities that come from web-scale pretrained VLMs, greatly affecting its performance on language conditioned policy compared to goal conditioned policy.
 
-Some shared limitations include all three models primarily being evluated on tabletop manipulation with 7-DoF arms, but generalizations to other robot embodiments remains unexplored, (humanoids, quadrupeds, mobile manipulators)
+Some shared limitations include all three models primarily being evaluated on tabletop manipulation with 7-DoF arms, but generalizations to other robot embodiments remains unexplored, (humanoids, quadrupeds, mobile manipulators)
 
 ## References
 
