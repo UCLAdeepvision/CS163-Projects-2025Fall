@@ -171,12 +171,13 @@ Together, these results suggest that the effectiveness of policy pretraining dep
 
 ### Konstantin Section
 
+## 3D Diffusion Policy (DP3) [4]
 
 ### Issues with Previous Work
 
 The breakthrough work in Diffusion Policy [3] achieved near-human or human level performance on many tasks, proving that diffusion is a very promising direction. However, this model was incredibly data-hungry (approximately 100-200 demonstrations per task) and sensitive to camera viewpoint. Furthermore, these issues lead to the model committing safety violations, requiring interruption of the experiments by humans. 
 
-### The Solution: 3D Diffusion Policy (DP3) [4]
+### Solution
 
 The authors of 3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations hypothesized that with a 3D aware diffusion policy one could achieve much better results. Rather than using multi-view 2D images fed through a ResNet backbone to condition the action diffusion process, they cleverly converted the visual input from a single camera into a point cloud representation followed by an efficient point encoder. They found that with far fewer demonstrations (as few as 10), DP3 is able to handle tasks, surpass previous baselines, and commit far fewer safety violations.
 
@@ -209,7 +210,7 @@ $$
 $$
 where $\beta_k$ and $\bar{\alpha}_k$ are, again, functions of k from the noise scheduler. They use the same diffusion policy network architecture as the original 2D Diffusion Policy authors.
 
-![YOLO]({{ '/assets/images/team22/DP3Architecture.png' | relative_url }})
+![DP3_Architecture]({{ '/assets/images/team22/DP3Architecture.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
 *Fig 5. Overview of 3D Diffusion Policy. In the training phase, DP3 simultaneously trains its perception module and decision-making process end-to-end with expert demonstrations. During evaluation, DP3 determines actions based on visual observations from the environment.* [4].
 
@@ -218,29 +219,31 @@ where $\beta_k$ and $\bar{\alpha}_k$ are, again, functions of k from the noise s
 
 The authors also performed several ablation studies to assess their design choices. They selected 6 tasks with 10 demonstrations each and ran ablations on different 3D representations, point cloud encoders, and other design choices. Here are some of their results:
 
-![YOLO]({{ '/assets/images/team22/3dRepAbl.png' | relative_url }})
+![Ablation_3D_Representation]({{ '/assets/images/team22/3dRepAbl.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-*Fig 5. Overview of 3D Diffusion Policy. In the training phase, DP3 simultaneously trains its perception module and decision-making process end-to-end with expert demonstrations. During evaluation, DP3 determines actions based on visual observations from the environment.* [4].
+*Fig 6. Ablation on the choice of 3D representations. Point clouds perform the best.* [4].
 
-
-<figure>
-  <img src="image.jpg" alt="">
-  <figcaption>Design Choice Ablation</figcaption>
-</figure>
+![Ablation_Design]({{ '/assets/images/team22/DesignChoiceAbl.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 7. Ablation on some design choices. * [4].
 
 
 Surprisingly, the lightweight MLP Encoder greatly outperformed even pre-trained models such as PointNet and Point Transformer. Through careful analysis, the authors made modifications to PointNet and achieved competitive accuracy (72.3%) with their MLP decoder. Here are the original ablation results below:
 
-<figure>
-  <img src="image.jpg" alt="">
-  <figcaption>Encoder Ablation</figcaption>
-</figure>
-
+![Ablation_Encoder]({{ '/assets/images/team22/EncoderAbl.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 8. Ablation on choice of point cloud encoder. Surprisingly, the lightweight MLP encoder outperforms larger pre-trained models. * [4].
 
 
 ### Results [4]
 
-DP3 was benchmarked on a wide range of tasks spanning rigid, articulated, and deformable object manipulation. It achieved over 24% relative improvement compared to Diffusion Policy, converged much faster, and required far fewer demonstrations. In particular, the real robot tasks were: 
+DP3 was benchmarked on a wide range of tasks spanning rigid, articulated, and deformable object manipulation. It achieved over 24% relative improvement compared to Diffusion Policy, converged much faster, and required far fewer demonstrations. Here are the main results on benchmarks for DP3 and other models:
+
+![ResultsTable]({{ '/assets/images/team22/TableI.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 9. Main simulation results. Averaged over 72 tasks, DP3 achieves 24.2% relative improvement compared to Diffusion Policy, with a smaller variance.  * [4].
+
+DP3 also excelled in real robot tasks with greater generality. In particular, the real robot tasks were: 
 1. **Roll-up**: The Allegro hand wraps the plasticine multiple times to make a roll-up.
 2. **Dumpling**: The Allegro hand first wraps the plasticine and then pinchs it to make dumpling pleats.
 3. **Drill**: The Allegro hand grasps the drill up and moves towards the green cube to touch the cube with the drill.
@@ -248,37 +251,37 @@ DP3 was benchmarked on a wide range of tasks spanning rigid, articulated, and de
 
 For the sake of time, there were 40 demonstrations per task. See the table below for results on real-robot tasks:
 
-<figure>
-  <img src="image.jpg" alt="">
-  <figcaption>Table VIII</figcaption>
-</figure>
+![RealRobotResults]({{ '/assets/images/team22/TableVIII.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 10. Results on real robot experiments with 10 tasks per trial. * [4].
 
 To further assess generalization capabilities, they studied spatial generalization with the Pour task, instance generalization on drill, and more. Here are some of their exciting results:
 
-<figure>
-  <img src="image.jpg" alt="Table IX">
-  <figcaption>Spatial Generalization on Pour: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial.</figcaption>
-</figure>
+![SpatialGeneralization]({{ '/assets/images/team22/TableIX.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 11. Spatial Generalization on Pour: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].
 
-<figure>
-  <img src="image.jpg" alt="Table X">
-  <figcaption>Color/Appearance Generalization on Drill: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial.</figcaption>
-</figure>
+![ColorGeneralization]({{ '/assets/images/team22/TableX.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 12. Color/Appearance Generalization on Drill: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].
 
-<figure>
-  <img src="image.jpg" alt="Table XI">
-  <figcaption>Instance generalization on Drill. We replace the cube used in Drill with five objects in varied sizes from our daily life. Each instance is evaluated with one trial.</figcaption>
-</figure>
+![InstanceGeneralizatoin]({{ '/assets/images/team22/TableXI.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 13. Instance generalization on Drill. The authors replaced the cube used in Drill with five objects in varied sizes from our daily life. Each instance is evaluated with one trial. * [4].
 
+This generalizability of the model is perhaps the most crucial aspect, as robots will have to handle many different conditions in real-world applications. The instance generalization is an especially promising result, as it suggests possibilities for 0-shot learning on very similar tasks to training data.
 
 Finally, the authors also present encouraging results about safety. They define a safety violation as "unpredictable behaviors in real-world experiments, which necessitates human termination to ensure robot safety." Below are the safety results for DP3 and Diffusion Policy:
 
-<figure>
-  <img src="image.jpg" alt="Table XIV">
-  <figcaption>Average safety violation rates. DP3 rarely committed any safety violations, in contrast to the other two models.</figcaption>
-</figure>
+![SafetyViolations]({{ '/assets/images/team22/TableXIV.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 14. Average safety violation rates. DP3 rarely committed any safety violations, in contrast to the other models. * [4].
 
 They found that DP3 rarely makes safety violations, and suspect this is due to its 3D awareness, though further work needs to be carried out in this direction. 
+
+### Discussion and Impact of DP3 [4]
+
+Overall, DP3 represents a major step forward from 2D Diffusion Policy by showing that a simple, well-designed 3D representation—sparse point clouds plus a lightweight MLP encoder—is enough to dramatically improve data efficiency, generalization, and safety in visuomotor diffusion policies. However, despite their success, the authors believe that the optimal 3D representation is yet to be discovered. Furthermore, these tasks had relatively short horizons, and they acknowledge that much work needs to be done for tasks with extremely long horizons. Despite these limitations, DP3 has already lead to future work and been built upon in many other projects. For example, ManiCM [5] improves on inference speed, one of the most pressing practical issues. By distilling the multi-step denoising process into a consistency model that can generate actions in single step, ManiCM preserves the strengths of DP3’s 3D-aware policy while making it more suitable for real-time control. Taken together, DP3 and its extensions like ManiCM suggest that 3D diffusion policies are not just a one-off improvement over 2D image-based methods, but a robust foundation for future work in Imitation Learning for visuo-motor policy.
 
 ## References
 
@@ -290,6 +293,10 @@ They found that DP3 rarely makes safety violations, and suspect this is due to i
 "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion."  
 _arXiv preprint arXiv:2303.04137_, 2023.
 
-[2] Ze, Yanjie, Yiming Zhang, Zhiyang Dou, Xingyu Lin, and Shuran Song.  
+[4] Ze, Yanjie, Yiming Zhang, Zhiyang Dou, Xingyu Lin, and Shuran Song.  
 "3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations."  
 _arXiv preprint arXiv:2403.03954_, 2024.
+
+[5] Lu, Guanxing, Zifeng Gao, Tianxing Chen, Wenxun Dai, Ziwei Wang, Wenbo Ding, and Yansong Tang.
+"ManiCM: Real-time 3D Diffusion Policy via Consistency Model for Robotic Manipulation."
+arXiv preprint arXiv:2406.01586, 2024.
