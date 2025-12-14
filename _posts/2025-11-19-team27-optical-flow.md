@@ -9,9 +9,11 @@ date: 2025-11-19
 > Optical flow is simply the problem of estimating motion in images, with real world applications in other fields such as autonomous driving. As such, there have been many different approaches to this problem. We compare three of these approaches: FlowNet, RAFT, and UFlow. We explore each of these models in depth, before moving on to a comparative analysis and discussion of the three models. This analysis highlights the key differences between each approach, when they are most applicable, and how they each handle common problems in the optical flow field such as the lack of available training data.
 
 <!--more-->
+
 {: class="table-of-content"}
-* TOC
-{:toc}
+
+-  TOC
+   {:toc}
 
 ## 1. Introduction
 
@@ -55,11 +57,11 @@ In short, the FlowNet model uses a CNN to take 2 input images, usually a before 
 
 ### Architecture Overview
 
-At a high level, FlowNet is built using an encoder-decoder structure, with information being spacially compressed in the contractive portion first, then refined in the expansion portion, with layers on top of this convolutional portion that are used to actually predict the optical flow field based on the features produced by the convolutional network. 
+At a high level, FlowNet is built using an encoder-decoder structure, with information being spacially compressed in the contractive portion first, then refined in the expansion portion, with layers on top of this convolutional portion that are used to actually predict the optical flow field based on the features produced by the convolutional network.
 
 <img src="{{ site.baseurl }}/assets/images/team27/FlowNet-Architecture.png" />
 
-*Figure 1. High level picture of the FlowNet Architecture [4].*
+_Figure 2. High level picture of the FlowNet Architecture [4]._
 
 In the contractive portion, there are 9 covolution layers total, 6 of them using a stride of 2 to act as a pooling mechanism. Each of them contain a ReLU activation to introduce non-linearity. In these 9 layers, there are no fully-connected layers, allowing for images of any size.
 
@@ -71,7 +73,7 @@ FlowNet actually has two seperate models, both with their own strengths.
 
 <img src="{{ site.baseurl }}/assets/images/team27/FlowNetS-vs-FlowNetC.png" />
 
-*Figure 2. Comparison between FlowNetSimple vs. FlowNetCorrelated architectures [4].*
+_Figure 3. Comparison between FlowNetSimple vs. FlowNetCorrelated architectures [4]._
 
 In FlowNetSimple, both images are just stacked together along the channel dimension, and fed through the generic convolutional network. Because of this, the network has complete freedom on to learn how to process the pair of images, with no constraints on the internal representations on matching strategies.
 
@@ -81,7 +83,7 @@ While we will analyze the results more shortly, at a high level FlowNetCorr perf
 
 ### Training FlowNet
 
-As mentioned beforehand, optical flow models are not the easiest to train, mainly due to the fact that ground truth data is hard to come by, and usually has to be simulated. Because of this, the Flying Chairs dataset was used as it had the most ground truth image pairings out of any dataset at the time, with around 23,000 different simulated pairings. Along with this simulated data to help train, there was also data augmentation which was used to diversify and not overfit to the simple, clean images that are within the Flying Chairs dataset. Augmentation techniques included simple geometric transformations like translation, rotating, and scaling, as well as additive Gaussian noise features like brightness, contrast, gamma, and color. 
+As mentioned beforehand, optical flow models are not the easiest to train, mainly due to the fact that ground truth data is hard to come by, and usually has to be simulated. Because of this, the Flying Chairs dataset was used as it had the most ground truth image pairings out of any dataset at the time, with around 23,000 different simulated pairings. Along with this simulated data to help train, there was also data augmentation which was used to diversify and not overfit to the simple, clean images that are within the Flying Chairs dataset. Augmentation techniques included simple geometric transformations like translation, rotating, and scaling, as well as additive Gaussian noise features like brightness, contrast, gamma, and color.
 
 In terms the actual loss function, endpoint error (EPE) is used, which is measured as the euclidean distance between the predicted flow vector and the ground truth movement of pixels, averaged over all pixels.
 
@@ -91,19 +93,19 @@ Along with augmentation, finetuning can also be used to expand to other types of
 
 ### Results
 
-Like just mentioned above, FlowNet accuracy is based on the metric of EPE, which at a high level tells us how close average pixel in the predicted flow vector was to its ground truth flow vector. 
+Like just mentioned above, FlowNet accuracy is based on the metric of EPE, which at a high level tells us how close average pixel in the predicted flow vector was to its ground truth flow vector.
 
 FlowNet was evaluated on many different datasets with many options, but a table with a good representation of its strengths and limitations is listed here.
 
 <img src="{{ site.baseurl }}/assets/images/team27/FlowNet-Results.png" />
 
-*Figure 3. Evaluation Metrics on different datasets and FlowNet model options [4].*
+_Figure 4. Evaluation Metrics on different datasets and FlowNet model options [4]._
 
 The different options used in evaluating FlowNet were +v and +ft, which correspond to the variatonal refinement and finetuning options respectively.
 
 FlowNet models are trained on the Flying Chairs dataset. Because of this, the test EPE on this dataset was extremely low for all models, with a high of 3.03. As mentioned before, the FlowNetC model performs best on simple datasets, which was why it was able to achieve the lowest EPE out of all models and datasets with an EPE of only 2.19, compared to FlowNetS which achieved a 2.71 EPE. One thing that is interesting, however, is that the FlowNetS and FlowNetC actually perform worse with variational refinement and finetuning. This is because as the models were already trained on Flying Chairs, they have already learned the optimal representation for that specific data. Adding variational refinement (to smooth a noisy output in post-processing) and finetuning (which is done with the Sintel dataset) actually makes the model perform worse.
 
-On the other datasets, Sintel Clean and Sintel Final, we can see the model performs significantly worse than on the Flying Chairs dataset, which makes sense for two reasons. One, the model is trained using Flying Chairs, but also Sintel is a more realistic dataset than Flying Chairs, so it is harder to capture all features correctly. 
+On the other datasets, Sintel Clean and Sintel Final, we can see the model performs significantly worse than on the Flying Chairs dataset, which makes sense for two reasons. One, the model is trained using Flying Chairs, but also Sintel is a more realistic dataset than Flying Chairs, so it is harder to capture all features correctly.
 
 It can be seen in the Sintel Clean and Sintel Final results that FlowNetS performs better on a more noisy dataset (Sintel Final), where FlowNetC performs better on a cleaner dataset (Flying Chairs and Sintel Clean). As the finetuning was done on Sintel, we also see performance boosts from using it when evaluating on the Sintel datasets. Variatonal refinement also helped with these datasets, as it helps smooth the output (flow fields), as they are more noisy than the clean outputs from Flying Chairs that the model was trained on.
 
@@ -126,7 +128,7 @@ RAFT (Recurrent All-Pairs Field Transforms) is a state-of-the-art optical flow m
 <img src="{{ site.baseurl }}/assets/images/team27/RAFT_arc.png" />
 
 </center>
-*Figure 1. RAFT model architecture illustrating the feature encoder, correlation volume construction, and recurrent update operator [2].*
+*Figure 5. RAFT model architecture illustrating the feature encoder, correlation volume construction, and recurrent update operator [2].*
 
 #### Loss Function
 
@@ -162,7 +164,7 @@ The methods used included:
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | <img src="{{ site.baseurl }}/assets/images/team27/FC_no_aug.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/FC_with_aug.png" width="400"> |
 
-_Figure 2. Visualization of Flying Chairs samples before and after data augmentation, showing the effects of geometric and photometric transformations used during training [2]._
+_Figure 6. Visualization of Flying Chairs samples before and after data augmentation, showing the effects of geometric and photometric transformations used during training [2]._
 
 ### Evaluation Metrics
 
@@ -182,7 +184,7 @@ Across nearly all settings, increasing the number of Flying Chairs samples impro
 | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | <img src="{{ site.baseurl }}/assets/images/team27/flownet_on_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/flownet_on_kitti.png" width="400"> |
 
-_Figure 3. FlowNet performance on Sintel and KITTI, displaying metrics after fine-tuning under different data conditions [2]._
+_Figure 7. FlowNet performance on Sintel and KITTI, displaying metrics after fine-tuning under different data conditions [2]._
 
 Data augmentation consistently helped when the test domain differed from the training domain. For RAFT in particular, augmentation sharply reduced error. For example, on Sintel with 2000 pre-training samples, EPE improved from 38.78 (no aug) to 6.51 (with aug). FlowNet saw smaller gains, and in some Sintel cases the improvement was minimal, showing that FlowNet tends to overfit more regardless of augmentation.
 
@@ -190,7 +192,7 @@ Data augmentation consistently helped when the test domain differed from the tra
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | <img src="{{ site.baseurl }}/assets/images/team27/raft_on_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/raft_on_kitti.png" width="400"> |
 
-_Figure 4. RAFT performance on Sintel and KITTI, displaying metrics after fine-tuning under different data conditions [2]._
+_Figure 8. RAFT performance on Sintel and KITTI, displaying metrics after fine-tuning under different data conditions [2]._
 
 The modified FlowNet architecture with deconvolutional upsampling performed almost identically to the original. For instance, at 2000 pre-training samples on Sintel, the new model achieved an EPE of 6.80, essentially the same as the original 6.79. The only noticeable pattern was that DU gave a slight advantage when little or no pre-training data was available, while the original FlowNet recovered a small edge with larger datasets. Overall, the architecture change did not introduce meaningful improvements.
 
@@ -200,7 +202,7 @@ The modified FlowNet architecture with deconvolutional upsampling performed almo
 
 </center>
 
-_Figure 5. Predictions from the modified FlowNet model using deconvolutional upsampling, compared against the original architecture on Sintel [2]._
+_Figure 9. Predictions from the modified FlowNet model using deconvolutional upsampling, compared against the original architecture on Sintel [2]._
 
 Qualitatively, RAFT produced cleaner and more consistent flow fields than FlowNet, especially when pre-training and augmentation were combined. In scenes from the Driving and FlyingThings, RAFT captured fine-grained motion and global consistency better, while FlowNet focused more on object boundaries and sometimes missed motion details. In the low-data setting with no pre-training, RAFT still produced more coherent motion estimates, whereas FlowNet tended to rely heavily on edges rather than true frame-to-frame displacement.
 
@@ -208,7 +210,7 @@ Qualitatively, RAFT produced cleaner and more consistent flow fields than FlowNe
 | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | <img src="{{ site.baseurl }}/assets/images/team27/raft_preds_sintel.png" width="400"> | <img src="{{ site.baseurl }}/assets/images/team27/flownet_preds_sintel.png" width="400"> |
 
-_Figure 6. Comparison of RAFT and FlowNet without pre-training, illustrating RAFT’s stronger inductive bias for motion estimation in extremely low data conditions [2]._
+_Figure 10. Comparison of RAFT and FlowNet without pre-training, illustrating RAFT’s stronger inductive bias for motion estimation in extremely low data conditions [2]._
 
 ## 5. UFlow: What Matters in Unsupervised Optical Flow
 
@@ -228,7 +230,7 @@ Despite these changes, UFlow at its core uses a self-supervised training loop ac
 
 <img src="{{ site.baseurl }}/assets/images/team27/wcf-loop.png" />
 
-_Figure 6. Overview of the UFlow model architecture, showing the pyramid structure as well as the WCF block present at each level [3]._
+_Figure 11. Overview of the UFlow model architecture, showing the pyramid structure as well as the WCF block present at each level [3]._
 
 As previously mentioned, the unsupervised training objective is the photometric loss. While the team behind UFlow experimented with multiple different losses, the main one used was the generalized Charbonnier loss function, given by
 
@@ -260,7 +262,7 @@ All together, a comparison of the estimated flow without each of these three com
 
 <img src="{{ site.baseurl }}/assets/images/team27/ablations-comparisons.png" />
 
-_Figure 7. A visual comparison of how ablating each individual component, while holding the others constant, impacts the results. Examples from both KITTI and SINTEL shown. [3]._
+_Figure 12. A visual comparison of how ablating each individual component, while holding the others constant, impacts the results. Examples from both KITTI and SINTEL shown. [3]._
 
 ### Results And Performance
 
@@ -282,30 +284,31 @@ FlowNet: As FlowNet is a supervised approach, it requires a ground truth optical
 
 RAFT: RAFT operates entirely within the supervised setting, benefiting from accurate ground-truth labels that allow its recurrent refinement process to learn stable and precise motion estimates. This allows RAFT to consistently outperform earlier supervised models. However, RAFT inherits the major limitation of supervised learning: the scarcity of labeled optical flow data. As a result, it depends heavily on large-scale synthetic datasets such as Flying Chairs. While this strategy enables strong performance, it reduces flexibility compared to unsupervised models that can leverage real-world video.
 
-UFlow: Being an unsupervised approach, UFlow is not susceptible to the same labeled data bottleneck as the supervised models. The tradeoff here is the added complexity in the training pipeline, as outlined in the ablation studies section.  
+UFlow: Being an unsupervised approach, UFlow is not susceptible to the same labeled data bottleneck as the supervised models. The tradeoff here is the added complexity in the training pipeline, as outlined in the ablation studies section.
+
 ### Performance Comparison Across Datasets
 
 FlowNet: According to the paper on FlowNet, “The endpoint error (EPE), which is the standard error measure for optical flow estimation. It is the Euclidean distance between the predicted flow vector and the ground truth, averaged over all pixels.” This is how the FlowNet Models were evaluated on different datasets, with the lower EPE value the better. All of these models did very well on the Flying Chairs dataset, likely because it is a simpler dataset and that is also what the models were trained on, and had a harder time with the Sintel dataset. The Sintel dataset was made of animated images, with the Clean dataset being ones that were just straight-forward images, and Final having tougher things like motion blur and other blemishes on the image that make it tougher to identify correlating pixels. However, in the models including +ft, we did see a slightly better performance. This makes sense as these models were finetuned with the Sintel dataset, compared to their counterparts (that didn’t include +ft) that had a worse performance, as they didn’t have the fine tuning. A main reason for the training being purely on the Flying Chairs dataset is because of how many samples are located within it, around 23,000, compared to Sintel which only contained around 1000 image pairings.
 
 RAFT achieves high accuracy across benchmarks due to its dense correlation volume and iterative update operator. On Sintel, RAFT consistently outperforms FlowNet and produces significantly sharper flow predictions. Its performance does drop when trained with insufficient pre-training or augmentation, but once supplied with enough diversity, RAFT remains the strongest supervised model. On KITTI, domain shift limits its accuracy more noticeably, yet RAFT still surpasses FlowNet and remains competitive with top supervised methods.
 
-UFlow: Uflow was evaluated on the field standard datasets KITTI and SINTEL. The final result was that UFlow could perform on par with supervised models such as FlowNet. However, when the supervised models were fine-tuned, they were able to achieve better performance than UFlow. 
+UFlow: Uflow was evaluated on the field standard datasets KITTI and SINTEL. The final result was that UFlow could perform on par with supervised models such as FlowNet. However, when the supervised models were fine-tuned, they were able to achieve better performance than UFlow.
 
 ### Training Data Requirements
 
-FlowNet: One thing that makes it tough to have extremely accurate optical flow models is the lack of real-world ground truth data. Because of this, synthetic datasets are required in order to get enough data to train a supervised model.  Like mentioned earlier, the FlowNet model is trained on the Flying Chairs synthetic dataset. This is for 2 reasons, one being its simplicity, but the other being the amount of data that is available. The 22,872 synthetic image pairs provide a decent amount of data for FlowNet to be trained on, compared to Sintel which only contains 1041 pairs. Another important feature of training the FlowNet model is data augmentation. These are making the images slightly different using translation, rotation, and scaling. This is just so the model doesn’t get too used to one specific POV and expect the chairs (and other items that will be evaluated) to all be the same size, shape, and orientation. This data augmentation proves to have a pretty significant impact on the EPE of its predictions, with about a 2 pixel increase in EPE on the Sintel dataset compared to training the model without it. 
+FlowNet: One thing that makes it tough to have extremely accurate optical flow models is the lack of real-world ground truth data. Because of this, synthetic datasets are required in order to get enough data to train a supervised model. Like mentioned earlier, the FlowNet model is trained on the Flying Chairs synthetic dataset. This is for 2 reasons, one being its simplicity, but the other being the amount of data that is available. The 22,872 synthetic image pairs provide a decent amount of data for FlowNet to be trained on, compared to Sintel which only contains 1041 pairs. Another important feature of training the FlowNet model is data augmentation. These are making the images slightly different using translation, rotation, and scaling. This is just so the model doesn’t get too used to one specific POV and expect the chairs (and other items that will be evaluated) to all be the same size, shape, and orientation. This data augmentation proves to have a pretty significant impact on the EPE of its predictions, with about a 2 pixel increase in EPE on the Sintel dataset compared to training the model without it.
 
 RAFT: RAFT’s architecture is powerful but data-hungry. With little or no pre-training, RAFT struggles to learn stable motion representations, resulting in high error. Performance improves rapidly as more Flying Chairs samples are added, and augmentation provides an even larger boost. This sensitivity highlights how much RAFT depends on both the quantity and variety of labeled or synthetic data. Compared to FlowNet, RAFT benefits more from scale but also degrades more sharply when data is scarce.
 
-UFlow: Clearly, in terms of training data requirements, UFlow is the superior model. This is due to the fact that the unsupervised approach provides the model with an abundance of additional data to train on. As a direct result, the training process for UFlow does not require computational resources to be allocated to creating synthetic data, reducing the computational costs as well. 
+UFlow: Clearly, in terms of training data requirements, UFlow is the superior model. This is due to the fact that the unsupervised approach provides the model with an abundance of additional data to train on. As a direct result, the training process for UFlow does not require computational resources to be allocated to creating synthetic data, reducing the computational costs as well.
 
 ### Generalization Capabilities
 
-FlowNet: While it performs the best on the Flying Chairs dataset, as it was trained on it, the model does quite well on real-world data like Sintel and KITTI, with only a ~6 dropoff between the performance of EPE on Flying Chairs and Sintel, which when it comes down to it, is not a lot of displacement if we are speaking in terms of pixels. Along with a good overall generalization, the FlowNet model provides the  FlowNetS and FlowNetC models, which can both be used for different types of datasets, depending on the need. FlowNetS takes the approach of literally just stacking the 2 images pixels on top of each other, to form an input of 6 values, RGB1 and RGB2. With this approach, the model basically just has to learn what every value means. And through its training, it will make inferences like, “The difference between R1 and R2 is important”, and other details of that nature. FlowNetC, on the other hand, basically instructs the model to compute how similar certain patches are. Basically, the model is told to compare one patch to other patches around it, and compare the similarities in order to determine which patch in the second image is the closest to the one being examined in the first image. Contrary to what many believed would be the case, FlowNetC is not better in all scenarios. It seems to do better when it comes to cleaner data, but actually performs worse than FlowNetS when it comes to challenging data. This is because FlowNetC somewhat overfits to the training data, while FlowNetS can infer some more complex relationships itself as it doesn’t have such rigid instructions.
+FlowNet: While it performs the best on the Flying Chairs dataset, as it was trained on it, the model does quite well on real-world data like Sintel and KITTI, with only a ~6 dropoff between the performance of EPE on Flying Chairs and Sintel, which when it comes down to it, is not a lot of displacement if we are speaking in terms of pixels. Along with a good overall generalization, the FlowNet model provides the FlowNetS and FlowNetC models, which can both be used for different types of datasets, depending on the need. FlowNetS takes the approach of literally just stacking the 2 images pixels on top of each other, to form an input of 6 values, RGB1 and RGB2. With this approach, the model basically just has to learn what every value means. And through its training, it will make inferences like, “The difference between R1 and R2 is important”, and other details of that nature. FlowNetC, on the other hand, basically instructs the model to compute how similar certain patches are. Basically, the model is told to compare one patch to other patches around it, and compare the similarities in order to determine which patch in the second image is the closest to the one being examined in the first image. Contrary to what many believed would be the case, FlowNetC is not better in all scenarios. It seems to do better when it comes to cleaner data, but actually performs worse than FlowNetS when it comes to challenging data. This is because FlowNetC somewhat overfits to the training data, while FlowNetS can infer some more complex relationships itself as it doesn’t have such rigid instructions.
 
 RAFT generalizes better than earlier supervised models due to its strong inductive biases, yet it still faces challenges when moving from synthetic data to real-world scenes. On Sintel, RAFT adapts well with fine-tuning, but KITTI exposes limitations in matching the natural noise, lighting, and texture variations absent in synthetic pre-training. While RAFT is more robust than FlowNet, it cannot match the domain flexibility of unsupervised approaches like UFlow that learn directly from real imagery.
 
-Generalization is one aspect where UFlow excels compared to other models. This is true even when the training and test data weren’t from the same domain. This is largely due to the fact that it is trained on real-world unlabeled data, which makes it more robust in practice. 
+Generalization is one aspect where UFlow excels compared to other models. This is true even when the training and test data weren’t from the same domain. This is largely due to the fact that it is trained on real-world unlabeled data, which makes it more robust in practice.
 
 ### Computational Costs
 
