@@ -2,6 +2,7 @@
 layout: post
 comments: true
 title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3"
+Project Track: Project 1
 author: Team 35
 date: 2025-12-13
 ---
@@ -48,7 +49,8 @@ realistic segmentation setting.
 ## Results
 
 ### Full Results (Qualitative)
-(See qualitative visualizations comparing input images, ground truth, and model predictions.)
+![Qualitative comparison of segmentation outputs]({{ '/assets/images/team35/cs163_final_project_im_1.png' | relative_url }})
+{: style="width: 700px; max-width: 100%;"}
 
 ### Full Results (Quantitative)
 
@@ -83,6 +85,9 @@ available, it serves as a high-quality reference baseline for our experiments.
 **Architecture.**  
 SegFormer uses a hierarchical Mix Transformer (MiT-B5) encoder that produces multi-scale
 feature maps, and a lightweight decoder that fuses these features into dense per-pixel logits.
+
+![Segformer Architecture]({{ '/assets/images/team35/cs163_final_project_im_2.png' | relative_url }})
+{: style="width: 700px; max-width: 100%;"}
 
 **Results.**  
 The released SegFormer-B5 checkpoint is the strongest model in our study across most splits,
@@ -126,6 +131,9 @@ and complex boundaries.
 DeepLabV3+ combines a CNN backbone with atrous/dilated convolutions (ASPP) for multi-scale
 context, followed by a decoder for boundary refinement.
 
+![DeepLabV3+ Architecture]({{ '/assets/images/team35/cs163_final_project_im_3.png' | relative_url }})
+{: style="width: 700px; max-width: 100%;"}
+
 **Results.**
 With limited training time, DeepLabV3+ performs below SegFormer:
 - FULL: Val mIoU 0.3591, Test mIoU 0.4548  
@@ -145,7 +153,10 @@ minimal adaptation.
 SAM3 is originally built for prompt-driven instance segmentation. To repurpose it for dense multi-class segmentation, we:
 - Use SAM3 as an image feature backbone  
 - Attach a lightweight per-pixel semantic head  
-- Train in a prompt-free dense prediction mode with the same CE+Dice objective  
+- Train in a prompt-free dense prediction mode with the same CE+Dice objective
+
+![SAM3 Architecture]({{ '/assets/images/team35/cs163_final_project_im_4.png' | relative_url }})
+{: style="width: 700px; max-width: 100%;"}
 
 **Results.**
 SAM3 performs poorly in this prompt-free, dense multi-class setup:
