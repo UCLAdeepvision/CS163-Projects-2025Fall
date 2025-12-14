@@ -22,7 +22,7 @@ Cityscapes is a large-scale, widely used dataset for understanding complex urban
 
 We remapped all categories in cityscapes to a consistent six-class scheme - fence, car, vegetation, pole, traffic sign, and traffic light. All of the classes are fine-grained urban structures. We define an additional implicit background class which are default to ignore by setting their pixel values to zero.
 ### Dataset Split
-We partition the Cityscapes dataset into three subsets from training, validation, and testing. From the original Cityscapes training split, we sample 2000 images to form our training set, 250 images to form our validation set, and another 250 images to form our test set.
+We partition the Cityscapes dataset into three subsets from training, validation, and testing. Then, we sample 2000 images to form our training set, 250 images to form our validation set, and another 250 images to form our test set.
 
 ## Model: SegFormer
 In this project, we build everything upon the SegFormer model.
