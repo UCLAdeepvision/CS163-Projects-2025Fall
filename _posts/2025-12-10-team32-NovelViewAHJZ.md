@@ -224,13 +224,13 @@ _Fig. LVSM architectures: (a) Encoder-Decoder LVSM and (b) Decoder-Only LVSM._
 
 #### Results
 
-Jin et. al evaluated LVSM across multiple datasets against previous state-of-the-art methods for both object-level and scene-level novel view synthesis. Here are the quantitative results:
+Jin et al. evaluated LVSM across multiple datasets against previous state-of-the-art methods for both object-level and scene-level novel view synthesis. Here are the quantitative results:
 
 ![LVSM Comparison Table]({{ '/assets/images/32/lvsm_comparison_table.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-_Table 2. Quantitive comparisons on object-level (left) and scene-level (right) view synthesis. Table taken from LVSM paper [2]._
+_Table 2. Quantitative comparisons on object-level (left) and scene-level (right) view synthesis. Table taken from LVSM paper [2]._
 
-For object level testing, they used the Objaverse dataset to train the LVSM. Then, they tested on two object-level datasets, Google Scanned Objects (GSO) and Amazon Berkeley Objects (ABO). Based on the results, the 512-res decoder achieves a 3 dB and 2.8 dB Peak Signal-to-Noise Ratio against the best prior method GS-LRM (which uses 3D Gaussian splatting) and the 256-res decoder only LVSM performs a lot better than Large Multi-view Gaussian Models and GS-LRM. The results show that removing the 3D inductive bias is effective. A strong performance on the ABO dataset also suggests that the model can handle challenging materials difficult for current handcrafted 3D representations.
+For object level testing, they used the Objaverse dataset to train the LVSM. Then, they tested on two object-level datasets, Google Scanned Objects (GSO) and Amazon Berkeley Objects (ABO). Based on the results, the 512-res decoder achieves a 3 dB and 2.8 dB PSNR (Peak Signal-to-Noise Ratio) against the best prior method GS-LRM (which uses 3D Gaussian splatting) and the 256-res decoder only LVSM performs a lot better than Large Multi-view Gaussian Models and GS-LRM. The results show that removing the 3D inductive bias is effective. A strong performance on the ABO dataset also suggests that the model can handle challenging materials difficult for current handcrafted 3D representations.
 
 For scene level testing, they compared the results of LVSM with pixelNeRF, GPNR, pixelSplat, MVSplat, and GS-LRM. The LVSM shows a 1.6 dB PSNR gain against the best prior work GS-LRM, and the improved performance can be visualized in the below image where the LVSM has better performance on thin structures and specular materials.
 
@@ -253,7 +253,7 @@ Overall, the LVSM bypasses 3D representations, minimizing 3D inductive bias by u
 
 #### Running the Codebase
 
-Using the paper's [Github](https://github.com/haian-jin/LVSM) repository, we tried running the LVSM ourselves within Google Colab, modifying the code to suit the Colab environment. However, we ran into a few issues with Colab package installation, outdated NumPy code, and related dependency conflicts. In the end, we ran the inference step on 30 inputted images, but the output rendered view consisting of the synthesized views turned out to be a lot blurrier than expected. Some possibilties include sparse inputs, incorrect COLMAP generated images, and low resolution outputs.
+Using the paper's [Github](https://github.com/haian-jin/LVSM) repository, we tried running the LVSM ourselves within Google Colab, modifying the code to suit the Colab environment. However, we ran into a few issues with Colab package installation, outdated NumPy code, and related dependency conflicts. In the end, we ran the inference step on 30 inputted images, but the output rendered view consisting of the synthesized views turned out to be a lot blurrier than expected. Some possibilities include sparse inputs, incorrect COLMAP generated images, and low resolution outputs.
 
 Here is the rendered video output for a scene containing a long desk at the library. As you can see, the video shows blurriness as it transitions from one input image to the next input image while attempting to synthesize novel views. [Video Link](https://drive.google.com/file/d/1P8BDGMR9Ng-7UjQemSg4WXGn3MvCJdV3/view?usp=sharing)
 
