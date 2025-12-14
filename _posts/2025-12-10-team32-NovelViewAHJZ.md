@@ -1,10 +1,12 @@
 ---
 layout: post
 comments: true
-title: "Project Track: Exploring Modern Novel View Generation Methods"
+title: "Exploring Modern Novel View Generation Methods"
 author: Team 32
 date: 2025-12-10
 ---
+
+> [Project Tack] Historically, novel view synthesis (NVS) has relied on volumetric radiance field approaches, such as NeRF. While effective, these methods are often computationally expensive to train and prohibitively slow to render for real-time applications. To address these limitations, researchers have developed new architectures that reduce computational costs while maintaining or exceeding visual fidelity. This report examines two distinct solutions to this challenge: 3D Gaussian Splatting (3DGS) and the Large View Synthesis Model (LVSM).
 
 <!--more-->
 
@@ -49,9 +51,9 @@ Block formula: $$ y = mx + b $$
 Inline formula: $$y = mx + b$$
 -->
 
-## Motivation
+<!-- ## Motivation
 
-Historically, novel view synthesis (NVS) has relied on volumetric radiance field approaches, such as NeRF. While effective, these methods are often computationally expensive to train and prohibitively slow to render for real-time applications. To address these limitations, researchers have developed new architectures that reduce computational costs while maintaining or exceeding visual fidelity. This report examines two distinct solutions to this challenge: 3D Gaussian Splatting (3DGS) and the Large View Synthesis Model (LVSM).
+Historically, novel view synthesis (NVS) has relied on volumetric radiance field approaches, such as NeRF. While effective, these methods are often computationally expensive to train and prohibitively slow to render for real-time applications. To address these limitations, researchers have developed new architectures that reduce computational costs while maintaining or exceeding visual fidelity. This report examines two distinct solutions to this challenge: 3D Gaussian Splatting (3DGS) and the Large View Synthesis Model (LVSM). -->
 
 ## Current Novel View Generation Methodologies
 
