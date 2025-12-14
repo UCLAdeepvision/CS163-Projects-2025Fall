@@ -71,6 +71,10 @@ Multi-person pose estimation, on the other hand, introduces the challenge of ass
 The top-down methods generally achieve higher accuracy but scale linearly with the number of people. Bottom-up methods are more computationally efficient for crowded scenes but require robust association algorithms. 
 
 ### Deep Learning Models for Pose Estimation
+Human pose estimation aims to infer the spatial configuration of human body parts from visual input such as images or videos. Depending on the target representation, pose estimation can be formulated as either a 2D or 3D prediction problem. In 2D pose estimation, the task is to localize body joints on the image plane, while 3D pose estimation further recovers depth information to reconstruct the full skeletal structure in three-dimensional space. As a result, human pose estimation has become a dominant and foundational research topic within the computer vision community.
+
+Accurate pose estimation plays a critical role in a wide range of applications. For example, sports activity recognition relies on precise skeletal joint localization to analyze movement patterns, evaluate performance, and prevent injuries. Similarly, pose estimation enables downstream tasks such as action recognition, gesture classification, and posture assessment, although these tasks are conceptually distinct. While action recognition focuses on identifying motion patterns over time, pose estimation provides the structural representation required to support such high-level reasoning. As pose estimation models improve, they increasingly serve as a backbone for action understanding systems, suggesting that future advances in pose estimation may significantly enhance action recognition performance.
+
 Convolutional neural networks form the backbone of most pose estimation systems. CNNs exploit local spatial correlations in images and progressively build higher-level features through stacked convolutional layers. Early layers capture low-level patterns such as edges, while deeper layers encode semantic concepts like limbs and body parts.  
 
 A typical pose estimation network predicts a stack of heatmaps using a fully convolutional architecture: 
@@ -97,7 +101,7 @@ $$
 where $$Q$$, $$K$$, and $$V$$, are query, key, and value matrices derived from feature embeddings. By inforporating attention, pose models can better handle occlusions and complex interactions between joints. 
 
 ## 3D Human Pose Estimation 
-3D pose estimation extends the 2D formulation by predicting depth information for each joint. The task is inherently ill-posed because multiple 3D poses can project to the same 2D configuration. Many approaches therefore, rely on multi-view supervision, temporal constraints, or learned priors over human anatomy. 
+3D pose estimation extends the 2D formulation by predicting depth information for each joint and predicting the image-plan coordinates (x,y) of each joing, as well as estimating the depth $$z$$, thereby reconstructing the full three-dimensinoal structure of the human body. The task is inherently ill-posed because multiple 3D poses can project to the same 2D configuration. Many approaches therefore, rely on multi-view supervision, temporal constraints, or learned priors over human anatomy. 
 
 A common formulation predicts 3D joints ($$x_i$$, $$y_i$$, $$z_i$$) from 2D detections: 
 
@@ -138,7 +142,8 @@ By converting raw pixel data into structured skeletal representations, pose esti
 Human pose estimation has evolved considerably over the last decade, largely driven by advances in deep learning architectures. In this section, we compare some of the most influential models and frameworks, including SRCNN and ViTPose, highlighting their design and limitations. 
 
 ### SRCNN (Super-Resolution Convolutional Neural Network) 
-Although SRCNN was originally designed for image super-resolution, its underlying convolutional architecture has inspired early approaches to pose estimation through feature extraction and heatmap regression. SRCNN consists of three layers of convolution:
+Single image super-resolution (SR) is a classical and well-studied problem in computer vision that aims to recover a high-resolution image from a single low-resolution input. This task is fundamentally ill-posed, as multiple high-resolution images can correspond to the same low-resolution observation. In other words, SR is an underdetermined inverse problem, where the solution space is large and non-unique. To mitigate this ambiguity, most super-resolution approaches constrain the solution space by imposing strong prior information learned from data. 
+SRCNN introduced a key conceptual shift by showing that this traditional pipeline can be interpreted as a deep convolutional neural network, enabling end-to-end learning of the super-resolution mapping. Rather than explicitly learning dictionaries or manifolds for patch representation, SRCNN implicitly captures these priors through hidden convolutional layers. Patch extraction, non-linear mapping, and reconstruction are all reformulated as convolution operations, allowing the entire process to be optimized jointly using backpropagation. Although SRCNN was originally designed for image super-resolution, its underlying convolutional architecture has inspired early approaches to pose estimation through feature extraction and heatmap regression. SRCNN consists of three layers of convolution:
 
 $$
 F_1(Y) = \max\left(0, W_1 * Y + B_1\right)
