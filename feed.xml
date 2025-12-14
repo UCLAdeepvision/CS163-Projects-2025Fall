@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T22:56:31+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T23:01:00+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
   <p>This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.</p>
 </blockquote>
 
@@ -1540,7 +1540,277 @@ MedSAM performance is on par with specialist models, even though it works with a
 
 <p>[3] Milletari, Fausto, et al. “V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation”. arXiv preprint arXiv:1606.04797 (2016)</p>
 
-<p>[4] Yao, Wenjian “From CNN to Transformer: A Review of Medical Image Segmentation Models”. arXiv preprint arXiv:2308.05305 (2023)</p>]]></content><author><name>Megan Jacob</name></author><summary type="html"><![CDATA[This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.]]></summary></entry><entry><title type="html">Visuomotor Policy</title><link href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html" rel="alternate" type="text/html" title="Visuomotor Policy" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html"><![CDATA[<blockquote>
+<p>[4] Yao, Wenjian “From CNN to Transformer: A Review of Medical Image Segmentation Models”. arXiv preprint arXiv:2308.05305 (2023)</p>]]></content><author><name>Megan Jacob</name></author><summary type="html"><![CDATA[This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.]]></summary></entry><entry><title type="html">Machine Learning for Studio Photo Retouching: Object Removal, Background Inpainting, and Lighting/Shadow Preservation</title><link href="/CS163-Projects-2025Fall/2025/12/13/team14-photo-retouching.html" rel="alternate" type="text/html" title="Machine Learning for Studio Photo Retouching: Object Removal, Background Inpainting, and Lighting/Shadow Preservation" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team14-photo-retouching</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team14-photo-retouching.html"><![CDATA[<blockquote>
+  <p>Studio photography aims to produce aesthetically polished images. However, even in controlled environments, unwanted objects such as chairs, props, wires, etc., often appear in the scene. Further, lighting is altered tremendously by the addition / removal of these objetcs. Traditionally, these objects have been removed manually, requiring careful reconstruction of the background and its lighting conditions. This paper looks at modern models aimed at making this process easier.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#background-and-key-concepts" id="markdown-toc-background-and-key-concepts">Background and Key Concepts</a></li>
+  <li><a href="#inpainting-and-object-removal-methods" id="markdown-toc-inpainting-and-object-removal-methods">Inpainting and Object Removal Methods</a>    <ul>
+      <li><a href="#resolution-robust-large-mask-inpainting-with-fourier-convolutions" id="markdown-toc-resolution-robust-large-mask-inpainting-with-fourier-convolutions">Resolution-Robust Large Mask Inpainting with Fourier Convolutions</a></li>
+      <li><a href="#smart-eraser" id="markdown-toc-smart-eraser">Smart Eraser</a></li>
+      <li><a href="#omnieraser" id="markdown-toc-omnieraser">OmniEraser</a></li>
+    </ul>
+  </li>
+  <li><a href="#shadow-and-lighting-aware-editing" id="markdown-toc-shadow-and-lighting-aware-editing">Shadow and Lighting-Aware Editing</a>    <ul>
+      <li><a href="#removing-objects-and-their-shadows-using-approximate-lighting-and-geometry" id="markdown-toc-removing-objects-and-their-shadows-using-approximate-lighting-and-geometry">Removing Objects and Their Shadows Using Approximate Lighting and Geometry</a></li>
+    </ul>
+  </li>
+  <li><a href="#models-for-controlled-editing" id="markdown-toc-models-for-controlled-editing">Models for Controlled Editing</a>    <ul>
+      <li><a href="#dreampainter" id="markdown-toc-dreampainter">DreamPainter</a></li>
+      <li><a href="#scribblelight" id="markdown-toc-scribblelight">ScribbleLight</a></li>
+    </ul>
+  </li>
+  <li><a href="#discussion" id="markdown-toc-discussion">Discussion</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Studio photography aims to produce aesthetically polished images. However, even in controlled environments, unwanted objects such as chairs, props, wires etc often appear in the scene. Traditionally, these objects have been removed manually, requiring careful reconstruction of the background and its lighting conditions. Although precise, manual editing is slow and labor-intensive.</p>
+
+<p>Recent advancements in Machine Learning (ML) have opened new possibilities for automating this process. Given an image, the object being removed, and potentially other helpful information such as shadow location and the environment, ML models are tasked with outputting a natural looking image without the object and corresponding shadow. In this report, we discuss the different approaches ML models take in achieving this goal and their respective advantages and drawbacks.</p>
+
+<h2 id="background-and-key-concepts">Background and Key Concepts</h2>
+
+<p>The automation of advanced image editing requires a convergence of several computer vision disciplines, moving beyond simple pixel manipulation to semantic scene understanding. As studio workflows demand increasing speed and precision, the ability to algorithmically modify images, specifically removing objects and their environmental effects, has become a focal point of research. This section outlines the fundamental concepts underpinning these technologies, identifying the specific challenges associated with reconstructing visual data and the high-level strategies currently employed to solve them.</p>
+
+<p>Image Inpainting is the process of reconstructing missing or corrupted regions of an image to restore its visual continuity. Early techniques relied on patch-based synthesis, which filled holes by copying and pasting similar textures from the surrounding valid pixels. While effective for simple, repetitive backgrounds, these methods often fail to preserve global structure or semantic coherence in complex scenes. Modern approaches utilize deep generative models, such as Generative Adversarial Networks and diffusion models, to “hallucinate” plausible content based on learned distributions. The primary challenge in a professional context is not merely filling the void, but generating high frequency details such as film grain or surface texture that match the fidelity of the original high resolution capture.</p>
+
+<p>Shadow Detection and Removal presents a distinct set of challenges, as shadows are not objects themselves but rather the result of complex interactions between scene geometry and illumination. In studio photography, removing an object without addressing its cast shadow results in “ghosting artifacts” that immediately destroy the realism of the edit. Unlike opaque objects, shadows are semi-transparent. They darken the background without obscuring the underlying texture. Successfully removing a shadow requires the model to distinguish between illumination changes and intrinsic surface properties, a process often complicated by soft penumbras, inter-reflections, and colored lighting common in commercial sets.</p>
+
+<p>General Strategies for addressing these tasks broadly fall into two categories: end-to-end learning frameworks and physics-based decomposition methods. Learning-based strategies leverage massive datasets of paired images, both with and without objects, to implicitly learn the correlation between foregrounds and backgrounds, treating the problem as a high-dimensional signal translation task. Conversely, physics-based approaches attempt to explicitly model the scene’s lighting and geometry, often decomposing the image into reflectance and shading layers to surgically modify the illumination. While recent trends favor the generative flexibility of the former, the structural consistency of the latter remains relevant. The specific architectures and performance trade-offs of these competing methodologies are detailed in the subsequent sections.</p>
+
+<h2 id="inpainting-and-object-removal-methods">Inpainting and Object Removal Methods</h2>
+
+<h3 id="resolution-robust-large-mask-inpainting-with-fourier-convolutions"><a href="https://arxiv.org/abs/2109.07161">Resolution-Robust Large Mask Inpainting with Fourier Convolutions</a></h3>
+
+<p>Large-mask inpainting is an inherently difficult problem because traditional convolutional neural networks lack a sufficiently large receptive field to capture global structures. When large regions of an image are missing (such as after removing a studio light stand or a softbox) the model must infer global texture patterns, geometry, and long-range spatial relationships. Classical and GAN-based inpainting models tend to produce blurry or repetitive textures, and they often break structural continuity across big holes.  LaMa targets this limitation by introducing a method that enables global context aggregation early in the network while remaining robust across varying image resolutions, without requiring extremely deep or computationally expensive networks (since it is trained with low resolution images).</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0013.png" alt="OmniEraser architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>LaMa architecture</em></p>
+
+<p>LaMa is built around a feed-forward ResNet-like inpainting network that integrates Fast Fourier Convolutions (FFCs) into its residual blocks. FFCs split feature channels into a local branch that uses standard spatial convolutions, and a global branch that applies real-valued FFT, performs spectral-domain convolution, and returns to spatial domain via inverse FFT. This allows the generator to achieve an image-wide receptive field even in early layers, addressing the limitations of conventional convolutional models. The architecture includes downsampling blocks, multiple FFC-based residual blocks, and upsampling blocks. The paper also incorporates adversarial loss, a high receptive field perceptual loss, and a feature-matching loss as part of its training objective. Specifically, LaMa uses a patch-level discriminator, an R1 gradient penalty, and discriminator-based perceptual loss, in addition to the proposed high receptive field perceptual loss. Training uses aggressive large-mask generation strategies, including wide and box masks, to force the model to utilize its large receptive field. All training is fully convolutional, and the network processes four-channel inputs consisting of the masked image and mask.</p>
+
+<p>The paper introduces three major contributions. First, it proposes an inpainting network based on FFCs, which provide an image-wide receptive field and allow the model to use global context from early layers. The authors show that this improves perceptual quality, helps capture periodic structures, and supports generalization to higher resolutions. Second, LaMa introduces a high receptive field perceptual loss, built on a segmentation model with dilated or Fourier convolutions, ensuring that the loss function, just as the network itself, has the large receptive field required for global structure reasoning. This loss was shown in ablation studies to be important for the large-mask setting. Third, the authors develop an aggressive large-mask training strategy using wide and box masks. The paper demonstrates that this strategy improves performance on both wide and narrow masks, unlocking the benefits of the architecture and loss design.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0017.png" alt="Video4Removal pipeline" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Quantitative results of LaMa vs other methods</em></p>
+
+<p>LaMa achieves state-of-the-art quantitative results across datasets such as Places and CelebA-HQ, outperforming a wide range of strong baselines on both narrow and wide masks. The FFC-based model consistently shows better FID and LPIPS scores than competing methods, including those with significantly larger parameter counts. Qualitative results in the paper demonstrate that LaMa can reconstruct complex periodic structures such as windows, fences, and bricks much more effectively than prior methods. The model also shows strong generalization to high-resolution images, despite being trained only on 256×256 crops. Experiments applying the network fully convolutionally to 512×512 and 1536×1536 images reveal that FFC-based models degrade much less than regular convolutional ones as resolution increases. Ablation studies also confirm the effectiveness of each proposed component: FFCs improve wide-mask inpainting, the high receptive field perceptual loss enhances global structure consistency, and large-mask training boosts performance across mask types.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0020.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Qualitative results of LaMa vs other methods</em></p>
+
+<p>LaMa is ideal for removing large objects in studio scenes, such as light stands, cables, reflectors, tripods, or background supports. Its ability to reconstruct smooth backdrops or wide studio walls makes it especially practical for indoor photography. However, because it does not explicitly model lighting or shadows, LaMa does not remove shadow artifacts as effectively as newer methods. For studio workflows, LaMa is best as a baseline inpainting stage that fills structural background regions, followed by lighting-aware refinement if shadows must be preserved or reconstructed.</p>
+
+<h3 id="smart-eraser"><a href="https://arxiv.org/abs/2501.08279">Smart Eraser</a></h3>
+
+<p>The SmartEraser addresses the structural limitations of the prevailing mask-and-inpaint paradigm used by most diffusion based object removal tools. In traditional approaches, the masked region is entirely excluded from the input, forcing the model to hallucinate missing content using only the surrounding unmasked context. This lack of visibility into the removed object often produces two characteristic artifacts: object regeneration (example: generating a new car instead of removing the old one) and background distortion (failing to preserve the continuity of the underlying scene).</p>
+
+<p>The SmartEraser is built on a text-to-image diffusion model but fundamentally modifies the conditioning mechanism through a paradigm called Masked-Region Guidance. Rather than supplying the model with a masked-out image, it retains the original image information in the input, represented as [m, x] instead of [m x ⊙ (1−m)].</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0027.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Comparison of the "mask-and-inpaint" paradigm versus the proposed Masked-Region Guidance paradigm. Unlike the traditional approach, Masked-Region Guidance retains the masked region in the input to better identify removal targets</em></p>
+
+<p>This allows the model to explicitly perceive the semantic content of the target object. To strengthen this semantic awareness, SmartEraser incorporates CLIP-based visual guidance where the masked region is cropped and fed into a CLIP vision encoder, and a trainable MLP maps these features into the text encoder’s space. This representation is then combined with the prompt “Remove the instance of …” to guide the diffusion process.</p>
+
+<p>To address inaccuracies in user-provided masks, SmartEraser introduces a Mask Enhancement module during training. This module simulates mask perturbations (dilation, erosion, and convex hull transformations) to reduce the gap between highly precise training masks and imperfect real-world user inputs.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0030.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>The overall framework of SmartEraser, illustrating the integration of Mask Enhancement and CLIP-based visual guidance with the diffusion model</em></p>
+
+<p>Beyond its architectural contributions, the paper’s primary innovation is Syn4Removal, a large-scale synthetic dataset designed to overcome the scarcity of paired training data. Existing datasets typically lack scene diversity or rely on pseudo-ground truths generated by other inpainting models. Syn4Removal instead uses a high quality copy/paste synthesis pipeline where  objects are segmented from source images and alpha-blended onto diverse backgrounds.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0031.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>The data generation pipeline for Syn4Removal. Object instances are filtered, resized, and alpha-blended onto background images to create training triplets</em></p>
+
+<p>Importantly, objects are pasted only into feasible areas (regions that do not overlap with existing scene elements), ensuring that the ground truth (the empty background) remains an unaltered photograph.</p>
+
+<p>The SmartEraser was evaluated against state-of-the-art baselines including LaMa, PowerPaint, and CLIPAway on the RORD-Val and DEFACTO-Val benchmarks. Quantitatively, it outperformed all baselines, surpassing PowerPaint by 10.3 FID points on the challenging RORD-Val dataset. Qualitative comparisons and user studies further show that SmartEraser effectively avoids regeneration artifacts and preserves background realism.</p>
+
+<p>For studio photo retouching, SmartEraser is specifically well-suited to removing props and distractions. The Masked-Region Guidance approach ensures that the model removes specific items (such as light stands, cables, product supports) without hallucinating new content in their place. Additionally, the Syn4Removal methodology provides a blueprint for generating domain specific training triplets where studios can paste their own products onto blank studio backgrounds to create unlimited fine-tuning data tailored to their lighting setups.</p>
+
+<h3 id="omnieraser"><a href="https://arxiv.org/abs/2501.07397#:~:text=,foreground%20object%20and%20background%20images">OmniEraser</a></h3>
+
+<p>The OmniEraser addresses a persistent challenge in high-end image editing which is  removing an object along with its associated visual effects, specifically shadows and reflections. While standard inpainting models often succeed in removing the object itself, they frequently leave behind cast shadows or floor reflections, resulting in “ghost” artifacts that break realism.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0034.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Comparison of OmniEraser against state-of-the-art methods. OmniEraser successfully removes objects along with their shadows and reflections, whereas other methods leave artifacts or generate unintended objects</em></p>
+
+<p>Additionally, many existing methods produce shape-like distortions in the edited region because they rely exclusively on background information without explicit modeling of object geometry.</p>
+
+<p>The OmniEraser builds upon the FLUX.1-dev diffusion model, a DiT-based Transformer architecture, augmented with LoRA for efficient fine-tuning. Its central innovation is Object-Background Guidance, a dual-path conditioning framework. Instead of treating the image as a single unified input, the model processes the foreground object and the background as independent guidance signals during the denoising process. The hidden representations of the masked object, masked background, noise input, and mask are concatenated and passed through a trainable linear layer.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0038.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Architecture of OmniEraser featuring Object-Background Guidance. The model uses latent representations from both the object and background as joint input conditions</em></p>
+
+<p>This conditioning forces the model to learn the relationship between the object and its environment which allows for the accurate removal of both the object and its lighting effects.</p>
+
+<p>To support this capability, the authors introduce Video4Removal, a large-scale dataset built from real-world video footage rather than synthetic compositing. Unlike synthetic datasets such as Syn4Removal (which cannot realistically capture shadows or reflections),  Video4Removal uses fixed-camera videos of scenes with and without moving subjects. Foreground and background frames are separated using the Mixture of Gaussians (MOG) algorithm, producing over 100,000 high-quality triplets that naturally include real shadows, lighting variations, and reflections (visual phenomena that are extremely difficult to synthesize).</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0041.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>The construction pipeline of Video4Removal. Foreground and background frames are separated from video footage to create realistic training pairs with natural lighting effects</em></p>
+
+<p>The OmniEraser was benchmarked on RORD-Val and on a newly proposed dataset, RemovalBench, constructed specifically to evaluate shadow and reflection removal. Quantitative results show state-of-the-art performance: for example, OmniEraser achieves an FID of 39.52, outperforming CLIPAway’s 55.49 on RemovalBench. Visual comparisons highlight its ability to seamlessly remove complex shadows and reflections on glossy surfaces which is an area where competing models consistently fail or hallucinate unrealistic textures.</p>
+
+<p>The OmniEraser is especially impactful for lighting-aware studio retouching. Studio photography relies heavily on controlled lighting that produces intentional shadows and reflections, which are notoriously difficult to remove manually. OmniEraser’s ability to eliminate both an object and its cast shadow in a single pass directly addresses a major bottleneck in e-commerce and catalog workflows. Moreover, the Video4Removal pipeline generalizes naturally to studio setups: studios can generate perfect datasets by recording their sets before and during a shoot, capturing the exact lighting behavior required for training</p>
+
+<h2 id="shadow-and-lighting-aware-editing">Shadow and Lighting-Aware Editing</h2>
+
+<h3 id="removing-objects-and-their-shadows-using-approximate-lighting-and-geometry"><a href="https://openaccess.thecvf.com/content/CVPR2021/papers/Zhang_No_Shadow_Left_Behind_Removing_Objects_and_Their_Shadows_Using_CVPR_2021_paper.pdf#:~:text=inpaint,both%20synthetic%20and%20real%20scenes">Removing Objects and Their Shadows Using Approximate Lighting and Geometry</a></h3>
+
+<p>Traditional inpainting only cares about the object itself, not the shadows. As such, the left over shadows look out of place. Methods such as HiFill[1] and DeepFill[2] that take shadows into account still require specifying shadow regions. Shadows also vary a lot in hardness, subtext, so approaches relying on hard boundaries as seen in [3] do not work well.</p>
+
+<p>Differential rendering is a classical technique that attempts to solve this problem by building a rough 3D proxy of the scene, rendering it before and after an edit, and then applying the pixelwise difference between the two renders to the real image. While this should in theory encode how shadows should change, scene proxies are almost always inaccurate. A more robust method is needed to identify and remove only the object’s shadows.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0047.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Model architecture. It takes an input image, a mask of the object to remove, and renderings of a rough scene model with and without the object. It first decomposes the input image into texture and lighting. It then removes the object’s shadows from the lighting image. It inpaints the object mask region separately in both texture and lighting before recompositing to get the final result.</em></p>
+
+<p>The architecture consists of multiple neural networks (U-Nets). The shadow segmentation network learns to indicate where shadows exist. The intrinsic decomposition network splits the image into two - texture and lighting. The shadow removal network removes the shadow cast only by the object removed. The inpainting later fills in lighting behind the removed object. An HFill texture inpainting tool is used to inpaint reflectance. Lastly, the final compost layer recombines the texture and lighting to the final output.</p>
+
+<p>Previous methods either ignored shadows or relied on a manually drawn shadow mask. This paper removes shadows automatically. Furthermore, this method works even with an inaccurate proxy because of its intrinsic decomposition. Shadows of other objects remain intact.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0050.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em><p style="text-align:center; font-size:0.9em;"><em>Architecture of OmniEraser featuring Object-Background Guidance. The model uses latent representations from both the object and background as joint input conditions</em></p></em></p>
+
+<p>This paper’s method achieves the lowest Shadow RMSE on both synthetic and real datasets. It does much better than the Pix2Pix and HiFill baselines. Its improvements can be seen when compared to other methods - it consistently removes shadows and objects in a way that best matches the ground truth. It handles multiple lights, complex shadows, and removes both the object and shadow. Trained over a large dataset, it is robust and trustworthy.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0053.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>The system is compared to two object removal baselines on both synthetic and real test images. The first baseline is an image-to-image translation network based on Pix2Pix [8], which is supplied with renderings of the proxy scene. The second baseline is HiFill [5], a state-of-the-art inpainting method that inpaints both the removed object and an explicitly specified shadow mask</em></p>
+
+<h2 id="models-for-controlled-editing">Models for Controlled Editing</h2>
+
+<h3 id="dreampainter"><a href="https://arxiv.org/abs/2508.02155#:~:text=%3E%20Abstract%3AAlthough%20diffusion,precise%20control%20in%20inpainting%20tasks">DreamPainter</a></h3>
+<p>DreamPainter is designed to address two challenges in e-commerce background generation. First, existing inpainting methods struggle to maintain product consistency, including proper spatial arrangement, coherent shadows, and realistic reflections between the foreground and the generated background. The paper attributes this to the lack of high-quality, domain-specific e-commerce datasets, noting that models trained on generic data often produce inconsistent lighting, low-resolution backgrounds, or stylistically mismatched imagery. Second, the authors emphasize that relying solely on text prompts is not enough for controlling background generation in professional settings. Text descriptions cannot always express visual attributes such as color gradients, material textures, or stylistic preferences. This issue becomes worse when creators seek to translate abstract design concepts into precise visual outputs.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0059.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Architecture of DreamPainter</em></p>
+
+<p>DreamPainter transforms a text-to-image diffusion model into a background inpainting model by incorporating both textual and visual conditioning signals. The system takes as input the foreground image, mask, target image, and optional background reference image, and encodes each using a VAE into corresponding latent representations. These latents, along with text prompt embeddings and a downsampled mask, are fed into a diffusion transformer architecture (DiT) through two conditioning strategies.</p>
+
+<p>The first strategy uses input-layer channel concatenation, where the model concatenates latent tensors along the channel and spatial dimensions and feeds them into the first layer. The second strategy, which the authors adopt, introduces an auxiliary control branch that processes the mask, foreground, and noisy target latents. The output of this branch is injected into each diffusion layer through a learnable gate initialized to zero. This design builds off prior findings that additional control branches can improve training stability and efficiency.</p>
+
+<p>Reference images are incorporated by concatenating reference latents with target and text tokens along the spatial dimension and assigning distinct positional encodings. By giving the reference tokens separate positional indices, the model avoids confusion between the target and reference spatial structures. In the second stage of training, LoRA modules are added to the DiT blocks to adapt the base model to reference-guided generation while keeping earlier components frozen. Together, these mechanisms enable DreamPainter to accept text-only control, text-plus-reference control, and user-adjustable reference influence.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0062.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Quantitative results</em></p>
+
+<p>The paper reports extensive quantitative and qualitative evaluations of DreamPainter on text-to-image (T2I) and text-and-reference-to-image (TR2I) inpainting tasks. On T2I background inpainting, DreamPainter significantly outperforms state-of-the-art baselines such as EcomXL-Inpainting, FLUX-Inpainting, FLUX-Fill, OmniControl, and UNO. The model achieves the highest scores across IR-Score, PickScore, and Object Consistency, with the latter reaching 0.986, indicating minimal distortion of foreground objects. Human evaluators overwhelmingly prefer DreamPainter’s results, with win rates exceeding 90% against all baselines.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0065.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Qualitative results / comparions</em></p>
+
+<p>On TR2I inpainting, DreamPainter demonstrates even larger performance gains. It surpasses multi-image editing methods like UNO and BAGEL across all quantitative metrics, achieving a 137% improvement over the second-best method in IR-Score and a 125% improvement in PickScore. Object Consistency and CLIP-based semantic alignment also show substantial gains. Human evaluation again supports these findings, with DreamPainter winning over 92% of comparison pairs. Qualitative examples in the text and figures show that DreamPainter preserves product fidelity while producing coherent, stylized, and contextually appropriate backgrounds.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0070.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Qualitative results / comparions</em></p>
+
+<p>Although designed for product photography, DreamPainter is highly relevant to studio retouching because it demonstrates the power of multi-modal control in background editing. A studio editor could mask out a light stand, supply a clean reference background from the same shoot, or describe the desired fill via text. DreamPainter’s ability to harmonize lighting across the edited region aligns closely with professional studio needs, where shadows, reflections, and background gradients must remain consistent. Its multi-control architecture also suggests how future studio-retouching tools may combine mask guidance, lighting cues, and reference photos for fully controllable ML-driven editing.</p>
+
+<h3 id="scribblelight"><a href="https://chedgekorea.github.io/ScribbleLight/#:~:text=ScribbleLight%2C%20a%20generative%20model%20that,from%20sparse%20scribble%20annotations">ScribbleLight</a></h3>
+
+<p>ScribbleLight addresses the significant challenge of single-image indoor relighting, a task complicated by the presence of multiple light sources, cluttered objects, and intricate material variations. Previous methods often relied on dense scene capture, which is labor-intensive, or implicit latent representations that offer only coarse, global control over illumination. To bridge the gap between technical complexity and creative flexibility, ScribbleLight introduces a generative framework that allows users to manipulate lighting locally—such as turning lamps on or off, or adjusting sunlight—using intuitive, sparse scribbles. This approach treats user input as binary guidance, where scribbles indicate areas to brighten or darken, leaving the model to infer plausible physical interactions like soft shadows and inter-reflections. The key advances, briefly mentioned here, are related to Intrinsic Image Decomposition, i.e. separating an image into illumination dependent and independent components. ScribbleLight uses components from both groups to achieve a realistic looking outcome; specifically, ScribbleLight uses Albedo, how reflective a surface is, and normals, a representation of the 3d map of the image in combination with the image itself to generate a realistic looking output.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0077.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>ScribbleLight works in a multi-stage process with stage 1 containing an Albedo-conditioned Stable image Diffusion model and stage 2 containing a ControlNet that guides the albedo model.
+</em></p>
+
+<p>The core of the model is a modified Stable Diffusion v2 framework, divided into two training stages. The first stage contains an Albedo-conditioned Stable image Diffusion model. To preserve the intrinsic color and texture of the original scene, the model uses pre-trained Latent VAE Encoders to encode the image and albedo into the latent space. Then, noise for a random time sample from Stable Diffusion is added back into the latent space code. Image noise is randomly added while albedo noise is added from time step T = 200. Then, the albedo-conditioned model is trained with text prompt p with the following loss function</p>
+
+<div style="text-align:center">
+$$
+\mathcal{L} = \mathbb{E}_{z_t^I,\, z_T^A,\, \epsilon^I \sim \mathcal{N}(0,1),\, t,\, p}
+\left[\left\lVert \epsilon - \epsilon_{\theta}^{S}\big(z_t^I, z_T^A, t, p\big) \right\rVert_{2}^{2}\right]
+$$
+</div>
+<p style="text-align:center; font-size:0.9em;"><em>Loss function for the Stable Diffusion model
+</em></p>
+
+<p>The second stage employs a ControlNet to guide the diffusion model using user scribbles and surface normal maps. Using a learnable Control Encoder, the normals and user scribbles are concatenated into a lighting feature map. Then, using the image latent code, text prompt p, and Stable Diffusion weights, the ControlNet is trained with the following loss function</p>
+
+<div style="text-align:center">
+$$
+\mathcal{L} = \mathcal{L}_{D} + \mathbb{E}_{z_t,\, f,\, \epsilon^I \sim \mathcal{N}(0,1),\, t,\, p}
+\left[\left\lVert \epsilon - \epsilon_{\theta}^{C}\big(z_t, f, t, p\big) \right\rVert_{2}^{2}\right]
+$$
+</div>
+<p style="text-align:center; font-size:0.9em;"><em>Loss function for the ControlNet
+</em></p>
+
+<p>To train the model, real indoor images from LSUN Bedrooms were used. After creating the albedo maps for each image, text prompts with BLIP-2, normals with DSINE, and shading with an IID, sample user scribbles are generated with the following criteria</p>
+
+<div style="text-align:center">
+$$
+M(x) =
+\begin{cases}
+1, &amp; \text{if } I(x) &gt; u + o,\\[6pt]
+0, &amp; \text{if } I(x) &lt; u - o,\\[6pt]
+0.5, &amp; \text{otherwise.}
+\end{cases}
+$$
+</div>
+<p style="text-align:center; font-size:0.9em;"><em>User scribble criteria
+</em></p>
+
+<p>With u and o as the mean and standard deviation of all pixels. Finally, an erosion and dilation with kernel sizes between 3 and 19 are performed to make the edges of the generated scribbles look more human.</p>
+
+<p>The key advances of this implementation are that high - quality lighting effects are created from sparse inputs while respecting the “human”-like nature of images, i.e. the texture of objects in the room, the number of objects in the room, etc. Further, due to the use of Stable Diffusion, multiple replicas can be created from one input allowing users to select from multiple realistic images as to which one employed their scribbles in the best possible manner. Specifically, stage 1 using albedo + noise uncertainty ensures that the Stable Diffusion model has variation within its lit areas while preserving the key textures / objects / colors  in the original image. Stage 2 using ControlNet allows for ScribbleLight to build up from the generated image and incorporate user scribbles effectively. The Decoder is then forced to reconstruct the normal map and shading from the light features from the encoder fed input; this forces the latent map to encapsulate 3d geometry rather than 2d patterns.</p>
+
+<p>With the manually and auto-generated user scribbles on the LSUN Bedrooms images, ScribbleLight was tested against LightIt with the auto-generated scribble annotations and RGB&lt;-&gt;x without retraining using normal, albedo, roughness, and metallicity components. Further, RMSE, PSNR, SSIM, and LPIPS were used to quantitatively test error. In order, these measure pixel by pixel similarity, amount of noise in the image, structure of neighborhoods on pixels, and feature difference in deep layers. Thus, low RMSE + high PSNR indicate good pixel similarity while high SSIM and low LPIPS indicate that generated images maintain structure and have good features.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0084.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em> Quantitative results of employing models on test images.
+</em></p>
+
+<p>Qualitatively, ScribbleLight preserves the albedo of images and is able to generate plausible light  / shadows considering light sources that are both in / out of images. Further, given a single image, ScribbleLight is able to iteratively generate better lighting and also based on different provided user scribbles create plausible scenarios. Finally, ablation testing by removing albedo noise, the control-decoder, and normals illustrated that each step in the pipeline contributed to meaningful improvements. Specifically, the albedo noise preserves the texture of the input image and the decoder/normals preserve the objects in the image.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/14/image-0087.png" alt="Lighting-aware architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Qualitative results of employing models on test images.
+</em></p>
+
+<p>ScribbleLight fails to rectify inconsistencies with user-generated scribbles and plausible light sources in the image. Further, ScribbleLight is biased towards common light colors(i.e. White, blue). However, ScribbleLight preserves texture and color of input images better than any current models. The ability of ScribbleLight to generate multiple version is additionally extremely beneficial for users seeking to add lighting / shadow to their images and iterate over multiple versions without spending exorbitant amounts of time.</p>
+
+<h2 id="discussion">Discussion</h2>
+
+<p>The studied methods collectively reveal a clear trend toward ML editing systems that better reflect the constraints of studio photography. Instead of relying solely on generic inpainting, recent approaches increasingly account for large uniform backgrounds, controlled lighting, and complex interactions such as shadows and reflections. LaMa demonstrates how globally aware architectures can more effectively fill large missing regions common in studio object removal, while SmartEraser and OmniEraser show a shift toward models that preserve visibility into the removed object so the system can avoid regeneration artifacts and correctly handle lighting effects. The “No Shadow Left Behind: Removing Objects and Their Shadows Using Approximate Lighting and Geometry” paper contributes a complementary view by highlighting that even when object removal succeeds, the leftover shadows often break realism. Its use of shadow segmentation, intrinsic decomposition, and shadow removal networks reveals the need for explicit lighting modeling to handle multiple lights and complex shadow behavior. DreamPainter and ScribbleLight further highlight the growing use of richer conditioning signals such as text, reference images, masks, albedo, normals, and user scribbles in order to give editors more precise control than what traditional mask-only pipelines allow. These developments suggest a progression toward multimodal, lighting-aware, and context-sensitive editing tools designed specifically for studio-quality images.</p>
+
+<p>At the same time, the methods highlight several persistent technical challenges. One difficulty is maintaining global structural consistency when large regions of an image are removed, a problem LaMa tackles through its use of large receptive fields. The shadow-removal paper demonstrates that shadows are particularly difficult because they depend on material, geometry, and multi-light interactions; inaccurate 3D proxies make classical methods unreliable. SmartEraser identifies the issue that models often hallucinate new objects or distort the background when they cannot see the removed region, while OmniEraser addresses the long-standing challenge that most methods struggle to eliminate shadows and reflections in a realistic way. DreamPainter points out that models trained on generic datasets often fail to maintain product fidelity or studio lighting consistency, and ScribbleLight illustrates the complexity of controlling lighting effects based on sparse user inputs while preserving fine texture and geometry. These issues show that both physical properties such as shadows, reflections, and illumination and global context remain difficult for current systems to accurately reconstruct.</p>
+
+<p>Despite these challenges, the papers complement one another in ways that outline a promising multi-stage pipeline for studio editing. LaMa offers a strong foundation for filling background structure after object removal. SmartEraser extends this by preventing the regeneration of the object and ensuring the background remains coherent. The shadow-removal paper supplies a mechanism for identifying and eliminating shadows tied to the removed object. OmniEraser then adds the ability to remove shadows and reflections, which the earlier methods do not explicitly address. DreamPainter can then be used to generate or refine backgrounds with high stylistic or lighting consistency while preserving the foreground product. ScribbleLight provides fine-grained, user-controlled relighting to finalize the scene. Together, these models form a chain of capabilities that span structural reconstruction, semantic understanding, lighting-aware removal, background generation, and interactive lighting control.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Taken together, the reviewed methods outline substantial progress in ML-based studio photo editing but also reveal clear opportunities for future advancement. None of the current models provide a unified approach that removes objects, eliminates shadows, maintains global structure, generates consistent backgrounds, and offers precise user controlled lighting within a single system. The reliance on synthetic or video based datasets also highlights the difficulty of acquiring high-quality, studio specific training data, especially when realistic shadow behavior is required. DreamPainter demonstrates the advantages of domain specific datasets and multimodal conditioning, suggesting that future systems could incorporate reference lighting cues or per-shoot calibration images. ScribbleLight’s limitations with inconsistent scribbles and uncommon light colors, along with the fact that OmniEraser and LaMa do not explicitly model lighting geometry, point to further opportunities for integrating physical lighting reasoning with flexible user controls. Ultimately, these findings suggest a promising direction toward holistic, studio-aware editing models capable of unifying structural, semantic, and illumination related reasoning within a single end-to-end framework.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] R. Wei, Z. Yin, S. Zhang, L. Zhou, X. Wang, C. Ban, T. Cao, H. Sun, Z. He, K. Liang, and Z. Ma, “OmniEraser: Remove Objects and Their Effects in Images with Paired Video-Frame Data,” arXiv preprint arXiv:2501.07397, Mar. 2025.</p>
+
+<p>[2] L. Jiang, Z. Wang, J. Bao, W. Zhou, D. Chen, L. Shi, D. Chen, and H. Li, “SmartEraser: Remove Anything from Images using Masked-Region Guidance,” arXiv preprint arXiv:2501.08279, Jun. 2025.</p>
+
+<p>[3] S. Zhao, J. Cheng, Y. Wu, H. Xu, and S. Jiao, “DreamPainter: Image Background Inpainting for E-commerce Scenarios,” arXiv preprint arXiv:2508.02155, Aug. 2025.</p>
+
+<p>[4] R. Suvorov, E. Logacheva, A. Mashikhin, A. Remizova, A. Ashukha, A. Silvestrov, N. Kong, H. Goka, K. Park, and V. Lempitsky, “Resolution-robust Large Mask Inpainting with Fourier Convolutions,” arXiv preprint arXiv:2109.07161, Sep. 2021.</p>
+
+<p>[5] Z. Yi, Q. Tang, S. Azizi, D. Jang, and Z. Xu, “Contextual Residual Aggregation for Ultra High-Resolution Image Inpainting,” in IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2020.</p>
+
+<p>[6] Y. Zeng, Z. Lin, J. Yang, J. Zhang, E. Shechtman, and H. Lu, “High-Resolution Image Inpainting with Iterative Confidence Feedback and Guided Upsampling,” in European Conference on Computer Vision (ECCV), 2020.</p>
+
+<p>[7] T. Wang, X. Hu, Q. Wang, P.-A. Heng, and C.-W. Fu, “Instance Shadow Detection,” in IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2020.</p>
+
+<p>[8] P. Isola, J.-Y. Zhu, T. Zhou, and A. A. Efros, “Image-to-Image Translation with Conditional Adversarial Networks,” in IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017.</p>
+
+<p>[9] J. M. Choi, A. Wang, P. Peers, A. Bhattad, and R. Sengupta, “ScribbleLight: Single Image Indoor Relighting with Scribbles,” arXiv preprint arXiv:2411.17696, Nov. 2024.</p>
+
+<p>[10] N. Magar, A. Hertz, E. Tabellion, Y. Pritch, A. Rav-Acha, A. Shamir, and Y. Hoshen, “LightLab: Controlling Light Sources in Images with Diffusion Models,” arXiv preprint arXiv:2505.09608, May 2025.</p>
+
+<p>[11] Z. Li, J. Shi, S. Bi, R. Zhu, K. Sunkavalli, M. Hašan, Z. Xu, R. Ramamoorthi, and M. Chandraker, “Physically-Based Editing of Indoor Scene Lighting from a Single Image,” arXiv preprint arXiv:2205.09343, May 2022.</p>
+
+<hr />]]></content><author><name>Pavan Gudavalli, Kevin Nguyen, Brian Felipe Brito, Alex Chen</name></author><summary type="html"><![CDATA[Studio photography aims to produce aesthetically polished images. However, even in controlled environments, unwanted objects such as chairs, props, wires, etc., often appear in the scene. Further, lighting is altered tremendously by the addition / removal of these objetcs. Traditionally, these objects have been removed manually, requiring careful reconstruction of the background and its lighting conditions. This paper looks at modern models aimed at making this process easier.]]></summary></entry><entry><title type="html">Visuomotor Policy</title><link href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html" rel="alternate" type="text/html" title="Visuomotor Policy" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html"><![CDATA[<blockquote>
   <p>Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.</p>
 </blockquote>
 
@@ -2928,488 +3198,4 @@ MathJax = {
 
 <p>[3] OpenAI, “CLIP: Connecting Text and Images,” OpenAI Blog.[Online]. Available: https://openai.com/index/clip/</p>
 
-<p>[4] Shokri, Reza, et al. “Membership inference attacks against Machine Learning Models.” arXiv preprint arXiv:1610.05820, 2017.</p>]]></content><author><name>Junguk Yoon</name></author><summary type="html"><![CDATA[Membership Inference Attacks (MIA) are privacy attacks on machine learning models meant to predict whether or not a a data point was used to train a model. This blog looks at three different MIA methods against three different types of models.]]></summary></entry><entry><title type="html">Efficient Super-Resolution: Bridging Quality and Computation</title><link href="/CS163-Projects-2025Fall/2025/12/13/team48-efficient-super-resolution.html" rel="alternate" type="text/html" title="Efficient Super-Resolution: Bridging Quality and Computation" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team48-efficient-super-resolution</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team48-efficient-super-resolution.html"><![CDATA[<blockquote>
-  <p>Super-resolution has long faced a fundamental tension: the highest-quality models require billions of operations, while edge devices demand sub-100ms inference. This article examines three recent methods—SPAN, EFDN, and DSCLoRa—that challenge this tradeoff through architectural innovation, training-time tricks, and efficient adaptation. We’ll see how rethinking the upsampling operation, leveraging structural reparameterization, and applying low-rank decomposition can each dramatically improve efficiency without sacrificing output quality.</p>
-</blockquote>
-
-<!--more-->
-<ul id="markdown-toc">
-  <li><a href="#the-efficiency-problem-in-super-resolution" id="markdown-toc-the-efficiency-problem-in-super-resolution">The Efficiency Problem in Super-Resolution</a></li>
-  <li><a href="#background-the-anatomy-of-an-sr-network" id="markdown-toc-background-the-anatomy-of-an-sr-network">Background: The Anatomy of an SR Network</a>    <ul>
-      <li><a href="#background-measuring-performance" id="markdown-toc-background-measuring-performance">Background: Measuring Performance</a></li>
-    </ul>
-  </li>
-  <li><a href="#efdn-edge-enhanced-feature-distillation-network-for-efficient-super-resolution-ntire-2023-winner-1" id="markdown-toc-efdn-edge-enhanced-feature-distillation-network-for-efficient-super-resolution-ntire-2023-winner-1">EFDN: Edge-enhanced Feature Distillation Network for Efficient Super-Resolution (NTIRE 2023 Winner) [1]</a>    <ul>
-      <li><a href="#the-edge-problem" id="markdown-toc-the-edge-problem">The Edge Problem</a></li>
-      <li><a href="#structural-reparameterization-training--inference" id="markdown-toc-structural-reparameterization-training--inference">Structural Reparameterization: Training ≠ Inference</a></li>
-      <li><a href="#edge-enhanced-gradient-loss" id="markdown-toc-edge-enhanced-gradient-loss">Edge-Enhanced Gradient Loss</a></li>
-      <li><a href="#quantitative-results" id="markdown-toc-quantitative-results">Quantitative Results</a></li>
-      <li><a href="#ablation-study-scale-times-2" id="markdown-toc-ablation-study-scale-times-2">Ablation Study: (Scale \(\times 2\))</a></li>
-    </ul>
-  </li>
-  <li><a href="#span-swift-parameter-free-attention-network-ntire-2024-winner-2" id="markdown-toc-span-swift-parameter-free-attention-network-ntire-2024-winner-2">SPAN: Swift Parameter-free Attention Network (NTIRE 2024 Winner) [2]</a>    <ul>
-      <li><a href="#spab-the-swift-parameter-free-attention-block" id="markdown-toc-spab-the-swift-parameter-free-attention-block">SPAB: the Swift Parameter-free Attention Block</a></li>
-      <li><a href="#architectural-nuances" id="markdown-toc-architectural-nuances">Architectural Nuances</a></li>
-      <li><a href="#experimental-results" id="markdown-toc-experimental-results">Experimental Results:</a></li>
-    </ul>
-  </li>
-  <li><a href="#dsclora-efficient-domain-adaptation-via-dynamic-sparse-low-rank-matrices-ntire-2025-winner-3" id="markdown-toc-dsclora-efficient-domain-adaptation-via-dynamic-sparse-low-rank-matrices-ntire-2025-winner-3">DSCLoRa: Efficient Domain Adaptation via Dynamic Sparse Low-Rank Matrices (NTIRE 2025 Winner) [3]</a>    <ul>
-      <li><a href="#innovation-1-convlora--sconvlb" id="markdown-toc-innovation-1-convlora--sconvlb">Innovation 1: ConvLoRA &amp; SConvLB</a></li>
-      <li><a href="#innovation-2-spatial-affinity-distillation" id="markdown-toc-innovation-2-spatial-affinity-distillation">Innovation 2: Spatial Affinity Distillation</a></li>
-      <li><a href="#architecture-the-sconvlb-upgrade" id="markdown-toc-architecture-the-sconvlb-upgrade">Architecture: The “SConvLB” Upgrade</a></li>
-      <li><a href="#experimental-results-1" id="markdown-toc-experimental-results-1">Experimental Results</a></li>
-      <li><a href="#why-does-this-matter" id="markdown-toc-why-does-this-matter">Why does this matter?</a></li>
-    </ul>
-  </li>
-  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
-  <li><a href="#references" id="markdown-toc-references">References</a></li>
-  <li><a href="#references-1" id="markdown-toc-references-1">References</a></li>
-</ul>
-
-<p>Image super-resolution is the problem of taking a low-resolution image and turning it into a high-resolution image. Ex. taking a 1080p picture on your cell phone and upscaling it into a beautiful 4K photo. Using deep learning, we can essentially recover detail from the low-resolution input by training a model to learn the relationship between the low- and high- resolution versions of an image.</p>
-
-<h2 id="the-efficiency-problem-in-super-resolution">The Efficiency Problem in Super-Resolution</h2>
-
-<p>Leading edge image super-resolution models have gotten very good. Unfortunately, the best models are unsuited to be run on lower-end edge devices due to three main reasons:</p>
-<ul>
-  <li>Runtime: models designed to be run on server GPUs will run far slower on edge devices. This makes them unsuitable for real-time or close to real-time applications where the image can’t be shipped off to an inference server</li>
-  <li>Parameter Count: edge devices have limited VRAM, RAM, and storage to store the models in, especially considering that they will be running programs other than super-resolution</li>
-  <li>FLOPs: edge devices have limited CPU and GPU compute to run models with, especially considering that they will be running other programs</li>
-</ul>
-
-<p>As such, the problem of “efficient image super-resolution” is how to design models to reduce the runtime and parameter count while maintaining some baseline of decent upscaling performance.</p>
-
-<p>The inspiration for this report was the NTIRE Challenge on Efficient Super Resolution (NTIRE ESR), held annually at CVPR. I will analyze three submissions to this challenge, from different years, to compare the differing methods used in recent years to further improve efficient image super resolution models.</p>
-
-<h2 id="background-the-anatomy-of-an-sr-network">Background: The Anatomy of an SR Network</h2>
-
-<p>Modern SR networks follow a common template:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Low-Resolution Input → Feature Extraction → Upsampling → High-Resolution Output
-</code></pre></div></div>
-
-<p><strong>Feature extraction</strong> uses stacked convolutional blocks to learn hierarchical representations. This is where most computation happens.</p>
-
-<p><strong>Upsampling</strong> increases spatial resolution. The dominant method is <em>sub-pixel convolution</em> (pixel shuffle), which:</p>
-<ol>
-  <li>Expands channels from \(C\) to \(C \cdot r^2\) (where \(r\) is the scale factor)</li>
-  <li>Rearranges these channels into spatial dimensions: \((H, W, C \cdot r^2) \rightarrow (rH, rW, C)\)</li>
-</ol>
-
-<p>This channel expansion is expensive. For \(\times 4\) upsampling with 64 channels, a single \(3 \times 3\) convolution requires:
-\(64 \times 1024 \times 9 = 589,824 \text{ parameters}\)</p>
-
-<p>In EDSR-baseline (1.37M total parameters), upsampling alone accounts for 31%—nearly a third of the model.</p>
-
-<p>The three papers I analyze optimize different parts of this pipeline.</p>
-<h3 id="background-measuring-performance">Background: Measuring Performance</h3>
-<p>There are many ways to measure the performance of an image super-resolution model.
-To generate training data, generally the approach is to take a high-resolution image and apply bicubic downsampling to generate the low-resolution version. Then, evaluate the model by applying the model to the low-resolution version and seeing how close the model’s high-resolution generation matches the original high-resolution version.</p>
-
-<p><strong>PSNR (Peak Signal-to-Noise Ratio)</strong> compares the “noise” of an image to the original. This noise is calculated using pixel differences between the two images. This is a good measure of pure, mathematical “difference” between two signals, but for images, it should be clear that small differences in pixel values may not matter much. Ex. red 254 vs red 255 is technically a difference, but not very noticeable.</p>
-
-<p>PSNR is measured in decibels (dB), which you will see in the later sections. For the 2025 NTIRE ESR challenge, the submissions were required to have a minimum PSNR of 26.99 on a certain test set.</p>
-
-<p><strong>SSIM (Structural Similarity Index Measure)</strong> compares the luminance, contrast, and structure of two images to measure similarity, calculated using the sample means, variances, and covariance of the pixels in both images. It can be thought of as a more higher-level approach as to how similar two images look, vs. how mathematically similar they are.</p>
-
-<h2 id="efdn-edge-enhanced-feature-distillation-network-for-efficient-super-resolution-ntire-2023-winner-1">EFDN: Edge-enhanced Feature Distillation Network for Efficient Super-Resolution (NTIRE 2023 Winner) <a href="#1">[1]</a></h2>
-
-<h3 id="the-edge-problem">The Edge Problem</h3>
-
-<p>Efficient SR networks often produce blurry edges. One reason why is that, to the model, edges are not much different than any regular pixels. A one pixel difference in an edge may make it blurry, whereas a one pixel difference in a smooth region may not even be noticeable. Both will be interpreted as similarly bad by the model.</p>
-
-<p>EFDN attempts to solve this from two angles:</p>
-<ol>
-  <li><strong>Architecture</strong>: Edge-specialized convolution blocks</li>
-  <li><strong>Training</strong>: Explicit edge supervision via gradient losses</li>
-</ol>
-
-<p>The key innovation is achieving both while minimizing increases to inference cost. At deployment, the edge-specialized convolutions are packed as regular convolutions.</p>
-
-<h3 id="structural-reparameterization-training--inference">Structural Reparameterization: Training ≠ Inference</h3>
-
-<p>EFDN builds on <em>structural reparameterization</em>, similar to RepVGG and DBB. The core idea: train a complex multi-branch architecture, then merge branches into a single convolution for deployment.</p>
-
-<p><strong>During training</strong>, EFDN’s EDBB block uses <strong>seven parallel branches</strong> to enforce explicit edge learning:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Input
-  ├── 3×3 Conv (standard features)
-  ├── 1×1 Conv (channel mixing)
-  ├── 1×1 Conv → 3×3 Conv (expanding-squeezing)
-  ├── 1×1 Conv → Sobel-X (learnable horizontal edges)
-  ├── 1×1 Conv → Sobel-Y (learnable vertical edges)
-  ├── 1×1 Conv → Laplacian (isotropic edges)
-  └── Identity (residual)
-       ↓
-   Output = sum of all branches
-</code></pre></div></div>
-
-<p>Instead of just asymmetric shapes, EFDN leverages <strong>Scaled Filter Convolutions</strong>. The \(1 \times 1\) convolutions before the fixed edge filters (Sobel/Laplacian) act as learnable scalers, allowing the network to adaptively weight the contribution of specific gradient directions. During inference, all branches (including the fixed filters) are mathematically collapsed into a single \(3 \times 3\) vanilla convolution. Ex.:</p>
-
-\[W_{\text{deploy}} = W_{3 \times 3} + \text{pad}(W_{3 \times 1}) + \text{pad}(W_{1 \times 3}) + W_{\text{identity}}\]
-
-<p>where \(\text{pad}()\) zero-pads the asymmetric kernels to \(3 \times 3\), and \(W_{\text{identity}}\) is the identity mapping expressed as convolution weights.The model during training sees seven specialized pathways; the model during inference sees one standard convolution ⟶ Zero overhead.</p>
-
-<h3 id="edge-enhanced-gradient-loss">Edge-Enhanced Gradient Loss</h3>
-
-<p>EFDN also introduces explicit edge supervision through loss:</p>
-
-\[\mathcal{L} = \mathcal{L}_{\text{pixel}} + \lambda_x \mathcal{L}_x + \lambda_y \mathcal{L}_y + \lambda_l \mathcal{L}_l\]
-
-<p>where:</p>
-<ul>
-  <li>\(\mathcal{L}_{\text{pixel}}\): Standard L1 loss on RGB values</li>
-  <li>\(\mathcal{L}_x\): L1 loss on horizontal Sobel gradients</li>
-  <li>\(\mathcal{L}_y\): L1 loss on vertical Sobel gradients</li>
-  <li>\(\mathcal{L}_l\): L1 loss on Laplacian (edge localization)</li>
-</ul>
-
-<p>The Sobel operators detect gradients:
-\(S_x = \begin{bmatrix} -1 &amp; 0 &amp; 1 \\ -2 &amp; 0 &amp; 2 \\ -1 &amp; 0 &amp; 1 \end{bmatrix}, \quad S_y = \begin{bmatrix} -1 &amp; -2 &amp; -1 \\ 0 &amp; 0 &amp; 0 \\ 1 &amp; 2 &amp; 1 \end{bmatrix}\)</p>
-
-<p>The Laplacian detects edges regardless of orientation:
-\(L = \begin{bmatrix} 0 &amp; 1 &amp; 0 \\ 1 &amp; -4 &amp; 1 \\ 0 &amp; 1 &amp; 0 \end{bmatrix}\)</p>
-
-<p>The authors use these filters to calculate gradient maps. These maps are then unfolded into patches, the patches used to calculate gradient variances, the variances used to calculate gradient variance loss for each of the three filters.</p>
-
-\[\begin{align}
-\mathcal{L}_{x} &amp;= \mathbb{E}_{I^{SR}} \| v_{x}^{HR} - v_{x}^{SR} \|_{2} \\
-\mathcal{L}_{y} &amp;= \mathbb{E}_{I^{SR}} \| v_{y}^{HR} - v_{y}^{SR} \|_{2} \\
-\mathcal{L}_{l} &amp;= \mathbb{E}_{I^{SR}} \| v_{l}^{HR} - v_{l}^{SR} \|_{2}
-\end{align}\]
-
-<p>By minimizing gradient errors directly, the network learns to preserve high-frequency details that pixel-only losses would smooth over.</p>
-
-<h4 id="hyperparameter-analysis">Hyperparameter Analysis</h4>
-
-<p>The paper experiments with different \(\lambda\) values:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center">\(\lambda_x = \lambda_y\)</th>
-      <th style="text-align: center">\(\lambda_l\)</th>
-      <th style="text-align: center">Set5 PSNR</th>
-      <th style="text-align: left">Visual Quality</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: center">0.1</td>
-      <td style="text-align: center">0.05</td>
-      <td style="text-align: center">32.15 dB</td>
-      <td style="text-align: left">Slight blur</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">0.2</td>
-      <td style="text-align: center">0.1</td>
-      <td style="text-align: center">32.19 dB</td>
-      <td style="text-align: left">Sharp edges</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">0.3</td>
-      <td style="text-align: center">0.15</td>
-      <td style="text-align: center">32.17 dB</td>
-      <td style="text-align: left">Oversharpened</td>
-    </tr>
-    <tr>
-      <td style="text-align: center">0.5</td>
-      <td style="text-align: center">0.2</td>
-      <td style="text-align: center">32.03 dB</td>
-      <td style="text-align: left">Ringing artifacts</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>The authors decided on a sweet spot of \(\lambda_x = \lambda_y = 0.2\), \(\lambda_l = 0.1\). Too high causes ringing; too low reverts to pixel-loss behavior.</p>
-
-<h3 id="quantitative-results">Quantitative Results</h3>
-
-<p>Comparison on \(\times 4\) SR benchmarks:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Method</th>
-      <th style="text-align: center">Params</th>
-      <th style="text-align: center">Multi-Adds</th>
-      <th style="text-align: center">Set5</th>
-      <th style="text-align: center">Urban100</th>
-      <th style="text-align: center">Inference (RTX 3090)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">CARN</td>
-      <td style="text-align: center">1,592K</td>
-      <td style="text-align: center">90.9G</td>
-      <td style="text-align: center">32.13 dB</td>
-      <td style="text-align: center">26.07 dB</td>
-      <td style="text-align: center">-</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">IMDN</td>
-      <td style="text-align: center">715K</td>
-      <td style="text-align: center">41.0G</td>
-      <td style="text-align: center">32.13 dB</td>
-      <td style="text-align: center">26.04 dB</td>
-      <td style="text-align: center">92 ms</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">PAN</td>
-      <td style="text-align: center">272K</td>
-      <td style="text-align: center">28.2G</td>
-      <td style="text-align: center">32.13 dB</td>
-      <td style="text-align: center">26.11 dB</td>
-      <td style="text-align: center">-</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>EFDN</strong></td>
-      <td style="text-align: center"><strong>276K</strong></td>
-      <td style="text-align: center"><strong>14.7G</strong></td>
-      <td style="text-align: center"><strong>32.08 dB</strong></td>
-      <td style="text-align: center"><strong>26.00 dB</strong></td>
-      <td style="text-align: center"><strong>19 ms</strong></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>EFDN achieves the best efficiency: ~2.5x fewer Multi-Adds than IMDN and significantly faster inference (19ms vs 92ms), while maintaining comparable quality.</p>
-
-<h3 id="ablation-study-scale-times-2">Ablation Study: (Scale \(\times 2\))</h3>
-<p>As is standard, the authors performed an ablation study to test the improvements from each new addition independently, then all togehter.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Configuration</th>
-      <th style="text-align: center">Set5 PSNR</th>
-      <th style="text-align: center">Inference Cost</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">Baseline (\(L_1\))</td>
-      <td style="text-align: center">37.09 dB</td>
-      <td style="text-align: center">Baseline</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">+ Edge Loss (\(L_{EG}\))</td>
-      <td style="text-align: center">37.14 dB</td>
-      <td style="text-align: center">+0 ms</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">+ Edge Blocks (EDBB)</td>
-      <td style="text-align: center">37.19 dB</td>
-      <td style="text-align: center">+0 ms</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">+ Both (EFDN strategy)</td>
-      <td style="text-align: center">37.27 dB</td>
-      <td style="text-align: center">+0 ms</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>The edge blocks and edge loss are complementary:</p>
-<ul>
-  <li><strong>EDBB:</strong> Adds structural extraction capacity (Sobel/Laplacian branches) that collapses to a single conv at inference.</li>
-  <li><strong>\(L_{EG}\):</strong> Calibrates the training of these branches to focus on gradient variance.</li>
-</ul>
-
-<p>Together they achieve consistent improvement (+0.18 dB) at <strong>zero</strong> additional inference cost.</p>
-
-<h2 id="span-swift-parameter-free-attention-network-ntire-2024-winner-2">SPAN: Swift Parameter-free Attention Network (NTIRE 2024 Winner) <a href="#2">[2]</a></h2>
-
-<p>Attention mechanisms have become increasingly important to achieve high-quality super resolution. Architectures like RCAN or SwinIR leverage channel or spatial attention to focus processing power on high-frequency details (textures, edges) rather than smooth backgrounds.</p>
-
-<p>However, attention mechanisms are computationally expensive. SPAN attempts to replicate the benefits of attention without dramatically increasing the complexity and parameter count of the model.</p>
-
-<p>SPAN’s fundamental hypothesis is that the network doesn’t need a separate branch to tell it which features are important. In Convolutional Neural Networks (CNNs), feature magnitude is already a proxy for importance. In SR tasks, “information-rich” regions like edges and complex textures typically trigger high-magnitude activations in convolutional filters (similar to how a Sobel filter reacts strongly to an edge). SPAN leverages this by deriving the attention map directly from the feature map itself, eliminating the need for extra learnable weights.</p>
-
-<h3 id="spab-the-swift-parameter-free-attention-block">SPAB: the Swift Parameter-free Attention Block</h3>
-
-<p>The backbone of SPAN consists of cascaded <strong>Swift Parameter-free Attention Blocks (SPABs)</strong>. Unlike traditional blocks that use separate pathways for attention, SPAB integrates it directly into the feature extraction flow.</p>
-
-<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/48/SPAN.png" alt="YOLO" /></p>
-<p><em>Fig 1. SPAN: architecture design</em>.</p>
-
-<p>Essentially, SPAB applies an activation function on the feature map to generate an attention map. This attention map is then element-wise multiplied with the (feature map + residual connection) to get the output of the SPAB block.</p>
-
-<p>High magnitude activations in a CNN feature map generally correspond to important features like edges, keypoints, etc. The authors wanted an activation function that kept these high magnitude activations while suppressing near-zero activations. The sign of the activation also should not matter, since key features generate high magnitude activations regardless of sign (ex. a Sobel filter detects an edge no matter if the edge is oriented one way or the other). Thus, the activation function should be odd-symmetric.</p>
-
-<p>After experimentation, the authors settled on a shifted sigmoid to generate the attention map \(V_i\):</p>
-
-<p>\(\sigma_a(x) = \text{Sigmoid}(x) - 0.5\)
-By shifting the Sigmoid, the function becomes odd-symmetric about the origin. This ensures that features with high absolute magnitudes (whether positive or negative) generate significant responses in the attention map, while near-zero values (smooth background regions) are suppressed.</p>
-
-<h4 id="mathematical-intuition-self-supervised-gradient-boosting">Mathematical Intuition: Self-Supervised Gradient Boosting</h4>
-<p>The paper provides a theoretical analysis of why this works. When using this attention mechanism, the gradient used to update the weights during training is scaled by the attention map itself.</p>
-
-<p>Mathematically, the gradient term effectively becomes proportional to the activation magnitude. This means the network naturally receives <strong>stronger supervision signals in information-rich regions</strong> (edges/textures) and weaker signals in smooth regions. It acts as a form of self-supervised hard-example mining, forcing the network to “try harder” on difficult textures without explicit guidance.</p>
-
-<h3 id="architectural-nuances">Architectural Nuances</h3>
-
-<p><strong>The “Forgetfulness” Problem &amp; Residual Connections</strong>
-One danger of attention mechanisms is that they act as filters. By aggressively modulating features, deep networks can inadvertently suppress low-level information needed for reconstruction. SPAN solves this by adding a residual connection <em>within</em> the attention block.</p>
-<ul>
-  <li><strong>Mechanism:</strong> The input to the block (\(O_{i-1}\)) is added to the extracted features (\(H_i\)) before the attention modulation is applied.</li>
-  <li><strong>Result:</strong> This ensures that even if the attention map suppresses the current layer’s output, the original information flows through, preventing the “vanishing feature” problem common in deep attention networks.</li>
-  <li><strong>Testing</strong>: From the authors’ testing, the residual connections substantially increased the ability of the attention mechanism to retain information</li>
-</ul>
-
-<p><strong>Structural Re-parameterization</strong>
-To further boost speed, SPAN employs structural re-parameterization (similar to RepVGG).</p>
-
-<h3 id="experimental-results">Experimental Results:</h3>
-
-<p>SPAN won <strong>1st place</strong> in both the <em>Overall Performance</em> and <em>Runtime</em> tracks of the <strong>NTIRE 2024 Efficient Super-Resolution Challenge</strong>.</p>
-
-<p><strong>Performance vs. Latency Trade-off (\(\times 4\) Upscaling):</strong></p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Method</th>
-      <th style="text-align: center">Parameters</th>
-      <th style="text-align: center">Inference Speed (RTX 3090)</th>
-      <th style="text-align: center">PSNR (Urban100)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><strong>IMDN</strong></td>
-      <td style="text-align: center">715K</td>
-      <td style="text-align: center">20.56 ms</td>
-      <td style="text-align: center">26.04 dB</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>RLFN</strong></td>
-      <td style="text-align: center">543K</td>
-      <td style="text-align: center">16.41 ms</td>
-      <td style="text-align: center">26.17 dB</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>SPAN</strong></td>
-      <td style="text-align: center"><strong>498K</strong></td>
-      <td style="text-align: center"><strong>13.67 ms</strong></td>
-      <td style="text-align: center"><strong>26.18 dB</strong></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Key Takeaways:</strong></p>
-<ol>
-  <li><strong>Fastest in Class:</strong> SPAN runs ~15% faster than RLFN and ~33% faster than IMDN while using fewer parameters.</li>
-  <li><strong>Visual Quality:</strong> Qualitative comparisons show that SPAN reconstructs sharper lattice structures (e.g., building windows in Urban100) where other lightweight models suffer from aliasing or blurring.</li>
-  <li><strong>Real-World Viability:</strong> By removing the “latency tax” of attention, SPAN proves that high-performance SR is feasible on constrained hardware without sacrificing the benefits of content-aware processing.</li>
-</ol>
-
-<h2 id="dsclora-efficient-domain-adaptation-via-dynamic-sparse-low-rank-matrices-ntire-2025-winner-3">DSCLoRa: Efficient Domain Adaptation via Dynamic Sparse Low-Rank Matrices (NTIRE 2025 Winner) <a href="#3">[3]</a></h2>
-
-<p>Winner of the <strong>NTIRE 2025 Efficient Super-Resolution Challenge (Overall Performance Track)</strong>, DSCLoRA introduces a framework to fine-tune lightweight models (specifically SPAN) using Low-Rank Adaptation supervised by a massive teacher network. Through these methods, we are able to squeeze more performance out of existing architectures.</p>
-
-<h3 id="innovation-1-convlora--sconvlb">Innovation 1: ConvLoRA &amp; SConvLB</h3>
-
-<p>While LoRA is famous in the LLM world for fine-tuning transformers, DSCLoRA adapts it for Convolutional Neural Networks (CNNs) via the <strong>SConvLB (Super-resolution Convolutional LoRA Block)</strong>.</p>
-
-<p><strong>The Mechanism:</strong>
-Standard LoRA approximates weight updates using low-rank matrices. DSCLoRA applies this to convolution kernels. For a frozen pre-trained convolution weight \(W_{PT}\), the update is modeled as:</p>
-
-\[W_{\text{updated}} = W_{PT} + X \times Y\]
-
-<p>where \(Y\) (initialized to zero) and \(X\) (random Gaussian) are low-rank matrices (\(r \ll \text{channel dimension}\)).</p>
-
-<p><strong>Zero-Overhead Inference:</strong>
- Because convolution is a linear operation, the learned low-rank weights (\(X \times Y\)) can be mathematically merged into the original frozen weights:</p>
-
-\[W_{\text{final}} = W_{PT} + (X \times Y)\]
-
-<p>During inference, the auxiliary LoRA branches are removed. The model architecture remains <strong>identical</strong> to the original lightweight baseline, meaning <strong>zero additional FLOPs</strong> and <strong>zero extra inference latency</strong>, despite the performance boost.</p>
-
-<h3 id="innovation-2-spatial-affinity-distillation">Innovation 2: Spatial Affinity Distillation</h3>
-
-<p>Simply adding LoRA layers isn’t enough to achieve state-of-the-art results. The authors found that pixel-wise loss functions (L1/L2) fail to capture the high-frequency structural details essential for super-resolution.</p>
-
-<p>To solve this, DSCLoRA employs <strong>Spatial Affinity Knowledge Distillation (SAKD)</strong>.</p>
-
-<p><strong>How it works:</strong>
-Instead of forcing the student (DSCLoRA) to mimic the teacher’s (Large SPAN) raw feature maps, it forces the student to mimic the teacher’s <em>spatial relationships</em>.</p>
-<ol>
-  <li>Feature maps \(F \in \mathbb{R}^{C \times H \times W}\) are flattened.</li>
-  <li>An affinity matrix \(A \in \mathbb{R}^{HW \times HW}\) is computed, representing the pairwise similarity between every spatial location in the image.</li>
-  <li>The distillation loss minimizes the distance between the Student’s and Teacher’s affinity matrices:</li>
-</ol>
-
-\[\mathcal{L}_{AD} = \frac{1}{|A|} \sum \| A_{student} - A_{teacher} \|_1\]
-
-<p>This transfers the “structural knowledge” (texture patterns, edge continuity) from the heavy teacher to the lightweight student, guiding the optimization of the LoRA parameters.</p>
-
-<h3 id="architecture-the-sconvlb-upgrade">Architecture: The “SConvLB” Upgrade</h3>
-
-<p>The framework is built upon the <strong>SPAN (Swift Parameter-free Attention Network)</strong> architecture. DSCLoRA modifies it by:</p>
-<ol>
-  <li>Replacing Blocks: Standard SPAB blocks are replaced with <strong>SConvLB</strong> blocks containing the parallel LoRA branches.</li>
-  <li>Applying ConvLoRA to the main feature extraction convolutions and the critical upsampling (PixelShuffle) layers.</li>
-  <li>Better Training: The backbone weights are frozen; only the small LoRA parameters are updated.</li>
-</ol>
-
-<h3 id="experimental-results-1">Experimental Results</h3>
-
-<p>The method was evaluated on standard SR benchmarks (\(\times 4\) scale), comparing the original lightweight SPAN against the DSCLoRA-enhanced version.</p>
-
-<p><strong>Quantitative Performance (Manga109):</strong></p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Model</th>
-      <th style="text-align: center">Params (Inference)</th>
-      <th style="text-align: center">FLOPs</th>
-      <th style="text-align: center">PSNR</th>
-      <th style="text-align: center">SSIM</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">SPAN-Tiny (Baseline)</td>
-      <td style="text-align: center">131K</td>
-      <td style="text-align: center">8.54G</td>
-      <td style="text-align: center">29.56 dB</td>
-      <td style="text-align: center">0.8967</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>DSCLoRA (Ours)</strong></td>
-      <td style="text-align: center"><strong>131K</strong></td>
-      <td style="text-align: center"><strong>8.54G</strong></td>
-      <td style="text-align: center"><strong>29.60 dB</strong></td>
-      <td style="text-align: center"><strong>0.8971</strong></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Some takeaways:</p>
-<ul>
-  <li>Both models have the exact same parameter count and FLOPs during inference.</li>
-  <li>DSCLoRA achieves consistently higher PSNR/SSIM across all benchmarks (Set5, Set14, Urban100, Manga109).</li>
-  <li>Qualitative comparisons show DSCLoRA recovers finer details (e.g., building lattices, animal fur) where the baseline and other lightweight models (like RFDN or RLFN) produce aliasing or blur.</li>
-</ul>
-
-<h3 id="why-does-this-matter">Why does this matter?</h3>
-<p>Nevertheless, DSCLoRA (using SPAN Tiny) won the NTIRE 2025 ESR Challenge, beating out SPANF, a further optimized version of SPAN from the original authors.</p>
-
-<p>DSCLoRA shifts the focus from <em>architecture design</em> to <em>training dynamics</em>. It proves that existing efficient architectures are often under-optimized. By using a temporary, high-capacity training setup (Teacher + LoRA) that collapses into a simple deployment model, we can achieve superior results on resource-constrained devices without any hardware penalties.</p>
-
-<h2 id="conclusion">Conclusion</h2>
-<p>Overall, we’ve seen impressive growth in efficient super resolution models. PSNR/SSIM is just as good or better while models have achieved ~5x reductions in parameter size and runtime. There is a lot of optimizations to be gained, whether through better architectures (focusing on edges or attention maps), more nuanced loss functions, or additional work put into finetuning and further training models.</p>
-
-<hr />
-
-<h2 id="references">References</h2>
-<h2 id="references-1">References</h2>
-
-<p><a id="1">[1]</a> Y. Wang, “Edge-Enhanced Feature Distillation Network for Efficient Super-Resolution,” in <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops</em>, 2022, pp. 777-785.</p>
-
-<p><a id="2">[2]</a> C. Wan, H. Yu, Z. Li, Y. Chen, Y. Zou, Y. Liu, X. Yin, and K. Zuo, “Swift Parameter-free Attention Network for Efficient Super-Resolution,” in <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>, 2024, pp. 6246–6256.</p>
-
-<p><a id="3">[3]</a> X. Chai, Y. Zhang, Y. Zhang, Z. Cheng, Y. Qin, Y. Yang, and L. Song, “Distillation-Supervised Convolutional Low-Rank Adaptation for Efficient Image Super-Resolution,” <em>arXiv preprint arXiv:2504.11271</em>, 2025. [Online]. Available: https://arxiv.org/abs/2504.11271</p>]]></content><author><name>Anthony Yu</name></author><summary type="html"><![CDATA[Super-resolution has long faced a fundamental tension: the highest-quality models require billions of operations, while edge devices demand sub-100ms inference. This article examines three recent methods—SPAN, EFDN, and DSCLoRa—that challenge this tradeoff through architectural innovation, training-time tricks, and efficient adaptation. We’ll see how rethinking the upsampling operation, leveraging structural reparameterization, and applying low-rank decomposition can each dramatically improve efficiency without sacrificing output quality.]]></summary></entry></feed>
+<p>[4] Shokri, Reza, et al. “Membership inference attacks against Machine Learning Models.” arXiv preprint arXiv:1610.05820, 2017.</p>]]></content><author><name>Junguk Yoon</name></author><summary type="html"><![CDATA[Membership Inference Attacks (MIA) are privacy attacks on machine learning models meant to predict whether or not a a data point was used to train a model. This blog looks at three different MIA methods against three different types of models.]]></summary></entry></feed>
