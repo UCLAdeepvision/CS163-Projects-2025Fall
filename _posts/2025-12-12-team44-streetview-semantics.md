@@ -7,7 +7,7 @@ date: 2025-12-13
 ---
 
 
-> Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Finally, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.
+> Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Then, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Our last contribution is a boundary-aware auxillary supervision strategy that explicitly promotes boundary preservation for thin and small objects while maintaining architectural simplicity. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.
 
 
 * [Streetview Semantics](#streetview-semantics)
@@ -374,6 +374,51 @@ Although our overall mIoU was still lower than our model for all classes, it sti
 - bicycle: ~ 9%
 
 
+
+## Boundary-Aware Auxiliary Supervision {#boundary}
+
+Recent research has proposed incorporating explicit boundary or edge information into semantic segmentation models. The motivation behind these approaches is that by introducing an auxiliary task that supervises object boundaries, the model can learn finer-grained spatial features that improve the distinction between adjacent objects.
+
+### Related Work
+
+We draw inspiration from **Takikawa et al.**, who proposed **Gated-SCNN: Gated Shape CNNs for Semantic Segmentation (ICCV 2019)** [6]. Their work demonstrates that incorporating boundary and shape prediction objectives significantly improves both mean Intersection-over-Union (mIoU) and boundary F-score, with particularly strong gains for thin and small objects. While effective, this approach requires substantial architectural changes and increased computational cost, as it introduces a two-stream CNN architecture.
+
+### Our Design
+
+In our work, we adopt **explicit boundary supervision as an auxiliary task**. Rather than modifying the core architecture, we augment the model with a lightweight boundary prediction head and an additional loss term during training. Boundary labels are generated directly from the ground-truth segmentation masks, requiring no additional annotations. A pixel is labeled as a boundary pixel if any of its 4-connected neighbors belongs to a different semantic class (excluding ignore regions). This produces a binary boundary map in which pixels on class transitions are marked as 1, and all other pixels are marked as 0. This process is deterministic, computationally inexpensive, and ensures perfect alignment between segmentation and boundary targets.
+
+To incorporate boundary supervision into the model, we attach a small boundary prediction head to the shared feature representation produced by the Atrous Spatial Pyramid Pooling (ASPP) module. Specifically, a 1×1 convolutional layer is added on top of the ASPP features to predict a single-channel boundary logit map. The segmentation head and boundary head share all upstream features, enabling multi-task learning without duplicating computation. Importantly, the DeepLabv3 backbone and ASPP remain unchanged. To avoid modifying the model’s output interface, ASPP features are accessed via a forward hook, preserving the original training and evaluation pipeline.
+
+This design was chosen to balance effectiveness and simplicity. Attaching the boundary head at the ASPP level allows the auxiliary task to operate on high-level semantic features while still retaining sufficient spatial resolution for boundary localization. In contrast, attaching boundary supervision earlier in the backbone would emphasize low-level edge detection but was found to produce noisier boundary predictions that did not align well with semantic class transitions. Using a lightweight 1×1 convolution further minimizes additional parameters, reducing the risk of overfitting and ensuring that performance gains arise from improved supervision rather than increased model capacity.
+
+### Loss Function
+
+The total training objective is defined as:
+
+\\[
+L = L_{\\text{seg}} + \\lambda L_{\\text{boundary}}
+\\]
+
+Here, L_seg denotes the primary segmentation loss from before, implemented as a combination of focal loss and Dice loss to address class imbalance and improve region-level overlap. The boundary loss L_boundary is defined as a binary cross-entropy loss with logits, applied only to valid (non-ignore) pixels and computed from boundary targets derived from ground-truth segmentation masks. The scalar weight lambda controls the relative contribution of boundary supervision and is set to 0.2. Empirically, we found that this weighting provides a good trade-off between encouraging precise boundary localization and maintaining region-level semantic consistency. Larger values of lambda tended to overemphasize fine-grained edges at the expense of interior region accuracy, while smaller values diminished the impact of the auxiliary task.
+
+### Results
+
+| Class       |   IoU |
+|-------------|------:|
+| pole        | 0.2958 |
+| vegetation  | 0.7590 |
+| person      | 0.4829 |
+| car         | 0.8043 |
+| motorcycle  | 0.2450 |
+| bicycle     | 0.0010 |
+
+mIoU: 0.3817
+The boundary-aware model improves overall performance, increasing mIoU from **0.3592** (DeepLabv3 baseline) to **0.3817**. The largest gains occur for boundary-sensitive classes, most notably **pole**, which improves from **0.0105** to **0.2958**, demonstrating the effectiveness of explicit boundary supervision for thin structures. Improvements are also observed for **vegetation** (0.6153 → 0.7590), **car** (0.7371 → 0.8043), and **person** (0.4454 → 0.4829). Note that our additions seemed to improve for large objects as well, 
+
+Performance on **motorcycle** remains largely unchanged, while **bicycle** exhibits a decrease in IoU. This suggests that although boundary supervision improves localization, it may overemphasize edges for extremely sparse objects without sufficiently reinforcing interior regions. Overall, these results validate boundary-aware auxiliary supervision as an effective and lightweight improvement over the baseline, particularly for thin and boundary-sensitive classes.
+
+As future work, more experimentation would be necessary to evaluate how our boundary-aware auxiliary supervision improves all class IoUs or fine-grained structures disproportionately. Additionally, exploring complementary approaches such as region-consistency losses, shape-aware architectures, or post-processing refinement methods may further improve performance on challenging small and thin object classes.
+
 ## Future uses
 
 Beyond standard IoU metrics, we implemented a `RoadSafetyAnalyzer` class in our notebook that computes a composite safety score (0 - 100) based on segmentation predictions. This scorer evaluates road visibility, pedestrian and vehicle presence, obstacle detection, and lane clarity to provide a risk-level assessment (LOW, MODERATE, HIGH, CRITICAL) for each scene.
@@ -385,7 +430,7 @@ Beyond standard IoU metrics, we implemented a `RoadSafetyAnalyzer` class in our 
 ## Conclusion
 
 
-This work demonstrates that semantic segmentation performance in urban driving scenes cannot be meaningfully assessed, or improved, using pixel-level accuracy alone in the presence of extreme class imbalance. Through a series of controlled model iterations on the BDD100K dataset, we show that loss design, class-aware weighting, and training strategy play a decisive role in recovering minority-class performance. By progressively shifting from a general-purpose baseline to a targeted, high-resolution optimization focused on safety-critical classes, we achieve substantial gains in mIoU and per-class IoU for thin and rare objects such as bicycles, motorcycles, and poles. These results highlight the necessity of task and risk-aware model design in autonomous driving and provide a practical blueprint for addressing imbalance-driven failure modes without reliance on dataset expansion.
+This work demonstrates that semantic segmentation performance in urban driving scenes cannot be meaningfully assessed, or improved, using pixel-level accuracy alone in the presence of extreme class imbalance. Through a series of controlled model iterations on the BDD100K dataset, we show that loss design, class-aware weighting, and training strategy play a decisive role in recovering minority-class performance. By progressively shifting from a general-purpose baseline to a targeted, high-resolution optimization focused on safety-critical classes, and explicitly encouraging boundary preservation, we achieve substantial gains in mIoU and per-class IoU for thin and rare objects such as poles and other fine-grained structures. These results highlight the necessity of task and risk-aware model design in autonomous driving and provide a practical blueprint for addressing imbalance-driven failure modes without reliance on dataset expansion.
 
 ## References
 
@@ -399,7 +444,7 @@ This work demonstrates that semantic segmentation performance in urban driving s
 
 [5] He, K., Zhang, X., Ren, S., & Sun, J. "Deep residual learning for image recognition." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2016.
 
-
+[6] T. Takikawa, D. Acuna, V. Jampani and S. Fidler, "Gated-SCNN: Gated Shape CNNs for Semantic Segmentation," 2019 IEEE/CVF International Conference on Computer Vision (ICCV), Seoul, Korea (South), 2019.
 
 
 
