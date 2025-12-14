@@ -107,7 +107,7 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
 
 2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form (for multi-class case):
 
-    $$\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}^{H} \sum_{c=1}^{W} \left[ S(r,c) + G(r,c) - S(r,c) G(r,c) \right]}$$
+    $$\ell_{iou} = 1 - \frac{1}{C} \sum_{c=1}^{C} \frac{\sum_{r,w} S_c(r,w) G_c(r,w) + \epsilon}{\sum_{r,w} S_c(r,w) + \sum_{r,w} G_c(r,w) - \sum_{r,w} S_c(r,w) G_c(r,w) + \epsilon}$$
 
     where $$G_c(r,c)$$ is the ground truth label of the pixel (r,c) and $$S_c(r,c)$$ is the predicted probability [2]. 
 
