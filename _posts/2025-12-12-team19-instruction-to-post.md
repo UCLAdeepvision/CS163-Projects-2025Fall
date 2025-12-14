@@ -9,7 +9,7 @@ date: 2025-12-12
 
 ## Abstract
 
-Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator, which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN, a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.
+Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator (2022), which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN (2024), a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.
 
 <!--more-->
 {: class="table-of-content"}
@@ -56,7 +56,7 @@ $$
 
 over all geocells using the features extracted by the CNN backbone.
 
-## TransLocator: A New Architecture
+## TransLocator: A New Architecture (2022)
 
 The next major advancement in tackling geolocation as a classification problem is introduced in the paper *Where in the World is this Image?
 Transformer-based Geo-localization in the Wild*. The paper proposes TransLocator, a fundamentally different model architecture to PlaNet that makes use of transformers and semantic segmentation maps [2].
@@ -100,7 +100,7 @@ Upon analyzing the errors made by TransLocator, the authors found that the model
 
 ![TransLocator Error Examples]({{ '/assets/images/team19/translocator_errors.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-*Fig 6. Some examples of incorrectly geo-located images* [2].
+*Fig 3. Some examples of incorrectly geo-located images* [2].
 
 ## PIGEON: The Semantic Shift (2023)
 
@@ -108,7 +108,7 @@ The next leap forward comes from *PIGEON* (Pre-trained Image GEO-localization Ne
 
 ![Pigeon Geocells]({{ '/assets/images/team19/pigeon_diagram.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-*Fig 2. Prediction pipeline and main contributions of PIGEON.*
+*Fig 4. Prediction pipeline and main contributions of PIGEON.*
 
 ### Semantic Geocells
 PIGEON refines the geocell concept. While PlaNet split cells based purely on photo density, PIGEON incorporates *administrative boundaries*.
@@ -118,7 +118,7 @@ PIGEON refines the geocell concept. While PlaNet split cells based purely on pho
 
 ![Pigeon Diagram]({{ '/assets/images/team19/naive_semantic_geocells.png' | relative_url }}) 
 {: style="width: 800px; max-width: 100%;"}
-*Fig 3. &emsp;&emsp;&emsp;&emsp; a) Old Naive geocells &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; b) Pigeon’s semantic geocells [3].*
+*Fig 5. &emsp;&emsp;&emsp;&emsp; a) Old Naive geocells &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; b) Pigeon’s semantic geocells [3].*
 
 ### Haversine Smoothing Loss
 A major limitation of PlaNet's classification approach is that it penalizes "near misses" just as harshly as "far misses." If the model guesses a cell 1km away from the correct one, standard One-Hot encoding treats it the same as guessing a cell on a different continent.
@@ -153,14 +153,14 @@ After several other finetuning features discussed in the paper but not here, *PI
 
 ![Pigeon Diagram]({{ '/assets/images/team19/pigeon_results.png' | relative_url }}) 
 {: style="width: 800px; max-width: 100%;"}
-*Fig 4. PIGEON Model results on a holdout dataset of 5,000 Street View locations.*
+*Fig 6. PIGEON Model results on a holdout dataset of 5,000 Street View locations.*
 
 While some may call the above results unimpressive, they then compare PIGEON's results to ranked players on GeoGuessr to more fairly contextualize results:
 ![GeoGuessr Context]({{ '/assets/images/team19/geoguessr_context.png' | relative_url }}) 
 {: style="width: 800px; max-width: 100%;"}
-*Fig 4. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.*
+*Fig 7. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.*
 
-## ETHAN
+## ETHAN (2024)
 
 
 ETHAN introduces a framework that leverages existing large vision language models(LVLMs). While PlaNet and PIGEON achieved impressive results, they operate as pattern matching systems, relying on visual features tied to geocells. ETHAN, instead, attempts to mimic human geoguessing strategies by analyzing visual and contextual cues such as architectural, natural, and cultural elements. It replicates this reasoning process through chain-of-thinking prompting built on top of existing VLMs.
@@ -231,7 +231,7 @@ To calculate coordinates form textual reasoning, ETHAN employs several strategie
 
 ![Ethan Results]({{ '/assets/images/team19/ethan_results.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-*Fig 5. Results of ETHAN Prompting framework with SOTA LVLMs on custom dataset[4].*
+*Fig 8. Results of ETHAN Prompting framework with SOTA LVLMs on custom dataset[4].*
 
 
 ETHAN performs strongly, with high accuracy in country and continent classification, on par with Pigeon. As compared to previous strategies, ETHAN benefits from increased interpretability, zero-shot generalization, but has higher computational costs as VLM inference is slower. Additionally, it can suffer from hallucination risks where generative model recognizes non-existent models or applies incorrect assumptions.
