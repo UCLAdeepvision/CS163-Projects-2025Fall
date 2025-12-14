@@ -60,7 +60,7 @@ $$
 ])
 $$
 
-where $$K$$ is the number of keypoints, \( (x_i, y_i) \) denotes the spatial location of the $$i$$ -th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
+where $$K$$ is the number of keypoints, $$(x_i, y_i)$$ denotes the spatial location of the $$i$$ -th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
 
 <div style="text-align: center;">
   <img src="{{ '/assets/images/assets/images/905972224/Joint_heatmap.png' | relative_url }}" 
@@ -80,9 +80,28 @@ This formulation is particularly effective because it preserves spatial uncertai
 ### Single-Person and Multi-Person Pose Estimation 
 Single-person pose estimation assumes the presence of one dominant subject in the image. The model focuses entirely on accurately localizing all keypoints of that individual, often after a preprocessing step that crops the person from the background. This setup allows for high precision and is commonly used in controlled environments such as motion capturing or sports analysis. 
 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/single.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 5. Single-person 3D HPE frameworks.  [5].</em></p>
+</div>
+
 Multi-person pose estimation, on the other hand, introduces the challenge of associating detected keypoints with the correct individuals. Top-down approaches first detect bounding boxes for each person and then apply a single-person pose estimator to each crop. Bottom-up approaches detect all keypoints in the image simultaneously and then group them into individual skeletons. 
 
-The top-down methods generally achieve higher accuracy but scale linearly with the number of people. Bottom-up methods are more computationally efficient for crowded scenes but require robust association algorithms. 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/multi.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 6. Results of CMU-Pose (a–c) and SE-ResNet-OKHM-CMU-Pose(Ours) (d–f). The joint points in the red circle were not recognized by CMU-Pose.  [6].</em></p>
+</div>
+
+Building on the challenges inherent in multi-person pose estimation recent research has explored architectural improvements to enhance robustness in crowded and complex scenes. Figure 18 illustrates a qualitative comparison of multi-person 2D pose estimation results from the research project Improved Multi-Person 2D Human Pose Estimation Using Attention Mechanisms and Hard Example Mining. The first row presents results produced by the baseline CMU Pose network, while the second row shows outputs from the proposed SE-ResNet-OKHM-CMU-Pose model.
+
+In the first set of images, the CMU Pose network detects only 17 joint keypoints for the two individuals on the right, whereas the SE-ResNet-OKHM-CMU-Pose model successfully identifies all 18 joints. The missing joints, highlighted by red circles, demonstrate the baseline model’s difficulty in localizing harder or partially occluded joints. Similarly, in the second image set, only the proposed model correctly detects all 18 joints for the third person in the scene, while the baseline fails to fully recover the pose. In the third set of images, the left ankle of the first individual is accurately detected only by the SE-ResNet-OKHM-CMU-Pose network, further emphasizing its improved sensitivity to challenging and flexible joints.
+
+These qualitative results demonstrate that incorporating attention mechanisms and online hard keypoint mining significantly improves joint localization accuracy, particularly in crowded scenes with overlapping bodies or visually ambiguous joints. By explicitly focusing on difficult examples during training, the proposed method addresses common failure cases present in the COCO dataset. Overall, these findings validate the effectiveness of the approach in improving multi-person pose estimation performance under complex real-world conditions.
+
 
 ### Deep Learning Models for Pose Estimation
 Human pose estimation aims to infer the spatial configuration of human body parts from visual input such as images or videos. Depending on the target representation, pose estimation can be formulated as either a 2D or 3D prediction problem. In 2D pose estimation, the task is to localize body joints on the image plane, while 3D pose estimation further recovers depth information to reconstruct the full skeletal structure in three-dimensional space. As a result, human pose estimation has become a dominant and foundational research topic within the computer vision community.
@@ -104,6 +123,13 @@ $$
 $$
 
 Beyond research settings, human pose estimation has become indispensable in real-time systems across multiple domains. In healthcare, pose estimation supports rehabilitation monitoring, fall detection, and posture grading systems that assess whether patients perform movements correctly. In human–machine interaction, pose-based interfaces allow users to control systems using body movements rather than traditional input devices. Additional applications include surveillance, animation, virtual reality, and intelligent monitoring systems. These use cases demand models that are not only accurate but also robust, efficient, and capable of operating in unconstrained environments.
+
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/intelligent-monitoring-system.ppm' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 7. Intelligent monitoring system.  [7].</em></p>
+</div>
 
 To overcome the spatial resolution limitations of traditional CNNs, later architectures introduced multi-scale feature fusion and high-resolution representations. Models such as HRNet maintain high-resolution feature maps throughout the network and continuously exchange information across resolutions. This design significantly improves joint localization accuracy, especially for fine-grained body parts like wrists and ankles.
 
