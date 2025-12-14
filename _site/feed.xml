@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T23:49:41-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T23:50:01-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
   <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.</p>
 </blockquote>
 
@@ -22,7 +22,9 @@
   </li>
   <li><a href="#findings-and-analysis" id="markdown-toc-findings-and-analysis">Findings and Analysis</a>    <ul>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
-      <li><a href="#analysis" id="markdown-toc-analysis">Analysis</a></li>
+    </ul>
+  </li>
+  <li><a href="#analysis" id="markdown-toc-analysis">Analysis</a>    <ul>
       <li><a href="#absolute-trajectory-error-ate-1" id="markdown-toc-absolute-trajectory-error-ate-1">Absolute Trajectory Error (ATE)</a></li>
       <li><a href="#relative-translation-error-rte" id="markdown-toc-relative-translation-error-rte">Relative Translation Error (RTE)</a></li>
       <li><a href="#relative-orientation-error-roe-1" id="markdown-toc-relative-orientation-error-roe-1">Relative Orientation Error (ROE)</a></li>
@@ -197,7 +199,7 @@ relative_transform = reg.transformation
   </tbody>
 </table>
 
-<h3 id="analysis">Analysis</h3>
+<h2 id="analysis">Analysis</h2>
 
 <h3 id="absolute-trajectory-error-ate-1">Absolute Trajectory Error (ATE)</h3>
 <p>ATE captures how accurately each method reconstructs the global camera trajectory, which is critical for long web videos where drift can accumulate. VGGSfM achieves the lowest ATE, showing strong global consistency due to its end-to-end optimization of camera poses and scene structure. COLMAP performs moderately well but is more sensitive to unreliable feature matches that commonly occur in web videos. ICP performs worst, as it only estimates relative motion and lacks global optimization, causing small errors to compound over time.</p>

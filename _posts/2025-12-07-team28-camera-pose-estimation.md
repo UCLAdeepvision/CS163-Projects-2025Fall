@@ -157,7 +157,7 @@ Here is a table comparing the three methods using the metrics above.
 | ICP     | 0.0842 | 0.0172        | 1.5116       |
 | COLMAP  | 0.0477 m | 0.0073 m/frame | 0.9050 °/frame |
 
-### Analysis
+## Analysis
 
 ### Absolute Trajectory Error (ATE)
 ATE captures how accurately each method reconstructs the global camera trajectory, which is critical for long web videos where drift can accumulate. VGGSfM achieves the lowest ATE, showing strong global consistency due to its end-to-end optimization of camera poses and scene structure. COLMAP performs moderately well but is more sensitive to unreliable feature matches that commonly occur in web videos. ICP performs worst, as it only estimates relative motion and lacks global optimization, causing small errors to compound over time.
