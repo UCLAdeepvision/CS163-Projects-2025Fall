@@ -31,14 +31,16 @@ Camera pose estimation predicts the pose of a camera with these two components:
 *Fig 1. Pose estimation formula* [1].
 
 ### COLMAP
-COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camer poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene. 
+COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camera poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene. 
 
-The process of SfM consists of taking a series of images and then performing feature detection and extraction, feature matching and geometric verification, and structure and motion reconstruction. 
+The process of SfM consists of these key stages after taking in images as input:
+- Performing feature detection and extraction
+- Feature matching and geometric verification
+- Structure and motion reconstruction
 
-For the feature matching and geometric verification, we used sequential matching which is best for images that were acquired in sequential order, like by a video camera. Since frames have visual overlap, it is not required to use exhaustive matching. In this process, consecutive images and matched against each other. 
+For the feature matching and geometric verification, we employ sequential matching, which is best for images that were acquired in sequential order, such as video data. Since frames have visual overlap, it is not required to use exhaustive matching. In this process, consecutive images and matched against each other. 
 
-Multi-View Stereo (MVS) then takes what was output from SfM to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points. 
-
+After SfM, Multi-View Stereo (MVS) then takes that output to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points. 
 
 
 https://demuc.de/colmap/
