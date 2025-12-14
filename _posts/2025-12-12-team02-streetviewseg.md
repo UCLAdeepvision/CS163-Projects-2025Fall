@@ -736,7 +736,7 @@ The reason fence degrades with copy-paste augmentation is that fence is fundamen
 
 It is also observed that Approach 3 did not work as well as we expected (with a 1.24 percentage point mIoU improvement, which is 0.52 points lower than Approach 1 and 0.63 points lower than Approach 2). We identify two potential reasons. First, soft IoU loss directly optimizes the intersection-over-union ratio through smooth gradients, providing stable global-shape supervision that complements SSIM's boundary focus. Lovász-Softmax, while also optimizing IoU, uses a fundamentally different gradient mechanism based on sorting prediction errors by magnitude—this may interact less favorably with SSIM's local window-based gradients. Second, the explicit class weighting (5× for fence/pole/sign) in cross-entropy may conflict with Lovász's error-magnitude-based weighting scheme, potentially causing gradient instability rather than balanced learning.
 
-In general, the combination of BASNet hybrid loss and copy-paste augmentation helps improve model performance the most, achieving a 1.87% mIoU increase compared to the baseline model.
+In general, the Approach 2, combination of BASNet hybrid loss and copy-paste augmentation, helps improve model performance the most, achieving a 1.87% mIoU increase compared to the baseline model.
 
 ### Visualization
 In this part, we provide two example visualizations of the Approach 2 Model (which is the BASNet hybrid loss + copy-paste augmentation approach) and compare it with the baseline model (fully-finetuned SegFormer)
