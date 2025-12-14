@@ -6,7 +6,14 @@ author: Vivek Alumootil and Jinying Lin
 date: 2025-12-11
 ---
 
-##### In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task.  
+> In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task.  
+
+<!--more-->
+
+{: class="table-of-content"}
+
+* TOC
+{:toc}
 
 ### <u> 3D Gaussian Splatting </u>
 
