@@ -128,10 +128,10 @@ Our tech interactions occured as follows:
 <p>However, even with these limitations, we were able to produce meaningful results. In the videos below, the car stopping represents us querying the virtual machine. Its next action is based on the results of applying one of our models.</p>
 
 <p style="display:flex; flex-wrap:wrap; gap:12px;">
-  <video src="/CS163-Projects-2025Fall/assets/images/team21/cnn_forward.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
-  <video src="/CS163-Projects-2025Fall/assets/images/team21/sam_forward.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
-  <video src="/CS163-Projects-2025Fall/assets/images/team21/cnn_turn.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
-  <video src="/CS163-Projects-2025Fall/assets/images/team21/sam_turn.MOV" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/cnn_forward.mp4" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/sam_forward.mp4" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/cnn_turn.mp4" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
+  <video src="/CS163-Projects-2025Fall/assets/images/team21/sam_turn.mp4" controls style="flex:1 1 calc(50% - 12px); width:100%;"></video>
 </p>
 <p><em>From top to bottom, left to right: CNN based model detecting no obstacles, SAM based model detecting no obstacles, CNN based model detecting a person, SAM based model detecting a person</em>.</p>
 
@@ -139,7 +139,7 @@ Our tech interactions occured as follows:
 
 
 ## Conclusion
-<p>Through this project, we explored several differences between the models used. The baseline CNN was quick to implement but still took some time to train. The SAM/SAM V2 models were also quick to implement and came pretrained. SAM performed similar to baseline when comparing segmentation label quality, and SAM V2 outperformed the baseline. However, they performed worse during our real-world test. The CNN with CRF/Grounding modifications improved on the baseline when it came to preserving thin features during segmentation. On the other hand, it was complicated to implement and performed relatively similar to the baseline in our real-world test. These results demonstrate several considerations, including the speed of implementation, performace, and type of problem, that must be made when determining a model to use. </p>
+<p>Through this project, we explored several differences between the models used. The baseline CNN was quick to implement but still took some time to train. The SAM/SAM V2 models were also quick to implement and came pretrained. SAM performed similar to baseline when comparing segmentation labels, and SAM V2 outperformed the baseline. However, they performed worse during our real-world test. The CNN with CRF/Grounding modifications improved on the baseline when it came to preserving thin features during segmentation. On the other hand, it was complicated to implement and performed relatively similar to the baseline in our real-world test. These results demonstrate several considerations, including the speed of implementation, performace, and type of problem, that must be made when determining a model to use. </p>
 
 ## Reference
 [1] Facebookresearch/Segment-Anything. 23 Mar. 2023, Jupyter Notebook. Meta Research, 14 Dec. 2025. GitHub, https://github.com/facebookresearch/segment-anything.
