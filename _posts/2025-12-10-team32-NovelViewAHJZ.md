@@ -6,8 +6,6 @@ author: Team 32
 date: 2025-12-10
 ---
 
-> <!-- PASTE: Motivation paragraph here as the abstract/intro -->
-
 <!--more-->
 
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
@@ -21,8 +19,8 @@ date: 2025-12-10
       + [Results](#results)
       + [Discussion](#discussion)
       + [Running the Codebase](#running-the-codebase)
-         - [Exploring Activation Functions](#exploring-activation-functions)
-         - [Clamping](#clamping)
+      + [Creating a Dataset](#creating-a-dataset)
+      + [Exploring Activation Functions](#exploring-activation-functions)
    * [Large View Synthesis Model (LVSM)](#large-view-synthesis-model-lvsm)
       + [Overview](#overview-1)
       + [Method](#method-1)
