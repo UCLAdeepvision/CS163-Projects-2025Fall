@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Medical Image Segmentation</title>
+
+    <meta name="description" content="Medical image segmentation is an important component in the medical field, supporting the diagnosis of patients, treatment planning, and disease monitoring. ...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Medical Image Segmentation" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Medical image segmentation is an important component in the medical field, supporting the diagnosis of patients, treatment planning, and disease monitoring. Segmentation in machine learning is a process where datasets are broken into meaningful groups for annotation and deeper analysis. Medical segmentation, a combination of the two, has grown to..." property="og:description">
+    
+    
+        <meta content="/2024/12/13/team45-medical-segmentation.html" property="og:url">
+    
+<!--
+    
+        <meta content="Radhika Kakkar, Janie Kuang, Nyla Zia" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2024-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2024/12/13/team45-medical-segmentation.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Medical Image Segmentation">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Medical image segmentation is an important component in the medical field, supporting the diagnosis of patients, treatment planning, and disease monitoring. Segmentation in machine learning is a process where datasets are broken into meaningful groups for annotation and deeper analysis. Medical segmentation, a combination of the two, has grown to importance in the field, but there still remains a challenging problem due to the large variability in modalities, anatomical structures, and usage. This report examines three recent approaches, MedSAM, UniverSeg, and GenSeg, that aim to address and improve on these limitations by improving generalization and adaptability.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Medical Image Segmentation</h1>
+    <p class="post-meta">
+
+      <time datetime="2024-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2024
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Radhika Kakkar, Janie Kuang, Nyla Zia</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2024/12/13/team45-medical-segmentation.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Medical image segmentation is an important component in the medical field, supporting the diagnosis of patients, treatment planning, and disease monitoring. Segmentation in machine learning is a process where datasets are broken into meaningful groups for annotation and deeper analysis. Medical segmentation, a combination of the two, has grown to importance in the field, but there still remains a challenging problem due to the large variability in modalities, anatomical structures, and usage. This report examines three recent approaches, MedSAM, UniverSeg, and GenSeg, that aim to address and improve on these limitations by improving generalization and adaptability.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#motivation" id="markdown-toc-motivation">Motivation</a></li>
+  <li><a href="#medsam" id="markdown-toc-medsam">MedSAM</a></li>
+  <li><a href="#universeg" id="markdown-toc-universeg">UniverSeg</a></li>
+  <li><a href="#genseg" id="markdown-toc-genseg">GenSeg</a></li>
+  <li><a href="#discussion" id="markdown-toc-discussion">Discussion</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+<p>Medical segmentation plays a key role in decision making in clinical settings. It supports tasks ranging from diagnosis, treatment planning, and disease monitoring. However, the existence of large variability in imaging modalities, anatomical structures, and labeling conventions makes segmentation really difficult. In practice, medical images differ widely across different scanners, institutions, and patient populations.</p>
+
+<p>Furthermore, new segmentation tasks come to light frequently that differ in both appearance and semantic definition from previous training data. These tasks may be centered on uncommon autonomies, institution specific labelling protocols, or generally unseen imaging conditions. This all makes it very difficult to design and scale medical image segmentation systems across diverse, real world clinical settings.</p>
+
+<h2 id="motivation">Motivation</h2>
+<p>Current existing approaches are catered towards narrowly defined tasks that still require a large amount of labelled data and retraining for new tasks. This leads to overeliance on very detailed task specific annotations or retraining continuously, both of which prove to be expensive and hard to maintain. As clinical environments continue to grow and evolve, these limitations hinder scalability and impact of medical image segmentation.</p>
+
+<p>These challenges motivate the need for segmentation frameworks that are able to generalize well across new tasks in an efficient and effective manner. Ideally, these systems would support different formulations of task specification while simultaneously maintaining good performance across heterogeneous medical imaging domains. The following sections deep dive into three approaches that attempt to address these challenges from different yet complimentary perspectives.</p>
+
+<h2 id="medsam">MedSAM</h2>
+<p>Current medical segmentation models lack generalizability as many are tailored to individual medical image segmentation tasks. This can prove to be an obstacle for practical use of models in a clinical setting when there is a wide range of applications where medical segmentation can be applied. There already exist generalized segmentation models like the segment anything model (SAM) which is a general segmentation foundation model designed for general segmentation on natural images. However, when applied on medical image segmentations it performs conditionally with weaker performance when targets are characterized by weak boundaries causing a strong limitation of its use in the medical field. This led to the development of MedSAM [1], a promptable segmentation model specifically adapted for medical images. It can segment medical images both 2D and 3D(processes 3D images as a series of 2D slices) with the enhanced aid of specificity through user prompting.</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure1.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 1. a. MedSAM dataset distribution 
+b. MedSAM model architecture</em> [1].</p>
+
+<p>MedSAM’s approach was to finetune SAM on more than one million medical image mask pairs sourced from publicly available medical image segmentation datasets. To start, 1.5 million medical image mask pairs were split for training, tuning, and validation of the model. These medical images range from a variety of medical imaging modalities including CT, MRI, X-ray, ultrasound, endoscopy, ultrasound, mammography, OCT, and pathology and also cover a diverse range of targets like organs, tissues, and lesions to ensure generalization.</p>
+
+<p>The data is then trained on a model retaining most of SAM’s backbone which includes a ViT-Base model with an image encoder that extracts dense visual features, a prompt encoder that processes user inputs, and a mask decoder that generates segmentation outputs. During training, bounding box prompts also help the model learn mapping by deriving ground truth masks which help convert coarse spatial localization to precise boundary delineation. This is aimed to help increase human interaction as in many medical settings, different clinicians may have different needs from the same image.</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure2.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 2. Performance Correspondence of Internal Validation Tasks across the models </em> [1].</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure3.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 3. Performance Correspondence of External Validation Tasks across the models </em> [1].</p>
+
+<p>To evaluate the effectiveness of MedSAM, its performance was compared against SAM and specialist models like U-Net and DeepLabV3+. Each of the specialist models were trained separately for each of the modalities that MedSAM is trained on and then tested with internal and external validation where internal validation was the default data splits from the same dataset and the external validation came from unseen, new datasets of the same modality. Results then showed that MedSAM had a stronger consistent performance on internal and validation while U-Net and DeepLabV3+ would perform stronger on internal validation but poorly on external validation showing their limited generalization ability. SAM performed relatively poorly across all validation sets and in comparison to the other three models.</p>
+
+<p>A human annotation study was also conducted to quantitatively evaluate MedSAM’s effect on annotation time cost in actual practice. Two experienced radiologists were given a dataset not in training or validation of the model to annotate through two pipelines: one with MedSAM and one without. To evaluate their annotations, the dice similarity coefficient and normalized surface distance (NSD) were.</p>
+
+\[DSC(G, S) = \frac{2|G \cap S|}{|G| + |S|}\]
+
+<p>The dice similarity constant is a region based metric that measures the overlap between the two expert annotations and provides a quantitative statistic for segmentation accuracy.</p>
+
+\[NSD(G, S) = \frac{|\partial G \cap B_{\partial S}^{(\tau)}| + |\partial S \cap B_{\partial G}^{(\tau)}|}{|\partial G| + |\partial S|}\]
+
+<p>NSD is a boundary based metric which evaluates how close the predicted annotations are within a specified tolerance parameter and this provides a measurement with more boundary precision. The combination of these two statistics capture the region level overlap and boundary level accuracy to comprehensively assess the use of MedSAM in actual practice, and they showed that the use of MedSAM can reduce annotation time by more than 80%.</p>
+
+<p>In general, MedSAM is a strong step towards making segmentation foundation models useful in medicine and it shows that with large, well-curated medical data, a generalized segmentation model in medical uses is possible and broadly useful. However, there are still limitations to MedSAM. Much of the training data consist of CT, MRI, and endoscopy images which impact the models performance on other modalities like mammography. It is also limited on bounding box prompts for vessel-like branching structures. Overall, despite some limitations, MedSAM is still a significant improvement for medical image segmentation.</p>
+
+<h2 id="universeg">UniverSeg</h2>
+<p>The power of large scale foundational models for medical image segmentation is clearly demonstrated through MedSAM. However, the reality is that it still relies on predefined prompt formats to adapt to new segmentation issues and requires task specific fine tuning. UniverSeg [2] tackles the same ultimate goal of universality from a different and interesting angle. Instead of prompt engineering or retraining, it proposes an adaptation framework that is trained only once and is inference only. It essentially enables the segmentation of new medical tasks without additional learning.</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure4.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 4. Train and Test Segmentation Tasks </em> [2].</p>
+
+<p>UniverSeg approaches medical image segmentation as a task conditioned inference problem. It does not encode the task implicitly using the weights of the model. Instead, the task is defined explicitly at inference time using a support set, which is a small collection of labelled image-mask pairs that represent the segmentation objective at hand. Given this support set and a query image, the model is able to output a segmentation for the query in a single forward pass. Essentially, if a few representative examples are given at inference time, UniverSeg is able to generalize to unseen anatomies, image modalities, and label spaces.</p>
+
+<p>From an architectural perspective, UniverSeg contains a symmetric encoder that is responsible for processing both query and support images. This is then followed by a cross-feature interaction module, which is referred to as CrossConv or CrossBlock. This module is responsible for the facilitation of the bidirectional exchange of information between the query and support features. This essentially allows the model to understand what structures should be segmented in the query image based on the support examples available. Most importantly, this model does not assume that there are a fixed number of classes or predefined semantics. This makes it very well suited for heterogeneous and open set medical segmentation tasks.</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure5.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 5. UniverSeg network (left) and CrossBlock architecture (right) </em> [2].</p>
+
+<p>The authors curated a very large and diverse training corpus named MegaMedical in order to train a model capable of broad generalization. MegaMedical consists of 53 public medical segmentation datasets. It spans various anatomical targets and imaging modalities (MRI, CT, fundus imaging, etc.). During the training process, segmentation tasks are sampled episodically. Each of the episodes define a new task through a randomly selected support set and the corresponding query images. This set up was designed to mirror the setting during inference. It really encourages the model to learn segmentation principles that are task agonistic instead of memorizing data specific patterns.</p>
+
+<p>From an empirical standpoint, UniverSeg showcases both strong zero shot and few shot performance when tested on a large range of previously unseen data sets. The model was evaluated on segmentation tasks that differed greatly from the training distribution in terms of label definitions, autonomy, and modality. Furthermore, the results clearly show that UniverSeg outperforms traditional supervised baselines that have been trained on limited data. It is also competitive with or superior to several of the specialized few shot medical segmentation methods. It is crucial to note this performance is achieved without any fine tuning, truly highlighting the effectiveness of task conditioning through support examples.</p>
+
+<p style="width: 500px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Table1.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Table 1: Performance Summary of UniverSeg and each FS baseline (right) </em> [2].</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure6.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 6. Average Dice score per each held out dataset </em> [2].</p>
+
+<p>While MedSAM focuses on promptable segmentation within a powerful model that has been pretrained, UniverSeg transfers the burden of adaptation from the parameters of the model to contextual examples. This represents an important design tradeoff in the realm of universal medical segmentation. MedSAM performs extremely well when simple prompts and large pretrained representations prove to be more than sufficient. On the other hand, UniverSeg truly shines in cases where the new tasks can not be encoded through prompts easily, labeled examples are present, and retraining is ineffective or inefficient. Together, these two approaches intertwine and provide interesting insights into complementary future work focusing on scalable and flexible medical image segmentation.</p>
+
+<h2 id="genseg">GenSeg</h2>
+<p>To complete our research of medical image segmentation, we read the paper, “Generative AI enables medical image segmentation in ultra low-data regimes.” In this paper, the authors aim to solve the problem of ultra low-data regimes. In the medical world, this refers to the extremely low availability of medical images that have been properly annotated due in part to limited professionals who can accurately complete the annotations, the time consuming nature of individually marking every pixel in an image, as well as the overall lack of adequate images for this annotation and analysis. To combat this issue, they introduce GenSeg: a framework used to generate synthetic data that has been labeled and can be used to train segmentation models [3].</p>
+
+<p>Existing AI deep learning frameworks often struggle with medical segmentation due to their heavy reliance on large datasets. Approaches to augment and create synthetic data also often fail, as they treat augmentation as a separate step rather than integrating it with segmentation performance, which leads to inadequate data generation and training. Accurate segmentation performance is the critical aspect of medical imaging, yet the lack of incorporating this feedback is why recent approaches often struggle.</p>
+
+<p>GenSeg, an end-to-end generative framework, is designed specifically to address the issue of the ultra low-data regimes. Its focus is to generate high-fidelity paired masks that can be used to train segmentation models more effectively. It differs from existing approaches by integrating data generation with segmentation performance. GenSeg generates these synthetic images by utilizing real medical image segmentation masks. The synthetic image-mask pairs are then used to train the model which in turn optimizes the generation. The framework uses a Generative Adversarial Network (GAN) based generator which consists of a generator and discriminator competing with each other, and builds upon this generator by embedding it inside its end-to-end framework. The feedback loop of this framework functions as follows: the generator produces the synthetic pair, the image-pair mask is then used to train a segmentation model, and the following performance is used as feedback to improve the generation process. The data generation is directly guided by the performance of the segmentation which ensures it is high-quality and accurate.</p>
+
+<p>The authors were able to assess this improved accuracy by testing on as few as 40-100 training examples. As shown in Figure 7, the segmentation masks produced by GenSeg are a lot closer aligned with the Ground Truth than other popular models such as UNet. These results reveal that the generations produced are reliable and detailed even while being trained with very limited data.</p>
+
+<p style="width: 600px; max-width: 100%; margin: 0 auto; display: block;"><img src="/CS163-Projects-2025Fall/assets/images/team45/Figure7.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"><em>Fig 7. GenSeg performance comparison to Unet and DeepLab in ultra low-data regimes </em> [3].</p>
+
+<p>Additionally, the authors evaluated GenSeg in out-of-domain (OOD) scenarios. Out-of-domain refers to a situation where both the training and test data come from different datasets, and is common in the medical world when clinical data differs from training sets. GenSeg was able to outperform other models with under 40 labeled examples.</p>
+
+<p>The authors were able to determine why GenSeg’s performance was so much more effective than existing approaches by examining components of the framework. The examinations showed that GenSeg yields higher segmentation in both in-domain and OOD settings which confirms that the multi-faceted approach of. Incorporating segmentation performance in data generation is the critical factor to improve the outcomes. The authors additionally conducted ablation studies to analyze individual components within the framework. These studies revealed that the end-to-end aspect of the framework is just as crucial as the joint segmentation and generation. Furthermore, the generator architecture improved performance with the adaptability in the generation approach based on segmentation performance. Another key finding is GenSeg does not need labeled data to outperform data augmentation techniques which is incredibly important to medical imaging with sensitive and private data.</p>
+
+<p>The authors reveal that GenSeg is an effective solution that tackles the challenge of ultra low-data regimes of medical image segmentation. With the integration of generative modeling and segmentation performance in the end-to-end framework, GenSeg is able to reduce the need for large, annotated, trainable datasets while still achieving successful domain and OOD performance. The results show that data generation coupled with performance, rather than traditional augmentation, is the key to improving segmentation accuracy. Overall, GenSeg highlights the potential that generative AI has to meaningfully address limitations in the medical world.</p>
+
+<h2 id="discussion">Discussion</h2>
+<p>The three methods we have seen in the papers, MedSAM, UniverSeg, and GenSeg, all aim to improve generalization and scalability in medical image segmentation. MedSAM does this with its large-scale pretraining and is strong with enough data and prompts. UniverSeg builds upon this but conditions on support examples at inference without learning which is effective when tasks cannot be expressed with prompting. GenSeg encompasses all by addressing situations where there are neither prompts nor enough data present and focuses on improving performance with generation and segmentation performance.</p>
+
+<p>The three approaches demonstrate constraints present in the medial imaging setting. MedSAM is best used for scenarios where prompts are available, likely interactive workflows. UniverSeg, in contrast, excels when adapting to new tasks given a small set of examples. GenSeg covers situations where there is less data present, particularly helpful for rare or un-understood diseases. Together, they demonstrate the different techniques to enhance medical imaging, and show that such approaches are complementary to combat a wide range of issues.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>In conclusion, medical image segmentation remains to be a challenging yet necessary problem to solve. As these approaches reveal, ongoing research continues to improve the generalization and adaptability of segmentation frameworks in medical imaging. Each approach, MedSAM, UniverSeg, and GenSeg, tackles a key limitation, whether related to the availability of data, the use of prompts, or task adaptability, and together they highlight complementary strategies for improving medical image segmentation. Every new model and framework represents a step toward more accurate, scalable, and reliable analysis in an evolving clinical field.</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>[1] Ma, Jun, et al.
+“<a href="https://www.nature.com/articles/s41467-024-44824-z">Segment anything in medical images</a>.” Nature Communications, 2024.</p>
+
+<p>[2] Butoi, Victor Ion, et al.
+“<a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Butoi_UniverSeg_Universal_Medical_Image_Segmentation_ICCV_2023_paper.pdf">UniverSeg: Universal medical image segmentation</a>.” International Conference on Computer Vision, 2023.</p>
+
+<p>[3] Zhang, Li, et al.
+“<a href="https://www.nature.com/articles/s41467-025-61754-6">Generative AI enables medical image segmentation in ultra low-data regimes</a>.” Nature Communications, 2025.</p>
+
+<hr />
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html">&larr; Post Template</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html">Camera Pose Estimation &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
