@@ -679,8 +679,6 @@ Approach 1 - BASNet Hybrid Loss:
 | traffic light | 0.4583 | 0.4730 | +0.0147 |
 | **mIoU** | **0.5788** | **0.5963** | **+0.0176** |
 
-![BAS]({{ '/assets/images/team02/BAS.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-
 Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
 
 | Class | Baseline | BAS + Aug | Improvement |
@@ -693,8 +691,6 @@ Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:
 | traffic light | 0.4583 | 0.4775 | +0.0191 |
 | **mIoU** | **0.5788** | **0.5974** | **+0.0187** |
 
-![Aug]({{ '/assets/images/team02/Aug.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-
 Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
 
 | Class | Baseline | SLC | Improvement |
@@ -706,8 +702,6 @@ Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:
 | traffic sign | 0.5653 | 0.5787 | +0.0134 |
 | traffic light | 0.4583 | 0.4724 | +0.0140 |
 | **mIoU** | **0.5788** | **0.5912** | **+0.0124** |
-
-![SLC]({{ '/assets/images/team02/SLC.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
 ### Compare to Baseline Model
 By comparing the results of Approach 1, 2, and 3 to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light get increased, and the overall mIoU scores also get increased in all three approachesn (with a 1.76%, 1.87%, and 1.24% mIoU increase respectively, as you can see from the table). However, the model performance on both the car and vegetation classes degraded slightly. Before we start to analyze, there is something we need to know first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compared to the other 4 classes.

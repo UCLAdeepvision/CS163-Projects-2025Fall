@@ -905,8 +905,6 @@ trainer.save_model("./segformer-thin-structures-hybrid-final")
   </tbody>
 </table>
 
-<p><img src="/CS163-Projects-2025Fall/assets/images/team02/BAS.png" alt="BAS" style="width: 400px; max-width: 100%;" /></p>
-
 <p>Approach 2 - BASNet Hybrid Loss + CopyPaste Augmentation:</p>
 
 <table>
@@ -964,8 +962,6 @@ trainer.save_model("./segformer-thin-structures-hybrid-final")
   </tbody>
 </table>
 
-<p><img src="/CS163-Projects-2025Fall/assets/images/team02/Aug.png" alt="Aug" style="width: 400px; max-width: 100%;" /></p>
-
 <p>Approach 3 - SSIM Loss + Lovasz Loss + CopyPaste Augmentation:</p>
 
 <table>
@@ -1022,8 +1018,6 @@ trainer.save_model("./segformer-thin-structures-hybrid-final")
     </tr>
   </tbody>
 </table>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team02/SLC.png" alt="SLC" style="width: 400px; max-width: 100%;" /></p>
 
 <h3 id="compare-to-baseline-model">Compare to Baseline Model</h3>
 <p>By comparing the results of Approach 1, 2, and 3 to the baseline model, we can find that the per-class IoU scores on fence, pole, traffic sign, and traffic light get increased, and the overall mIoU scores also get increased in all three approachesn (with a 1.76%, 1.87%, and 1.24% mIoU increase respectively, as you can see from the table). However, the model performance on both the car and vegetation classes degraded slightly. Before we start to analyze, there is something we need to know first: although still counted as fine-grained urban structures (from project description), car and vegetation classes generally have relatively larger sizes compared to the other 4 classes.</p>
