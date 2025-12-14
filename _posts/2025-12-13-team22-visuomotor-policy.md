@@ -184,7 +184,7 @@ The authors evaluate ACO on downstream imitation learning tasks in the CARLA dri
 
 ### Pretraining Versus Learning-from-Scratch
 
-In *On Pre-Training for Visuo-Motor Control: Revisiting a Learning-from-Scratch Baseline* [2], Hansen et al. provide a systematic re-evaluation of visual policy pretraining by comparing frozen pretrained representations against strong learning-from-scratch baselines. Rather than proposing a new pretraining method, this work examines whether commonly used pretrained visual encoders offer consistent advantages once baselines are properly controlled.
+In *On Pre-Training for Visuo-Motor Control: Revisiting a Learning-from-Scratch Baseline* [2], Hansen et al. provide a systematic re-evaluation of visual policy pretraining by comparing frozen pretrained representations against strong learning-from-scratch baselines. Rather than proposing a new pretraining method, this work examines whether commonly used pretrained visual encoders offer consistent advantages compared to baselines.
 
 #### Problem Formulation
 
