@@ -438,7 +438,7 @@ training_args = TrainingArguments(
     save_strategy="epoch",
     logging_steps=25,
     remove_unused_columns=False,
-    dataloader_num_workers=12,
+    dataloader_num_workers=8,
     fp16=torch.cuda.is_available(),
     gradient_accumulation_steps=1,
     report_to="none",
@@ -459,7 +459,7 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 ```
 
 
-### Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation
+### Approach 3 - SSIM + Lovasz Softmax Loss + Copy-Paste Augmentation
 In our third approach, we replace the soft IoU loss from the BASNet hybrid loss with the Lovász-Softmax loss, while retaining SSIM loss and copy-paste augmentation. The motivation is to explore whether Lovász-Softmax, which directly optimizes for the IoU metric through a convex surrogate, can provide better supervision than the standard soft IoU loss.
 
 Unlike soft IoU loss which computes a differentiable approximation of IoU, Lovász-Softmax loss leverages the Lovász extension to create a convex surrogate that directly optimizes the Jaccard index [4]. The key mechanism involves sorting pixels by their prediction error magnitude and applying class-specific gradient weighting derived from the Lovász extension. Critically, the loss uses per-class averaging, where each class contributes equally to the total loss regardless of its pixel count:
@@ -645,7 +645,7 @@ training_args = TrainingArguments(
     save_strategy="epoch",
     logging_steps=25,
     remove_unused_columns=False,
-    dataloader_num_workers=12,
+    dataloader_num_workers=8,
     fp16=torch.cuda.is_available(),
     gradient_accumulation_steps=1,
     report_to="none",
@@ -668,6 +668,15 @@ trainer.save_model("./segformer-thin-structures-hybrid-final")
 After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
 
 Approach 1 - BASNet Hybrid Loss:
+
+Class,Baseline,BAS,Improvement
+fence,0.3438,0.3960,+0.0522
+car,0.8964,0.8943,-0.0021
+vegetation,0.8968,0.8948,-0.0020
+pole,0.3119,0.3379,+0.0259
+traffic sign,0.5653,0.5819,+0.0166
+traffic light,0.4583,0.4730,+0.0147
+mIoU,0.5788,0.5963,+0.0176
 
 ![BAS]({{ '/assets/images/team02/BAS.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
