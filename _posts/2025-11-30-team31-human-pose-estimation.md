@@ -21,7 +21,7 @@ Human pose estimation is the computational task of detecting and localizing pred
   <img src="{{ '/assets/images/assets/images/905972224/print.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 1. Graphical Skeleton [1].</em></p>
+  <p><em>Fig 1. Graphical Skeleton (Image source: <https://www.mdpi.com/2071-1050/15/18/13363>) [1].</em></p>
 </div>
 
 The field of pose estimation has grown in the past few years, driven by advances in deep learning, the availability of large annotated datasets, and the development of flexible, production toolkits. Out of all of these, MMPose stands out as an open-source and extensible framework build on PyTorch that supports a wide array of tasks. Some of these tasks include 2D multi-person human pose estimation, hand keypoint detection, face landmarks, full-body pose estimation including body, hands, face, and feet, animal pose estimations, and so much more. 
@@ -66,7 +66,7 @@ where $$K$$ is the number of keypoints, $$(x_i, y_i)$$ denotes the spatial locat
   <img src="{{ '/assets/images/assets/images/905972224/Joint_heatmap.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 4. Examples of generated joint heatmap, limb heatmap, and joint–limb heatmap.  [4].</em></p>
+  <p><em>Fig 4. Examples of generated joint heatmap, limb heatmap, and joint–limb heatmap. (Image source: < https://www.researchgate.net/publication/378907335/figure/fig1/AS:11431281252590961@1718783506447/Architecture-of-SRCNN-SRCNN-consists-of-feature-block-extraction-and-representation.png>) [4].</em></p>
 </div>
 
 Most modern approaches model pose estimation as a heatmap regression problem. For each joint $$i$$, the network predicts a heat map (shown  below), where each pixel value represents the probability of that joint appearing at that location. The final keypoint location is obtained by: 
