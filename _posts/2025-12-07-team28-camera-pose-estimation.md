@@ -27,10 +27,18 @@ Camera pose estimation predicts the pose of a camera with these two components:
 - A rotation: which describes the camera's orientation relative to the world
 
 ![YOLO]({{ '/assets/images/team28/pose_estimation.PNG' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
+{: style="width: 600px; max-width: 100%;"}
 *Fig 1. Pose estimation formula* [1].
 
+## Camera Pose Estimation Methods
+This is an overview of the camera pose methods that we are working on. 
+
 ### COLMAP
+
+![YOLO]({{ '/assets/images/team28/colmap.PNG' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+*Fig 1. Example: COLMAP used for 3D scene reconstruction* [1].
+
 COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camera poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene. 
 
 The process of SfM consists of these key stages after taking in images as input:

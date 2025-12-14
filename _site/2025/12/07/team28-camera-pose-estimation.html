@@ -178,6 +178,9 @@
 <ul id="markdown-toc">
   <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
       <li><a href="#camera-pose-estimation" id="markdown-toc-camera-pose-estimation">Camera Pose Estimation</a></li>
+    </ul>
+  </li>
+  <li><a href="#camera-pose-estimation-methods" id="markdown-toc-camera-pose-estimation-methods">Camera Pose Estimation Methods</a>    <ul>
       <li><a href="#colmap" id="markdown-toc-colmap">COLMAP</a></li>
     </ul>
   </li>
@@ -207,10 +210,17 @@ that aims to determine the position (translation) and orientation (rotation) of 
   <li>A rotation: which describes the camera’s orientation relative to the world</li>
 </ul>
 
-<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
 <p><em>Fig 1. Pose estimation formula</em> [1].</p>
 
+<h2 id="camera-pose-estimation-methods">Camera Pose Estimation Methods</h2>
+<p>This is an overview of the camera pose methods that we are working on.</p>
+
 <h3 id="colmap">COLMAP</h3>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/colmap.PNG" alt="YOLO" /></p>
+<p><em>Fig 1. Example: COLMAP used for 3D scene reconstruction</em> [1].</p>
+
 <p>COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camera poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene.</p>
 
 <p>The process of SfM consists of these key stages after taking in images as input:</p>
