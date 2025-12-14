@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding</title>
+
+    <meta name="description" content="Spatial reasoning and object-centric perception are central to deploying Vision–Language Models (VLMs) in embodied systems, where agents must interpret fine-...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Spatial reasoning and object-centric perception are central to deploying Vision–Language Models (VLMs) in embodied systems, where agents must interpret fine-grained scene structure to support action and interaction. However, current VLMs continue to struggle with fine-grained visual reasoning, particularly in the object-centric tasks that demand visual understanding that requires dense visual..." property="og:description">
+    
+    
+        <meta content="http://localhost:4000/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html" property="og:url">
+    
+<!--
+    
+        <meta content="Bomin Wei, Hanzhang Liu" property="article:author">
+        <meta content="http://localhost:4000/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-12T00:00:00-08:00" property="article:published_time">
+        <meta content="http://localhost:4000/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Spatial reasoning and object-centric perception are central to deploying Vision–Language Models (VLMs) in embodied systems, where agents must interpret fine-grained scene structure to support action and interaction. However, current VLMs continue to struggle with fine-grained visual reasoning, particularly in the object-centric tasks that demand visual understanding that requires dense visual perception. We introduced VLIMA, a guided fine-tuning framework that enhances VLMs by incorporating auxiliary visual supervision from external self-supervised vision encoders. Specifically, VLIMA adds an auxiliary alignment loss that encourages intermediate VLM representations to match features from encoders such as DINOv2, which exhibit emergent object-centricity and strong spatial correspondence. By transferring these spatially precise and object-aware inductive biases into the VLM representation space, VLIMA improves object-centric embodied scene understanding without calling external tools or modifying the VLM’s core architecture.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Project Track: Project39-Self-Propose-Topic Scale Up VLM for Embodied Scene Understanding</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-12T00:00:00-08:00" itemprop="datePublished">
+        
+        Dec 12, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Bomin Wei, Hanzhang Liu</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/12/team42-Scale-Up-VLM-for-Embodied-Scene-Understanding.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Spatial reasoning and object-centric perception are central to deploying Vision–Language Models (VLMs) in embodied systems, where agents must interpret fine-grained scene structure to support action and interaction. However, current VLMs continue to struggle with fine-grained visual reasoning, particularly in the object-centric tasks that demand visual understanding that requires dense visual perception. We introduced VLIMA, a guided fine-tuning framework that enhances VLMs by incorporating auxiliary visual supervision from external self-supervised vision encoders. Specifically, VLIMA adds an auxiliary alignment loss that encourages intermediate VLM representations to match features from encoders such as DINOv2, which exhibit emergent object-centricity and strong spatial correspondence. By transferring these spatially precise and object-aware inductive biases into the VLM representation space, VLIMA improves object-centric embodied scene understanding without calling external tools or modifying the VLM’s core architecture.</p>
+</blockquote>
+
+<!--more-->
+
+<ul class="table-of-content" id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#related-work" id="markdown-toc-related-work">Related Work</a></li>
+  <li><a href="#method" id="markdown-toc-method">Method</a>    <ul>
+      <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+      <li><a href="#cross-modal-representation-alignment" id="markdown-toc-cross-modal-representation-alignment">Cross-Modal Representation Alignment</a></li>
+      <li><a href="#implementation-detail-code" id="markdown-toc-implementation-detail-code">Implementation Detail (Code)</a></li>
+    </ul>
+  </li>
+  <li><a href="#experiment" id="markdown-toc-experiment">Experiment</a>    <ul>
+      <li><a href="#experiment-setup" id="markdown-toc-experiment-setup">Experiment Setup</a></li>
+      <li><a href="#main-result" id="markdown-toc-main-result">Main Result</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/teaser_ver1.png" alt="VLIMA Method" /></p>
+<p>Fig 1. VLIMA introduced a guided fine-tuning method that enhances VLMs by incorporating visual supervision from external DINO encoders and aligned DINO features with model’s intermediate features.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Vision–language models (VLMs) combine a vision encoder with a large language model to interpret images and generate natural-language responses, enabling unified perception-and-reasoning for tasks such as visual question answering, captioning, and embodied decision making. Despite rapid progress and strong benchmark results, many recent failures on vision-centric evaluations point to an integration gap: rich visual evidence exists in the model’s latent representations, but it is not consistently accessed or utilized when the model must express answers through the language interface [1]. We introduced VLIMA, a guided fine-tuning framework that enhances VLMs by incorporating auxiliary visual supervision from external self-supervised vision encoders. Specifically, VLIMA adds an auxiliary alignment loss that encourages intermediate VLM representations to match features from encoders such as DINOv2, which exhibit emergent object-centricity and strong spatial correspondence. We evaluate VLIMA on MetaVQA, BLINK, MMVP, and MMStar, where it consistently outperforms the baseline. Further ablations show that applying alignment within transformer intermediate states yields larger gains than adding it only to the output step.</p>
+
+<h2 id="related-work">Related Work</h2>
+
+<p>Current approaches in vision–language models (VLMs), such as Qwen2.5-VL [5], emphasize fine-grained visual perception and agentic interaction, achieving improved visual recognition, spatial grounding, document understanding, and long-video comprehension.</p>
+
+<p>Recent work has begun to question whether strong performance in vision language models (VLMs) truly reflects effective utilization of visual representations. [1] argue that many VLM failures on vision-centric benchmarks reflect an integration gap rather than weak visual features. They compare standard VQA prompting with direct probing of the underlying vision encoder on tasks from CV-Bench, BLINK, and MOCHI, and find that accuracy often drops to near-chance when answers must be produced through language, despite the visual representations being sufficient.</p>
+
+<p>REPA [4] introduces a representation alignment regularizer for diffusion transformers that explicitly aligns noisy intermediate hidden states with clean features from a pretrained vision encoder, thereby encouraging models to preserve semantically meaningful visual structure throughout generation and improving downstream reasoning fidelity.</p>
+
+<h2 id="method">Method</h2>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/method_ver1.png" alt="VLIMA Method" /></p>
+<p>Fig 2. <strong>The Training Pipeline of VLIMA.</strong> VLIMA augments a vision–language model with a trainable continuous token block inserted after a special <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token as a marker. During training, the hidden states of this block are projected and aligned with frozen DINOv2 features via a reconstruction dino loss, while the model is jointly optimized with the standard language modeling objective. At inference time, the model emits <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> to trigger the insertion of the learned token block as DINO feature reasoning, after which generation resumes at <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code> to produce the final answer.</p>
+
+<h3 id="overview">Overview</h3>
+
+<p>Despite strong semantic alignment, existing VLMs exhibit key limitations when deployed for embodied scene understanding. These questions require spatially grounded and object-centric representations, yet end-to-end image–text training often underemphasizes token-level structure and dense correspondence. In contrast, self-supervised ViT encoders such as DINO series are known to produce features with emergent object-centric organization and semantics-aligned spatial structure at the token level. Motivated by representation alignment ideas in generative modeling (e.g., REPA), we introduce VLIMA, which adds an auxiliary alignment loss to guide intermediate VLM features toward a frozen DINO encoder, injecting the spatial/grounding perception which needed for embodied VQA into VLMs.</p>
+
+<p>VLMs follows the standard next-token prediction paradigm. Let a VLM consist of a visual encoder \(\mathcal{V}\) and a language model \(\mathcal{T}\) with hidden size \(d_T\). For a given image-text pair \((x_{\text{img}}, x_{\text{txt}})\), the VLM encodes \(x_{\text{img}}\) into a sequence of visual tokens, which are then passed to \(\mathcal{T}\) along with text tokens. The VLM estimates the probability of generating a sequence \(Y =(y_1, y_2, ..., y_n)\) as:</p>
+
+\[Y = \mathcal{T}(\mathcal{V}(x_{\text{img}}), x_{\text{txt}})\]
+
+<p>As shown in Fig 2, VLIMA learns to produce a <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token that triggers insertion of a fixed-length trainable token block whose hidden states features are supervised to match projected DINOv2 features, after which generation resumes at <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code> to produce the final answer. Specifically,</p>
+
+<ul>
+  <li>
+    <p><strong>During training</strong>, VLIMA adds an additional trainable “continuous-token” padding block and supervises the VLM to align the block’s intermediate hidden states (after a lightweight projection) with frozen DINOv2 features, while jointly learning to generate the correct <code class="language-plaintext highlighter-rouge">&lt;dino&gt;…&lt;/dino&gt;</code> span and the final textual answer.</p>
+  </li>
+  <li>
+    <p><strong>At inference time</strong>, once the model outputs <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code>, we replace the following with the learned “continuous-token” padding block. The aligned feature tokens will automatically decode inside hidden states until <code class="language-plaintext highlighter-rouge">&lt;/dino&gt;</code>, and then continue normal text generation for answering the question.</p>
+  </li>
+</ul>
+
+<h3 id="cross-modal-representation-alignment">Cross-Modal Representation Alignment</h3>
+
+<p>VLIMA extract features \(f_{\mathcal{E}} \in \mathbb{R}^{M \times d_E}\) from the external DINOv2 Encoder \(\mathcal{E}\), which produces dense patch-level outputs for the same image. DINOv2 produced \(1025\) tokens with \(1024\) feature tokens corresponding to \(16 \times 16\) patches and a [CLS] token. This might be too much for the model to produced. Thus we downsampled it through a \(4 \times 4\) max pooling to produced DINO feature \(f_{\mathcal{E}_{proj}} \in \mathbb{R}^{N_q \times d_E}\) with \(N_q = 8 \times 8 = 64\):</p>
+
+\[f_{\mathcal{E}_{pool}} = \text{MaxPool}_{4 \times 4}(f_{\mathcal{E}}) \in \mathbb{R}^{T \times d_E}\]
+
+<p>We define the trainable padding \(t_{\text{padding}} \in \mathbb{R}^{N_q \times d_T}\) with the hidden features \(f^{(4)}_{\text{padding}} \in \mathbb{R}^{N_q \times d_T}\) after 4 layers of transformer blocks in \(\mathcal{T}\). As the hidden size of language model \(d_T \neq d_E\), we introduce a projection head \(P : \mathbb{R}^{d_T} \rightarrow \mathbb{R}^{d_E}\) to map trainable padding’s hidden features into the DINO feature space:</p>
+
+\[f_{\text{padding}_{proj}} = P(f^{(4)}_{\text{padding}}) \in \mathbb{R}^{T \times d_E}\]
+
+<p>The resulting projected representation is compared to the pooled feature. We define this target as the feature alignment loss as:</p>
+
+\[\mathcal{L}_{\text{DINO}} = \mathcal{L}_{\text{sim}} + \mathcal{L}_{\mathrm{mdms}}\]
+
+\[\mathcal{L}_{\text{sim}} = \operatorname{ReLU}\bigl(1 - \frac{f_{\mathcal{E}_{pool}} \cdot f_{\text{padding}_{proj}}}{||f_{\mathcal{E}_{pool}}|| \times ||f_{\text{padding}_{proj}}||})\]
+
+\[\mathcal{L}_{\mathrm{mdms}}=
+\frac{1}{N^2}
+\sum_{i,j}
+\operatorname{ReLU}
+\left(
+\left|
+\frac{f_{\mathcal{E}_{pool}}^{(i)} \cdot f_{\mathcal{E}_{pool}}^{(j)}}{\|f_{\mathcal{E}_{pool}}^{(i)}\| \, \|f_{\mathcal{E}_{pool}}^{(j)}\|}
+-
+\frac{f_{\text{padding}_{proj}}^{(i)} \cdot f_{\text{padding}_{proj}}^{(j)}}{\|f_{\text{padding}_{proj}}^{(i)}\| \, \|f_{\text{padding}_{proj}}^{(j)}\|}
+\right|
+\right)\]
+
+<p>Specifically, \(\mathcal{L}_{\text{sim}}\) optimized the cosine similarity of the alignment feature with the actual feature at each spatial location. Penalizing only poorly aligned regions via a ReLU. \(\mathcal{L}_{\mathrm{mdms}}\) encourages global structural consistency. Preserving relational geometry across spatial locations while ignoring minor discrepancies through a margin. This alignment mechanism regularizes the VLM to internalize semantically meaningful patterns from the external encoder, much help the VLM “speak to learn” the features and representations of image. We jointly optimize the standard autoregressive language modeling loss \(\mathcal{L}_{\text{LM}}\) and the proposed alignment loss:</p>
+
+\[\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{LM}} + \lambda \cdot \mathcal{L}_{\text{DINO}}\]
+
+<p>where \(\lambda\) is a tunable hyperparameter that governs the influence of the external alignment signal during fine-tuning.</p>
+
+<p>This objective allows VLIMA to preserve the original task while injecting powerful external visual priors, improving spatial/grounding capability for embodied VQA for VLMs.</p>
+
+<h3 id="implementation-detail-code">Implementation Detail (Code)</h3>
+
+<p>We choose to use <a href="https://huggingface.co/collections/Qwen/qwen25-vl">Qwen2.5-VL-Instruct</a> as our base model and trained the model with <a href="https://huggingface.co/datasets/OpenGVLab/InternVL-Chat-V1-2-SFT-Data">InternVL-SFT</a> data. In this section, we will introduced the detail code implementation of our method.</p>
+
+<h4 id="model-designs">Model Designs</h4>
+
+<p>Trainable Padding is simply defined as a new empty parameters, it will be attached inside Qwen2.5VL model.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="bp">self</span><span class="p">.</span><span class="n">trainable_dino_padding</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">randn</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">alignment_token_size</span><span class="p">,</span> <span class="mi">3584</span><span class="p">)),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The decode projection is simply defined as a linear projection, we used a module list for future convenient with multiple encoders.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="bp">self</span><span class="p">.</span><span class="n">encoder_projection_decoder</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3584</span><span class="p">,</span> <span class="n">encoder_shape_i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bias</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>The DINO feature loss is defined as an external function:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">cosine_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="c1"># L_sim
+</span>    <span class="k">return</span> <span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">relu</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">F</span><span class="p">.</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span><span class="p">))).</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">reconstruction_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span> <span class="c1"># L_mdms
+</span>    <span class="c1"># Normalize the input tensors
+</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">x_sim</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'bci,bcj-&gt;bij'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">y_sim</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'bci,bcj-&gt;bij'</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">x_sim</span> <span class="o">-</span> <span class="n">y_sim</span><span class="p">)</span>
+
+    <span class="c1"># Compute the cosine similarity loss
+</span>    <span class="k">return</span> <span class="p">(</span><span class="n">F</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">diff</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)).</span><span class="n">mean</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h4 id="training-design">Training Design</h4>
+
+<p>In order to correctly match and take out the features aligned with trainable padding, we externally defined a new token <code class="language-plaintext highlighter-rouge">&lt;dino_pad&gt;</code> for dino paddings, this will not fed into tokenizer but directly replaced with the trainable padding before text embedding.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># find dino paddings
+</span><span class="n">mask</span> <span class="o">=</span> <span class="n">input_ids</span> <span class="o">==</span> <span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">encoder_token_id</span>
+<span class="n">mask_unsqueezed</span> <span class="o">=</span> <span class="n">mask</span><span class="p">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mask_expanded</span> <span class="o">=</span> <span class="n">mask_unsqueezed</span><span class="p">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">inputs_embeds</span><span class="p">)</span>
+<span class="n">dino_mask</span> <span class="o">=</span> <span class="n">mask_expanded</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">inputs_embeds</span><span class="p">.</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1"># replaced with trainable features
+</span><span class="n">inputs_embeds</span> <span class="o">=</span> <span class="n">inputs_embeds</span><span class="p">.</span><span class="n">masked_scatter</span><span class="p">(</span><span class="n">dino_mask</span><span class="p">,</span> <span class="n">replaced_trainable_dino_padding</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">inputs_embeds</span><span class="p">.</span><span class="n">device</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>We will also use this to extract dino features from LM output</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">all_hidden_features</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">.</span><span class="n">hidden_states</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">token_align_layer</span><span class="p">][...,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shifted hidden state
+</span><span class="n">dino_token_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">input_ids</span> <span class="o">==</span> <span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">encoder_token_id</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span> <span class="c1"># one digit move from input to output
+</span><span class="n">hidden_features</span> <span class="o">=</span> <span class="n">all_hidden_features</span><span class="p">[...,</span> <span class="n">dino_token_mask</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># [B , 64 , 3584]
+</span></code></pre></div></div>
+
+<h4 id="generation-design">Generation Design</h4>
+
+<p>Since special tokens are added to the output part of the model, an optimized generation pipeline is also designed to make sure the model is able to output <code class="language-plaintext highlighter-rouge">&lt;dino begin&gt;</code> token then we could attach the trainable padding on to the model. We attached the quick psudocode here for reference how to implement the generation pipeline.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
+    <span class="p">...</span> <span class="c1"># generate params
+</span><span class="p">):</span>
+    <span class="n">dino_begin_token</span> <span class="o">=</span> <span class="mi">151665</span>  <span class="c1"># DINO_BEGIN_TOKEN
+</span>    <span class="n">dino_end_token</span> <span class="o">=</span> <span class="mi">151666</span>
+    <span class="n">dino_pad_token</span> <span class="o">=</span> <span class="mi">151667</span>
+    <span class="n">dino_feature</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="p">...</span> <span class="c1"># initializing KV cache, attention records, output tokens...
+</span>
+    <span class="k">while</span> <span class="n">generated</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_length</span><span class="p">:</span>
+
+        <span class="p">...</span> <span class="c1"># single step of model
+</span>        <span class="n">model_token_output</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dino_begin_token</span> <span class="ow">in</span> <span class="n">model_token_output</span><span class="p">:</span> <span class="c1"># hit DINO token, next output will be 64 len dino feature
+</span>            <span class="p">...</span> <span class="c1"># update cache position
+</span>
+            <span class="c1"># prepare for one more time of generation with trainable paddings
+</span>            <span class="n">model_inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">prepare_inputs_for_generation</span><span class="p">(</span><span class="n">generated</span><span class="p">,</span> <span class="n">past_key_values</span><span class="o">=</span><span class="n">past_key_values</span><span class="p">,</span> <span class="n">cache_position</span><span class="o">=</span><span class="n">cache_position</span><span class="p">,</span> <span class="o">**</span><span class="n">generate_kwargs</span><span class="p">)</span>
+            <span class="n">dino_internal_prediction_quick</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">model_inputs</span><span class="p">,</span> <span class="n">return_dict</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+            <span class="c1"># the first 64 logits this time is meaningless, thus only keeping the last one
+</span>            <span class="n">logits</span> <span class="o">=</span> <span class="n">dino_internal_prediction_quick</span><span class="p">.</span><span class="n">logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># [bsz, vocab_size]
+</span>            <span class="n">model_token_output</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="c1"># the features are on the first 64 output, extract it if needed
+</span>            <span class="n">dino_feature</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">dino_internal_prediction_quick</span><span class="p">.</span><span class="n">hidden_states</span><span class="p">[</span><span class="mi">2</span><span class="p">][:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">dino_internal_prediction_quick</span>
+
+        <span class="p">...</span> <span class="c1"># update output, cache and early stop
+</span>
+    <span class="k">return</span> <span class="n">generated</span>
+</code></pre></div></div>
+
+<h2 id="experiment">Experiment</h2>
+
+<h3 id="experiment-setup">Experiment Setup</h3>
+
+<p>In our experiments, we followed CoVT’s design [2], Qwen2.5-VL-7B [5] is selected as the main baseline, we uses LoRA [7] tuning method, while the rank and Alpha of LoRA is both 32. The learning rate of LoRA and projection layers are set as 1e-4. We trained the model for 8000 steps on InternVL-SFT [6] dataset and set the Global (Total) Batch size to 16. The experiments are carried out on one A100 (about 30 hours) or four A6000 GPUs (about 10 hours).</p>
+
+<h3 id="main-result">Main Result</h3>
+
+<h4 id="demo">Demo</h4>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team42/demo_ver1.png" alt="VLIMA Demo" /></p>
+<p>Fig 3. Qualitative Demo results on MetaVQA. VLIMA consistently outperforms the baseline on spatial and grounding questions by decoding aligned DINOv2 features through the <code class="language-plaintext highlighter-rouge">&lt;dino&gt;</code> token span, enabling object-centric and spatially grounded reasoning.</p>
+
+<h4 id="metavqa">MetaVQA</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">MetaVQA   </th>
+      <th style="text-align: right">  Overall</th>
+      <th style="text-align: right">  Real</th>
+      <th style="text-align: right">  Sim</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ChatGPT-4o</td>
+      <td style="text-align: right">0.628</td>
+      <td style="text-align: right"><strong>0.655</strong></td>
+      <td style="text-align: right">0.602</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Baseline (Qwen2.5VL-7B)</td>
+      <td style="text-align: right">0.617</td>
+      <td style="text-align: right">0.631</td>
+      <td style="text-align: right">0.604</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Ours (VLIMA)</td>
+      <td style="text-align: right"><strong>0.629</strong></td>
+      <td style="text-align: right">0.647</td>
+      <td style="text-align: right"><strong>0.610</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Table 1. On the MetaVQA benchmark, our method improve over the baseline. Notably, the largest gains are observed on the “identify all non-ego agents” subset, where our approach attains an average accuracy of 0.649 compared to the baseline’s 0.630, indicating stronger holistic object recognition and more complete scene understanding.</p>
+
+<h4 id="additional-benchmark">Additional Benchmark</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Task   </th>
+      <th style="text-align: right">  Average</th>
+      <th style="text-align: right">  BLINK</th>
+      <th style="text-align: right">  MMVP</th>
+      <th style="text-align: right">  MMStar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Baseline (Qwen2.5VL-7B)</td>
+      <td style="text-align: right">0.5828</td>
+      <td style="text-align: right">0.5576</td>
+      <td style="text-align: right">0.5667</td>
+      <td style="text-align: right">0.6240</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Ours (VLIMA)</td>
+      <td style="text-align: right"><strong>0.5969</strong></td>
+      <td style="text-align: right"><strong>0.5671</strong></td>
+      <td style="text-align: right"><strong>0.5933</strong></td>
+      <td style="text-align: right"><strong>0.6303</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Table 2. Our VLIMA method’s performance on other vision centric benchmarks. VLIMA shows a consistent improvements across all tested vision centric benchmarks.</p>
+
+<h4 id="ablation-studies">Ablation Studies</h4>
+
+<p>To isolate the contribution of DINO feature alignment, we conducted ablation comparing with pure training without feature alignment and last token prediction (alignment with the last layer).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Task   </th>
+      <th style="text-align: right">  Average</th>
+      <th style="text-align: right">  BLINK</th>
+      <th style="text-align: right">  MMVP</th>
+      <th style="text-align: right">  MMStar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Baseline (Qwen2.5VL-7B)</td>
+      <td style="text-align: right">0.5828</td>
+      <td style="text-align: right">0.5576</td>
+      <td style="text-align: right">0.5667</td>
+      <td style="text-align: right">0.6240</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Ours (VLIMA)</td>
+      <td style="text-align: right"><strong>0.5969</strong></td>
+      <td style="text-align: right"><strong>0.5671</strong></td>
+      <td style="text-align: right"><strong>0.5933</strong></td>
+      <td style="text-align: right"><strong>0.6303</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Pure Training</td>
+      <td style="text-align: right">0.5672</td>
+      <td style="text-align: right">0.5476</td>
+      <td style="text-align: right">0.5467</td>
+      <td style="text-align: right">0.6072</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Token Prediction</td>
+      <td style="text-align: right">0.5727</td>
+      <td style="text-align: right">0.5260</td>
+      <td style="text-align: right">0.5733</td>
+      <td style="text-align: right">0.6188</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Table 3. <strong>VLIIMA Ablation Study</strong>. Pure Training applies additional training without DINO-based feature alignment and yields no consistent improvement over the baseline. Token Prediction aligns DINO features only at the final layer, demonstrating limited gains. In contrast, VLIMA’s intermediate feature alignment consistently improves performance across BLINK, MMVP, and MMStar, highlighting the importance of guiding internal representations rather than relying on token-level supervision alone.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this work, we introduced VLIMA, a framework for enhancing object-centric and spatial reasoning in vision–language models for embodied scene understanding. By inserting a trainable continuous-token block and aligning intermediate VLM representations with frozen DINOv2 features through an auxiliary alignment loss, VLIMA injects strong spatial and object-aware inductive biases without modifying the backbone architecture or relying on external tools at inference time.</p>
+
+<p>Empirical results on MetaVQA and additional embodied benchmarks demonstrate that VLIMA consistently improves performance over strong baselines, with particularly notable gains on tasks requiring holistic object identification and spatial grounding. Ablation studies further confirm that the proposed feature-level alignment plays a critical role beyond standard fine-tuning or token-level supervision.</p>
+
+<p>Overall, VLIMA shows that explicit representation alignment is a promising direction for closing the integration gap between visual perception and language reasoning in VLMs. We believe this approach offers a scalable and generalizable pathway for equipping future multimodal models with stronger embodied and spatial understanding and opens up avenues for integrating other self-supervised visual priors into large multimodal systems.</p>
+
+<p>For future improvements, one limitation is that DINOv2 features are extracted at a fixed relative low resolution (\(224 \times 224\)), which can under-represent fine-grained details in large scenes and make the alignment less helpful for small or distant objects. A natural next step is to incorporate multi-scale and/or higher-resolution feature extraction so that the aligned continuous-token block can capture both global layout and small-object cues, improving robustness across diverse embodied viewpoints and scene scales.</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>[1] Fu, Stephanie, et al. “Hidden in plain sight: VLMs overlook their visual representations.” <em>Proceedings of COLM and CVPR EVAL-FoMo 2 Workshop Best Paper Award</em>. 2025.</p>
+
+<p>[2] Qin, Yiming, Wei, Bomin el al. “Chain-of-Visual-Thought: Teaching VLMs to See and Think Better with Continuous Visual Tokens.” <em>arXiv:2511.19418v2</em>. 2025</p>
+
+<p>[3] Wang, Weizhen, et al. “Embodied Scene Understanding for Vision Language Models via MetaVQA.” <em>Proceedings of the IEEE conference on Computer Vision and Pattern Recognition</em>. 2025.</p>
+
+<p>[4] Yu, Sihyun, et al. “Representation Alignment for Generation: Training Diffusion Transformers Is Easier Than You Think.” <em>Proceedings of the International Conference on Learning Representations</em>. 2025.</p>
+
+<p>[5] Bai, Shuai, et al. “Qwen2.5-VL Technical Report.” <em>arXiv:2502.13923</em>. 2025.</p>
+
+<p>[6] Chen, Zhe, et al. “Expanding Performance Boundaries of Open-Source Multimodal Models with Model, Data, and Test-Time Scaling.” (InternVL2) <em>arXiv:2412.05271</em>. 2024</p>
+
+<p>[7] Hu, Edward J., et al. “LoRA: Low-Rank Adaptation of Large Language Models.” <em>Proceedings of the International Conference on Learning Representations (ICLR)</em>. 2022.</p>
+
+<hr />
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html">&larr; Post Template</a>
+    
+
+    <!--  -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
