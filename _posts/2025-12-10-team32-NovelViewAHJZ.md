@@ -61,15 +61,13 @@ Historically, novel view synthesis (NVS) has relied on volumetric radiance field
 
 #### Overview
 
-Following Radiance Field-based methods such as NeRF, researchers identified shortcomings in costly training and subpar quality. Before this paper, unbounded and complete scenes with high-resolution rendering (1080p) were not achieved by any existing methods. This lack of speed and quality made real-time, high-quality rendering seem far-fetched. 3D Gaussian Splatting introduced three key elements that greatly improved visual quality and maintained competitive training times while enabling real-time novel-view synthesis.
+Following Radiance Field-based methods such as NeRF, researchers identified a critical bottleneck: achieving high visual quality required computationally expensive training and rendering. While high-fidelity results were possible, they were too slow for real-time applications. Conversely, methods optimized for speed often sacrificed visual detail. Before this paper, real-time, high-resolution rendering (1080p) of unbounded and complete scenes was not achievable without compromising quality. 3D Gaussian Splatting introduced three key elements that maintained state-of-the-art visual quality while enabling competitive training times and real-time novel-view synthesis.
 
 1. Represent the scene with 3D Gaussians, which avoids unnecessary computation in empty space in volumetric radiance fields
 2. Perform interleaved optimization and density control to achieve an accurate representation of the scene
 3. Develop a fast visibility-aware rendering algorithm that accelerates training and allows real-time rendering
 
 #### Method
-
-<!-- PASTE: 3DGS Method content (starts with "Given input images with known camera intrinsics...") -->
 
 Given input images with known camera intrinsics and extrinsics obtained via Structure-from-Motion (SfM), 3D Gaussian Splatting constructs an explicit radiance field representation using a set of anisotropic 3D Gaussian primitives. The goal of this method is to synthesize a novel target image corresponding with a target camera pose.
 
@@ -338,7 +336,7 @@ To view the Colab notebook we used, please refer to this [link](https://colab.re
 
 ## Conclusion
 
-The comparison between 3D Gaussian Splatting and the Large View Synthesis Model shows a variety of approaches in novel-view synthesis from geometry-based approaches to data-driven paradigms. 3D Gaussian Splatting demonstrates that explicit representations using Gaussians can achieve real-time performance and photorealistic quality through efficient rendering and adaptive optimization but at a high memory cost. In contrast, LVSM challenges the need for strong 3D inductive biases, achieving competitive results by leveraging transformer architectures and large-scale training for generalizable view synthesis. Together, these approaches illustrate two distinct yet complementary paths toward faster, more flexible, and increasingly general 3D scene understanding.
+The exploration of 3D Gaussian Splatting and the Large View Synthesis Model shows a variety of approaches in novel-view synthesis, from geometry-based approaches to data-driven paradigms. 3D Gaussian Splatting demonstrates that explicit representations using Gaussians can achieve real-time performance and photorealistic quality through efficient rendering and adaptive optimization but at a high memory cost. LVSM challenges the need for strong 3D inductive biases, achieving competitive results by leveraging transformer architectures and large-scale training for generalizable view synthesis. Together, these approaches illustrate two distinct paths toward faster, more flexible, and increasingly general 3D scene understanding.
 
 ---
 
