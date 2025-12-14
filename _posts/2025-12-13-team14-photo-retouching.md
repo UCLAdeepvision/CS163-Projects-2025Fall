@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Machine Learning for Studio Photo Retouching: Object Removal, Background Inpainting, and Lighting/Shadow Preservation"
-author: Pavan Gudavalli, 
+author: Pavan Gudavalli, Kevin Nguyen, Brian Felipe Brito, Alex Chen
 date: 2025-12-13
 ---
 
