@@ -53,7 +53,7 @@ In this project, we built a complete satellite-image detection pipeline to ident
 
 ## 2. Dataset Preparation 
 
-This section describes the pipeline implemented to convert the DOTA benchmark into a PyTorch-ready classification dataset. The original DOTA dataset consists of very large aerial images, which are annotated with bounding box polygons. Some examples of the object categories include planes, vehicles, and ships. The issue with this dataset is that the images are too large to be fed directly into most deep learning models, and the current annotation format is not applicable for standard PyTorch workflows. The script created provides a solution through tiling large images, converting annotations into COCO format, and creating a PyTorch dataset and dataloader for multi-label classification.
+This section describes the pipeline implemented to convert the DOTA benchmark into a PyTorch-ready classification dataset. The original DOTA dataset consists of very large aerial images, which are annotated with bounding box polygons. Some examples of the object categories include planes, vehicles, and ships. The issue with this dataset is that the images are too large to be fed directly into most deep learning models, and the current annotation format is not applicable for standard PyTorch workflows. The script created provides a solution through tiling large images, converting annotations into COCO format, and creating a PyTorch dataset and dataloader for multi-label classification. [code](https://colab.research.google.com/drive/1vWBr6rjQKc_69pvNUING5zZYZ4pQzVtR?usp=sharing)
 
 ### 2.1. Configuration and dependencies
 
@@ -149,7 +149,7 @@ While the script is functionally complete, its deployment in a batch process fac
 
 ### 5.1. Model configuration 
 
-We fine-tuned a Faster R-CNN detector with a ResNet-50 backbone and FPN using the default COCO pretrained weights. The original classification head was replaced with a new predictor configured for 17 total classes (16 DOTA classes \+ background). All images were forced to 3-channel RGB using a small wrapper to ensure compatibility with the detector.
+We fine-tuned a Faster R-CNN detector with a ResNet-50 backbone and FPN using the default COCO pretrained weights. The original classification head was replaced with a new predictor configured for 17 total classes (16 DOTA classes \+ background). All images were forced to 3-channel RGB using a small wrapper to ensure compatibility with the detector. [model](https://colab.research.google.com/drive/1HVTZsIpAQSMTcJhuzXsZ95USS4jgHg_M?usp=sharing)
 
 Training parameters were:
 
@@ -169,7 +169,7 @@ Training parameters were:
 
 * Evaluation: Precision/Recall/F1 at IoU ≥ 0.5, score ≥ 0.5
 
-Both train and validation datasets used COCO-format DOTA annotations with only minimal preprocessing (tensor conversion, box cleanup). A model checkpoint was saved after each epoch. Fig. 3 shows the loss reduction per Epoch. Fig. 4 demonstrates the capability of our model in detecting the right object. 
+Both train and validation datasets used COCO-format DOTA annotations with only minimal preprocessing (tensor conversion, box cleanup). A model checkpoint was saved after each epoch. Fig. 3 shows the loss reduction per Epoch. Fig. 4 demonstrates the capability of our model in detecting the right object. [inference](https://colab.research.google.com/drive/1Y1DxzK-t90dQLxnuzjZgaV_VIzl1DNBm?usp=sharing)
 
 ![A graph with a lineAI-generated content may be incorrect.][image3]
 
@@ -219,11 +219,11 @@ For the future works, we will use the identified locations and the assigned vehi
 \[5\]	P. Y. Chen, J. W. Hsieh, M. Gochoo, C. Y. Wang, and H. Y. M. Liao, “Smaller Object Detection for Real-Time Embedded Traffic Flow Estimation Using Fish-Eye Cameras,” *Proceedings \- International Conference on Image Processing, ICIP*, vol. 2019-September, pp. 2956–2960, Sep. 2019, doi: 10.1109/ICIP.2019.8803719.
 
 
-[image1]: {{ '/assets/images/teamXX/image1.png' | relative_url }}
-[image2]: {{ '/assets/images/teamXX/image2.png' | relative_url }}
-[image3]: {{ '/assets/images/teamXX/image3.png' | relative_url }}
-[image4]: {{ '/assets/images/teamXX/image4.png' | relative_url }}
-[image5]: {{ '/assets/images/teamXX/image5.png' | relative_url }}
-[image6]: {{ '/assets/images/teamXX/image6.png' | relative_url }}
-[image7]: {{ '/assets/images/teamXX/image7.png' | relative_url }}
-[image8]: {{ '/assets/images/teamXX/image8.png' | relative_url }}
+[image1]: {{ '/assets/images/team41/image1.png' | relative_url }}
+[image2]: {{ '/assets/images/team41/image2.png' | relative_url }}
+[image3]: {{ '/assets/images/team41/image3.png' | relative_url }}
+[image4]: {{ '/assets/images/team41/image4.png' | relative_url }}
+[image5]: {{ '/assets/images/team41/image5.png' | relative_url }}
+[image6]: {{ '/assets/images/team41/image6.png' | relative_url }}
+[image7]: {{ '/assets/images/team41/image7.png' | relative_url }}
+[image8]: {{ '/assets/images/team41/image8.png' | relative_url }}
