@@ -7,7 +7,7 @@ date: 2025-12-12
 ---
 
 
-> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each. You can find the code [here](https://colab.research.google.com/drive/1EuKH1M5QShNnko6od2uuQ9T3VVfVJ6o6#scrollTo=61x0fKAi5W3m)
+> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each. You can find the code [here](https://colab.research.google.com/drive/1zyYjBVjg5Cb8FCsuKu3ZdRixrpnStUDx)
 
 <!--more-->
 {: class="table-of-content"}
