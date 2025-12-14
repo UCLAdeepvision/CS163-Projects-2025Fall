@@ -500,22 +500,23 @@ Specifically, in our experiment, we will be modifying the architecture of the HA
 
 Here is a comparison of average PSNR on benchmark datasets between the base HAT-S and our model:
 
-|                    	| \|  Set5  \| 	| \|  Set14  \| 	| \|  BSD100  \| 	| \|  Urban100  \| 	| \|  Manga109  \| 	|
-|--------------------	|:------------:	|:-------------:	|:--------------:	|:----------------:	|:----------------:	|
-| HAT-S (baseline)   	|     32.92    	|     29.15     	|      27.97     	|       27.87      	|       32.35      	|
-| HAT-S + AST        	|     32.46    	|     28.86     	|      27.74     	|       26.71      	|       31.21      	|
+|                    	| \|Set5 [8]\| 	| \|Set14 [9]\| 	| \|BSD100 [10]\| 	| \|Urban100 [11]\| 	| \|Manga109 [12]\| 	|
+|--------------------	|:--------------:	|:---------------:	|:-----------------:	|:-------------------:	|:-------------------:	|
+| HAT-S (baseline)   	|      32.92     	|      29.15      	|       27.97       	|        27.87        	|        32.35        	|
+| HAT-S + AST        	|      32.46     	|      28.86      	|       27.74       	|        26.71        	|        31.21        	|
 
 Unfortunately, our modification to the HAT-S was unable to match the results of the regular HAT-S. A possible reason is that the sparse attention is not particularly useful for 4x upscaling; there are few pixels in the starting image compared to the output image, so each one is more likely to hold important information than if we were doing something like 2x upscaling. Additionally, the size of the overlap window may be an issue: we did not get the chance to experiment with other sizes, so it is possible that the smaller 0.5 ratio may have actually worked better for our model, still benefitting from the sparse attention mechanism.
 
 Here are a few samples from our validation sets:
 
-| HR Image | 4x Bicubic | HAT-S | HAT-S + AST |
+| HR Image | 4x Bicubic | HAT-S [1] | HAT-S + AST |
 | :---: | :---: | :---: | :---: |
 | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/hatast.png", width="170">{:/} |
 | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/hatast.png", width="170">{:/} |
 | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/hatast.png", width="170">{:/} |
 | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/gt.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/bic.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/hat.png", width="170">{:/} | {::nomarkdown}<img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/hatast.png", width="170">{:/} |
 
+*Fig 30. Comparison of HAT-S and our modification for images from Set5 [8], Set14 [9], and BSD100 [10].*
 
 We see similar qualitative peformance between HAT-S and our modification, though a closer inspection does confirm that our model produces slightly blurrier results.
 
@@ -541,11 +542,18 @@ In our experiment, we attempted to combine two existing super-resolution archite
 
 [5] Park, S., Lee, S., Jin, K., & Jung, S.W. (2025). IM-LUT: Interpolation Mixing Look-Up Tables for Image Super-Resolution. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (pp. 14317-14325).
 
-[6]  Olaf Ronneberger, Philipp Fischer, and Thomas Brox. Unet: Convolutional networks for biomedical image segmentation. In International Conference on Medical image computing and computer-assisted intervention, pages 234–241.
-Springer, 2015.
+[6]  Olaf Ronneberger, Philipp Fischer, and Thomas Brox. Unet: Convolutional networks for biomedical image segmentation. In International Conference on Medical image computing and computer-assisted intervention, pages 234–241. Springer, 2015.
 
-[7] S. Zhou, D. Chen, J. Pan, J. Shi and J. Yang, 
-"Adapt or Perish: Adaptive Sparse Transformer with Attentive Feature Refinement for Image Restoration," 
-2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Seattle, WA, USA, 2024, pp. 2952-2963, doi: 10.1109/CVPR52733.2024.00285. 
+[7] S. Zhou, D. Chen, J. Pan, J. Shi and J. Yang, "Adapt or Perish: Adaptive Sparse Transformer with Attentive Feature Refinement for Image Restoration," 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Seattle, WA, USA, 2024, pp. 2952-2963, doi: 10.1109/CVPR52733.2024.00285. 
+
+[8] M. Bevilacqua, A. Roumy, C. Guillemot, and M.-L. A. Morel, “Low-complexity single-image super-resolution based on nonnegative neighbor embedding,” in Br. Mach. Vis. Conf. (BMVC), 2012.
+
+[9] R. Zeyde, M. Elad, and M. Protter, “On single image scale-up using sparse-representations,” in Int. Conf. Curves Surfaces, 2010, pp. 711–730.
+
+[10] D. Martin, C. Fowlkes, D. Tal, and J. Malik, “A database of human segmented natural images and its application to evaluating segmentation algorithms and measuring ecological statistics,” in Proc. IEEE Int. Conf. Comput. Vis. (ICCV), vol. 2, 2001, pp. 416–423.
+
+[11] J.-B. Huang, A. Singh, and N. Ahuja, “Single image super-resolution from transformed self-exemplars,” in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2015, pp. 5197–5206.
+
+[12] Y. Matsui, K. Ito, Y. Aramaki, A. Fujimoto, T. Ogawa, T. Yamasaki, and K. Aizawa, “Sketch-based manga retrieval using manga109 dataset,” Multimedia Tools Appl., vol. 76, no. 20, pp. 21 811–21 838, 2017.
 
 ---
