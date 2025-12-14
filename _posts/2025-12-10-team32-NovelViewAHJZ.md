@@ -166,32 +166,98 @@ Overall, 3DGS takes a fundamentally different approach from previous methods of 
 
 ### Large View Synthesis Model (LVSM)
 
+> **Note:** This section provides an overview of the Large View Synthesis Model based on the original paper by Jin et al. [2]. All figures and methodology descriptions are derived from their work.
+
 #### Overview
 
-<!-- PASTE: LVSM Overview content (starts with "Despite advances such as 3D Gaussian Splatting...") -->
+Despite advances such as 3D Gaussian Splatting and many variants, existing models prior to the Large View Synthesis Model (LVSM) are encoded with 3D inductive bias (assumptions that are built in about how the 3D world is structured). For example, assumptions that use triangle meshes, NeRF volumetric fields, and 3D Gaussians all encode biases about how the world is a 3D scene and images are projections of that scene. While 3D inductive bias is  important to making learning feasible, it can be seen as a bottleneck for data-driven 3D understanding, which led to researchers $$\textbf{aiming to minimize 3D inductive biases}$$ with a data-driven approach using LVSM [2]. Additionally, these prior models are trained per scene while the decoder-only LVSM is able to perform zero shot generalization, allowing it to quickly generate novel views of a specific scene without pre-training.
 
 #### Method
 
-<!-- PASTE: LVSM Method content (starts with "Given N sparse input images...") -->
-<!-- NOTE: You'll need to add your formulas here using LaTeX $$ syntax -->
+Given $$N$$ sparse input images with known camera poses and intrinsics, LVSM synthesizes a target image $$I_t$$ under novel target camera extrinsics and intrinsics. For each input view, pixel-wise Plücker ray embeddings $$P_i \in \mathbb{R}^{H \times W \times 6}$$ are computed from the camera parameters and patchified together with the corresponding RGB images. Each image--ray patch is concatenated and projected into a latent token via
+
+$$
+x_{ij} = \mathrm{Linear}_{\text{input}}([I_{ij}, P_{ij}]) \in \mathbb{R}^d,
+$$
+
+forming a sequence of geometry-aware input tokens.
+
+The target camera is represented analogously by computing its Plücker ray embeddings which are then patchified and mapped into patch-wise query tokens
+
+$$
+q_j = \mathrm{Linear}_{\text{target}}(P^t_j) \in \mathbb{R}^d.
+$$
+
+A transformer model $$M$$ conditions the target query tokens on the full set of input tokens to synthesize the novel view:
+
+$$
+y_1, \ldots, y_{\ell_q} = M(q_1, \ldots, q_{\ell_q} \mid x_1, \ldots, x_{\ell_x}),
+$$
+
+where each output token $$y_j$$ encodes the appearance of the $$j$$-th target patch. The output tokens are decoded into RGB patches using a linear projection followed by a sigmoid activation,
+
+$$
+\widehat{I}^t_j = \mathrm{Sigmoid}(\mathrm{Linear}_{\text{out}}(y_j)),
+$$
+
+and the predicted patches are reshaped and assembled to form the synthesized novel view $$\widehat{I}_t$$.
+
+$$\textbf{Loss}$$: The model is trained end-to-end using photometric novel view rendering losses:
+
+$$
+L = \mathrm{MSE}(\widehat{I}^t, I^t) + \lambda \cdot \mathrm{Perceptual}(\widehat{I}^t, I^t),
+$$
+
+where $$\lambda$$ balances the pixel-wise and perceptual reconstruction terms.
+
 
 #### Architecture
 
-<!-- PASTE: LVSM Architecture content (starts with "The paper introduces the Large View Synthesis Model...") -->
+The paper introduces the Large View Synthesis Model (LVSM), “a novel transformer-based framework that synthesizes novel-view images from posed sparse-view inputs without predefined rendering equations or 3D structures…”. The paper also introduces two new architectures using this framework. 
+
+The first is an $$\textbf{encoder-decoder LVSM}$$. It consists of an encoder, which takes in image tokens and encodes them into a fixed number of 1D latent tokens. This functions as the learned scene representation, which is used to decode novel-view images from. The second is a $$\textbf{decoder-only LVSM}$$, which directly takes images and creates novel-view outputs. There is no scene representation in this model. The model’s learning of a direct mapping makes it more scalable, and can use many images to inform the mapping learned. Both, with no assumptions about the 3D world and how it is rendered, are solely data-based and achieve superior quality to existing models, even with reduced computational resources.
+
+
+![LVSM Architecture]({{ '/assets/images/32/lvsm_architecture.png' | relative_url }})
+{: style="width: 700px; max-width: 100%;"}
+_Fig. LVSM architectures: (a) Encoder-Decoder LVSM and (b) Decoder-Only LVSM._
 
 #### Results
 
-<!-- PASTE: LVSM Results content (starts with "Jin et. al tested the LVSM model...") -->
-<!-- NOTE: Add your object-level and scene-level comparison figures here -->
+Jin et. al evaluated LVSM across multiple datasets against previous state-of-the-art methods for both object-level and scene-level novel view synthesis. Here are the quantitative results:
+
+![LVSM Comparison Table]({{ '/assets/images/32/lvsm_comparison_table.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+_Table 2. Quantitive comparisons on object-level (left) and scene-level (right) view synthesis. Table taken from LVSM paper [2]._
+
+For object level testing, they used the Objaverse dataset to train the LVSM. Then, they tested on two object-level datasets, Google Scanned Objects (GSO) and Amazon Berkeley Objects (ABO). Based on the results, the 512-res decoder achieves a 3 dB and 2.8 dB Peak Signal-to-Noise Ratio against the best prior method GS-LRM (which uses 3D Gaussian splatting) and the 256-res decoder only LVSM performs a lot better than Large Multi-view Gaussian Models and GS-LRM. The results show that removing the 3D inductive bias is effective. A strong performance on the ABO dataset also suggests that the model can handle challenging materials difficult for current handcrafted 3D representations.
+
+For scene level testing, they compared the results of LVSM with pixelNeRF, GPNR, pixelSplat, MVSplat, and GS-LRM. The LVSM shows a 1.6 dB PSNR gain against the best prior work GS-LRM, and the improved performance can be visualized in the below image where the LVSM has better performance on thin structures and specular materials.
+
+![LVSM Object Level Comparison]({{ '/assets/images/32/lvsm_object_comparison.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+_Fig. Qualitative comparison for object level testing._
+
+![LVSM Scene Level Comparison]({{ '/assets/images/32/lvsm_scene_comparison.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+_Fig. Qualitative comparison on the RealEstate10K dataset for scene level testing._
+
 
 #### Discussion
 
-<!-- PASTE: LVSM Discussion content (starts with "The decoder-only model shows better performance...") -->
+The decoder-only model shows better performance with more input views, which shows the model is scalable at test time. On the other hand, the encoder-decoder model shows a performance drop with more input views, suggesting the intermediate representation inhibits performance when trying to compress input information. With only one input, however, the performance is competitive. The improvement in performance validates this data-driven approach, with the goal of minimizing 3D inductive bias. 
+
+The decoder-only model, while able to work with many images and can scale well, falls short due to the same property that makes it notable. The direct mapping from input image to novel view means linear increase in image tokens and quadratic growth in complexity. The encoder-decoder model, on the other hand, shows consistent rendering speed as there is always a fixed length set of 1D latent tokens, regardless of the number of input images. 
+
+Overall, the LVSM bypasses 3D representations, minimizing 3D inductive bias by using a data-driven approach, and demonstrates an improvement in performance across a variety of benchmarks. 
 
 #### Running the Codebase
 
-<!-- PASTE: LVSM codebase running content -->
-<!-- NOTE: Include your video link and Colab link here -->
+Using the paper's [Github](https://github.com/haian-jin/LVSM) repository, we tried running the LVSM ourselves within Google Colab. However, we ran into a few issues with Colab package installation, outdated NumPy code, and related dependency conflicts. In the end, we ran the inference step on 30 inputted images, but the output rendered view consisting of the synthesized views turned out to be a lot blurrier than expected. Some possibilties include sparse inputs, improper
+
+Here is the rendered video output for a scene containing a long desk at the library. As you can see, the video shows blurriness as it transitions from one input image to the next input image while attempting to synthesize novel views. [Video Link](https://drive.google.com/file/d/1P8BDGMR9Ng-7UjQemSg4WXGn3MvCJdV3/view?usp=sharing)
+
+To view the Colab notebook we used, please refer to this [link](https://colab.research.google.com/drive/1Q5p3yM5bTx4vbtvFubqhtllFUuTv5DDu?usp=sharing).
 
 ---
 
@@ -199,8 +265,12 @@ Overall, 3DGS takes a fundamentally different approach from previous methods of 
 
 The comparison between 3D Gaussian Splatting and the Large View Synthesis Model shows a variety of approaches in novel-view synthesis from geometry-based approaches to data-driven paradigms. 3D Gaussian Splatting demonstrates that explicit representations using Gaussians can achieve real-time performance and photorealistic quality through efficient rendering and adaptive optimization but at a high memory cost. In contrast, LVSM challenges the need for strong 3D inductive biases, achieving competitive results by leveraging transformer architectures and large-scale training for generalizable view synthesis. Together, these approaches illustrate two distinct yet complementary paths toward faster, more flexible, and increasingly general 3D scene understanding.
 
+---
+
 ## Reference
 
 [1] Kerbl, Bernhard, et al. "3D Gaussian Splatting for Real-Time Radiance Field Rendering." _ACM Transactions on Graphics (SIGGRAPH)_, vol. 42, no. 4, 2023.
+
+[2] Jin, Haian, et al. “LVSM: A Large View Synthesis Model with Minimal 3D Inductive Bias.” arXiv.Org, 2 Apr. 2025, arxiv.org/abs/2410.17242.
 
 ---
