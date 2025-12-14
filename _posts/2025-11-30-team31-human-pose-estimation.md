@@ -89,8 +89,14 @@ $$
 \text{L} = \frac{1}{K} \sum_{i=1}^{K} \left\| H_i - \hat{H}_i \right\|_2^2
 $$
 
+Beyond research settings, human pose estimation has become indispensable in real-time systems across multiple domains. In healthcare, pose estimation supports rehabilitation monitoring, fall detection, and posture grading systems that assess whether patients perform movements correctly. In human–machine interaction, pose-based interfaces allow users to control systems using body movements rather than traditional input devices. Additional applications include surveillance, animation, virtual reality, and intelligent monitoring systems. These use cases demand models that are not only accurate but also robust, efficient, and capable of operating in unconstrained environments.
+
+To overcome the spatial resolution limitations of traditional CNNs, later architectures introduced multi-scale feature fusion and high-resolution representations. Models such as HRNet maintain high-resolution feature maps throughout the network and continuously exchange information across resolutions. This design significantly improves joint localization accuracy, especially for fine-grained body parts like wrists and ankles.
+
 ## Transformer-Based Pose Models 
-Transformers introduce self-attention mechanisms that allow each join representation to attend to all others. This is particularly useful for modeling long-range dependencies, such as symmetric limbs or full-body constraints. Instead of relying solely on local convolutions, transformers explicitly reason about global body structure. 
+More recently, transformer-based architectures have been introduced to human pose estimation. Unlike CNNs, transformers rely on self-attention mechanisms to capture long-range dependencies and global context. This capability is particularly beneficial in scenarios involving occlusion, crowded scenes, or unusual body configurations. Transformer-based pose models, such as ViTPose, treat pose estimation as a sequence modeling problem. 
+
+Transformers introduce self-attention mechanisms that allow each joint representation to attend to all others. This is particularly useful for modeling long-range dependencies, such as symmetric limbs or full-body constraints. Instead of relying solely on local convolutions, transformers explicitly reason about global body structure. 
 
 Self-attention is written as: 
 
@@ -142,8 +148,11 @@ By converting raw pixel data into structured skeletal representations, pose esti
 Human pose estimation has evolved considerably over the last decade, largely driven by advances in deep learning architectures. In this section, we compare some of the most influential models and frameworks, including SRCNN and ViTPose, highlighting their design and limitations. 
 
 ### SRCNN (Super-Resolution Convolutional Neural Network) 
-Single image super-resolution (SR) is a classical and well-studied problem in computer vision that aims to recover a high-resolution image from a single low-resolution input. This task is fundamentally ill-posed, as multiple high-resolution images can correspond to the same low-resolution observation. In other words, SR is an underdetermined inverse problem, where the solution space is large and non-unique. To mitigate this ambiguity, most super-resolution approaches constrain the solution space by imposing strong prior information learned from data. 
-SRCNN introduced a key conceptual shift by showing that this traditional pipeline can be interpreted as a deep convolutional neural network, enabling end-to-end learning of the super-resolution mapping. Rather than explicitly learning dictionaries or manifolds for patch representation, SRCNN implicitly captures these priors through hidden convolutional layers. Patch extraction, non-linear mapping, and reconstruction are all reformulated as convolution operations, allowing the entire process to be optimized jointly using backpropagation. Although SRCNN was originally designed for image super-resolution, its underlying convolutional architecture has inspired early approaches to pose estimation through feature extraction and heatmap regression. SRCNN consists of three layers of convolution:
+Single-image super-resolution (SR) is a classical and well-studied problem in computer vision that aims to recover a high-resolution image from a single low-resolution input. This task is fundamentally ill-posed, as multiple high-resolution images can correspond to the same low-resolution observation. In other words, SR is an underdetermined inverse problem, where the solution space is large and non-unique. To mitigate this ambiguity, most super-resolution approaches constrain the solution space by imposing strong prior information learned from data. 
+
+SRCNN introduced a key conceptual shift by showing that this traditional pipeline can be interpreted as a deep convolutional neural network, enabling end-to-end learning of the super-resolution mapping. Rather than explicitly learning dictionaries or manifolds for patch representation, SRCNN implicitly captures these priors through hidden convolutional layers. Patch extraction, non-linear mapping, and reconstruction are all reformulated as convolution operations, allowing the entire process to be optimized jointly using backpropagation. 
+
+Although SRCNN was originally designed for image super-resolution, its underlying convolutional architecture has inspired early approaches to pose estimation through feature extraction and heatmap regression. SRCNN consists of three layers of convolution:
 
 $$
 F_1(Y) = \max\left(0, W_1 * Y + B_1\right)
@@ -158,6 +167,8 @@ F(Y) = W_3 * F_2(Y) + B_3
 $$
 
 Where $$Y$$ is the input image, $$*$$ denotes convolution, $$W_i$$ and $$B_i$$ are the weights and biases of the $$i$$-th layer, and max (0,⋅) represents the ReLU activation. SRCNN's simplicity allows fast training and easy integration into pipelines where low-resolution keypoint heatmaps are upscaled to higher resolution for finer localization. 
+
+While SRCNN was originally designed for image super-resolution, its principles have influenced pose estimation pipelines—particularly in heatmap-based keypoint localization. In pose estimation, models often predict low-resolution heatmaps for each joint, which must then be upsampled to higher resolutions for precise localization. SRCNN-like architectures can be used to refine or super-resolve these heatmaps, improving joint accuracy without substantially increasing computational cost. In this context, SRCNN-style models serve as post-processing or refinement modules, learning a mapping from coarse joint confidence maps to sharper, more spatially precise outputs. The ill-posed nature of heatmap super-resolution mirrors that of image SR, as multiple high-resolution joint configurations can correspond to the same low-resolution heatmap.
 
 ### Implementation of SRCNN 
 ```
