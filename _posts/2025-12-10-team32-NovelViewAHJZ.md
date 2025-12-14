@@ -10,10 +10,30 @@ date: 2025-12-10
 
 <!--more-->
 
-{: class="table-of-content"}
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
-- TOC
-{:toc}
+- [Motivation](#motivation)
+- [Current Novel View Generation Methodologies](#current-novel-view-generation-methodologies)
+   * [3D Gaussian Splatting](#3d-gaussian-splatting)
+      + [Overview](#overview)
+      + [Method](#method)
+      + [Architecture](#architecture)
+      + [Results](#results)
+      + [Discussion](#discussion)
+      + [Running the Codebase](#running-the-codebase)
+         - [Exploring Activation Functions](#exploring-activation-functions)
+         - [Clamping](#clamping)
+   * [Large View Synthesis Model (LVSM)](#large-view-synthesis-model-lvsm)
+      + [Overview](#overview-1)
+      + [Method](#method-1)
+      + [Architecture](#architecture-1)
+      + [Results](#results-1)
+      + [Discussion](#discussion-1)
+      + [Running the Codebase](#running-the-codebase-1)
+- [Conclusion](#conclusion)
+- [Reference](#reference)
+
+<!-- TOC end -->
 
 <!--
 IMAGE SYNTAX REFERENCE:
@@ -30,6 +50,12 @@ FORMULA SYNTAX REFERENCE:
 Block formula: $$ y = mx + b $$
 Inline formula: $$y = mx + b$$
 -->
+
+## Motivation
+
+As generative models become commonplace in our society, there are many applications of such models in creating visual representations of our world. While image generation (such as Stable Diffusion) is already quite popular, other fields of interest are worth exploring too. More notably, there have been advances in novel-view synthesis in the past year that are worth exploring through this report. 
+
+With a demand for faster and clearer generation, novel-view synthesis has evolved from NeRF-style volumetric radiance field approaches, which are costly to train and create images with low quality. With 3D Gaussian Splatting and the Large View Synthesis Model, researchers have taken multiple approaches to reduce the computational cost of generating novel views while still improving performance. Comparing these two paradigms provides insight into the tradeoffs between geometry-aware and fully data-driven approaches. 
 
 ## Current Novel View Generation Methodologies
 
@@ -171,13 +197,9 @@ Overall, 3DGS takes a fundamentally different approach from previous methods of 
 
 ---
 
-## Results
-
-<!-- PASTE: Overall comparison results content (starts with "When we ran the two architectures ourselves...") -->
-
 ## Conclusion
 
-<!-- PASTE: Your conclusion content here -->
+The comparison between 3D Gaussian Splatting and the Large View Synthesis Model shows a variety of approaches in novel-view synthesis from geometry-based approaches to data-driven paradigms. 3D Gaussian Splatting demonstrates that explicit representations using Gaussians can achieve real-time performance and photorealistic quality through efficient rendering and adaptive optimization but at a high memory cost. In contrast, LVSM challenges the need for strong 3D inductive biases, achieving competitive results by leveraging transformer architectures and large-scale training for generalizable view synthesis. Together, these approaches illustrate two distinct yet complementary paths toward faster, more flexible, and increasingly general 3D scene understanding.
 
 ## Reference
 
