@@ -183,8 +183,6 @@ Future work includes:
 
 ## References
 
-## References
-
 Carion, N., et al. (2025). *SAM 3: Segment anything with concepts*. arXiv preprint arXiv:2511.16719.
 
 Chen, L.-C., et al. (2017). *DeepLab: Semantic image segmentation with deep convolutional nets, atrous convolution, and fully connected CRFs*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 40(4), 834–848.
