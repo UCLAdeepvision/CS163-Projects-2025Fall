@@ -24,13 +24,13 @@ We remapped all categories in cityscapes to a consistent six-class scheme - fenc
 ### Dataset Split
 We partition the Cityscapes dataset into three subsets from training, validation, and testing. From the original Cityscapes training split, we sample 2000 images to form our training set, 250 images to form our validation set, and another 250 images to form our test set.
 
-## Model: Segformer
+## Model: SegFormer
 In this project, we build everything upon the SegFormer model.
-Segformer is a transformer-based semantic segmentation model designed to be simple and accurate. It contains two main parts: encoder and decoder. 
+SegFormer is a transformer-based semantic segmentation model designed to be simple and accurate. It contains two main parts: encoder and decoder. 
 The encoder is MiT (Mix Transformer), a hierarchical Transformer that produces 4 multi-scale feature maps. It uses overlapped patch embeddings and an efficient attention design [1].
 The decoder is a lightweight All-MLP decoder. It linearly projects each of the 4 feature maps to the same channel size, upsamples them to the same resolution, concatenates and fuses them with an MLP, then outputs per-pixel class scores [1].
 ![Segformer]({{ '/assets/images/team02/segformerArch.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
-*Fig 1. Segformer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
+*Fig 1. SegFormer Architecture, consists of a hierarchical Transformer encoder to extract coarse and fine features and a lightweight All-MLP decoder to fuse these multi-level features and predict the segmentation mask* [1].
 
 ## Evaluation Metrics
 We evaluate the performance of models using both per-class intersection over union (IoU) and mean intersection over union (mIoU). IoU measures the overlap between the predicted region and the ground truth bounding box. The equation of calculating IoU is given as follows:
@@ -418,7 +418,7 @@ class CopyPasteDataset(torch.utils.data.Dataset):
         return inputs
 ```
 
-Generally, this is the training flow: Boundary-aware Segformer-B0 + copy-paste augmented train split → BA loss training → save `segformer-thin-structures-ba_aug-final`.
+Generally, this is the training flow: Boundary-aware SegFormer-B0 + copy-paste augmented train split → BA loss training → save `segformer-thin-structures-ba_aug-final`.
 
 ```
 model_bas_aug = SegformerForSemanticSegmentation.from_pretrained(
