@@ -91,6 +91,7 @@ The backbone of the PlaNet model, as mentioned earlier, utilizes the *Inception 
 | **YFCC4k** | TransLocator | **8.4%** | **18.6%** | **27.0%** | **41.1%** | **60.4%** |
 | **YFCC26k** | PlaNet | 4.4% | 11.0% | 16.9% | 28.5% | 47.7% |
 | **YFCC26k** | TransLocator | **7.2%** | **17.8%** | **28.0%** | **41.3%** | **60.6%** |
+
 *Table 1. Geolocational accuracy of PlaNet vs TransLocator compared to several datasets and distance scales* [2].
 
 ### Persisting Limitations
