@@ -32,7 +32,7 @@ The advantages of MMPose is its comprehensive "model zoo" that includes both acc
   <img src="{{ '/assets/images/assets/images/905972224/map.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 1. UMAP of datasets with root subtraction [1].</em></p>
+  <p><em>Fig 2. UMAP of datasets with root subtraction [2].</em></p>
 </div>
 
 
@@ -45,7 +45,7 @@ Although pose estimation has been studied for decades, its recent success can la
   <img src="{{ '/assets/images/assets/images/905972224/3DPose.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 1. Examples of 3D pose estimation for Human3.6M  [1].</em></p>
+  <p><em>Fig 3. Examples of 3D pose estimation for Human3.6M  [3].</em></p>
 </div>
 
 Just as important is the availability of powerful computational resources. Training deep neural networks for pose estimation involves optimizing millions of parameters and processing high-resolution feature maps. GPUs and specialized accelerators make it possible to train models efficiently and deploy them in real-time systems. 
@@ -60,7 +60,14 @@ $$
 ])
 $$
 
-where $$K$$ is the number of keypoints, $$x_i, y_i)$$ denotes the spatial location of the $$i$$ -th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
+where $$K$$ is the number of keypoints, \( (x_i, y_i) \) denotes the spatial location of the $$i$$ -th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
+
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/Joint_heatmap.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 4. Examples of generated joint heatmap, limb heatmap, and joint–limb heatmap.  [4].</em></p>
+</div>
 
 Most modern approaches model pose estimation as a heatmap regression problem. For each joint $$i$$, the network predicts a heat map (shown  below), where each pixel value represents the probability of that joint appearing at that location. The final keypoint location is obtained by: 
 
