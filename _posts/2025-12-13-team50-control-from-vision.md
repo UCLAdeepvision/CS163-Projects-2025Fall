@@ -59,7 +59,7 @@ where:
 
 This optimization yields **world-frame human trajectories** and **gravity-aligned scene meshes** suitable for physics simulation.
 
-![VideoMimic Pipeline]({{ '/assets/images/ControlFromVideo/mimic_pipeline.png' | relative_url }})
+![VideoMimic Pipeline]({{ '/assets/images/team50/mimic_pipeline.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. 1. VideoMimic real-to-sim-to-real pipeline. Monocular videos are reconstructed into human motion and scene geometry, retargeted to a humanoid, and used to train a single context-aware control policy.* [1]
 
@@ -103,7 +103,7 @@ $$
 
 where $$s_t$$ is proprioception, $$h_t$$ is the terrain height-map, and $$d_t$$ is the root-direction command. This enables the robot to **autonomously select behaviors** like walking, climbing, sitting purely from environmental context, without explicit task labels or skill switching.
 
-![Policy Training]({{ '/assets/images/ControlFromVideo/mimic_policy.png' | relative_url }})
+![Policy Training]({{ '/assets/images/team50/mimic_policy.png' | relative_url }})
 {: style="width: 700px; max-width: 100%;"}
 *Fig. 2. Scene-conditioned imitation learning and policy distillation.* [1]
 
@@ -115,7 +115,7 @@ While VideoMimic shows that robots can learn context-aware control directly from
 
 R3M (Reusable Representations for Robotic Manipulation) represents a clean instantiation of this idea. Rather than learning actions, rewards, or dynamics, R3M focuses exclusively on perception. It learns a frozen visual embedding from large-scale human video that can be reused across downstream robot learning problems. This separation of representation learning from control enables strong generalization while remaining easy to integrate into standard imitation or reinforcement learning pipelines.
 
-![R3M Overview]({{ '/assets/images/ControlFromVideo/r3m_pretraining.png' | relative_url }})
+![R3M Overview]({{ '/assets/images/team50/r3m_pretraining.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. 3. R3M pre-training pipeline. Visual representations are learned from large-scale egocentric human video using temporal and semantic objectives, then reused as frozen perception modules for downstream robot manipulation.* [2]
 
@@ -177,7 +177,7 @@ $$
 
 This objective encourages embeddings to capture objects and relations referenced by language, which are directly relevant to manipulation.
 
-![R3M Overview]({{ '/assets/images/ControlFromVideo/r3m_learning.png' | relative_url }})
+![R3M Overview]({{ '/assets/images/team50/r3m_learning.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. 4. R3M pretraining. R3M is trained on Ego4D video–language pairs using temporal contrastive learning and video–language alignment to produce semantically grounded, temporally coherent visual embeddings for robotic manipulation.* [2]
 
@@ -222,7 +222,7 @@ where $$z_t = F_\phi(I_t)$$ and $$p_t$$ denotes proprioceptive features.
 
 Across manipulation benchmarks such as MetaWorld, Franka Kitchen, and Adroit, R3M substantially improves data efficiency relative to training from scratch and outperforms prior visual backbones such as CLIP and ImageNet-pretrained models. These gains hold despite R3M never observing robot data during pre-training.
 
-![R3M Overview]({{ '/assets/images/ControlFromVideo/r3m_results.png' | relative_url }})
+![R3M Overview]({{ '/assets/images/team50/r3m_results.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. 5. Data-efficient imitation learning. Success rates on 12 unseen manipulation tasks show that R3M consistently outperforms MoCo (PVR), CLIP, supervised ImageNet features, and training from scratch, with standard error bars reported.* [2]
 
@@ -252,7 +252,7 @@ $$
 
 These tracks form a correspondence-preserving representation of how the object should move to satisfy the goal. Because supervision is obtained from passive web videos using off-the-shelf tracking algorithms, the model scales naturally with diverse, uncurated data. By predicting motion instead of appearance, the representation abstracts away texture and lighting while retaining physically meaningful dynamics.
 
-![Track2Act Point Tracks]({{ '/assets/images/ControlFromVideo/t2a_predict.png' | relative_url }})
+![Track2Act Point Tracks]({{ '/assets/images/team50/t2a_predict.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. 6. Predicted point trajectories between an initial and goal image.* [3]
 
@@ -301,7 +301,7 @@ $$
 
 The residual policy is trained using behavior cloning on a small amount of embodiment-specific data. Because it only learns to correct deviations from a predicted plan, the policy generalizes effectively across unseen objects, scenes, and task configurations.
 
-![Residual Policy Execution]({{ '/assets/images/ControlFromVideo/t2a_residual_correction.png' | relative_url }})
+![Residual Policy Execution]({{ '/assets/images/team50/t2a_residual_correction.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. 7. Open-loop execution from predicted rigid transforms with closed-loop residual correction.* [3]
 
