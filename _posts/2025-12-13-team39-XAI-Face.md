@@ -64,13 +64,13 @@ $$
 FastDiME changes the reverse process to make a counterfactual image instead of an identical copy. The high-level process is as follows: After noising the input image to an intermediate step, the reverse process is performed with a loss that encourages the removal of a specific feature. The guided mean of reverse diffusion is given by:
 
 $$
-\mu_{g}(x_{t})=\mu(x_{t})-\Sigma(x_{t})\nabla_{x}L_{CF}(x_{t})
+\mu_{g}(x_{t})=\mu(x_{t})-\Sigma(x_{t})\nabla_{x}\mathcal{L}_{CF}(x_{t})
 $$
 
 The counterfactual is kept as close to the original as possible using a combined loss:
 
 $$
-L_{CF}=\lambda_{c}L_{cls}+\lambda_{1}||x-x_{0}||_{1}+\lambda_{p}L_{perc}
+\mathcal{L}_{CF}=\lambda_{c}\mathcal{L}_{cls}+\lambda_{1}||x-x_{0}||_{1}+\lambda_{p}\mathcal{L}_{perc}
 $$
 
 FastDiME has a time complexity of $$O(T)$$, beating the original DiME with a time complexity of $$O(T^{2})$$ by avoiding extraneous inner diffusion calculations that DiME performs during reconstruction.
@@ -216,7 +216,7 @@ Moving forward, the integration of these XAI tools into the standard development
 
 [3] Y. Lu, Z. Xu, and T. Ebrahimi, "Explainable face verification via feature-guided gradient backpropagation," *arXiv:2403.04549*, Mar. 2024. [Online]. Available: https://arxiv.org/abs/2403.04549
 
-[4] R. R. Selvaraju et al., "Grad-CAM: Visual explanations from deep networks via gradient-based localization," International Journal of Computer Vision, vol. 128, no. 2, pp. 336–359, Oct. 2019. [Online]. Available: http://dx.doi.org/10.1007/s11263-019-01228-7
+[4] R. R. Selvaraju et al., "Grad-CAM: Visual explanations from deep networks via gradient-based localization," *International Journal of Computer Vision*, vol. 128, no. 2, pp. 336–359, Oct. 2019. [Online]. Available: https://dx.doi.org/10.1007/s11263-019-01228-7
 
 [5] N. Weng et al., "Fast diffusion-based counterfactuals for shortcut removal and generation," *arXiv:2312.14223*, Dec. 2023. [Online]. Available: https://arxiv.org/abs/2312.14223
 
