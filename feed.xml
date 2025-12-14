@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T22:02:52+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Vision Language Action Models for Robotics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html" rel="alternate" type="text/html" title="Vision Language Action Models for Robotics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T22:10:42+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Vision Language Action Models for Robotics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html" rel="alternate" type="text/html" title="Vision Language Action Models for Robotics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html"><![CDATA[<blockquote>
   <p>The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.</p>
 </blockquote>
 
@@ -1134,7 +1134,273 @@ Here, I represents the image and P represents the user prompt. In the specialist
 
 <p>[4] Peng, L., Wang, H., Zhou, C., Hu, F., Tian, X., &amp; Hongtai, Z. (2024). <em>Research on Intelligent Detection and Segmentation of Rock Joints Based on Deep Learning</em>. Complexity, 2024, Article ID 8810092. &lt;<a href="https://onlinelibrary.wiley.com/doi/10.1155/2024/8810092">https://onlinelibrary.wiley.com/doi/10.1155/2024/8810092</a>&gt;</p>
 
-<p>[5] He, K., Chen, X., Xie, S., Li, Y., Dollár, P., &amp; Girshick, R. (2022). <em>Masked Autoencoders Are Scalable Vision Learners</em>. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 16000-16009. &lt;<a href="https://arxiv.org/abs/2111.06377">https://arxiv.org/abs/2111.06377</a>&gt;</p>]]></content><author><name>Abdallah Fares, Dean Ali, Olana Abraham</name></author><summary type="html"><![CDATA[The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.]]></summary></entry><entry><title type="html">XAI in Facial Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html" rel="alternate" type="text/html" title="XAI in Facial Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html"><![CDATA[<blockquote>
+<p>[5] He, K., Chen, X., Xie, S., Li, Y., Dollár, P., &amp; Girshick, R. (2022). <em>Masked Autoencoders Are Scalable Vision Learners</em>. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 16000-16009. &lt;<a href="https://arxiv.org/abs/2111.06377">https://arxiv.org/abs/2111.06377</a>&gt;</p>]]></content><author><name>Abdallah Fares, Dean Ali, Olana Abraham</name></author><summary type="html"><![CDATA[The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.]]></summary></entry><entry><title type="html">Global Human Mesh Recovery</title><link href="/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery.html" rel="alternate" type="text/html" title="Global Human Mesh Recovery" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery.html"><![CDATA[<blockquote>
+  <p>In this blog post, we introduce and discuss recent advancements in global human mesh recovery, a challenging computer vision problem involving the extraction of human meshes on a global coordinate system from videos where the motion of the camera is unknown.</p>
+</blockquote>
+
+<!--more-->
+
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#backgroundfoundation" id="markdown-toc-backgroundfoundation">Background/Foundation</a></li>
+  <li><a href="#approaches" id="markdown-toc-approaches">Approaches</a>    <ul>
+      <li><a href="#slahmr" id="markdown-toc-slahmr">SLAHMR</a></li>
+      <li><a href="#trace" id="markdown-toc-trace">TRACE</a></li>
+      <li><a href="#wham" id="markdown-toc-wham">WHAM</a></li>
+    </ul>
+  </li>
+  <li><a href="#works-cited" id="markdown-toc-works-cited">Works Cited</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Human mesh recovery (HMR) is the task of reconstructing a complete and accurate 3D mesh model of the human body and its pose from a single RGB image, with impressive results achieved especially in controlled settings.</p>
+
+<p>However, a problem with significantly less research progress is global human mesh recovery, in which a model takes in a monocular video with unknown camera motion and outputs a coherent sequence of human meshes in a world grounded coordinate system. This introduces significant challenges, including disentangling camera movement from human movement, enforcing temporal consistency, and ensuring physical plausibility to eliminate artifacts like foot sliding. Producing a global human mesh recovery model that works underneath these constraints would unlock applications spanning augmented and virtual reality, film production, sports analysis, human-computer interaction and more.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/local-motion.png" alt="local-motion" /></p>
+<p><em>Fig 1. Deriving a trajectory from the global frame requires accounting for camera movement in addition to the observed local motion</em> <sup id="fnref:9" role="doc-noteref"><a href="#fn:9" class="footnote" rel="footnote">1</a></sup></p>
+
+<p>To address these challenges, researchers have pursued complementary approaches that build upon each other. We will analyze the progression from foundational methods, SLAHMR and TRACE (CVPR 2023), which focused on decoupling camera motion and ensuring temporal smoothness, respectively. These techniques laid the groundwork for the WHAM model (CVPR 2024), which achieves superior world-grounded accuracy and physical plausibility through contact-aware trajectory recovery.</p>
+
+<h2 id="backgroundfoundation">Background/Foundation</h2>
+
+<p>Modern human mesh recovery methods rely primarily on parametric body models that represent the human body as a set of learnable parameters rather than estimating thousands of vertex positions, which would be necessary in the case of directly recovering a 3D triangle mesh.</p>
+
+<p>The most widely adopted model is SMPL (Skinned Multi-Person Linear model)<sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">2</a></sup>, which decomposes body representations into shape parameters (\(\beta\)), usually 10 values controlling identity characteristics like height and weight, and pose parameters (\(\theta\)), that describe the skeletal structure. Within this formulation, human mesh recovery essentially becomes a regression problem: a deep neural network takes the input and acts as a feature extractor that maps visual cues directly to the SMPL parameter space.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/smpl.png" alt="smpl" /></p>
+<p><em>Fig 2. Comparison between SMPL models (orange) and ground truths that SMPL parameters were learned from (gray) showing the variety of human forms that can be represented</em> <sup id="fnref:5:1" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">2</a></sup></p>
+
+<p>While this SMPL regression has been effective in recovering accurate body pose and shape, most early HMR methods operate in a camera-centric frame that treat each frame independently, failing to recover a globally consistent human trajectory over time. Recent approaches to the gloabl human mesh recovery problem effectively extend the same parametric SMPL formulation; all approaches covered aim to output SMPL or similar parametric models.</p>
+
+<h2 id="approaches">Approaches</h2>
+
+<h3 id="slahmr">SLAHMR</h3>
+
+<p>SLAHMR attempts to solve the problem of global human mesh recovery by taking an optimization-based approach.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">3</a></sup></p>
+
+<h4 id="method">Method</h4>
+
+<p>SLAHMR receives as input \(T\) frames of a scene with \(N\) people. First, each person \(i\)’s pose at each point in time \({\hat{P}}_t^i\) is estimated by a model known as PHALP. These estimates are used to calculate \(\mathbf{J}^i_t\), estimates locations of the joints of each human in the scene.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/phalp.jpg" alt="phalp" /></p>
+<p><em>Fig 3. Sample pose estimates from PHALP; entire body pose is estimated but only head shown for visualization</em> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">4</a></sup></p>
+
+<p>Then, a SLAM (simultaneous localization and mapping) system called DROID-SLAM to estimate the world-to-camera transform \(\{\hat{R}_t, \hat{T}_t\}\) at each point in time, where \(\hat{R}\) is the estimated camera rotation and \(\hat{T}\) is the estimated camera translation. Since DROID-SLAM estimates camera motion without knowing the scale of the world, SLAHMR will always multiply our predicted \(T\) by a value \(\alpha\) to correct for this factor.</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/droid-slam.png" alt="droid-slam" /></p>
+<p><em>Fig 4. Sample output from DROID-SLAM; blue icons represent camera locations; outputted point map not used in SLAHMR</em> <sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">5</a></sup></p>
+
+<p>Since PHALP estimates poses for each person in the camera’s coordinate system, the goal is now to combine these pose estimations with our camera transform estimations, resulting in world-frame pose estimations.</p>
+
+<p>To do this, the estimates \({\hat{P}}_t^i\) and \(\{\hat{R}_t, \hat{T}_t\}\) are used to initialize an optimization problem that we will constrain and solve. This optimization problem can be expressed as the joint reproduction loss:</p>
+
+\[\begin{equation}
+E_{\textrm{data}} = \sum_{i=1}^N \sum_{t=1}^T \psi^i_t \rho \big( \Pi_K ( R_t \cdot {}^W{\mathbf{J}}^i_t + \alpha T_t )- {\mathbf{x}^i_t} \big)
+\end{equation}\]
+
+<p>This loss function represents the sum of the differences between 2D joint keypoints (\(\mathbf{x}\)) gathered from our mesh estimates and our current prediction of where that same keypoint would be on the image if a picture were taken of the predicted mesh estimate from the predicted camera location (\(R \cdot \mathbf{J} + \alpha T\)). The other terms present deal with camera projections, which are not important to understand with regards to how SLAHMR works.</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/slahmr.png" alt="slahmr" /></p>
+<p><em>Fig 5. SLAHMR Pipeline: use optimization-based approach</em> <sup id="fnref:1:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">3</a></sup></p>
+
+<p>At this point, since we haven’t added many constraints, SLAHMR only optimizes the global orientation \(\Phi\) and root translation \(\Gamma\) of the human poses in a first pass. In other words, if \(\lambda\) is our learning rate:</p>
+
+\[\begin{equation}
+    \min_{\{\{ {}^W{\Phi}^i_t, {}^W{\Gamma}^i_t\}_{t=1}^T \}_{i=1}^N}
+    \lambda_{\textrm{data}} E_{\textrm{data}}.
+\end{equation}\]
+
+<p>Our next pass begins optimizing \(\alpha\) as well as the human body shapes and poses. To further constrain the optimization problem gradually, we add an additional loss meant to penalize joint movements that aren’t smooth. This is a simple prior that takes advantage of the assumption that humans typically move in a smooth fashion.</p>
+
+\[\begin{equation}
+E_{\textrm{smooth}}= \sum_i^N \sum_t^T \| \mathbf{J}^i_t - \mathbf{J}^i_{t+1} \|^2.
+\end{equation}\]
+
+<p>Along with a few other priors, this then allows us to optimize over all body pose parameters and our camera scale \(\alpha\):</p>
+
+\[\begin{equation}
+    \min_{\alpha, \{\{ {}^WP^i_t\}_{t=1}^T \}_{i=1}^N}
+    \lambda_\textrm{data} E_\textrm{data}
+    + \lambda_\beta E_{\beta} + \lambda_{\textrm{pose}} E_{\textrm{pose}}
+    + \lambda_\textrm{smooth} E_{\textrm{smooth}}.
+\end{equation}\]
+
+<p>Finally, a learned prior about the distribution of human motions is introduced: the likelihood of a transition between two velocity/joint locations \(p_\theta({s}_t \| {s}_{t-1})\) is modelled as a conditional VAE where the latent \(\mathbf{z}\) represents the transition between two time states. We can use this VAE to calculate part of a new loss term, representing the likelihood of a trajectory by combining the likelihoods of transitioning between each consecutive state within the trajectory.</p>
+
+\[\begin{equation}
+    E_\textrm{CVAE} = -\sum_i^N\sum_t^T
+    \log \mathcal{N}(\mathbf{z}_{t}^i; \mu_\theta({s}^i_{t-1}),\sigma_\theta({s}^i_{t-1})).
+\end{equation}\]
+
+<p>At this point, we can now optimize over entire trajectories by autoregressively calculating this loss term throughout all timesteps and adding it to all other components of our loss function.</p>
+
+<p>Note that this overview only covers the most major sections of the three optimization passes in SLAHMR. There are additional portions to the final loss function not mentioned for the sake of brevity; the important part how SLAHMR optimizes in many passes due to the complexity and difficulty of the optimization problem at hand.</p>
+
+<h4 id="performanceshortcomings">Performance/Shortcomings</h4>
+
+<p>SLAHMR improves stability over per-frame methods and handles complex camera movements significantly better than before; in comparison to PHALP alone, for instance, factoring in camera motion adds robustness to sudden camera motions when tracking subjects.</p>
+
+<p>One significant weakness of SLAHMR is that it is optimization-based: this process, as detailed above, is difficult, complex, and requires multiple computation-heavy stages. This results in slow performance.</p>
+
+<p>In addition, in-the-wild videos with a lot of rotational movement or co-linear motion between the human and camera can result in inconsistent trajectories. These are both areas where significant progress can be made.</p>
+
+<h3 id="trace">TRACE</h3>
+
+<p>Another foundational advancement in human mesh recovery is TRACE, whose primary goal is to reconstruct movement of multiple 3D people.<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">6</a></sup> This method was the first one-stage method to track people in global coordinates with moving cameras.</p>
+
+<p>TRACE achieves this by using a multiheaded network to output a novel 5D representation of space, time, and identity that enables reasoning about people in scenes. The network is divided into four branches: the detection branch, tracking branch, mesh recovery branch, and state output branch.</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/trace.png" alt="trace" /></p>
+<p><em>Fig 6. General architecture of TRACE</em> <sup id="fnref:4:1" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">6</a></sup></p>
+
+<p>To use TRACE, the user must first annotate the first frame of the video being analyzed with information about where the \(K\) subjects they want to track are. TRACE then outputs 3D meshes and trajectory for each of these subjects from a global frame of reference.</p>
+
+<h4 id="method-1">Method</h4>
+
+<p>TRACE encodes the video it is given and the subject motion within it into temporal feature maps \(F_i\) and motion feature maps \(O_i\) using two parallel backbones. These feature maps are fed into the detection branch and tracking branch, respectively, which use multisubject tracking to output the 3D human trajectory in camera coordinates.</p>
+
+<p>The <em>detection branch</em> uses the temporal feature map \(F_i\) to output a 3D center map (the detection of the subject) and a 3D localization map (the precise location of the subject). These maps are composited and combined to output 3D positions, their confidences \((t_i, c_i)\), and their offset vectors, all in the camera space.</p>
+
+<p>The <em>tracking branch</em> uses the motion feature map \(O_i\) to to create a 3D motion offset map, which denotes the position change of each tracked subject from the previous frame to the current frame. Additionally, this branch utilizes a novel memory unit to address the problem of long-term occlusions by storing the 3D positions of each subject in previously examined frames.</p>
+
+<p>Unlike SLAHMR, which uses PHALP for pose estimation and separately extracts human pose, appearance, and location in multiple stages from each video frame and combines them together, TRACE does so in an end-to-end manner. By combining the 3D motion offset map and \((t_i, c_i)\) from the detection branch, the memory unit determines subject identities and builds trajectories for each of the \(K\) subjects. Detected subjects who do not fit the output trajectories are filtered out; remaining tracking ids and their respective trajectories in the camera space are output.</p>
+
+<p>Next, the <em>mesh branch</em> extracts SMPL formatted mesh parameters from \(F_i\) and \(O_i\) to calculate meshes for each human.</p>
+
+<p>Finally, the <em>world branch</em> uses the 3D positions of the subjects’ in-camera coordinates to output a world motion map, which encompasses the 3D orientation and 3D translation offset of each subject in global coordinates. The combination of these is the global trajectory.</p>
+
+<p>In this way, the four branches are able to recover the 3D pose, shape, identity, and trajectory of each tracked subject.</p>
+
+<h4 id="performanceshortcomings-1">Performance/Shortcomings</h4>
+
+<p>TRACE is able to accurately track multiple subjects and outperforms PHALP especially when long-term occlusions occur. Furthermore, TRACE has better motion continuity (no sudden translations of the subject between frames) than other state of the art methods.</p>
+
+<p>Unlike SLAHMR, which is a multi-stage optimization-based approach, TRACE combines scene information and 3D motion with its novel 5D representation to utilize the full scene context and allow for end-to-end training.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/trace-perf.png" alt="trace-perf" /></p>
+<p><em>Fig 7. Tracking results of TRACE and other SOTA methods of the time on MuPoTS-3D, a dataset that contains multiperson interaction scenes with long-term occlusions</em> <sup id="fnref:4:2" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">6</a></sup></p>
+
+<p>However, TRACE is still dependent on clean detections to output accurate trajectories and meshes. Furthermore, these meshes are not world-grounded and are relative to camera position. Finally, TRACE depends on videos as input and its multiple branches cause it to require heavy computation.</p>
+
+<h3 id="wham">WHAM</h3>
+
+<p>World-Grounded Humans with Accurate Motion (WHAM) is a relatively recent approach to global human mesh recovery that targets three specific issues: global motion estimation accuracy, inference speed, and foot-ground contact.<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup> It builds off of both SLAHMR and TRACE, using camera and scene localization and temporal modeling, respectively. It also attempts to address the computationally expensive nature of optimization methods such as SLAHMR and the jittery video motion in regression models such as TRACE caused by challenges with handling camera, rather than subject, movement.</p>
+
+<h4 id="method-2">Method</h4>
+
+<p>WHAM can be divided primarily into two main tasks: motion estimation and trajectory estimation.</p>
+
+<p>To perform motion estimation, the features of the video are first extracted. The raw video data \(\left\{ I(t) \right\}_{t=0}^{T}\) is first inputted into WHAM. ViTPose (a vision transformer based model<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>) is used to detect 2D keypoints \(\left\{ x_{2D}^{(t)} \right\}_{t=0}^{T}\), which are then used to extract motion features \(\left\{ \varphi^{(t)}_m \right\}_{t=0}^{T}\).</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/vitpose.png" alt="vitpose" /></p>
+<p><em>Fig 8. Architecture of the ViTPose model used for 2D keypoint extraction</em> <sup id="fnref:8:1" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup></p>
+
+<p>An image encoder pretrained on AMASS (a large human motion database<sup id="fnref:7" role="doc-noteref"><a href="#fn:7" class="footnote" rel="footnote">9</a></sup>) is then used to extract static image features; these static image features are integrated with the motion features to refine them.</p>
+
+<p>A uni-directional RNN is used in the motion encoder, as well as the motion decoder later on, to extract the motion context from both the current and previous 2D keypoints, as well as the hidden state. The encoder is as follows:</p>
+
+\[\begin{equation}
+\varphi^{(t)}_m = E_M \left( x_2^{(0)}, x_2^{(1)}, \dots, x_2^{(t)} \mid h_E^{(0)} \right)
+\end{equation}\]
+
+<p>where \(h_E^{(0)}\) is the hidden state. The keypoints are then normalized to a bounding box, and the decoder recovers the SMPL parameters as follows:</p>
+
+\[\begin{equation}
+\left( \theta^{(t)}, \beta^{(t)}, c^{(t)}, p^{(t)} \right)
+= D_M\!\left( \hat{\phi}_m^{(0)}, \ldots, \hat{\phi}_m^{(t)} \mid h_D^{(0)} \right).
+\end{equation}\]
+
+<p>Finally, a feature integrator combines the motion context and image features through the following residual connection:</p>
+
+\[\begin{equation}
+\hat{\varphi}^{(t)}_m = \varphi^{(t)}_m + F_I \left( \text{concat} \left( \varphi^{(t)}_m , \varphi^{(t)}_i \right) \right)
+\end{equation}\]
+
+<p>This outputs pixel-aligned 3D meshes that preserve temporal consistency. As we have meshes, we now need to finish our task of trajectory estimation. This can be split into two main stages.</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/wham.png" alt="wham" /></p>
+<p><em>Fig 9. WHAM architecture; note the encoder-decoder structure</em> <sup id="fnref:6:1" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup></p>
+
+<p>First, the trajectory is decoded by an additional decoder \(D_T\) which predicts the global root orientation \(\Gamma^{(t)}_0\) and root velocity \(\omega^{(t)}\) from the motion feature \(\varphi^{(t)}_m\).</p>
+
+<p>However, the motion feature is derived from input signals from the camera, which makes it difficult to disambiguate the human motion from the camera motion. As such, the angular velocity of the camera is concatenated with the motion feature to create a motion context that is “camera-agnostic,” meaning WHAM is compatible with both SLAM algorithms and digital camera gyroscope measurements. With this, global orientation can be predicted through the uni-directional RNN:</p>
+
+\[\begin{equation}
+(\Gamma^{(t)}_0, v^{(t)}_0) = D_T \left( \varphi^{(0)}_m, \omega^{(0)}, \dots, \varphi^{(t)}_m, \omega^{(t)} \right)
+\end{equation}\]
+
+<p>WHAM then goes further to account for terrain differences to model accurate footground contact without sliding, issues that both SLAHMR and TRACE have, using a technique calledontact Aware Trajectory Refinement. First, the root velocity is adjusted to reduce foot sliding as a whole based on the probability of foot-ground contact:</p>
+
+\[\begin{equation}
+\tilde{v}^{(t)} = v^{(t)}_0 - \left( \Gamma^{(t)}_0 \right)^{-1} v^{(t)}_f
+\end{equation}\]
+
+<p>However, this can lead to noisy translation if the contact and pose estimation are inaccurate, an issue resolved by using a trajectory refining network \(R_T\) to update the root orientation and velocity as needed. This trajectory refining network is then used as part of the global translation operation:</p>
+
+\[\begin{equation}
+(\Gamma^{(t)}, v^{(t)}) = R_T \left( \varphi^{(0)}_m, \Gamma^{(0)}, \tilde{v}^{(0)}, \dots, \varphi^{(t)}_m, \Gamma^{(t)}, \tilde{v}^{(t)} \right)
+\end{equation}\]
+
+\[\begin{equation}
+\tau^{(t)} = \sum_{i=0}^{t-1} \Gamma^{(i)} \nu^{(i)}.
+\end{equation}\]
+
+<p>which allows the model to accurately reconstruct the motion and pose of the 3D human.</p>
+
+<h4 id="performanceshortcomings-2">Performance/Shortcomings</h4>
+
+<p>WHAM is quite powerful as it is now and is able to account for uneven terrain and camera movement while improving foot sliding issues, jittering, and inference speed.</p>
+
+<p>A comparison of its performance with SLAHMR and TRACE across the 3DPW, RICH, and EMDB datasets is provided in the paper discussing WHAM:</p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/wham-perf.png" alt="wham-perf" /></p>
+<p><em>Fig 10. WHAM estimation accuracy compared with SLAHMR and TRACE across multiple datasets</em> <sup id="fnref:6:2" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup></p>
+
+<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/wham-perf-emdb.png" alt="wham-perf-emdb" /></p>
+<p><em>Fig 11. WHAM estimation accuracy compared with SLAHMR and TRACE on the EMDB2 dataset</em> <sup id="fnref:6:3" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup></p>
+
+<p>Even with some data missing, it is clear that WHAM outperforms SLAHMR and TRACE across multiple of the datasets.</p>
+
+<p>However, although WHAM has contributed many improvements to human mesh recovery and can outperform SLAHMR, TRACE, and other single-image models, it still has several limitations.</p>
+
+<p>For example, because it utilizes the AMASS dataset, it has some level of motion prior bias that prevents it from fully accounting for “out-of-distribution” motions, or motions that the average person might not make regularly, such as acrobatics or injured movement, like limping. WHAM also does not fully address occlusion; even though masks are applied occasionally, motion that is blocked by other objects is not completely resolved by WHAM’s algorithm. Finally, it is still quite computationally heavy and could be further optimized for real-time applications, although it can theoretically handle them according to the paper.</p>
+
+<h2 id="works-cited">Works Cited</h2>
+
+<hr />
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:9" role="doc-endnote">
+      <p>Yang, et al. “OfCaM: Global Human Mesh Recovery via Optimization-free Camera Motion Scale Calibration”. 2024. <a href="#fnref:9" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:5" role="doc-endnote">
+      <p>Loper, et al. “{SMPL}: A Skinned Multi-Person Linear Model” <em>ACM Trans. Graphics (Proc. SIGGRAPH Asia)</em>. 2015. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:5:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
+    </li>
+    <li id="fn:1" role="doc-endnote">
+      <p>Ye, et al. “Decoupling Human and Camera Motion from Videos in the Wild” <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>. 2023. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:1:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>Rajasegaran, et al. “Tracking People by Predicting 3D Appearance, Location and Pose” <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition</em>. 2022. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>Teed, Deng. “DROID-SLAM: Deep Visual SLAM for Monocular, Stereo, and RGB-D Cameras” <em>Advances in neural information processing systems</em>. 2021. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:4" role="doc-endnote">
+      <p>Sun, et al. “TRACE: 5D Temporal Regression of Avatars with Dynamic Cameras in 3D Environments” <em>IEEE/CVF Conf.~on Computer Vision and Pattern Recognition (CVPR)</em>. 2023. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:4:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a> <a href="#fnref:4:2" class="reversefootnote" role="doc-backlink">&#8617;<sup>3</sup></a></p>
+    </li>
+    <li id="fn:6" role="doc-endnote">
+      <p>Shin, et al. “{WHAM}: Reconstructing World-grounded Humans with Accurate {3D} Motion” <em>IEEE/CVF Conf.~on Computer Vision and Pattern Recognition (CVPR)</em>. 2024. <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:6:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a> <a href="#fnref:6:2" class="reversefootnote" role="doc-backlink">&#8617;<sup>3</sup></a> <a href="#fnref:6:3" class="reversefootnote" role="doc-backlink">&#8617;<sup>4</sup></a></p>
+    </li>
+    <li id="fn:8" role="doc-endnote">
+      <p>Xu, et al. “ViTPose: Simple Vision Transformer Baselines for Human Pose Estimation”, <em>Advances in Neural Information Processing Systems</em>. 2022. <a href="#fnref:8" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:8:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
+    </li>
+    <li id="fn:7" role="doc-endnote">
+      <p>Mahmood, et al. “{AMASS}: Archive of Motion Capture as Surface Shapes” <em>International Conference on Computer Vision</em>. 2019. <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name>Albert Dong, Lindsay Qin, Lune Chan, Clare Jin</name></author><summary type="html"><![CDATA[In this blog post, we introduce and discuss recent advancements in global human mesh recovery, a challenging computer vision problem involving the extraction of human meshes on a global coordinate system from videos where the motion of the camera is unknown.]]></summary></entry><entry><title type="html">XAI in Facial Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html" rel="alternate" type="text/html" title="XAI in Facial Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html"><![CDATA[<blockquote>
   <p>Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME [5] which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) [3], which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability [2], which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.</p>
 </blockquote>
 
@@ -3095,81 +3361,4 @@ relative_transform = reg.transformation
 
 <p>[10] Zhang, Z., Scaramuzza, D., Robotics and Perception Group, University of Zürich, &amp; University of Zürich and ETH Zürich. (2021). A tutorial on Quantitative Trajectory Evaluation for Visual(-Inertial) odometry. Robotics and Perception Group. https://www.ifi.uzh.ch/dam/jcr:89d3db14-37b1-431d-94c3-8be9f37466d3/IROS18_Zhang.pdf</p>
 
-<hr />]]></content><author><name>Group 28</name></author><summary type="html"><![CDATA[Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.]]></summary></entry><entry><title type="html">Post Template</title><link href="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00+00:00</published><updated>2024-01-01T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
-  <p>[Project Track: Project N] This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
-</blockquote>
-
-<!--more-->
-<ul id="markdown-toc">
-  <li><a href="#main-content" id="markdown-toc-main-content">Main Content</a></li>
-  <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
-      <li><a href="#image" id="markdown-toc-image">Image</a></li>
-      <li><a href="#table" id="markdown-toc-table">Table</a></li>
-      <li><a href="#code-block" id="markdown-toc-code-block">Code Block</a></li>
-      <li><a href="#formula" id="markdown-toc-formula">Formula</a></li>
-      <li><a href="#more-markdown-syntax" id="markdown-toc-more-markdown-syntax">More Markdown Syntax</a></li>
-    </ul>
-  </li>
-  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
-</ul>
-
-<h2 id="main-content">Main Content</h2>
-<p>Your survey starts here. You can refer to the <a href="https://github.com/lilianweng/lil-log/tree/master/_posts">source code</a> of <a href="https://lilianweng.github.io/lil-log/">lil’s blogs</a> for article structure ideas or Markdown syntax. We’ve provided a <a href="https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html">sample post</a> from Lilian Weng and you can find the source code <a href="https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md">here</a></p>
-
-<h2 id="basic-syntax">Basic Syntax</h2>
-<h3 id="image">Image</h3>
-<p>Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.</p>
-
-<p style="width: 400px; max-width: 100%;">You can add an image to your survey like this:
-<img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/object_detection.png" alt="YOLO" /></p>
-<p><em>Fig 1. YOLO: An object detection method in computer vision</em> [1].</p>
-
-<p>Please cite the image if it is taken from other people’s work.</p>
-
-<h3 id="table">Table</h3>
-<p>Here is an example for creating tables, including alignment syntax.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: center">column 1</th>
-      <th style="text-align: right">column 2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">row1</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">row2</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="code-block">Code Block</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block
-import torch
-print (torch.__version__)
-</code></pre></div></div>
-
-<h3 id="formula">Formula</h3>
-<p>Please use latex to generate formulas, such as:</p>
-
-\[\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}\]
-
-<p>or you can write in-text formula \(y = wx + b\).</p>
-
-<h3 id="more-markdown-syntax">More Markdown Syntax</h3>
-<p>You can find more Markdown syntax at <a href="https://www.markdownguide.org/basic-syntax/">this page</a>.</p>
-
-<h2 id="reference">Reference</h2>
-<p>Please make sure to cite properly in your work, for example:</p>
-
-<p>[1] Redmon, Joseph, et al. “You only look once: Unified, real-time object detection.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
-
-<hr />]]></content><author><name>UCLAdeepvision</name></author><summary type="html"><![CDATA[[Project Track: Project N] This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.]]></summary></entry></feed>
+<hr />]]></content><author><name>Group 28</name></author><summary type="html"><![CDATA[Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.]]></summary></entry></feed>
