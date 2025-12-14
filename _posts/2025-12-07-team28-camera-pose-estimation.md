@@ -30,6 +30,39 @@ Camera pose estimation predicts the pose of a camera with these two components:
 {: style="width: 400px; max-width: 100%;"}
 *Fig 1. Pose estimation formula* [1].
 
+### COLMAP
+COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camer poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene. 
+
+The process of SfM consists of taking a series of images and then performing feature detection and extraction, feature matching and geometric verification, and structure and motion reconstruction. 
+
+For the feature matching and geometric verification, we used sequential matching which is best for images that were acquired in sequential order, like by a video camera. Since frames have visual overlap, it is not required to use exhaustive matching. In this process, consecutive images and matched against each other. 
+
+Multi-View Stereo (MVS) then takes what was output from SfM to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points. 
+
+
+
+https://demuc.de/colmap/
+https://colmap.github.io/tutorial.html 
+
+
+<div style="display: flex; gap: 20px; justify-content: center;">
+  <div style="text-align: center;">
+    <img src="{{ '/assets/images/team28/colmap_demo.gif' | relative_url }}"
+         style="width: 400px; max-width: 100%;">
+    <p><em>(a) COLMAP sparse reconstruction on freiburg1_plant</em></p>
+  </div>
+
+  <div style="text-align: center;">
+    <img src="{{ '/assets/images/team28/colmap_demo2.gif' | relative_url }}"
+         style="width: 400px; max-width: 100%;">
+    <p><em>(b) Alternate view of camera trajectory and sparse points</em></p>
+  </div>
+</div>
+<p style="text-align: center;">
+<em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence.</em> [2].
+</p>
+
+
 
 
 <!--

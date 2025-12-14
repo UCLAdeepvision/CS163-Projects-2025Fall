@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T18:14:03-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T20:56:37-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
   <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene with image/video data. Our project evaluates different pose estimation methods (COLMAP, VGGSfM, and ViPE) on video datasets using quantitative performance metrics.</p>
 </blockquote>
 
@@ -6,6 +6,7 @@
 <ul id="markdown-toc">
   <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
       <li><a href="#camera-pose-estimation" id="markdown-toc-camera-pose-estimation">Camera Pose Estimation</a></li>
+      <li><a href="#colmap" id="markdown-toc-colmap">COLMAP</a></li>
     </ul>
   </li>
   <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
@@ -36,6 +37,33 @@ that aims to determine the position (translation) and orientation (rotation) of 
 
 <p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
 <p><em>Fig 1. Pose estimation formula</em> [1].</p>
+
+<h3 id="colmap">COLMAP</h3>
+<p>COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camer poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene.</p>
+
+<p>The process of SfM consists of taking a series of images and then performing feature detection and extraction, feature matching and geometric verification, and structure and motion reconstruction.</p>
+
+<p>For the feature matching and geometric verification, we used sequential matching which is best for images that were acquired in sequential order, like by a video camera. Since frames have visual overlap, it is not required to use exhaustive matching. In this process, consecutive images and matched against each other.</p>
+
+<p>Multi-View Stereo (MVS) then takes what was output from SfM to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points.</p>
+
+<p>https://demuc.de/colmap/
+https://colmap.github.io/tutorial.html</p>
+
+<div style="display: flex; gap: 20px; justify-content: center;">
+  <div style="text-align: center;">
+    <img src="/CS163-Projects-2025Fall/assets/images/team28/colmap_demo.gif" style="width: 400px; max-width: 100%;" />
+    <p><em>(a) COLMAP sparse reconstruction on freiburg1_plant</em></p>
+  </div>
+
+  <div style="text-align: center;">
+    <img src="/CS163-Projects-2025Fall/assets/images/team28/colmap_demo2.gif" style="width: 400px; max-width: 100%;" />
+    <p><em>(b) Alternate view of camera trajectory and sparse points</em></p>
+  </div>
+</div>
+<p style="text-align: center;">
+<em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence.</em> [2].
+</p>
 
 <!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
