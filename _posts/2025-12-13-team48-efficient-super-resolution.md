@@ -177,7 +177,9 @@ SPAN's fundamental hypothesis is that the network doesn't need a separate branch
 
 The backbone of SPAN consists of cascaded **Swift Parameter-free Attention Blocks (SPABs)**. Unlike traditional blocks that use separate pathways for attention, SPAB integrates it directly into the feature extraction flow.
 
-`put an image here`
+![YOLO]({{ '/assets/images/48/SPAN.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+*Fig 1. SPAN: architecture design*.
 
 Essentially, SPAB applies an activation function on the feature map to generate an attention map. This attention map is then element-wise multiplied with the (feature map + residual connection) to get the output of the SPAB block.
 
