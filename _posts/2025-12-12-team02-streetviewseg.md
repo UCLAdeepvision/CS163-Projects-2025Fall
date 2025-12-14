@@ -760,9 +760,6 @@ We also observed that copy-paste augmentation, while generally beneficial for im
 
 In summary, our findings confirm that shifting from purely pixel-wise supervision toward hybrid, boundary-aware objectives is a valid and effective strategy for improving segmentation of fine-grained urban structures—a capability critical for autonomous driving, urban mapping, and robotic perception systems. Future work could explore class-adaptive loss weighting, context-aware augmentation techniques, and scaling these methods to larger SegFormer variants to further improve performance across all object sizes.
 
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
-
 ## Reference
 [1] Xie, Enze, et al. "SegFormer: Simple and efficient design for semantic segmentation with transformers." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2021.
 
