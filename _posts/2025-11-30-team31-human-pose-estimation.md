@@ -32,7 +32,7 @@ The advantages of MMPose is its comprehensive "model zoo" that includes both acc
   <img src="{{ '/assets/images/assets/images/905972224/map.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 2. UMAP of datasets with root subtraction [2].</em></p>
+  <p><em>Fig 2. UMAP of datasets with root subtraction. (Image source: <https://wangzheallen.github.io/cross-dataset-generalization> [2].</em></p>
 </div>
 
 
@@ -45,7 +45,7 @@ Although pose estimation has been studied for decades, its recent success can la
   <img src="{{ '/assets/images/assets/images/905972224/3DPose.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 3. Examples of 3D pose estimation for Human3.6M  [3].</em></p>
+  <p><em>Fig 3. Examples of 3D pose estimation for Human3.6M. (Image source: <https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.researchgate.net%2Ffigure%2FExamples-of-3D-pose-estimation-for-Human36M-top-row-and-MPII-middle-and-bottom>  [3].</em></p>
 </div>
 
 Just as important is the availability of powerful computational resources. Training deep neural networks for pose estimation involves optimizing millions of parameters and processing high-resolution feature maps. GPUs and specialized accelerators make it possible to train models efficiently and deploy them in real-time systems. 
@@ -66,7 +66,7 @@ where $$K$$ is the number of keypoints, $$(x_i, y_i)$$ denotes the spatial locat
   <img src="{{ '/assets/images/assets/images/905972224/Joint_heatmap.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 4. Examples of generated joint heatmap, limb heatmap, and joint–limb heatmap. (Image source: < https://www.researchgate.net/publication/378907335/figure/fig1/AS:11431281252590961@1718783506447/Architecture-of-SRCNN-SRCNN-consists-of-feature-block-extraction-and-representation.png>) [4].</em></p>
+  <p><em>Fig 4. Examples of generated joint heatmap, limb heatmap, and joint–limb heatmap. (Image source: < https://www.researchgate.net/publication/378907335/figure/extraction-and-representation.png>) [4].</em></p>
 </div>
 
 Most modern approaches model pose estimation as a heatmap regression problem. For each joint $$i$$, the network predicts a heat map (shown  below), where each pixel value represents the probability of that joint appearing at that location. The final keypoint location is obtained by: 
@@ -93,7 +93,7 @@ Multi-person pose estimation, on the other hand, introduces the challenge of ass
   <img src="{{ '/assets/images/assets/images/905972224/multi.jpg' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 6. Results of CMU-Pose (a–c) and SE-ResNet-OKHM-CMU-Pose(Ours) (d–f). The joint points in the red circle were not recognized by CMU-Pose.  [6].</em></p>
+  <p><em>Fig 6. Results of CMU-Pose (a–c) and SE-ResNet-OKHM-CMU-Pose(Ours) (d–f). The joint points in the red circle were not recognized by CMU-Pose.(image source: <https://www.researchgate.net/figure/Single-person-3D-HPE-frameworks-a-Direct-estimation-approaches-directly-estimate-the_fig5_347881067>  [6].</em></p>
 </div>
 
 Building on the challenges inherent in multi-person pose estimation recent research has explored architectural improvements to enhance robustness in crowded and complex scenes. Figure 18 illustrates a qualitative comparison of multi-person 2D pose estimation results from the research project Improved Multi-Person 2D Human Pose Estimation Using Attention Mechanisms and Hard Example Mining. The first row presents results produced by the baseline CMU Pose network, while the second row shows outputs from the proposed SE-ResNet-OKHM-CMU-Pose model.
@@ -128,7 +128,7 @@ Beyond research settings, human pose estimation has become indispensable in real
   <img src="{{ '/assets/images/assets/images/905972224/intelligent-monitoring-system.ppm' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 7. Intelligent monitoring system.  [7].</em></p>
+  <p><em>Fig 7. Intelligent monitoring system. (Image source: https://www.semanticscholar.org/paper/Bottom-up-Pose-Estimation-of-Multiple-Person-with-Li-Zhou/ca97a086da0306927ee89944e58e5758d0706b2d> [7].</em></p>
 </div>
 
 To overcome the spatial resolution limitations of traditional CNNs, later architectures introduced multi-scale feature fusion and high-resolution representations. Models such as HRNet maintain high-resolution feature maps throughout the network and continuously exchange information across resolutions. This design significantly improves joint localization accuracy, especially for fine-grained body parts like wrists and ankles.
