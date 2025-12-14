@@ -105,11 +105,11 @@ Inspired by Boundary-Aware Segmentation Network (BASNet), we achieve the boundar
     where $$\mu_x$$, $$\mu_y$$ are the mean for x and y, and $$\sigma_x$$, $$\sigma_y$$ are the standard deviations for x and y, $$\sigma_{xy}$$ is their covariance, $$C_1 = 0.01^2$$ and $$C_2 = 0.03^2$$ are used to avoid dividing by zero [2].
 
 
-2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form:
+2.  **Multi-Class IoU Loss:** This component optimizes the Jaccard Index directly. It aggregates softmax probabilities across the entire image to calculate the intersection and union for each class. This creates a global gradient that rewards the correct *extent* and *shape* of the predicted region, preventing the model from generating fragmented or "shattered" masks. It has the following mathematical form (for multi-class case):
 
     $$\ell_{iou} = 1 - \frac{\sum_{r=1}^{H} \sum_{c=1}^{W} S(r,c) G(r,c)}{\sum_{r=1}^{H} \sum_{c=1}^{W} \left[ S(r,c) + G(r,c) - S(r,c) G(r,c) \right]}$$
 
-    where G(r,c) is the ground truth label of the pixel (r,c) and S(r,c) is the predicted probability [2].
+    where $$G_c(r,c)$$ is the ground truth label of the pixel (r,c) and $$S_c(r,c)$$ is the predicted probability [2]. 
 
 3.  **Cross-Entropy (CE):** We retain the standard Cross-Entropy loss to anchor the pixel-level class fidelity, ensuring the semantic categorization remains accurate while SSIM and IoU refine the geometry.
 
@@ -583,7 +583,7 @@ class UltimateHybridLoss(nn.Module):
         self.lovasz_weight = lovasz_weight
 
         # High weights for Fence(1), Pole(4), Sign(5)
-        # 0:bg, 1:fence, 2:car, 3:veg, 4:pole, 5:sign, 6:person
+        # 0:bg, 1:fence, 2:car, 3:veg, 4:pole, 5:sign, 6:light
         class_weights = torch.tensor([1.0, 5.0, 1.0, 1.0, 5.0, 5.0, 2.0]).cuda()
 
         self.ce_loss = nn.CrossEntropyLoss(ignore_index=255, weight=class_weights)
@@ -721,9 +721,9 @@ The performance on larger objects did not degrade significantly because cross-en
 ### Approach-to-Approach Comparison
 When comparing the three approaches, Approach 2, which combines BASNet hybrid loss with copy-paste augmentation, generally achieves better performance than the other two approaches in both per-class IoU and mIoU, with a 0.11% mIoU improvement. The only exception is the fence class, where Approach 1 using BASNet hybrid loss alone performs better than Approach 2 with a 0.8% per-class IoU higher than Approach 2.
 
-The reason fence degrades with copy-paste augmentation is that fence is fundamentally different from other classes. Fence has a mesh and grid structure with see-through patterns, and it has high context dependency. Copy-paste augmentation uses binary masks that treat fence as a solid blob, destroying its transparent mesh pattern, and places fence in random locations where fences never naturally appear, destroying spatial context. In contrast, other classes such as car, pole, sign, and person are self-contained objects whose identity comes from their internal appearance alone, making them more suitable for copy-paste augmentation. In general, Copy-paste Augmentation technique introduces helpful variability but also adds noise through unrealistic placements, hard binary edges, and context violations — these partially cancel out, leaving only small-to-modest net improvement.
+The reason fence degrades with copy-paste augmentation is that fence is fundamentally different from other classes. Fence has a mesh and grid structure with see-through patterns, and it has high context dependency. Copy-paste augmentation uses binary masks that treat fence as a solid blob, destroying its transparent mesh pattern, and places fence in random locations where fences never naturally appear, destroying spatial context. In contrast, other classes such as car, pole, traffic sign, and traffic light are self-contained objects whose identity comes from their internal appearance alone, making them more suitable for copy-paste augmentation. In general, Copy-paste Augmentation technique introduces helpful variability but also adds noise through unrealistic placements, hard binary edges, and context violations — these partially cancel out, leaving only small-to-modest net improvement.
 
-It is also observed that Approach 3 did not work as well as we expected (with a 0.124% mIoU score, which is 0.52% lower than Approach 1 and 0.63% lower than Approach 2). We identify two potential reasons. First, soft IoU in BASNet provides complementary global-shape supervision that balances SSIM's boundary focus, whereas Lovász-Softmax's per-class averaging does not emphasize region coherence in the same way. Second, the explicit class weighting (5× for fence/pole/sign) combined with Lovász's per-class  averaging creates redundant compensation for class imbalance, which may cause over-correction and gradient instability rather than balanced learning.
+It is also observed that Approach 3 did not work as well as we expected (with a 0.124% mIoU score improvement, which is 0.52% lower than Approach 1 and 0.63% lower than Approach 2). We identify two potential reasons. First, IoU loss in BASNet provides complementary global-shape supervision that balances SSIM's boundary focus, whereas Lovász-Softmax's per-class averaging does not emphasize region coherence in the same way. Second, the explicit class weighting (5× for fence/pole/sign) combined with Lovász's per-class  averaging creates redundant compensation for class imbalance, which may cause over-correction and gradient instability rather than balanced learning.
 
 In general, the combination of BASNet hybrid loss and copy-paste augmentation helps improve model performance the most, achieving a 1.87% mIoU increase compared to the baseline model.
 
