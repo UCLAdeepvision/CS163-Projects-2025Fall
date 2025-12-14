@@ -238,7 +238,7 @@ To calculate coordinates form textual reasoning, ETHAN employs several strategie
 
 ### Results
 
-| Method | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2,500 km) | Avg Dist (km) | Avg Score |
+| Method / Distance (% @ km) | Street (1 km) | City (25 km) | Region (200 km) | Country (750 km) | Continent (2,500 km) | Avg Dist (km) | Avg Score |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | StreetClip | 4.9 | 39.5 | *`77.8`* | *`93.0`* | 97.5 | 120.5 | 3500.0 |
 | GeoClip | 3.6 | 38.4 | 75.2 | 92.4 | 97.2 | 135.2 | 3700.0 |
