@@ -93,7 +93,15 @@ All methods we explored in the project will use same set of training_args as sho
 
 The performance of the baseline model is shown in below:
 
-![Finetune]({{ '/assets/images/team02/finetune.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
+| Class | Fine-tune |
+| :--- | :---: |
+| fence | 0.3438 |
+| car | 0.8964 |
+| vegetation | 0.8968 |
+| pole | 0.3119 |
+| traffic sign | 0.5653 |
+| traffic light | 0.4583 |
+| **mIoU** | **0.5788** |
 
 ## Our Approach
 ### Approach 1 - BASNet Hybrid Loss
