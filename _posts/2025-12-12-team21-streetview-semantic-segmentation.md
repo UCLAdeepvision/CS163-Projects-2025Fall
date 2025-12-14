@@ -6,7 +6,7 @@ author: Andrea Asprer, Diana Chu, Matthew Lee, Tanisha Aggarwal
 date: 2024-12-12
 ---
 
-> [Project Track: Street-View Semantic Segmentation] In this project, we implement and evaluate semantic segmentation models on the Cityscapes dataset to enhance accurate pixel-level understanding of urban scenes for autonomous driving.
+> [Project Track: Street-View Semantic Segmentation] In this project, we implemented and evaluated semantic segmentation models on the Cityscapes dataset to enhance pixel-level understanding of urban scenes for autonomous driving; we also built a car to evaluate our models in real-world scenarios.
 
 <!--more-->
 
