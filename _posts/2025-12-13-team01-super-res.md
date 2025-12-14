@@ -10,7 +10,6 @@ date: 2025-12-13
 > Image super-resolution is a natural, ill-posed computer vision problem, being the task of recovering a high-resolution, clean image from a low-resolution, degraded image. In this post, we survey 3 recent methods of image super-resolution, each highly distinct with its own advantages and disadvantages. Finally, we conduct an experiment in modifying the structure of one of these methods.
 
 <!--more-->
-<!--bundle exec jekyll serve-->
 {: class="table-of-content"}
 * TOC
 {:toc}
