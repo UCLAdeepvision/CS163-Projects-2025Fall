@@ -42,7 +42,7 @@ Accompanying the implementation is a curated collection of seminal and research 
 Although pose estimation has been studied for decades, its recent success can largely be attributed to three converging facts. These factors are data, computation, and model design. Modern pose estimation models rely on large-scale annotated datasets such as COCO, MPII, Human3.6M, and 3DPW, which provide diverse human poses across different viewpoints, environments, and levels of occlusion. Without these datasets, learning representations of human articulation would not be possible. 
 
 <div style="text-align: center;">
-  <img src="{{ '/assets/images/905972224/3DPose.png' | relative_url }}" 
+  <img src="{{ '/assets/images/assets/images/905972224/3DPose.png' | relative_url }}" 
        alt="3D Pose Estimation" 
        style="width: 600px; max-width: 100%;" />
   <p><em>Fig 3. Examples of 3D pose estimation for Human3.6M. (Image source: <a href="https://www.researchgate.net/figure/Examples-of-3D-pose-estimation-for-Human36M-top-row-and-MPII-middle-and-bottom">ResearchGate</a>)</em></p>
@@ -63,7 +63,7 @@ $$
 where $$K$$ is the number of keypoints, $$(x_i, y_i)$$ denotes the spatial location of the $$i$$ -th joint, and $$c_i$$ represents either a confidence score or a visibility flag. 
 
 <div style="text-align: center;">
-  <img src="{{ '/assets/images/905972224/Joint_heatmap.png' | relative_url }}" 
+  <img src="{{ '/assets/images/assets/images/905972224/Joint_heatmap.png' | relative_url }}" 
        alt="Joint Heatmaps" 
        style="width: 600px; max-width: 100%;" />
   <p><em>Fig 4. Examples of generated joint heatmap, limb heatmap, and joint–limb heatmap. (Image source: <a href="https://www.researchgate.net/publication/378907335/figure/extraction-and-representation.png">ResearchGate</a>)</em></p>
@@ -90,7 +90,7 @@ Single-person pose estimation assumes the presence of one dominant subject in th
 Multi-person pose estimation, on the other hand, introduces the challenge of associating detected keypoints with the correct individuals. Top-down approaches first detect bounding boxes for each person and then apply a single-person pose estimator to each crop. Bottom-up approaches detect all keypoints in the image simultaneously and then group them into individual skeletons. 
 
 <div style="text-align: center;">
-  <img src="{{ '/assets/images/905972224/multi.jpg' | relative_url }}" 
+  <img src="{{ '/assets/images/assets/images/905972224/multi.jpg' | relative_url }}" 
        alt="CMU-Pose vs SE-ResNet-OKHM-CMU-Pose Results" 
        style="width: 600px; max-width: 100%;" />
   <p><em>Fig 6. Results of CMU-Pose (a–c) and SE-ResNet-OKHM-CMU-Pose (Ours) (d–f). The joint points in the red circle were not recognized by CMU-Pose. (Image source: <a href="https://www.researchgate.net/figure/Single-person-3D-HPE-frameworks-a-Direct-estimation-approaches-directly-estimate-the_fig5_347881067">ResearchGate</a>)</em></p>
@@ -125,7 +125,7 @@ $$
 Beyond research settings, human pose estimation has become indispensable in real-time systems across multiple domains. In healthcare, pose estimation supports rehabilitation monitoring, fall detection, and posture grading systems that assess whether patients perform movements correctly. In human–machine interaction, pose-based interfaces allow users to control systems using body movements rather than traditional input devices. Additional applications include surveillance, animation, virtual reality, and intelligent monitoring systems. These use cases demand models that are not only accurate but also robust, efficient, and capable of operating in unconstrained environments.
 
 <div style="text-align: center;">
-  <img src="{{ '/assets/images/905972224/intelligent-monitoring-system.ppm' | relative_url }}" 
+  <img src="{{ '/assets/images/assets/images/905972224/intelligent-monitoring-system.ppm' | relative_url }}" 
        alt="Intelligent Monitoring System" 
        style="width: 600px; max-width: 100%;" />
   <p><em>Fig 7. Intelligent monitoring system. (Image source: <a href="https://www.semanticscholar.org/paper/Bottom-up-Pose-Estimation-of-Multiple-Person-with-Li-Zhou/ca97a086da0306927ee89944e58e5758d0706b2d">Semantic Scholar</a>)</em></p>
