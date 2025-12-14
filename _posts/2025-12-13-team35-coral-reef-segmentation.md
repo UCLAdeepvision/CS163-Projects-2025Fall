@@ -1,8 +1,8 @@
 ---
 layout: post
 comments: true
-title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3"
-Project Track: Project 1
+title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3.
+Project Track: Project 1"
 author: Team 35 - Cara Burgess, Maria Campo Martins, Kevin Valencia
 date: 2025-12-13
 ---
@@ -193,6 +193,10 @@ Future work includes:
 2. Layer-freezing or gradual unfreezing to reduce catastrophic forgetting
 3. Coral-domain pretraining or underwater-specific augmentation strategies
 4. SAM3 experiments that incorporate prompts or prompt-like conditioning instead of forcing a prompt-free dense prediction mode
+
+
+
+Colab notebook with project code: https://colab.research.google.com/drive/1-XIG4hYo7OcubjfQI2XydadW4JpQBowh?usp=sharing
 
 ## References
 
