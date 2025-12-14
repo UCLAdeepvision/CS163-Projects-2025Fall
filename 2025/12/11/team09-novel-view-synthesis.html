@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Novel View Synthesis</title>
+
+    <meta name="description" content="In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from differen...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Novel View Synthesis" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task." property="og:description">
+    
+    
+        <meta content="/2025/12/11/team09-novel-view-synthesis.html" property="og:url">
+    
+<!--
+    
+        <meta content="Vivek Alumootil and Jinying Lin" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-11T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/11/team09-novel-view-synthesis.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Novel View Synthesis">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Novel View Synthesis</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-11T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 11, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Vivek Alumootil and Jinying Lin</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/11/team09-novel-view-synthesis.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task.</p>
+</blockquote>
+
+<!--more-->
+
+<ul class="table-of-content" id="markdown-toc">
+  <li><a href="#-3d-gaussian-splatting-" id="markdown-toc--3d-gaussian-splatting-"><u> 3D Gaussian Splatting </u></a></li>
+  <li><a href="#lvsm-a-large-view-synthesis-model-with-minimal-3d-inductive-bias" id="markdown-toc-lvsm-a-large-view-synthesis-model-with-minimal-3d-inductive-bias"><u>LVSM: A Large View Synthesis Model With Minimal 3D Inductive Bias</u></a></li>
+  <li><a href="#rayzer-a-self-supervised-large-view-synthesis-model" id="markdown-toc-rayzer-a-self-supervised-large-view-synthesis-model"><u>RayZer: A Self-supervised Large View Synthesis Model</u></a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h3 id="-3d-gaussian-splatting-"><u> 3D Gaussian Splatting </u></h3>
+
+<p>Before 3D Gaussian Splatting (3DGS) [6] was introduced, the dominant paradigm in novel view synthesis was Neural Radiance Fields (NeRF) [5]. NeRF showed strong performance, but its training optimization and rendering were slow. 3DGS introduced a new, explicit scene representation that is fast enough to support rendering in real time.</p>
+
+<h4 id="method">Method</h4>
+
+<h5 id="differentiable-3d-gaussian-splatting">Differentiable 3D Gaussian Splatting</h5>
+
+<p>Previous neural point-based methods, such as [9], computed the color \(C\) of a pixel by blending the colors of the points in the scene representation overlapping the pixel through the equation</p>
+<center>
+$$C = \sum_{i=1}^{N} c_i \alpha_i \prod_{j=1}^{i-1} (1-\alpha_j).$$
+</center>
+<p>Here, \(c_i\) is the color of a point and \(\alpha_i\) is its rendering opacity. This is similar to the formulation used in Neural Radiance Fields. Notably, the point-based approach is discrete and doesn’t require the expensive random sampling approach to calculate color that NeRF requires. 
+3DGS uses the same rendering equation as [9], but does not rely on neural networks, which are expensive to query, and it models the scene with anisotropic 3D Gaussians instead of points. Each 3D Gaussian is defined by a full 3D covariance matrix in the world coordinate system</p>
+<center>
+$$G(x) = e^{-\frac{1}{2}(x)^{T}\Sigma^{-1}(x)}.$$
+</center>
+<p>They also have their own associated opacity \(\alpha\), which they are multiplied by during rendering.</p>
+
+<p>The 3D Gaussians need to be projected to 2D for rendering, and the covariance matrices after this projection must be calculated. However, due to the fact that covariance matrices need to be positive semi-definite to have physical meaning, they are not optimized directly. Instead, the scaling matrix \(S\) and rotation matrix \(R\) for each Gaussian, which may be converted into the covariance matrix through the equation</p>
+<center>
+$$ \Sigma = RSS^{T}R^{T},$$
+</center>
+<p>are optimized. The scaling is stored in a 3D vector \(s\) and the rotation is stored in a quaternion \(q\) during optimization.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/09/3dgs_framework.png" style="width: 100%;" />
+<em>Fig 1. The 3D Gaussian Splatting Framework. The 3D Gaussians are initialized with SfM and repeatedly updated by rendering the training views, comparing them to the ground truth, and applying Stochastic Gradient Descent.</em></p>
+
+<h5 id="optimization-with-adaptive-density-control-of-3d-gaussians">Optimization with Adaptive Density Control of 3D Gaussians</h5>
+
+<p>In addition to the position \(p\), opacity \(\alpha\) and covariance \(\Sigma\) of each 3D Gaussian, Spherical Harmonic (SH) coefficients that capture the view-dependent color of each Gaussian are optimized. During the optimization algorithm, the 3D Gaussians are rendered with alpha-blending at each iteration. They are then compared to the training views, and the parameters of the scene are updated through backpropagation with Stochastic Gradient Descent. The sparse pointcloud from SfM is used to initialize the centers of the Gaussians. Gaussians with opacity below a certain threshold that are essentially transparent are removed every 100 iterations. Additionally, to allow the amount of scene covered by the Gaussians to expand, a densify operation is performed every 100 iterations. This involves two strategies. First, small Gaussians in regions not adequately covered are cloned to expand the scene geometry covered. Secondly, in regions with Gaussians that are too large to represent its high variance, the large Gaussians are split into smaller Gaussians. To handle “floaters”, which are Gaussians close to the camera that do not correspond to scene geometry, the opacity of the Gaussians is set close to \(0\) every 3000 iterations. The optimization then increases the opacity of Gaussians where necessary, but keeps the opacity of the floaters low. The operation that deletes with low opacity every 100 iterations then removes them.</p>
+
+<h5 id="fast-differentiable-rasterization">Fast Differentiable Rasterization</h5>
+
+<p>To allow fast rendering of the 3D Gaussians, a custom tile-based renderer is used. The screen is first divided into 16x16 tiles. Gaussians outside of the view frustum or at extreme positions are removed. Since Gaussians may overlap with multiple tiles, an instance of each Gaussian is created for every tile it touches. Each instance is then assigned a key, which combines its depth in the view space with its tile ID. The instances are then sorted with a single GPU Radix sort by their depth. A list of the Gaussians for each tile is generated. During rasterization, a thread block is launched for each tile. For every pixel in the tile, the block traverses the list, accumulating the color and \(\alpha\) values and stopping once a sufficiently high cumulative opacity has been reached.</p>
+
+<h4 id="results">Results</h4>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/09/3dgs.png" style="width: 100%;" />
+<em>Fig 2. 3D Gaussian Splatting greatly outperforms previous work in terms of training optimization and rendering speed.</em></p>
+
+<p>The rendering quality of 3D Gaussian Splatting is comparable to those of work before it. However, its training time is much faster. The paper notes that Mip-NeRF360 [10], at the time a state of the art method, took on average 48 hours to optimize a scene and rendered at 0.1 FPS during evaluation, while 3DGS took on average 35-45 minutes, and rendered at over 130 FPS.</p>
+
+<h4 id="discussion">Discussion</h4>
+
+<p>3D Gaussian Splatting is a landmark paper in novel view synthesis. While it represented a significant step forward from NeRF because of its real-time rendering, its explicit representation has also been useful for future work, which has associated attributes beyond those used for rendering, such as semantic information [11] and motion [12], with the Gaussians.</p>
+
+<h3 id="lvsm-a-large-view-synthesis-model-with-minimal-3d-inductive-bias"><u>LVSM: A Large View Synthesis Model With Minimal 3D Inductive Bias</u></h3>
+
+<p>Most existing novel view synthesis methods rely on explicit 3D scene representations, such as NeRF-style volumetric fields [5] or 3D Gaussian Splatting [6]. While effective, these approaches impose strong geometric inductive biases through predefined 3D structures and handcrafted rendering equations. LVSM proposes a fundamentally different approach by minimizing 3D inductive bias and reformulating novel view synthesis as a direct image-to-image prediction task conditioned on camera poses.</p>
+
+<h4 id="method-1">Method</h4>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/09/lvsm.png" style="width: 100%;" />
+<em>Fig 3. The LVSM Decoder-only and Encoder-Decoder architectures.</em></p>
+
+<h5 id="token-based-representation">Token-Based Representation</h5>
+
+<p>Instead of constructing an explicit 3D representation as in NeRF or 3DGS, LVSM operates entirely in token space using a large transformer model. Given \(N\) input images with poses \(\{(I_i, E_i, K_i)\}_{i=1}^N\), LVSM computes pixel-wise Plücker ray embeddings \(P_i \in \mathbb{R}^{H \times W \times 6}\) that encode ray origin and direction in a continuous 6D parametrization. The images and Plücker embeddings are patchified and projected into tokens:</p>
+
+<center>
+$$x_{ij} = \text{Linear}_{\text{input}}([I_{ij}, P_{ij}]) \in \mathbb{R}^d$$
+</center>
+
+<p>Target views are similarly represented by tokenized Plücker ray embeddings \(q_j\).</p>
+
+<h5 id="encoder-decoder-architecture">Encoder-Decoder Architecture</h5>
+
+<p>The encoder–decoder architecture introduces fixed-size learnable latent scene tokens (\(L = 3072\)) that aggregate information from all input views through bidirectional self-attention:</p>
+
+<center>
+$$x'_1, \ldots, x'_{l_x}, z_1, \ldots, z_L = \text{Transformer}_{\text{Enc}}(x_1, \ldots, x_{l_x}, e_1, \ldots, e_L)$$
+</center>
+
+<center>
+$$z'_1, \ldots, z'_L, y_1, \ldots, y_{l_q} = \text{Transformer}_{\text{Dec}}(z_1, \ldots, z_L, q_1, \ldots, q_{l_q})$$
+</center>
+
+<p>This compact representation enables inference time independent of the number of input views.</p>
+
+<h5 id="decoder-only-architecture">Decoder-Only Architecture</h5>
+
+<p>The decoder-only architecture processes input and target tokens jointly in a single stream, removing the latent bottleneck:</p>
+
+<center>
+$$x'_1, \ldots, x'_{l_x}, y_1, \ldots, y_{l_q} = \text{Transformer}_{\text{Dec-only}}(x_1, \ldots, x_{l_x}, q_1, \ldots, q_{l_q})$$
+</center>
+
+<p>Although computationally costlier due to quadratic attention, it demonstrates superior scalability with increasing input views.</p>
+
+<p>Both architectures regress RGB values using \(\hat{I}^t_j = \text{Sigmoid}(\text{Linear}_{\text{out}}(y_j))\) and are trained end-to-end with MSE and perceptual loss, without depth supervision or geometric constraints. QK-Normalization stabilizes training.</p>
+
+<h4 id="results-1">Results</h4>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/09/lvsm_qual.png" style="width: 400px; max-width: 100%;" />
+<em>Fig 4. A qualitative comparison between LVSM and GS-LRM on single and multi-view image input.</em></p>
+
+<p>LVSM achieves state-of-the-art performance on object-level (ABO, GSO) and scene-level (RealEstate10K) datasets, improving PSNR by 1.5–3.5 dB over GS-LRM [2], particularly excelling on specular materials, thin structures, and fine textures. The decoder-only model shows strong zero-shot generalization: trained with four views, it continues improving up to sixteen views. Conversely, the encoder-decoder model plateaus beyond eight views due to its fixed latent representation. Notably, even small LVSM models trained on limited resources outperform prior methods.</p>
+
+<h4 id="discussion-1">Discussion</h4>
+
+<p>LVSM demonstrates that high-quality novel view synthesis can be achieved through purely data-driven learning without explicit 3D representations. However, as a deterministic model, it struggles to hallucinate unseen regions, producing noisy artifacts rather than smooth extrapolation. The decoder-only architecture also becomes expensive with many input views.</p>
+
+<p>The superior performance of decoder-only over encoder-decoder reveals an important insight: 3D scenes may resist compression into fixed-length representations. Unlike language, visual information from multiple viewpoints contains redundant spatial structure that degrades when forced through a latent bottleneck, explaining why encoder-decoder performance drops beyond eight views while decoder-only continues scaling.</p>
+
+<p>Overall, LVSM demonstrates that learned representations without structural constraints offer a promising direction for novel view synthesis, echoing the shift from encoder–decoder to decoder-only architectures in large language models.</p>
+
+<h3 id="rayzer-a-self-supervised-large-view-synthesis-model"><u>RayZer: A Self-supervised Large View Synthesis Model</u></h3>
+
+<p>The dominant paradigm in studies on novel view synthesis has been to train models on datasets with COLMAP [3] annotations. However, there are several notable drawbacks to this approach. COLMAP is slow, struggles in sparse-view and dynamic scenarios and may produce noisy annotations. RayZer introduces a groundbreaking new approach to novel view synthesis that is entirely self-supervised (e.g. it does not use any camera pose annotations during training or testing) and thus avoids COLMAP entirely.</p>
+
+<p>Along with SRT [4] and LVSM [1], RayZer falls into the group of novel view synthesis methods employing a purely learned latent scene representation and a neural network to render it. This is in contrast to most state-of-the-art methods, which primarily rely on NeRF [5] or 3D Gaussian [6] representations. These two techniques carry a strong inductive bias through their use of volumetric rendering.</p>
+
+<h4 id="method-2">Method</h4>
+
+<h5 id="self-supervised-learning">Self-Supervised Learning</h5>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/09/rayzer.png" style="width: 100%;" />
+<em>Fig 5. RayZer first predicts camera parameters, then generates a latent scene representation and finally renders novel views.</em></p>
+
+<p>RayZer is a self-supervised method that takes in a set of unposed, multiview images and outputs camera poses and camera intrinsics, as well as the latent scene representation. The input images are split into two subsets, \(I_A\) and \(I_B\). \(I_A\) is used to predict the scene representation, and \(I_B\) supervises this prediction by producing a loss between the predicted renders of the scene representation corresponding to the predicted camera poses of \(I_B\) and the ground truth.</p>
+
+<h5 id="camera-estimation">Camera Estimation</h5>
+<p>RayZer first patchifies the image and converts the patches into tokens with a linear layer. Both intra-frame spatial positional encodings and inter-frame image index positional encodings are employed. To predict the pose of each camera (with respect to a chosen canonical view), RayZer allows information to flow from the image tokens to camera tokens, with one camera token for each image, by integrating both of them into a transformer, and then decodes them with an MLP. Specifically, the camera tokens are initialized with a learnable value in \(\mathbb{R}^{1 \times d}\). An image index positional encoding is added to them to inform the model which image each camera token corresponds to. The camera estimator consists of several full self-attention layers. Each layer can be written like so:</p>
+<center>
+$$
+y^0 = \{f, p\}
+$$
+$$
+y^l = \text{TransformerLayer}^l(y^{l-1})
+$$
+$$
+\{f^{*}, p^{*} \} = \text{split}(y^{l_T}) 
+$$
+</center>
+<p>The first equation describes how the state \(y\) is initialized as the concatenation of \(f\), the initial image tokens, and \(p\), the initial camera tokens. The second equation describes how \(y\) is repeatedly updated by passing it through a self-attention transformer layer. The third equation describes how \(f^{*}\) and \(p^{*}\) are extracted from the final \(y\) value, \(y^{l_T}\).</p>
+
+<p>Finally, the relative pose for each image is estimated with a MLP like so:</p>
+<center>
+$$p_i= \text{MLP}_{\text{Pose}}([p_i^{*}, p_c^{*}]),$$
+</center>
+<p>where \(p_i\) is the camera token for image \(I_i\) and \(p_c\) is the camera token for the canonical view. The output is parametrized with a continuous 6D representation. Another similar MLP is used to estimate the focal length from the camera token for the canonical view.</p>
+
+<h5 id="scene-reconstructor">Scene Reconstructor</h5>
+
+<p>We can generate a Plücker ray map [7] for each image in \(A\) by combining the predicted SE(3) pose \(P_i\) and intrinsic matrix \(K\) (which is derived from the predicted focal length) associated with it. The Plücker ray maps are patchified and then combined with the image tokens of \(A\) along the feature dimension using an MLP. The result of this fusing process is \(x_A\).</p>
+
+<p>In the scene reconstructor, learnable tokens representing the scene reconstruction, \(z \in \mathbb{R}^{L \times d}\), are updated through several transformer layers along with \(x_A\). This mechanism is identical to the one used in the camera estimation module and can be expressed as</p>
+
+<center>
+$${z^{*}, x_{A}^{*}} = {\large\epsilon}_{\text{scene}}(\{z, x_A\}).$$
+</center>
+
+<p>\(z^{*}\) is the latent scene representation. \(x_A\) is discarded at the end of the sequence.</p>
+
+<h5 id="rendering-decoder">Rendering Decoder</h5>
+
+<p>The goal of the rendering decoder is to render the scene from novel viewpoints using the latent scene representation. The architecture is inspired by LVSM. To render a target camera, we represent the target camera as a Plücker ray map, tokenize it and use the rule</p>
+<center>
+$${r^{*}, z'} = D_{\text{render}}(\{r, z^{*}\})$$
+</center>
+<p>where \(r^{*}\) are the tokens that are used for rendering and \(r\) is their initial value. \(D_{\text{render}}\) uses the same Transformer layer mechanism as the camera estimation and scene reconstructor modules. Finally, to produce the final RGB image, we decode the render tokens with an MLP like so:</p>
+<center>
+$$\hat{I} = \text{MLP}_{\text{rgb}}(r^{*}).$$
+</center>
+
+<h5 id="results-2">Results</h5>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/09/rayzer_qual.png" style="width: 400px; max-width: 100%;" />
+<em>Fig 6. A qualitative comparison between GS-LRM, LVSM and RayZer.</em></p>
+
+<p>Despite not using any ground truth camera annotations during training or testing, RayZer achieves state of the art performance. It achieves a 2.82% better PSNR, 4.70% better SSIM and 13.6% better LPIPS on the DL3DV-10K dataset [8] compared to LVSM, a leading method in novel view synthesis. The paper highlights how this may be in part due to the noisy nature of COLMAP pose annotations; by avoiding using camera pose data as input, which may be inaccurate, RayZer may have a higher ceiling than methods that rely on them.</p>
+
+<h4 id="discussion-2">Discussion</h4>
+
+<p>Perhaps the most compelling and fascinating part about RayZer is that it is able to estimate camera poses without ever being shown ground truth camera pose data. Neural networks tend to work with high-dimensional, abstract features, and it is uncommon to see them estimate simple, understandable values without supervision. This result shows that self-supervised methods have applications to 3D computer vision beyond being used as pre-training strategy</p>
+
+<h3 id="references">References</h3>
+
+<p>[1] Jin, Haian, et al. “LVSM: A Large View Synthesis Model with Minimal 3D Inductive Bias.” arXiv preprint arXiv:2410.17242 (2024).</p>
+
+<p>[2] Zhang, Kai, et al. “GS-LRM: Large Reconstruction Model for 3D Gaussian Splatting.” arXiv preprint arXiv:2404.19702 (2024).</p>
+
+<p>[3] Schonberger, Johannes L., and Jan-Michael Frahm. “Structure-from-motion revisited.” Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.</p>
+
+<p>[4] Sajjadi, Mehdi SM, et al. “Scene representation transformer: Geometry-free novel view synthesis through set-latent scene representations.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022.</p>
+
+<p>[5] Mildenhall, Ben, et al. “Nerf: Representing scenes as neural radiance fields for view synthesis.” Communications of the ACM 65.1 (2021): 99-106.</p>
+
+<p>[6] Kerbl, Bernhard, et al. “3D Gaussian splatting for real-time radiance field rendering.” ACM Trans. Graph. 42.4 (2023): 139-1.</p>
+
+<p>[7] Zhang, Jason Y., et al. “Cameras as rays: Pose estimation via ray diffusion.” arXiv preprint arXiv:2402.14817 (2024).</p>
+
+<p>[8] Ling, Lu, et al. “Dl3dv-10k: A large-scale scene dataset for deep learning-based 3d vision.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024.</p>
+
+<p>[9] Kopanas, Georgios, et al. “Neural point catacaustics for novel-view synthesis of reflections.” ACM Transactions on Graphics (TOG) 41.6 (2022): 1-15.</p>
+
+<p>[10] Barron, Jonathan T., et al. “Mip-nerf 360: Unbounded anti-aliased neural radiance fields.” Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. 2022.</p>
+
+<p>[11] Zhou, Shijie, et al. “Feature 3dgs: Supercharging 3d gaussian splatting to enable distilled feature fields.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2024.</p>
+
+<p>[12] Lin, Chenguo, et al. “MoVieS: Motion-aware 4D dynamic view synthesis in one second.” arXiv preprint arXiv:2507.10065 (2025).</p>
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/10/team32-NovelViewAHJZ.html">&larr; Exploring Modern Novel View Generation Methods</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/12/team31-human-pose-estimation.html">Human Pose Estimation &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
