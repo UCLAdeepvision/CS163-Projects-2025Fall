@@ -153,16 +153,93 @@ Overall, 3DGS takes a fundamentally different approach from previous methods of 
 
 #### Running the Codebase
 
-##### Exploring Activation Functions
+We use the popular open-source implementation [OpenSplat](https://github.com/pierotofy/OpenSplat), since it includes detailed instructions for building on different OSes as well as on Colab. On MacOS, it was as simple as installing the dependencies with `brew`, cloning the repository, and running   
+`cmake -DCMAKE_PREFIX_PATH=/path/to/libtorch/ .. && make -j$(nproc)`.   
+`./opensplat ../data/banana -n 2000` finished running in around 2 minutes and produced the expected banana model, viewed on [https://antimatter15.com/splat/](https://antimatter15.com/splat/).
 
-<!-- PASTE: Content about activation function exploration -->
+![banana]({{ '/assets/images/32/banana.png' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+_Fig. Banana splat rendered on antimatter_
 
-##### Clamping
+#### Creating a Dataset
 
-<!-- PASTE: Clamping experiment content -->
-<!-- NOTE: Include your code block and results here -->
+To explore the full Gaussian splatting pipeline, we recorded a 1-minute video on an iPhone 14 Pro walking around some objects on a table. Effort was made to minimize motion blur and capture as many reference views of the objects as possible.
 
----
+The first step afterwards was to extract the frames from the video. `ffmpeg` worked nicely, with the following producing 173 images:
+
+```python
+subprocess.run([
+    "ffmpeg",
+    "-i", str(video),
+    "-vf", "fps=3,scale=iw*0.75:ih*0.75",
+    "-q:v", "2", # quality, 0 is highest
+    str(out / "%06d.jpg"),
+], check=True)
+```
+
+We then ran the extracted frames through a structure-from-motion (COLMAP) pipeline to get it ready for OpenSplat:
+
+```python
+# feature extraction
+run_command([
+    colmap_bin, "feature_extractor",
+    "--database_path", database_path,
+    "--image_path", input_images_dir,
+    "--ImageReader.camera_model", "PINHOLE", 
+    "--ImageReader.single_camera", "1"
+])
+
+# sequential matching
+run_command([
+    colmap_bin, "sequential_matcher",
+    "--database_path", database_path,
+    "--SequentialMatching.overlap", "10",
+    "--SequentialMatching.loop_detection", "0"
+])
+
+run_command([
+    colmap_bin, "mapper",
+    "--database_path", database_path,
+    "--image_path", input_images_dir,
+    "--output_path", sparse_path
+])
+
+# image undistortion
+run_command([
+    colmap_bin, "image_undistorter",
+    "--image_path", input_images_dir,
+    "--input_path", sparse_path / "0",
+    "--output_path", output_path,
+    "--output_type", "COLMAP",
+    "--max_image_size", "2000"
+])
+```
+
+Much debugging later, we were able to get a passable reconstruction of our video.
+
+![pipeline]({{ '/assets/images/32/pipeline.gif' | relative_url }})
+{: style="width: 400px; max-width: 100%;"}
+_Fig. Splat of a team member's dining table after frame extraction, SfM, and OpenSplat_
+
+#### Exploring Activation Functions
+The paper applies a sigmoid activation to per-Gaussian opacity (α) to constrain it in the [0, 1) range and an exponential activation to the covariance scale parameters in the name of smooth gradients. We investigate Softplus as an alternative covariance scale activation choice and evaluate its impact on reconstruction quality.
+
+In Gaussian splatting, the covariance parameters must remain positive to ensure valid Gaussians. The paper enforces this constraint by applying an exponential activation; as a result, the magnitude of the gradient update applied to the scale parameters is directly proportional to the physical size of the Gaussian. This introduces an inductive bias where large Gaussians, typically representing background elements or low-frequency geometry, exhibit high volatility during optimization.
+
+To explore this effect, we replace the exponential activation with the softplus function: `Softplus(p) = ln(1+exp(p))`. The gradient of this activation with respect to the parameter p is the sigmoid function `exp(p) / (1 + exp(p))`. As p approaches infinity, the gradient saturates at 1. Unlike the exponential function, Softplus essentially imposes a linear update rule for large Gaussians. Using Softplus activation for covariance scale, we expect to see more stability in large features during optimization.
+
+![exp1]({{ '/assets/images/32/comparison1.gif' | relative_url }}){: style="width: 800px; max-width: 100%;"}
+_Fig. Comparison of Exp and Softmax activation functions over 7000 iterations, view 1_
+
+![exp1]({{ '/assets/images/32/comparison2.gif' | relative_url }}){: style="width: 800px; max-width: 100%;"}
+_Fig. Comparison of Exp and Softmax activation functions over 7000 iterations, view 2_
+
+Both models reconstruct the overall scene fairly well, but there are a few noticeable differences. Softplus more accurately one table corner, whereas the exponential activation leaves it somewhat blurry. Softplus also renders the diagonal shadow cast by the rear box more sharply in the first view, aligning more closely with the ground truth images. While not the difference in large Gaussians that we expected, this behavior is still nonetheless interesting.
+
+A possible explanation is related to covariance stability: the exponential activation causes Gaussians to expand and contract aggressively, relying on later density control to correct their scale. Compared with the smoother, more stable behavior of softplus, this dynamic may make it harder for exp to resolve thin structures like table edges or shadows within 7,000 iterations. 
+
+These results are thus suggestive rather than definitive. Evaluating on a higher-quality dataset (i.e. not from a self-captured iPhone camera) and running for the recommended 30,000 iterations would help determine whether the observed advantages persist or simply reflect statistical noise.
+
 
 ### Large View Synthesis Model (LVSM)
 
