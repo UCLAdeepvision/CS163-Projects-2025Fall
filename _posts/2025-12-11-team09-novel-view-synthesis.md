@@ -8,6 +8,49 @@ date: 2025-12-11
 
 ##### In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task.  
 
+### <u> 3D Gaussian Splatting </u>
+
+Before 3D Gaussian Splatting (3DGS) was introduced, the dominant paradigm in novel view synthesis was Neural Radiance Fields (NeRF). 3DGS introduced a new, explicit scene representation that is fast enough to support rendering in real time.
+
+#### Method
+
+##### Differentiable 3D Gaussian Splatting
+
+Previous neural point-based methods computed the color $$C$$ of a pixel by blending the colors of the points in the scene representation overlapping the pixel through the equation
+<center>
+$$C = \sum_{i=1}^{N} c_i \alpha_i \prod_{j=1}^{i-1} (1-\alpha_j)$$.
+</center>
+Here, $$c_i$$ is the color of a point and $$\alpha_i$$ is its rendering opacity. This is similar to the formulation used in Neural Radiance Fields. Notably, the point-based approach is discrete and doesn't require the expensive random sampling approach to calculate color that NeRF requires. 
+3DGS uses the same rendering equation, does not rely on neural networks, which are expensive to query, and it models the scene with anisotropic 3D Gaussians instead of points. Each 3D Gaussian is defined by a full 3D covariance matrix in the world coordinate system
+<center>
+$$G(x) = e^{-\frac{1}{2}(x)^{T}\sigma^{-1}(x)}$$
+</center>
+They also have their own associated opacity $$\alpha$$ which they are multipled by during rendering. 
+
+The 3D Gaussians need to be projected to 2D for rendering, and the covariance matrix after this projection must be calculated. However, due to the fact that covariance matrices need to be positive semi-definite to have physical meaning, they are not optimized directly. Instead, the scaling matrix $$S$$ and rotation matrix $$R$$, which may be converted into the covariance matrix through the equation
+<center>
+$$ \Sigma = RSS^{T}R^{T},$$
+</center>
+are optimized. The scaling is stored in a 3D vector $$s$$ and the rotation matrix is stored in a quaterionr $$q$$ during optimization.
+
+##### Optimization with Adaptive Density Control of 3D Gaussians
+
+In addition to the position $$p$$, opacity $$\alpha$$ and covariance $$\Sigma$$ of each 3D Gaussian, Spherical Harmonic (SH) coefficients that capture the view-dependent color of each Gaussian are optimized. During the optimization algorithm, the 3D Gaussians are rendered with alpha-blending at each iteration. They are then compared to the training views, and the parameters of the scene are updated through backpropogation with Stochastic Gradient Descent.
+
+The sparse pointcloud from SfM is used to initialize the centers of the Gaussians. Gaussians with opacity below a certain threshold that are essentially transparent are removed every 100 iterations. Additionally, to allow the amount of scene covered by the Gaussians to expand, a densify operation is performed every 100 iterations. This involves two strategies. First, in regions missing geometric features, small Gaussians are cloned to expand the scene geometry covered in this region. secondly, in regions with Gaussians that are too large to represent its high variance, the large Gaussians are split into smaller Gaussians. To handle "floaters", which are Gaussians close to the camera that not correspond to scene geometry, the opacity of the Gaussians is set close to $$0$$ every 3000 iterations. The optimization then increases the opacity of Gaussians where necessary, but keeps the opacity of the floaters low. The operation that deletes with low opacity every 100 iterations then removes them.
+
+##### Fast Differentiable Rasterization
+
+To allow fast rendering of the 3D Gaussians, a custom tile-based render is used. The screen is first divided into 16x16 tiles. Gaussians outside of the view frustum or at extreme positions are removed. Since Gaussians may overlap with multiple tiles, an instance of each Gaussian is created for every tile it touches. Each instance is then assigned a key, which combines its depth in the view space with its tile ID. The instances are then sorted with a single GPU Radix sort by their depth. A list of the Gaussians for each tile is generated. During rasterization, a thread block is launched for each tile. For every pixel in the tile, the block traverses the list, accumulating the color and $\alpha$ values and stopping once a sufficiently high cumulative $$\alpha$$ has been reached. 
+
+#### Results
+
+The rendering quality of 3D Gaussian Splatting is comparable to those of work before it. However, its training time is much faster. The paper notes that Mip-NeRF360, at the time a state of the art method, took on average 48 hours to optimize a scene and rendered at 0.1 FPS, while 3DGS took on average 35-45 minutes, and rendered at over 130 FPS. 
+
+#### Discussions
+
+3D Gaussian Splatting is a landmark paper in novel view synthesis. While it represented a significant step forward from NeRF because of its real-time rendering, its explicit representation has also been useful for future work, which has associated attributes beyond those used for rendering, such as semantic information and motion, with the Gaussians.  
+ 
 ### <u>LVSM: A Large View Synthesis Model With Minimal 3D Inductive Bias</u>
 
 Most existing novel view synthesis methods rely on explicit 3D scene representations, such as NeRF-style volumetric fields [5] or 3D Gaussian Splatting [6]. While effective, these approaches impose strong geometric inductive biases through predefined 3D structures and handcrafted rendering equations. LVSM proposes a fundamentally different approach by minimizing 3D inductive bias and reformulating novel view synthesis as a direct image-to-image prediction task conditioned on camera poses.
@@ -89,32 +132,38 @@ $$
 y^l = \text{TransformerLayer}^l(y^{l-1})
 $$
 $$
-\{f*, p* \} = \text{split}(y^{l_T}) 
+\{f^{*}, p^{*} \} = \text{split}(y^{l_T}) 
 $$
 </center>
-The first equation describes how the initial $$y$$ value, $$y^{0}$$, is initialized as the concatenation of $$f$$, the extracted image features, and $$p$$, the intial camera tokens. The second equation describes the how $y$ is repeatedly updated by passing it through a transformer layer. The third equation describes how $$f^{*}$$ and $$p^{*}$$ are extracted from the final $$y$$ value.
+The first equation describes how the the state $$y$$ is initialized as the concatenation of $$f$$, the initial image tokens, and $$p$$, the intial camera tokens. The second equation describes the how $$y$$ is repeatedly updated by passing it through a self-attention transformer layer. The third equation describes how $$f^{*}$$ and $$p^{*}$$ are extracted from the final $$y$$ value, $$y^{l_T}$$.
 
 Finally, the relative pose for each image is estimated with a MLP like so: 
 <center>
 $$p_i= \text{MLP}_{\text{Pose}}([p_i^{*}, p_c^{*}]),$$
 </center>
-where $$p_i$$ is the camera token for image $$I_i$$ and $$p_c$$ is the camera token for the canonical view. The output is parametrized with a continuous 6D representation. Another similar MLP is used to estimate the focal length from the camera token corresponding to the canonical view.
+where $$p_i$$ is the camera token for image $$I_i$$ and $$p_c$$ is the camera token for the canonical view. The output is parametrized with a continuous 6D representation. Another similar MLP is used to estimate the focal length from the camera token for the canonical view.
 
 ##### Scene Reconstructor
 
 We can generate a Plucker Ray map [7], a common technique to represent cameras, for each image in $$A$$ by combining the predicted SE(3) pose $$P_i$$ and intrinsic matrix $$K$$ (which is derived from the predicted focal length). The Plucker ray maps are patchified and then combined with the image tokens of $$A$$ along the feature dimension using an MLP. The result of this fusing process is $$x_A$$. 
 
-The scene reconstructor uses an identical mechanism to the camera estimation module. Learnable tokens for the scene reconstruction $$z$$, with $$z \in \mathbb{R}^{L \times d}$$ for a latent scene of $$L$$ tokens, are updated through several transformer layers along with $$x_A$$. $$x_A$$ is discarded at the end of the sequence and the the final value of $$z$$, $$z^{*}$$, is the latent scene representation.
+In the scene reconstructor, learnable tokens representing the scene reconstruction, $$z \in \mathbb{R}^{L \times d}$$, are updated through several transformer layers along with $$x_A$$. This mechanism is identical to the one used in the camera estimation module and can be expressed as 
+
+<center>
+$${z^{*}, x_{A}^{*}} = {\large\epsilon}_{\text{scene}}(\{z, x_A\}).$$
+</center>
+
+$$x_A$$ is discarded at the end of the sequence and $$z^{*}$$ is the latent scene representation.
 
 ##### Rendering Decoder
 
-The goal of the rendering decoder is to render the scene from novel viewpoints using the latent scene representation. The architecture is inspired by LVSM. To render a target camera, we represent the target camera as a Plucker ray map, tokenize it and use the update rule
+The goal of the rendering decoder is to render the scene from novel viewpoints using the latent scene representation. The architecture is inspired by LVSM. To render a target camera, we represent the target camera as a Plucker ray map, tokenize it and use the the rule
 <center>
 $${r^{*}, z'} = D_{\text{render}}(\{r, z^{*}\})$$
 </center>   
-where $$r^{*}$$ are the tokens that are used for rendering. $$D_{\text{render}}$$ uses the same Transformer layer mechanism as the camera estimation and scene reconstructor modules. Finally, to produce the final RGB image, we decode the render tokens with an MLP like so:
+where $$r^{*}$$ are the tokens that are used for rendering and $$r$$ is their initial value. $$D_{\text{render}}$$ uses the same Transformer layer mechanism as the camera estimation and scene reconstructor modules. Finally, to produce the final RGB image, we decode the render tokens with an MLP like so:
 <center>
-$$\hat{I} = \text{MLP}_{\text{rgb}}(r^{*})$$
+$$\hat{I} = \text{MLP}_{\text{rgb}}(r^{*}).$$
 </center>
 
 ##### Results
