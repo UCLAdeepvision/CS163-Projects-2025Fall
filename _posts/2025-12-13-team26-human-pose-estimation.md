@@ -56,9 +56,7 @@ The pipeline is as follows: the system takes a color image as input and produces
 
 #### 3.1.1. Part Affinity Fields
 
-A PAF is a 2D vector field that represents the direction and presence of a limb. The ground truth PAF is given by the equation
-
-Each also has a PAF based association score for each possible pairing which the greedy parser uses to link parts in human skeletons. PAFs are important because in comparison to before, they provide continuous spatial coverage, encode orientation, and enable multi-person association without costly global optimization. 
+A PAF is a 2D vector field that represents the direction and presence of a limb. Each also has a PAF based association score for each possible pairing which the greedy parser uses to link parts in human skeletons. PAFs are important because in comparison to before, they provide continuous spatial coverage, encode orientation, and enable multi-person association without costly global optimization. 
 
 ### 3.2. Architecture
 
