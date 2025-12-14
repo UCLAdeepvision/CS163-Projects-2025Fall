@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PR Review Tools - 完整使用指南</title>
+
+    <meta name="description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="PR Review Tools - 完整使用指南" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Course projects for UCLA CS163, Deep Learning in Compuver Vision" property="og:description">
+    
+    
+        <meta content="/pr_review_tools/USAGE_GUIDE.html" property="og:url">
+    
+<!--
+     -->
+
+    <!-- 
+    
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/pr_review_tools/USAGE_GUIDE.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="PR Review Tools - 完整使用指南">
+
+    
+        <meta name="twitter:description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="pr-review-tools---完整使用指南">PR Review Tools - 完整使用指南</h1>
+
+<h2 id="-目录">📖 目录</h2>
+
+<ol>
+  <li><a href="#系统架构">系统架构</a></li>
+  <li><a href="#完整工作流">完整工作流</a></li>
+  <li><a href="#功能详解">功能详解</a></li>
+  <li><a href="#api接口">API接口</a></li>
+  <li><a href="#git操作">Git操作</a></li>
+  <li><a href="#docker管理">Docker管理</a></li>
+  <li><a href="#故障排除">故障排除</a></li>
+</ol>
+
+<h2 id="️-系统架构">🏗️ 系统架构</h2>
+
+<h3 id="组件">组件</h3>
+<ul>
+  <li><strong>Flask服务器</strong>：提供Web界面和API</li>
+  <li><strong>Git集成</strong>：管理分支、合并、冲突检测</li>
+  <li><strong>Docker</strong>：预览Jekyll网站</li>
+  <li><strong>GitHub API</strong>：获取PR、发布评论</li>
+</ul>
+
+<h3 id="数据流">数据流</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GitHub → Flask后端 → Git操作 → Docker预览 → 用户审查 → 合并 → GitHub评论
+</code></pre></div></div>
+
+<h2 id="-完整工作流">🔄 完整工作流</h2>
+
+<h3 id="phase-1-启动">Phase 1: 启动</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>pr_review_tools
+./start.sh
+</code></pre></div></div>
+
+<p><strong>系统初始化</strong>：</p>
+<ul>
+  <li>检查Flask安装</li>
+  <li>检查Docker状态</li>
+  <li>加载PR列表</li>
+  <li>启动Web服务器（5001端口）</li>
+</ul>
+
+<h3 id="phase-2-选择pr">Phase 2: 选择PR</h3>
+
+<p><strong>用户操作</strong>：点击左侧PR列表中的PR</p>
+
+<p><strong>系统响应</strong>：</p>
+<ol>
+  <li>记录当前分支（通常是main）</li>
+  <li>创建临时分支：<code class="language-plaintext highlighter-rouge">review-pr-{number}</code></li>
+  <li>切换到临时分支</li>
+  <li>Fetch远程仓库最新状态</li>
+  <li>合并main分支</li>
+  <li>合并PR分支</li>
+  <li>检查合并冲突</li>
+  <li>过滤文件（只保留assets/和_posts/）</li>
+  <li>启动Docker预览</li>
+</ol>
+
+<p><strong>状态转换</strong>：</p>
+<ul>
+  <li>idle → preparing → starting_docker → docker_ready</li>
+</ul>
+
+<h3 id="phase-3-审查">Phase 3: 审查</h3>
+
+<p><strong>预览内容</strong>：</p>
+<ul>
+  <li>点击”打开预览网站”</li>
+  <li>在 <code class="language-plaintext highlighter-rouge">http://localhost:4000/CS163-Projects-2025Fall/</code> 查看效果</li>
+  <li>检查文章内容、图片、格式等</li>
+</ul>
+
+<p><strong>文件分类</strong>：</p>
+<ul>
+  <li>✅ <strong>Accepted Files</strong>：<code class="language-plaintext highlighter-rouge">assets/</code>、<code class="language-plaintext highlighter-rouge">_posts/</code>下的修改</li>
+  <li>❌ <strong>Rejected Files</strong>：其他目录的修改</li>
+</ul>
+
+<h3 id="phase-4-编辑可选">Phase 4: 编辑（可选）</h3>
+
+<p><strong>启动编辑模式</strong>：</p>
+<ol>
+  <li>点击 <strong>Start Edit</strong> 按钮</li>
+  <li>系统显示可编辑文件列表</li>
+  <li>使用编辑器（VS Code等）编辑文件</li>
+</ol>
+
+<p><strong>支持的操作</strong>：</p>
+<ul>
+  <li>修改 <code class="language-plaintext highlighter-rouge">_posts/</code> 下的Markdown文件</li>
+  <li>添加/替换 <code class="language-plaintext highlighter-rouge">assets/images/</code> 下的图片</li>
+  <li>修改文件内容、格式等</li>
+</ul>
+
+<p><strong>完成编辑</strong>：</p>
+<ol>
+  <li>点击 <strong>Finish Edit</strong> 按钮</li>
+  <li>系统检测修改：<code class="language-plaintext highlighter-rouge">git status --porcelain</code></li>
+  <li>显示修改的文件列表</li>
+  <li>记录到 <code class="language-plaintext highlighter-rouge">edited_files</code> 状态</li>
+</ol>
+
+<h3 id="phase-5-决策">Phase 5: 决策</h3>
+
+<h4 id="选项a接受并合并">选项A：接受并合并</h4>
+
+<p><strong>用户操作</strong>：</p>
+<ol>
+  <li>（可选）填写Additional Comment</li>
+  <li>点击 <strong>接受并合并（本地）</strong> 按钮</li>
+  <li>确认对话框</li>
+</ol>
+
+<p><strong>系统操作</strong>：</p>
+<ol>
+  <li>过滤并添加文件：
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add assets/
+git add _posts/
+</code></pre></div>    </div>
+  </li>
+  <li>提交更改：
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit <span class="nt">-m</span> <span class="s2">"Filtered changes from PR #X"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>停止Docker容器</li>
+  <li>切换回main分支</li>
+  <li>合并临时分支（fast-forward）：
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git merge review-pr-X <span class="nt">--ff-only</span>
+</code></pre></div>    </div>
+  </li>
+  <li>删除临时分支</li>
+  <li>生成并发布GitHub评论</li>
+</ol>
+
+<p><strong>GitHub评论格式</strong>：</p>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gu">## 🤖 Automated Review Report</span>
+
+<span class="gu">### ✅ Accepted Files (X)</span>
+<span class="p">-</span> <span class="sb">`_posts/article.md`</span>
+<span class="p">-</span> <span class="sb">`assets/images/pic.png`</span>
+
+<span class="gu">### ❌ Rejected Files (Y)</span>
+<span class="p">-</span> <span class="sb">`Gemfile.lock`</span>
+<span class="p">-</span> <span class="sb">`_site/index.html`</span>
+
+<span class="gu">### ✏️ Edited Files (Z)</span>
+<span class="p">-</span> <span class="sb">`_posts/article.md`</span>
+
+<span class="gu">## 💡 Additional Comments</span>
+{用户的自定义评论}
+</code></pre></div></div>
+
+<h4 id="选项b跳过">选项B：跳过</h4>
+
+<p><strong>系统操作</strong>：</p>
+<ol>
+  <li>重置临时分支：<code class="language-plaintext highlighter-rouge">git reset --hard</code></li>
+  <li>停止Docker容器</li>
+  <li>切换回main分支</li>
+  <li>删除临时分支</li>
+  <li>不发布GitHub评论</li>
+</ol>
+
+<h3 id="phase-6-push手动">Phase 6: Push（手动）</h3>
+
+<p><strong>重要</strong>：系统不会自动push到远程！</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 检查本地状态</span>
+git log <span class="nt">--oneline</span> <span class="nt">-5</span>
+
+<span class="c"># 确认无误后push</span>
+git push origin main
+</code></pre></div></div>
+
+<h2 id="️-功能详解">⚙️ 功能详解</h2>
+
+<h3 id="文件过滤">文件过滤</h3>
+
+<p><strong>白名单目录</strong>：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ALLOWED_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'assets/'</span><span class="p">,</span> <span class="s">'_posts/'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><strong>过滤逻辑</strong>：</p>
+<ol>
+  <li>获取PR的所有改动：<code class="language-plaintext highlighter-rouge">git diff --name-only</code></li>
+  <li>分类文件：
+    <ul>
+      <li>以 <code class="language-plaintext highlighter-rouge">assets/</code> 或 <code class="language-plaintext highlighter-rouge">_posts/</code> 开头 → accepted</li>
+      <li>其他 → rejected</li>
+    </ul>
+  </li>
+  <li>只添加accepted files到暂存区</li>
+</ol>
+
+<p><strong>特殊处理</strong>：</p>
+<ul>
+  <li>二进制文件（图片）正常处理</li>
+  <li>新建文件和修改文件统一处理</li>
+  <li>删除文件会被忽略（不支持）</li>
+</ul>
+
+<h3 id="edit-mode">Edit Mode</h3>
+
+<p><strong>实现原理</strong>：</p>
+<ol>
+  <li>用户触发 <strong>Start Edit</strong></li>
+  <li>系统记录初始状态：<code class="language-plaintext highlighter-rouge">git_initial_state = git status</code></li>
+  <li>用户在外部编辑器修改文件</li>
+  <li>用户触发 <strong>Finish Edit</strong></li>
+  <li>系统对比：<code class="language-plaintext highlighter-rouge">git_current_state = git status</code></li>
+  <li>计算差异 → <code class="language-plaintext highlighter-rouge">edited_files</code></li>
+</ol>
+
+<p><strong>限制</strong>：</p>
+<ul>
+  <li>只能编辑已过滤的文件</li>
+  <li>编辑其他文件会被忽略</li>
+  <li>不能删除文件</li>
+</ul>
+
+<h3 id="github集成">GitHub集成</h3>
+
+<p><strong>获取PR列表</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-H</span> <span class="s2">"Authorization: token </span><span class="nv">$GITHUB_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  https://api.github.com/repos/OWNER/REPO/pulls
+</code></pre></div></div>
+
+<p><strong>发布评论</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: token </span><span class="nv">$GITHUB_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"body": "comment content"}'</span> <span class="se">\</span>
+  https://api.github.com/repos/OWNER/REPO/issues/PR_NUMBER/comments
+</code></pre></div></div>
+
+<h3 id="docker管理">Docker管理</h3>
+
+<p><strong>构建</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose build <span class="nt">--no-cache</span>
+</code></pre></div></div>
+
+<p><strong>启动</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p><strong>停止</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose down
+</code></pre></div></div>
+
+<p><strong>重启</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose down
+docker compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p><strong>日志</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose logs <span class="nt">--tail</span><span class="o">=</span>50
+</code></pre></div></div>
+
+<h2 id="-api接口">🔌 API接口</h2>
+
+<h3 id="get-apiprs">GET /api/prs</h3>
+<p>获取PR列表</p>
+
+<p><strong>响应</strong>：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"prs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"index"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"number"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add new article"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feature-branch"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"stats"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reviewed"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"accepted"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="post-apiprepare_pr">POST /api/prepare_pr</h3>
+<p>准备审查PR</p>
+
+<p><strong>请求</strong>：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"index"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="get-apistatus">GET /api/status</h3>
+<p>获取当前状态</p>
+
+<p><strong>响应</strong>：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docker_ready"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Docker is ready"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"docker_running"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"preview_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:4000/..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"current_pr"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="post-apiaccept_pr">POST /api/accept_pr</h3>
+<p>接受并合并PR</p>
+
+<p><strong>请求</strong>：</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"additional_comment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LGTM!"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="post-apiskip_pr">POST /api/skip_pr</h3>
+<p>跳过PR</p>
+
+<h3 id="post-apirefresh_prs">POST /api/refresh_prs</h3>
+<p>刷新PR列表</p>
+
+<h3 id="post-apirestart_docker">POST /api/restart_docker</h3>
+<p>重启Docker</p>
+
+<h3 id="get-apiget_files">GET /api/get_files</h3>
+<p>获取可编辑文件列表</p>
+
+<h3 id="post-apicheck_edited_files">POST /api/check_edited_files</h3>
+<p>检测修改的文件</p>
+
+<h2 id="-git操作">🐙 Git操作</h2>
+
+<h3 id="分支命名">分支命名</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>review-pr-{PR_NUMBER}
+</code></pre></div></div>
+
+<h3 id="合并策略">合并策略</h3>
+<ol>
+  <li><strong>临时分支</strong>：standard merge（可能有merge commit）</li>
+  <li><strong>main分支</strong>：fast-forward only（保持线性历史）</li>
+</ol>
+
+<h3 id="冲突处理">冲突处理</h3>
+<p>如果检测到冲突：</p>
+<ul>
+  <li>状态设置为 <code class="language-plaintext highlighter-rouge">conflict</code></li>
+  <li>显示错误信息</li>
+  <li>自动清理环境</li>
+  <li>PR不会被合并</li>
+</ul>
+
+<h3 id="清理机制">清理机制</h3>
+
+<p><strong>正常清理</strong>（接受/跳过后）：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reset <span class="nt">--hard</span>
+git checkout main
+git branch <span class="nt">-D</span> review-pr-X
+docker compose down
+</code></pre></div></div>
+
+<p><strong>Ctrl+C清理</strong>（信号处理）：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># start.sh和pr_review_server.py都实现了</span>
+<span class="nb">trap </span>cleanup SIGINT SIGTERM
+
+cleanup<span class="o">()</span> <span class="o">{</span>
+  <span class="nv">current_branch</span><span class="o">=</span><span class="si">$(</span>git branch <span class="nt">--show-current</span><span class="si">)</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$current_branch</span> <span class="o">==</span> review-pr-<span class="k">*</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span>git reset <span class="nt">--hard</span>
+    git checkout main
+    git branch <span class="nt">-D</span> <span class="nv">$current_branch</span>
+  <span class="k">fi
+  </span>docker compose down
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="-docker管理">🐳 Docker管理</h2>
+
+<h3 id="配置文件">配置文件</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Dockerfile</code>：Jekyll环境</li>
+  <li><code class="language-plaintext highlighter-rouge">docker-compose.yml</code>：容器编排</li>
+</ul>
+
+<h3 id="预览url">预览URL</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:4000/CS163-Projects-2025Fall/
+</code></pre></div></div>
+
+<h3 id="常见问题">常见问题</h3>
+
+<p><strong>端口冲突</strong>：</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.yml</span>
+<span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s2">"</span><span class="s">4001:4000"</span>  <span class="c1"># 改为其他端口</span>
+</code></pre></div></div>
+
+<p><strong>依赖缺失</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose build <span class="nt">--no-cache</span>
+</code></pre></div></div>
+
+<p><strong>容器未启动</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose logs
+</code></pre></div></div>
+
+<h2 id="-故障排除">🔧 故障排除</h2>
+
+<h3 id="flask启动失败">Flask启动失败</h3>
+
+<p><strong>症状</strong>：<code class="language-plaintext highlighter-rouge">ModuleNotFoundError: No module named 'flask'</code></p>
+
+<p><strong>解决</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>flask
+<span class="c"># 或</span>
+conda <span class="nb">install </span>flask
+</code></pre></div></div>
+
+<h3 id="git冲突">Git冲突</h3>
+
+<p><strong>症状</strong>：状态显示 <code class="language-plaintext highlighter-rouge">conflict</code></p>
+
+<p><strong>手动解决</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. 查看冲突</span>
+git status
+
+<span class="c"># 2. 解决冲突文件</span>
+<span class="c"># 编辑文件，移除冲突标记</span>
+
+<span class="c"># 3. 标记为已解决</span>
+git add &lt;resolved_files&gt;
+git commit
+
+<span class="c"># 4. 继续审查</span>
+</code></pre></div></div>
+
+<h3 id="docker不启动">Docker不启动</h3>
+
+<p><strong>症状</strong>：预览链接不可用</p>
+
+<p><strong>检查</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Docker是否运行</span>
+docker info
+
+<span class="c"># 容器状态</span>
+docker compose ps
+
+<span class="c"># 容器日志</span>
+docker compose logs
+
+<span class="c"># 重新构建</span>
+docker compose build <span class="nt">--no-cache</span>
+docker compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<h3 id="端口占用">端口占用</h3>
+
+<p><strong>症状</strong>：<code class="language-plaintext highlighter-rouge">Address already in use</code></p>
+
+<p><strong>Flask端口</strong>：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># pr_review_server.py, line ~690
+</span><span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5002</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Docker端口</strong>：</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># docker-compose.yml</span>
+<span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s2">"</span><span class="s">4001:4000"</span>
+</code></pre></div></div>
+
+<h3 id="临时分支残留">临时分支残留</h3>
+
+<p><strong>症状</strong>：多个 <code class="language-plaintext highlighter-rouge">review-pr-*</code> 分支</p>
+
+<p><strong>清理</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 列出所有review分支</span>
+git branch | <span class="nb">grep </span>review-pr
+
+<span class="c"># 批量删除</span>
+git branch | <span class="nb">grep </span>review-pr | xargs git branch <span class="nt">-D</span>
+
+<span class="c"># 或单独删除</span>
+git branch <span class="nt">-D</span> review-pr-42
+</code></pre></div></div>
+
+<h3 id="github-token问题">GitHub Token问题</h3>
+
+<p><strong>症状</strong>：无法获取PR或发布评论</p>
+
+<p><strong>检查</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Token是否设置</span>
+<span class="nb">echo</span> <span class="nv">$GITHUB_TOKEN</span>
+
+<span class="c"># Token权限</span>
+<span class="c"># 需要: repo (full access)</span>
+</code></pre></div></div>
+
+<p><strong>设置</strong>：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 临时设置</span>
+<span class="nb">export </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">"ghp_xxxxxxxxxxxx"</span>
+
+<span class="c"># 永久设置（~/.zshrc或~/.bashrc）</span>
+<span class="nb">echo</span> <span class="s1">'export GITHUB_TOKEN="ghp_xxxxxxxxxxxx"'</span> <span class="o">&gt;&gt;</span> ~/.zshrc
+<span class="nb">source</span> ~/.zshrc
+</code></pre></div></div>
+
+<h2 id="-安全最佳实践">🔒 安全最佳实践</h2>
+
+<ol>
+  <li><strong>Token安全</strong>：不要提交到Git</li>
+  <li><strong>本地优先</strong>：不自动push</li>
+  <li><strong>分支隔离</strong>：临时分支操作</li>
+  <li><strong>自动清理</strong>：防止状态污染</li>
+  <li><strong>文件过滤</strong>：防止意外修改</li>
+</ol>
+
+<h2 id="-监控和日志">📊 监控和日志</h2>
+
+<h3 id="系统状态">系统状态</h3>
+<p>在Web界面右上角查看统计信息</p>
+
+<h3 id="git日志">Git日志</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log <span class="nt">--oneline</span> <span class="nt">--graph</span> <span class="nt">-10</span>
+</code></pre></div></div>
+
+<h3 id="docker日志">Docker日志</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose logs <span class="nt">--tail</span><span class="o">=</span>100 <span class="nt">-f</span>
+</code></pre></div></div>
+
+<h3 id="flask日志">Flask日志</h3>
+<p>终端输出显示所有HTTP请求</p>
+
+<h2 id="-高级技巧">💡 高级技巧</h2>
+
+<h3 id="批量处理">批量处理</h3>
+<p>依次选择、审查、接受多个PR</p>
+
+<h3 id="快速编辑">快速编辑</h3>
+<p>使用VS Code的文件监控实时查看效果</p>
+
+<h3 id="自定义过滤">自定义过滤</h3>
+<p>修改 <code class="language-plaintext highlighter-rouge">ALLOWED_DIRS</code> 变量</p>
+
+<h3 id="自动化测试">自动化测试</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 测试Docker build</span>
+docker compose build
+
+<span class="c"># 测试Jekyll</span>
+docker compose run <span class="nt">--rm</span> site jekyll build
+</code></pre></div></div>
+
+<h2 id="-参考资料">📚 参考资料</h2>
+
+<ul>
+  <li><strong>Jekyll文档</strong>：https://jekyllrb.com/docs/</li>
+  <li><strong>GitHub API</strong>：https://docs.github.com/en/rest</li>
+  <li><strong>Flask文档</strong>：https://flask.palletsprojects.com/</li>
+  <li><strong>Docker Compose</strong>：https://docs.docker.com/compose/</li>
+</ul>
+
+<hr />
+
+<p><strong>维护者</strong>：CS163-Projects-2025Fall Team<br />
+<strong>版本</strong>：2.0<br />
+<strong>最后更新</strong>：2025-12-14</p>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>

@@ -1,4 +1,417 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T17:36:49+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Post Template</title><link href="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00+00:00</published><updated>2024-01-01T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-14T20:03:57+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">From Labeling to Prompting: The Paradigm Shift in Image Segmentation</title><link href="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html" rel="alternate" type="text/html" title="From Labeling to Prompting: The Paradigm Shift in Image Segmentation" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html"><![CDATA[<blockquote>
+  <p>The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#mask-r-cnn" id="markdown-toc-mask-r-cnn">Mask R-CNN</a>    <ul>
+      <li><a href="#architecture" id="markdown-toc-architecture">Architecture:</a></li>
+    </ul>
+  </li>
+  <li><a href="#segment-anything-sam" id="markdown-toc-segment-anything-sam">Segment Anything (SAM)</a>    <ul>
+      <li><a href="#architecture-1" id="markdown-toc-architecture-1">Architecture:</a></li>
+      <li><a href="#results" id="markdown-toc-results">Results:</a></li>
+    </ul>
+  </li>
+  <li><a href="#discussion" id="markdown-toc-discussion">Discussion</a>    <ul>
+      <li><a href="#training-paradigms" id="markdown-toc-training-paradigms">Training Paradigms</a></li>
+      <li><a href="#the-semantic-gap" id="markdown-toc-the-semantic-gap">The Semantic Gap</a></li>
+      <li><a href="#the-future-towards-unified-perception" id="markdown-toc-the-future-towards-unified-perception">The Future: Towards Unified Perception</a></li>
+    </ul>
+  </li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>For the past decade, the “holy grail” of computer vision was fully automated perception: teaching a machine to look at an image and assign a semantic label to every pixel. The 2024 survey “Image Segmentation in Foundation Model Era: A Survey” by Zhou et al defines this era as “Generic Image Segmentation” (GIS), which was dominated by supervised specialists. One of the pinnacles of this approach was Mask R-CNN, a framework that efficiently detected objects and generated high-quality masks in parallel. While powerful, these models were fundamentally limited by their training data. They were “closed-vocabulary” systems that could only see what they were explicitly taught to label.</p>
+
+<p>To formalize this limitation, the 2024 survey introduces a unified formulation for the segmentation task:
+\(f: \mathcal{X} \mapsto \mathcal{Y} \quad \text{where} \quad \mathcal{X} = \mathcal{I} \times \mathcal{P}\)
+Here, I represents the image and P represents the user prompt. In the specialist era of Mask R-CNN, the prompt set was empty, forcing the model to rely entirely on learned semantics to determine the output. [1]</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1imageseg.png" alt="Image 1" /> 
+<em>Figure 1 from “Image Segmentation in Foundation Model Era: A Survey”.</em></p>
+
+<p>We are now witnessing a “new epoch” in computer vision driven by the rise of Foundation Models. The paradigm is shifting from passive labeling to active prompting. Leading this is the Segment Anything Model (SAM), which introduced the “promptable segmentation task”. Unlike its predecessors, SAM acts as a “segmentation generalist” that may not know what an object is but knows exactly where it is given a simple click or box prompt.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1sama.png" alt="Image 2" /> 
+<em>Figure 1 from “Segment Anything”.</em></p>
+
+<p>Our discussion of the two models explores this transition by contrasting the supervised precision of Mask R-CNN with the zero-shot flexibility of SAM, discussing how the move from curated datasets to massive “data engines” is redefining what it means for a machine to “see”.</p>
+
+<h2 id="mask-r-cnn">Mask R-CNN</h2>
+
+<p>Mask R-CNN represents one of the culmination of the supervised segmentation era, exemplifying both the strengths and limitations of closed-vocabulary, instance-level segmentation systems. Designed to assign fixed semantic labels, such as “person” or “car” to every pixel belonging to an object instance, it operates with precision on known categories. Unlike segmentation-first approaches that group pixels before classification, Mask R-CNN adopts an instance-first strategy by detecting object bounding boxes first, then segmenting the pixels within those regions. This design allows segmentation to run parallel to detection, providing a clean conceptual separation between the two tasks. However, achieving pixel-accurate masks required precise spatial alignment, something earlier detection pipelines struggled to provide.[3]</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1mask.png" alt="Image 3" />
+<em>Figure 1 from “Mask R-CNN”.</em></p>
+
+<h3 id="architecture">Architecture:</h3>
+
+<p>The breakthrough that elevated Mask R-CNN to exception was an innovation known as RoIAlign which solved a critical spatial alignment problem. Prior methods relied on RoIPool which used coarse quantization when mapping regions of interest to feature maps. This introduced misalignments which were okay when it came to bounding box detection but catastrophic for pixel-level segmentation accuracy. RoIAlign came and eliminated quantization, using bilinear interpolation to preserve spatial coordinates. This led to dramatic improvements in mask accuracy, going from 10% to 50% across benchmarks, showing how spatial precision was the primary bottleneck in achieving quality segmentation. [3]</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/roipooltable.png" alt="Image 4" /><br />
+<em>Table 6. RoIAlign vs. RoIPool for keypoint detection on minival. The backbone is ResNet-50-FPN.</em></p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/roifig.png" alt="Image 5" /> 
+<em>Figure 3, “Research on Intelligent Detection and Segmentation of RockJoints Based on Deep Learning”.</em></p>
+
+<p>Mask R-CNN’s efficiency stems from its decoupling of mask prediction from class prediction. The architecture predicts binary masks independently for every class without inter-class competition. The classification branch determines object identity while the mask branch focuses exclusively on spatial extent within detected regions. This separation of concerns enabled Mask R-CNN to surpass all competing single-models entries on the COCO object detection challenges, establishing it as the dominant approach for instance segmentation tasks. The mask loss, is the average binary cross-entropy (BCE) loss over all pixels in the RoI, calculated only for the ground-truth class:</p>
+
+\[L_{\text{mask}} =
+\frac{1}{M^2}
+\sum_{i=1}^{M^2}
+\text{BCE}\bigl(p_i^{k}, y_i^{k}\bigr)\]
+
+<p>Despite its advances in computer vision, Mask R-CNN operates within a crucial limitation because it functions as a closed-vocabulary model, capable of segmenting only those object categories encountered during training. Extending the model to recognize new categories requires substantial data collection, labor-intensive pixel-level annotation, and complete model retraining. This rigidity, inherent to the supervised learning paradigm, ultimately necessitated the evolution toward promptable architectures like SAM, which transcend fixed category constraints through foundation model approaches.</p>
+
+<h2 id="segment-anything-sam">Segment Anything (SAM)</h2>
+
+<p>In the GIS era, models like Mask R-CNN were designed as “all-in-one” systems. They were trained to simultaneously localize an object and assign it a specific semantic label from a fixed vocabulary (e.g., class_id: 1 for “person”). The architecture explicitly coupled these tasks: the network’s classification branch and mask branch ran in parallel, meaning the model could only segment what it could also recognize. The Segment Anything Model (SAM) flips this paradigm. [1]</p>
+
+<p>Created by Meta AI, SAM fundamentally redefines the segmentation task so that instead of predicting a fixed class label for every pixel, the goal is to return a valid segmentation mask for any prompt. It is trained to be class-agnostic. It does not output a semantic label; instead, it outputs a “valid mask” and a confidence score reflecting the object’s “thingness” rather than its category. SAM essentially understands structure (boundaries, occlusion, and connectivity) without necessarily understanding semantics. It knows that a pixel belongs to a distinct entity, but it relies on the prompter to define the context. This shift transforms the model from a static labeler into an interactive “generalist” that decouples the concept of “where an object is” (segmentation) from “what an object is” (semantics).</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/segment-anything-cut-out.gif" alt="Image 7" />
+<em>GIF of SAM UI, taken from: <a href="https://learnopencv.com/segment-anything/">https://learnopencv.com/segment-anything/</a>.</em></p>
+
+<p>In the supervised era, models like Mask R-CNN were limited by the high cost of manual pixel-level annotation. To overcome this, SAM utilized a “Data Engine” as follows:</p>
+
+<ul>
+  <li>Assisted-Manual: Annotators used a SAM-powered tool to label masks, working 6.5x faster than standard COCO annotation.</li>
+  <li>Semi-Automatic: The model automatically labeled confident objects (like “stuff” categories), allowing annotators to focus on difficult, less prominent objects.</li>
+  <li>Fully Automatic: The model lastly ran on 11 million images to generate the SA-1B dataset, containing 1.1 billion masks (400x larger than any existing segmentation dataset).</li>
+</ul>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1csam.png" alt="Image 8" /> 
+<em>Figure 1 from “Segment Anything”.</em></p>
+
+<p>This massive scale allowed SAM to learn a generalized notion of “thingness” that transfers zero-shot to underwater scenes, microscopy, and ego-centric views without specific retraining. [2]</p>
+
+<h3 id="architecture-1">Architecture:</h3>
+
+<p>SAM achieves real-time interactivity through a distinct three-part architecture that separates heavy computation from fluid interaction.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig4sam.png" alt="Image 9" /> 
+<em>Figure 4 from “Segment Anything”.</em></p>
+
+<p>The backbone of SAM is a Vision Transformer (ViT) pre-trained using Masked Autoencoders (MAE). Unlike standard supervised pre-training, MAE masks a large portion of the input image patches (e.g., 75%) and forces the model to reconstruct the missing pixels.This self-supervised approach allows the model to learn robust, scalable visual representations without human labels. In SAM, this encoder runs once per image, outputting a 64 x 64 image embedding. While computationally expensive, this cost is “amortized” over the interaction because once the embedding is calculated, the model can respond to hundreds of prompts in milliseconds.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/maefig1.png" alt="Image 10" /> 
+<img src="/CS163-Projects-2025Fall/assets/images/team23/maefig3.png" alt="Image 11" /> 
+<em>Figures 1 and 3 from “Masked Autoencoders Are Scalable Vision Learners”.</em></p>
+
+<p>The image encoder produces a high-dimensional embedding that preserves spatial structure. Unlike traditional CNNs that progressively downsample, the ViT maintains a 64 x 64 grid where each location encodes rich contextual information about that region. This design is essential for allowing the downstream decoder to perform pixel-precise localization even though the encoder operates at 16x downsampled resolution.</p>
+
+<p>To enable the “promptable” paradigm, SAM represents sparse inputs (points, boxes, text) as positional encodings:</p>
+
+<ul>
+  <li>Points &amp; Boxes: Represented by positional encodings summed with learned embeddings for each prompt type.</li>
+  <li>Text: Processed via an off-the-shelf CLIP text encoder, bridging the gap between language and pixels.</li>
+</ul>
+
+<p>Dense prompts (masks) are handled differently by being embedded using convolutions and summed element-wise with the image embedding. This enables SAM to accept a previous mask prediction as input, allowing iterative refinement, a key capability for interactive use cases where users progressively correct the model’s output.</p>
+
+<p>The decoder is a modification of a Transformer decoder block that efficiently maps the image embedding and prompt embeddings to an output mask. It utilizes a mechanism of cross-attention to update the image embedding with prompt information:</p>
+
+\[\text{Attention}(Q, K, V) = \text{softmax}\left( \frac{QK^T}{\sqrt{d_k}} \right) V\]
+
+<p>In this context, the prompt tokens act as queries (Q) to attend to the image embedding (K, V), ensuring the model focuses only on the regions relevant to the user’s input.</p>
+
+<p>The decoder performs bidirectional cross-attention where not only do prompt tokens query the image embedding, but the image embedding also queries the prompt tokens. This two-way information flow allows the model to both focus on relevant regions (prompt-to-image) and update its understanding based on spatial context (image-to-prompt). After two decoder blocks, the model upsamples the updated image embedding and applies a dynamic linear classifier (implemented as an MLP) to predict per-pixel mask probabilities.</p>
+
+<p>A critical innovation in SAM is its ambiguity awareness. In the Mask R-CNN era, a single input had to correspond to a single ground truth. However, a point on a person’s shirt is ambiguous: does the user want the shirt or the person?</p>
+
+<p>To solve this, SAM predicts three valid masks for a single prompt (corresponding to the whole, part, and sub-part) along with confidence scores (IoU), allowing the user or downstream system to resolve the ambiguity. This design choice acknowledges that segmentation is inherently ill-posed (i.e., a single input can have multiple valid outputs), a nuance often ignored by previous fully supervised specialists.</p>
+
+<p>SAM is trained with a multi-task loss combining focal loss and dice loss in a 20:1 ratio. The focal loss addresses class imbalance by down-weighting easy examples, while the dice loss directly optimizes for mask overlap (IoU). Critically, when SAM predicts multiple masks, only the mask with the lowest loss receives gradient updates (a technique that prevents the model from averaging over ambiguous ground truths). SAM also predicts an IoU score for each mask, trained via mean-squared-error loss, which enables automatic ranking of predictions without human intervention. The total loss is formulated as:</p>
+
+<p>\(L_{\text{total}} = \bigl(20 \cdot L_{\text{focal}} + L_{\text{dice}}\bigr) + L_{\text{MSE}}\)
+\(\underbrace{20 \cdot L_{\text{focal}} + L_{\text{dice}}}_{\text{Mask Prediction}}
+\quad + \quad
+\underbrace{L_{\text{MSE}}}_{\text{IoU Ranking}}\)</p>
+
+<p>During training, SAM also simulates interactive annotation by sampling prompts in 11 rounds per mask, including one initial prompt (point or box), 8 iteratively sampled points from error regions, and 2 refinement iterations with no new points. This forces the model to learn both initial prediction and self-correction, making it robust to imperfect prompts in deployment. [2]</p>
+
+<h3 id="results">Results:</h3>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/samtable.png" alt="Image 12" /> 
+<em>Figures 9 from “Segment Anything”.</em></p>
+
+<p>Upon its release, SAM demonstrated unprecedented zero-shot generalization across 23 diverse segmentation datasets spanning underwater imagery, microscopy, X-ray scans, and ego-centric video. On single-point prompts, SAM achieved competitive IoU with specialist models like RITM, but critically, human annotators rated SAM’s masks 1-2 points higher (on a 1-10 scale) than the strongest baselines of the time. This gap revealed a key limitation of IoU metrics because SAM produced perceptually better masks that effectively segmented valid objects, even when they differed from the specific ground truth, resulting in artificially deflated scores. [2]</p>
+
+<h2 id="discussion">Discussion</h2>
+
+<h3 id="training-paradigms">Training Paradigms</h3>
+
+<p>Mask R-CNN relies entirely on manually curated datasets like COCO and Cityscapes, which require pixel-level annotation. The model’s understanding was fundamentally bottlenecked by human time and effort. SAM flipped this paradigm by making the segmentation model itself the primary data generator. Instead of humans doing the work, the model proposes masks while humans simply validate and correct mistakes. This created a virtuous cycle that produced 1.1 billion masks, a scale utterly impossible with manual annotation alone. In the foundation model era, how data is collected may be as important as the model architecture itself.</p>
+
+<h3 id="the-semantic-gap">The Semantic Gap</h3>
+
+<p>The most important conceptual difference between Mask R-CNN and SAM lies in how they handle semantics. Mask R-CNN tightly couples segmentation and classification, where every predicted mask corresponds to a predefined category. This makes the model effective within its training distribution but also enforces a closed vocabulary.</p>
+
+<p>SAM deliberately breaks this coupling. It focuses on identifying coherent regions in an image without assigning semantic labels. In doing so, segmentation becomes a modular capability rather than a final output. SAM can be combined with other components (object detectors, language models, or task-specific logic) that provide semantic interpretation separately. This separation allows segmentation to function as general visual infrastructure that can support many downstream tasks without retraining.</p>
+
+<h3 id="the-future-towards-unified-perception">The Future: Towards Unified Perception</h3>
+
+<p>SAM represents a significant milestone, but recent developments suggest the field is moving beyond promptable segmentation. Models like DINO and Stable Diffusion now perform segmentation as an emergent capability, despite never being explicitly trained for it. Optimized for self-supervised learning and image generation respectively, these models spontaneously learn to group pixels into coherent objects. This suggests that segmentation may arise naturally from learning good visual representations, rather than requiring dedicated training.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig3survey.png" alt="Image 13" /> 
+<em>Figure 3 from “Image Segmentation in Foundation Model Era: A Survey”.</em></p>
+
+<p>These observations point toward unified perception systems that blur traditional task boundaries. Instead of separate modules for detection, segmentation, and classification, future architectures may provide continuous visual understanding from which any capability can be extracted as needed. The integration of large language models with vision systems exemplifies this trend, enabling reasoning about images at multiple levels simultaneously (e.g. like from pixel groupings to semantic relationships to natural language descriptions).</p>
+
+<p>The current landscape is characterized by coexisting paradigms rather than outright replacement. Specialist models remain optimal for well-defined domains with stable data distributions and strict performance requirements. Foundation models provide flexible infrastructure for open-world scenarios where generalization matters most. Emergent capabilities in self-supervised systems hint at a future where task boundaries dissolve entirely. Effective computer vision practice now requires combining these complementary approaches correctly for the right tasks.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] Zhou, T., Xia, W., Zhang, F., Chang, B., Wang, W., Yuan, Y., Konukoglu, E., &amp; Cremers, D. (2024). <em>Image Segmentation in Foundation Model Era: A Survey</em>. arXiv preprint arXiv:2408.12957. &lt;<a href="https://arxiv.org/abs/2408.12957">https://arxiv.org/abs/2408.12957</a>&gt;</p>
+
+<p>[2] Kirillov, A., Mintun, E., Ravi, N., Mao, H., Rolland, C., Gustafson, L., Xiao, T., Whitehead, S., Berg, A. C., Lo, W.-Y., Dollár, P., &amp; Girshick, R. (2023). <em>Segment Anything</em>. Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 4015-4026. &lt;<a href="https://arxiv.org/abs/2304.02643">https://arxiv.org/abs/2304.02643</a>&gt;</p>
+
+<p>[3] He, K., Gkioxari, G., Dollár, P., &amp; Girshick, R. (2017). <em>Mask R-CNN</em>. Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2961-2969. &lt;<a href="https://arxiv.org/abs/1703.06870">https://arxiv.org/abs/1703.06870</a>&gt;</p>
+
+<p>[4] Peng, L., Wang, H., Zhou, C., Hu, F., Tian, X., &amp; Hongtai, Z. (2024). <em>Research on Intelligent Detection and Segmentation of Rock Joints Based on Deep Learning</em>. Complexity, 2024, Article ID 8810092. &lt;<a href="https://onlinelibrary.wiley.com/doi/10.1155/2024/8810092">https://onlinelibrary.wiley.com/doi/10.1155/2024/8810092</a>&gt;</p>
+
+<p>[5] He, K., Chen, X., Xie, S., Li, Y., Dollár, P., &amp; Girshick, R. (2022). <em>Masked Autoencoders Are Scalable Vision Learners</em>. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 16000-16009. &lt;<a href="https://arxiv.org/abs/2111.06377">https://arxiv.org/abs/2111.06377</a>&gt;</p>]]></content><author><name>Abdallah Fares, Dean Ali, Olana Abraham</name></author><summary type="html"><![CDATA[The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.]]></summary></entry><entry><title type="html">Camera Pose Estimation</title><link href="/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00+00:00</published><updated>2025-12-07T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
+  <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
+      <li><a href="#camera-pose-estimation" id="markdown-toc-camera-pose-estimation">Camera Pose Estimation</a></li>
+    </ul>
+  </li>
+  <li><a href="#camera-pose-estimation-methods" id="markdown-toc-camera-pose-estimation-methods">Camera Pose Estimation Methods</a>    <ul>
+      <li><a href="#colmap" id="markdown-toc-colmap">COLMAP</a></li>
+      <li><a href="#vggsfm-visual-geometry-grounded-deep-structure-from-motion" id="markdown-toc-vggsfm-visual-geometry-grounded-deep-structure-from-motion">VGGSfM (Visual Geometry Grounded Deep Structure From Motion)</a></li>
+      <li><a href="#depth-based-estimation-with-icp-iterative-closest-point" id="markdown-toc-depth-based-estimation-with-icp-iterative-closest-point">Depth-based Estimation with ICP (Iterative Closest Point)</a></li>
+    </ul>
+  </li>
+  <li><a href="#metrics" id="markdown-toc-metrics">Metrics</a>    <ul>
+      <li><a href="#absolute-trajectory-error-ate" id="markdown-toc-absolute-trajectory-error-ate">Absolute Trajectory Error (ATE)</a></li>
+      <li><a href="#relative-translation-error-rle" id="markdown-toc-relative-translation-error-rle">Relative Translation Error (RLE)</a></li>
+      <li><a href="#relative-orientation-error-roe" id="markdown-toc-relative-orientation-error-roe">Relative Orientation Error (ROE)</a></li>
+    </ul>
+  </li>
+  <li><a href="#findings-and-analysis" id="markdown-toc-findings-and-analysis">Findings and Analysis</a>    <ul>
+      <li><a href="#table" id="markdown-toc-table">Table</a></li>
+    </ul>
+  </li>
+  <li><a href="#analysis" id="markdown-toc-analysis">Analysis</a>    <ul>
+      <li><a href="#absolute-trajectory-error-ate-1" id="markdown-toc-absolute-trajectory-error-ate-1">Absolute Trajectory Error (ATE)</a></li>
+      <li><a href="#relative-translation-error-rte" id="markdown-toc-relative-translation-error-rte">Relative Translation Error (RTE)</a></li>
+      <li><a href="#relative-orientation-error-roe-1" id="markdown-toc-relative-orientation-error-roe-1">Relative Orientation Error (ROE)</a></li>
+      <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
+    </ul>
+  </li>
+  <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+<p>Camera pose estimation has become a fundamental task in Computer Vision 
+that aims to determine the position (translation) and orientation (rotation) of a camera relative to a scene using image or extracted video data. Accurately estimating the absolute pose of a camera has widespread applications in 3D reconstruction, world models, and augmented reality.</p>
+
+<h3 id="camera-pose-estimation">Camera Pose Estimation</h3>
+<p>For camera pose estimation, there are 3D-2D correspondences between a 3D point in the world (scene geometry) and the 2D pixel location where that point appears in the image or video frame.</p>
+
+<p>Camera pose estimation predicts the pose of a camera with these two components:</p>
+<ul>
+  <li>A translation vector: which describes where the camera is in the world coordinate system</li>
+  <li>A rotation: which describes the camera’s orientation relative to the world</li>
+</ul>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/pose_estimation.PNG" alt="YOLO" /></p>
+<p><em>Fig 1. Overview of camera pose estimation.</em> [8].</p>
+
+<h2 id="camera-pose-estimation-methods">Camera Pose Estimation Methods</h2>
+<p>Here is an overview of the three camera pose estimation methods that we are evaluating: COLMAP, VGGSfM, and depth-based estimation with ICP.</p>
+
+<h3 id="colmap">COLMAP</h3>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/colmap.PNG" alt="COLMAP" /></p>
+<p><em>Fig 1. Example: COLMAP used for 3D scene reconstruction</em> [2].</p>
+
+<p>COLMAP is an end-to-end 3D reconstruction pipeline that estimates both scene geometry and camera poses from images. It uses Structure-from-Motion (SfM) to recover a sparse representation of the scene and camera poses of the input images. This is then fed into Multi-View Stereo (MVS) which recovers a dense representation of the scene.</p>
+
+<p>The process of SfM consists of these key stages after taking in images as input:</p>
+<ul>
+  <li>Performing feature detection and extraction</li>
+  <li>Feature matching and geometric verification</li>
+  <li>Structure and motion reconstruction</li>
+</ul>
+
+<p>For the feature matching and geometric verification, we employ sequential matching, which is best for images that were acquired in sequential order, such as video data. Since frames have visual overlap, it is not required to use exhaustive matching. In this process, consecutive images and matched against each other.</p>
+
+<p>After SfM, Multi-View Stereo (MVS) then takes that output to compute depth and/or normal information of every pixel in the image, and then it uses the depth and normal maps to create a dense point cloud of the scene. This sparse reconstruction process loads the extracted data from the database and incrementally extends the reconstruction from an initial image pair by registering new image and triangulating new points.</p>
+
+<div style="display: flex; gap: 20px; justify-content: center;">
+  <div style="text-align: center;">
+    <img src="/CS163-Projects-2025Fall/assets/images/team28/colmap_demo.gif" style="width: 400px; max-width: 100%;" />
+    <p><em>(a) COLMAP sparse reconstruction on freiburg1_plant</em></p>
+  </div>
+
+  <div style="text-align: center;">
+    <img src="/CS163-Projects-2025Fall/assets/images/team28/colmap_demo2.gif" style="width: 400px; max-width: 100%;" />
+    <p><em>(b) Alternate view of camera trajectory and sparse points</em></p>
+  </div>
+</div>
+<p style="text-align: center;">
+<em>Fig. 2. COLMAP sparse 3D points and estimated camera poses (red frustums) on the freiburg1_plant sequence</em>
+</p>
+
+<h3 id="vggsfm-visual-geometry-grounded-deep-structure-from-motion">VGGSfM (Visual Geometry Grounded Deep Structure From Motion)</h3>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/vggsfm.png" alt="VGGSfM" /></p>
+<p><em>Fig 3. Overview of VGGSfM pipeline.</em> [9].</p>
+
+<p>VGGSfM is a fully differentiable, learning-based SfM (Structure-from-Motion) pipeline that jointly estimates camera poses and 3D scene reconstruction. Unlike classical SfM frameworks, which uses non-differentiable components and incremental reconstruction, VGGSfM is fully differentiable, and therefore can be trained end-to-end.</p>
+
+<p>The pipeline works by:</p>
+<ul>
+  <li>Extracting 2D tracks from input images</li>
+  <li>Reconstructing cameras using image and track features</li>
+  <li>Initializing a point cloud based on those tracks and camera parameters</li>
+  <li>Applies a bundle adjustment layer for reconstruction refinement</li>
+</ul>
+
+<h3 id="depth-based-estimation-with-icp-iterative-closest-point">Depth-based Estimation with ICP (Iterative Closest Point)</h3>
+
+<p>Unlike COLMAP and VGGSfM, this method does not directly operate on images/video data to estimate absolute camera positions. Instead, it uses a geometric approach that aligns two 3D points clouds and estimates the transformation (rotation and translation) between them. This transformation represents the relative camera motion between frames, which can be accumulated to form a camera trajectory.</p>
+
+<p>Given the depth images from our dataset, each depth image can be projected back into a 3D point cloud using the known camera intrinsics. Iterative Closest Point (ICP) is then applied to each pair of consecutive point clouds by estimating the transformation that minimizes the spatial discrepances/sum of square errors.</p>
+
+<p>This estimated transformation represents the relative camera motion between frames, and accumulating these relative motions forms the camera trajectory. This process is related to RGB-Dodometry, which produces a sequence of relative poses instead of globally optimized absolute reconstruction.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/icp.svg" alt="YOLO" /></p>
+<p><em>Fig 4. Overview of how ICP works.</em> [4].</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/icp2.gif" alt="YOLO" /></p>
+<p><em>Fig 5. Overview of how ICP works.</em> [5].</p>
+
+<p>Here is our code for going from the depth images to the point cloud:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def depth_to_pointcloud(depth_path, intrinsics):
+    depth = cv2.imread(depth_path, cv2.IMREAD_ANYDEPTH)
+    h, w = depth.shape
+    fx, fy, cx, cy = intrinsics
+
+    u, v = np.meshgrid(np.arange(w), np.arange(h))
+    z = depth.astype(float) / 5000.0
+    x = (u - cx) * z / fx
+    y = (v - cy) * z / fy
+
+    valid = z &gt; 0
+    points = np.stack([x[valid], y[valid], z[valid]], axis=1)
+
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(points)
+    return pcd.voxel_down_sample(0.02)
+</code></pre></div></div>
+
+<p>The transformation matrix from ICP encodes the relative camera motion between the consecutive frames, and accumulates them the estimated camera trajectory.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reg = o3d.pipelines.registration.registration_icp(
+    source_pcd, target_pcd,
+    max_correspondence_distance=0.05,
+    init=np.eye(4),
+    estimation_method=o3d.pipelines.registration.TransformationEstimationPointToPoint()
+)
+
+relative_transform = reg.transformation
+</code></pre></div></div>
+
+<h2 id="metrics">Metrics</h2>
+<p>Now we will be going over the three key metrics that we used and what each of them are calculating.</p>
+
+<h3 id="absolute-trajectory-error-ate">Absolute Trajectory Error (ATE)</h3>
+
+<p>Absolute trajectory error (ATE) is a metric that is used to evaluate the accuracy of the estimated camera trajectory compared to the ground-truth trajectory. It measures the difference between the points of the true and estimated trajectory.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/ate.png" alt="YOLO" /></p>
+<p><em>Fig 6. Example of absolute trajectory error.</em> [10].</p>
+
+<h3 id="relative-translation-error-rle">Relative Translation Error (RLE)</h3>
+
+<p>Relative translation error (RTE) is a metric that measures the accuracy of the frame-to-frame translational motion of the camera. It is a local motion accuracy metric that evaluates if the camera moved the correct distance and direction between consecutive frames, independent of global drift.</p>
+
+<h3 id="relative-orientation-error-roe">Relative Orientation Error (ROE)</h3>
+
+<p>Relative orientation error (ROE) is a local rotation accuracy metric, which checks if the camera rotated by the correct amount and in the correct direction between two consecutive frames. It looks at the relative rotation in the estimated trajectory compared to the ground-truth relative rotation.</p>
+
+<h2 id="findings-and-analysis">Findings and Analysis</h2>
+
+<h3 id="table">Table</h3>
+<p>Here is a table comparing the three methods using the metrics above.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>ATE</th>
+      <th>RTE</th>
+      <th>ROE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VGG</td>
+      <td>0.0214</td>
+      <td>0.00493</td>
+      <td>0.3298</td>
+    </tr>
+    <tr>
+      <td>ICP</td>
+      <td>0.0842</td>
+      <td>0.0172</td>
+      <td>1.5116</td>
+    </tr>
+    <tr>
+      <td>COLMAP</td>
+      <td>0.0477 m</td>
+      <td>0.0073 m/frame</td>
+      <td>0.9050 °/frame</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="analysis">Analysis</h2>
+
+<h3 id="absolute-trajectory-error-ate-1">Absolute Trajectory Error (ATE)</h3>
+<p>ATE captures how accurately each method reconstructs the global camera trajectory, which is critical for long web videos where drift can accumulate. VGGSfM achieves the lowest ATE, showing strong global consistency due to its end-to-end optimization of camera poses and scene structure. COLMAP performs moderately well but is more sensitive to unreliable feature matches that commonly occur in web videos. ICP performs worst, as it only estimates relative motion and lacks global optimization, causing small errors to compound over time.</p>
+
+<h3 id="relative-translation-error-rte">Relative Translation Error (RTE)</h3>
+<p>RTE measures local frame-to-frame translation accuracy and reflects how well each method handles short-term camera motion. VGGSfM again performs best, suggesting that learned motion representations help stabilize local translation estimates under challenging visual conditions. COLMAP’s performance depends heavily on feature quality and overlap between frames, leading to higher error when these assumptions break down. ICP shows the largest error, likely due to depth noise and incomplete point cloud overlap between consecutive frames.</p>
+
+<h3 id="relative-orientation-error-roe-1">Relative Orientation Error (ROE)</h3>
+<p>ROE evaluates the accuracy of relative camera rotations, which is especially important in videos with abrupt or irregular motion. VGGSfM achieves the lowest rotational error, indicating stable orientation tracking across diverse scenes. COLMAP shows moderate rotational error, which can arise from weak geometric constraints in feature-based matching. ICP performs worst, as small rotational errors in each alignment step accumulate without any global correction mechanism.</p>
+
+<h3 id="summary">Summary</h3>
+<p>Overall, the results support the project’s motivation that pose estimation accuracy varies significantly across methods when applied to web videos. VGGSfM consistently performs best due to its learning-based and globally optimized design, COLMAP provides a strong but scene-sensitive classical baseline, and ICP struggles with accumulated drift over long sequences. These differences highlight the importance of choosing pose estimation methods that are well-suited to the variability and noise present in real-world video data.</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>[1] Schönberger, J. (n.d.). COLMAP - Structure-from-Motion and Multi-View Stereo. https://demuc.de/colmap/</p>
+
+<p>[2] Tutorial — COLMAP 3.14.0.dev0, 5b9a079a (2025-11-14) documentation. (n.d.). https://colmap.github.io/tutorial.html</p>
+
+<p>[3] VGGSFM: Visual Geometry Grounded deep structure from motion. (n.d.). https://vggsfm.github.io/</p>
+
+<p>[4] By Biggerj1 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=88265436</p>
+
+<p>[5] Jaykumaran, &amp; Jaykumaran. (2025, May 10). Iterative Closest Point (ICP) for 3D Explained with Code. LearnOpenCV – Learn OpenCV, PyTorch, Keras, Tensorflow With Code, &amp; Tutorials. https://learnopencv.com/iterative-closest-point-icp-explained/</p>
+
+<p>[6] Computer Vision Group - Useful tools for the RGB-D benchmark. (n.d.). https://cvg.cit.tum.de/data/datasets/rgbd-dataset/tools</p>
+
+<p>[7] System Evaluation » Filter Evaluation Metrics OpenVINS. (n.d.). https://docs.openvins.com/eval-metrics.html</p>
+
+<p>[8] Kitani, K. &amp; Carnegie Mellon University. (n.d.). Pose estimation [Lecture notes]. In 16-385 Computer Vision. https://www.cs.cmu.edu/~16385/s17/Slides/11.3_Pose_Estimation.pdf</p>
+
+<p>[9] Wang, J., Karaev, N., Rupprecht, C., &amp; Novotny, D. (2023, December 7). Visual geometry grounded deep structure from motion. arXiv.org. https://arxiv.org/abs/2312.04563</p>
+
+<p>[10] Zhang, Z., Scaramuzza, D., Robotics and Perception Group, University of Zürich, &amp; University of Zürich and ETH Zürich. (2021). A tutorial on Quantitative Trajectory Evaluation for Visual(-Inertial) odometry. Robotics and Perception Group. https://www.ifi.uzh.ch/dam/jcr:89d3db14-37b1-431d-94c3-8be9f37466d3/IROS18_Zhang.pdf</p>
+
+<hr />]]></content><author><name>Group 28</name></author><summary type="html"><![CDATA[Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.]]></summary></entry><entry><title type="html">Post Template</title><link href="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html" rel="alternate" type="text/html" title="Post Template" /><published>2024-01-01T00:00:00+00:00</published><updated>2024-01-01T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post</id><content type="html" xml:base="/CS163-Projects-2025Fall/2024/01/01/team00-instruction-to-post.html"><![CDATA[<blockquote>
   <p>[Project Track: Project N] This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.</p>
 </blockquote>
 

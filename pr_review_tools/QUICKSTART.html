@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PR Review Tools - 快速参考</title>
+
+    <meta name="description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="PR Review Tools - 快速参考" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Course projects for UCLA CS163, Deep Learning in Compuver Vision" property="og:description">
+    
+    
+        <meta content="/pr_review_tools/QUICKSTART.html" property="og:url">
+    
+<!--
+     -->
+
+    <!-- 
+    
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/pr_review_tools/QUICKSTART.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="PR Review Tools - 快速参考">
+
+    
+        <meta name="twitter:description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="pr-review-tools---快速参考">PR Review Tools - 快速参考</h1>
+
+<h2 id="-一键启动">⚡ 一键启动</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>pr_review_tools
+./start.sh
+</code></pre></div></div>
+
+<p>打开浏览器：<strong>http://localhost:5001</strong></p>
+
+<h2 id="-基本操作">🎯 基本操作</h2>
+
+<h3 id="审查pr">审查PR</h3>
+<ol>
+  <li><strong>选择PR</strong> → 左侧列表点击</li>
+  <li><strong>等待</strong> → 自动准备环境</li>
+  <li><strong>预览</strong> → 点击”打开预览网站”</li>
+  <li><strong>决定</strong> → 接受 or 跳过</li>
+</ol>
+
+<h3 id="编辑文件">编辑文件</h3>
+<ol>
+  <li><strong>Start Edit</strong> → 开启编辑模式</li>
+  <li><strong>编辑</strong> → 用编辑器修改文件</li>
+  <li><strong>Finish Edit</strong> → 检测修改</li>
+</ol>
+
+<h3 id="合并到main">合并到main</h3>
+<ol>
+  <li><strong>接受PR</strong> → 点击”接受并合并（本地）”</li>
+  <li><strong>Push</strong> → 手动运行 <code class="language-plaintext highlighter-rouge">git push origin main</code></li>
+</ol>
+
+<h2 id="️-快捷命令">⌨️ 快捷命令</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 刷新PR列表</span>
+点击界面上的 <span class="s2">"🔄 刷新PR列表"</span>
+
+<span class="c"># 重启Docker</span>
+点击界面上的 <span class="s2">"🐳 重启Docker"</span>
+
+<span class="c"># 停止服务器（自动清理）</span>
+Ctrl + C
+
+<span class="c"># 手动清理</span>
+git checkout main
+git branch <span class="nt">-D</span> review-pr-XX
+docker compose down
+</code></pre></div></div>
+
+<h2 id="-文件过滤规则">📂 文件过滤规则</h2>
+
+<p>✅ <strong>接受</strong>：<code class="language-plaintext highlighter-rouge">assets/</code>、<code class="language-plaintext highlighter-rouge">_posts/</code><br />
+❌ <strong>拒绝</strong>：其他所有目录</p>
+
+<h2 id="️-常见问题">🛠️ 常见问题</h2>
+
+<h3 id="flask未安装">Flask未安装</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>flask
+</code></pre></div></div>
+
+<h3 id="docker未运行">Docker未运行</h3>
+<p>启动 Docker Desktop</p>
+
+<h3 id="端口占用">端口占用</h3>
+<p>修改 <code class="language-plaintext highlighter-rouge">pr_review_server.py</code> 第690行左右：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(...,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5002</span><span class="p">)</span>  <span class="c1"># 改为其他端口
+</span></code></pre></div></div>
+
+<h2 id="-紧急清理">🔥 紧急清理</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose down
+git reset <span class="nt">--hard</span>
+git checkout main
+git branch | <span class="nb">grep </span>review-pr | xargs git branch <span class="nt">-D</span>
+</code></pre></div></div>
+
+<h2 id="-界面说明">🎨 界面说明</h2>
+
+<ul>
+  <li><strong>左侧</strong>：PR列表</li>
+  <li><strong>右上</strong>：统计信息</li>
+  <li><strong>右下</strong>：审查控制面板</li>
+</ul>
+
+<h2 id="-小贴士">💡 小贴士</h2>
+
+<ul>
+  <li>先预览，再编辑</li>
+  <li>添加Additional Comment更专业</li>
+  <li>记得手动push！</li>
+</ul>
+
+<h2 id="-需要帮助">📞 需要帮助？</h2>
+
+<p>查看完整文档：<code class="language-plaintext highlighter-rouge">README.md</code></p>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
