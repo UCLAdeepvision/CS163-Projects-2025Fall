@@ -8,8 +8,6 @@ date: 2025-12-09
 
 
 > Self-supervised Learning is a way for models to learn useful features without relying on labeled data. The model can create its own learning targets from the structure of the data. This method becomes popular in computer vision and many other fields because it makes use of large amounts of unlabeled data and can produce strong representations for downstream tasks. In this paper, we introduce the basic ideas behind self-supervised learning and discuss several common methods and why they are effective.
-This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
-
 
 <!--more-->
 {: class="table-of-content"}
@@ -17,15 +15,21 @@ This block is a brief introduction of your project. You can put your abstract he
 {:toc}
 
 ## Introduction
-Deep learning is a field that learns pattern and representations from data, and many of its breakthrough have relied on supervised learning. However, supervised learning depends on massive labeled datasets, and creating these labels is often expensive, time-consuming, and requires expertise. In many real situations, most datasets are unlabeled, which makes supervised learning difficult to apply in many practical situations. Therefore, self-supervised learning was developed to address this challenge. Instead of relying on human annotations, self-supervised learning creates pretext tasks that force the model to learn meaningful structure directly from the data itself. By doing this, the model can learn general and useful representations that can be applied to downstream tasks. 
+Deep learning is a field that learns pattern and representations from data, and many of its breakthrough have relied on supervised learning. However, supervised learning depends on massive labeled datasets, and creating these labels is often expensive, time-consuming, and requires expertise. In many real situations, most datasets are unlabeled, which makes supervised learning difficult to apply in many practical situations. Therefore, self-supervised learning was developed to address this challenge. Instead of relying on human annotations, self-supervised learning creates pretext tasks that force the model to learn meaningful structure directly from the data itself. 
 
-Other than self-supervised learning, semi-supervised learning is also a useful way to train a model when labeled data is not sufficient. It uses both labeled and unlabeled data during training. In general, a semi-supervised learning workflow starts by training the model on the labeled data and then using the model’s own predictions to guide learning on the unlabeled data. Popular semi-supervised approaches include pseudo-labeling, consistency regularization. In practice, semi-supervised learning is preferred when at least some labels exist and we want to boost performance by adding unlabeled data. Self-supervised learning, on the other hand, is more suitable when obtaining labels is very difficult or expensive. In this paper, we will focus on several popular methods in self-supervised learning and discuss why they have become strong alternatives to fully supervised and semi-supervised approaches.
+Other than self-supervised learning, semi-supervised learning is also a useful way to train a model when labeled data is not sufficient. It uses both labeled and unlabeled data during training. In general, a semi-supervised learning workflow starts by training the model on the labeled data and then using the model’s own predictions to guide learning on the unlabeled data. Popular semi-supervised approaches include pseudo-labeling and consistency regularization. In practice, semi-supervised learning is preferred when at least some labels exist and we want to boost performance when adding unlabeled data. Self-supervised learning, on the other hand, is more suitable when obtaining labels is very difficult or expensive. In this paper, we will focus on several popular methods in self-supervised learning and discuss why they have become strong alternatives to fully supervised and semi-supervised approaches.
+
+| Learning Method          | Training Data                                                            |
+|---------------------------|---------------------------------------------------------------------------|
+| Supervised Learning       | Fully labeled datasets                                                   |
+| Self-Supervised Learning  | Large-scale unlabeled datasets                                           |
+| Semi-Supervised Learning  | Limited labeled data combined with large amounts of unlabeled data       |
+
+
 
 ## Contrastive Learning (SimCLR)
-
+SimCLR is a self-supervised learning method built on contrastive representation learning. Its core idea is to make representations of different augmented views of the same image (positive pair) closer while representations of different images (negative pair) far apart[1].
 ### 1. Model Structure
-SimCLR is a self-supervised learning method built on contrastive representation learning. Its core idea is to make representations of different augmented views of the same image closer while pushing apart representations of different images.
-
 
 ![SimCLR Pipeline]({{ '/assets/images/team40/simclr.png' | relative_url }})
 *Fig 1. SimCLR: Overview of SimCLR Framework* [1].
@@ -55,9 +59,9 @@ $$
 }
 $$
 
-$\tau$ is the temperature parameter controlling distribution sharpness.
+$\tau$ is the temperature parameter controlling distribution sharpness. Appropriate temperature parameter can help model learn from hard negative samples.
 sim() is cosine similarity.
-(i, j) is a positive pair, and all augumented images in the batch act as negatives.
+(i, j) is a positive pair, and all other images in the batch act as negatives.
 
 ### 2. Workflow
 1. Sample a batch of N images. 
@@ -65,7 +69,7 @@ sim() is cosine similarity.
 $$
 x \rightarrow x_i',\, x_j'
 $$
-This produces two correlated views of the same image, which form a positive pair. All other augmented images in the batch serve as negative examples.
+This produces two correlated views of the same image. All other augmented images in the batch serve as negative examples.
 
 1. Each augmented view is passed through the encoder to obtain representations:
 
@@ -73,7 +77,7 @@ This produces two correlated views of the same image, which form a positive pair
     h = f_{\text{encoder}}(x')
     $$
 
-1. The projection head maps representations into a contrastive space:
+1. The projection head maps representations into a space where contrastive loss is applied:
 
     $$
     z = g_{\text{proj}}(h)
@@ -82,29 +86,31 @@ This produces two correlated views of the same image, which form a positive pair
 1. SimCLR uses the NT-Xent loss to increase similarity between positive pairs and decrease similarity with negative samples.
 
 ### 3. Key Findings
-Importance of Large Batch Sizes: SimCLR demonstrates that more negative samples is better for contrastive learning. However, training large batch using standard SGD/Momentum is unstable. Therefore, SimCLR uses LARS optimizer.  
+Experiment Setting:
+Using ResNet-50 as base encoder, and two layer MLP projection head. Training at 4096 batch size and 100 epoches. SimCLR able to achieve 76.5% Top-1 accuracy on ImageNet[1].
 
-Data Augumentation is essential: SimCLR relies on strong augmentations (crop, color jitter, Gaussian blur, etc.) to create meaningful positive pairs. No single augmentation (e.g., only cropping or only color jitter) is sufficient to learn high-quality representations. The model can still solve the contrastive prediction task with high accuracy, but the representations remain poor unless augmentations are combined. A particularly important finding is that the composition of random cropping + random color distortion produces the strongest results.
+Large Batch Sizes: SimCLR demonstrates that more negative samples is better for contrastive learning. However, training large batch using standard SGD/Momentum is unstable. Therefore, SimCLR uses LARS optimizer.  
 
+Data Augmentation: SimCLR relies on strong augmentations (crop, color jitter, Gaussian blur, etc.) to create meaningful positive pairs. No single augmentation (e.g., only cropping or only color jitter) is sufficient to learn high-quality representations. The model can still solve the contrastive prediction task with high accuracy, but the representations remain poor unless augmentations are combined, as shown in Fig 2 that the diagnoal entries are lower than off-diagnoal entries. A particularly important finding is that the composition of random cropping + random color distortion produces the strongest results. If only using random cropping, network will find the shortcut that most patches will share similar color distribution[1].
+
+Contrastive learning benefits from bigger model and longer training. 
 ![SimCLR Aug]({{ '/assets/images/team40/simclr_aug.png' | relative_url }})
 *Fig 2. Impact of combining data augmentations on representation quality in SimCLR* [1].
 
 
 ## Masked Image Modelling (MAE)
-
+Masked Autoencoders are a self-supervised learning method for masked image modeling. The model learns to reconstruct missing image patches using only a set of visible patches[2].
 ### 1. Model Structure
-
-Masked Autoencoders are a self-supervised learning method for masked image modeling. The model learns to reconstruct missing image patches using only a subset of visible patches.
 
 ![SimCLR Aug]({{ '/assets/images/team40/mae.png' | relative_url }})
 *Fig 2. Architecture of Masked Autoencoders (MAE)* [2].
 
 
 #### Asymmetric Encoder
-The encoder is a ViT that only processes visible patches. Because only small part of image is visible to encoder when using high masking ratio, the encoder computation and memory cost are substantially reduced. The encoder learns semantic, high-level features without being forced to memorize low-level pixel statistics.
+The encoder is a ViT that only processes visible patches. Because only small part of image is visible to encoder when using high masking ratio, the encoder computation and memory cost are substantially reduced. The encoder learns semantic, high-level features.
 
 #### Lightweight Decoder
-The decoder receives both the encoded visible patch embeddings and a set of mask tokens that represent missing patches. Mask tokens are shared learned vectors with positional embeddings indicates where a patch should appear. The decoder reconstructs pixel values for all patches, and its output dimension equals the number of pixels per patch, which is later reshaped back into image format. The decoder is used only during pre-training, not for downstream tasks.
+The decoder receives both the encoded visible patch embeddings and a set of mask tokens that represent missing patches. Mask tokens are shared learned vectors with positional embeddings indicates where a patch should appear. The decoder reconstructs pixel values for all patches, and its output channel equals the number of pixels per patch, which is later reshaped back into image format. The decoder is used only during pre-training, not for downstream tasks, hence the design of it can be lightweight.
 
 #### Normalized Pixel Reconstruction Variant
 MAE also evaluates reconstruction using normalized pixel values rather than raw RGB pixel values.  
@@ -136,16 +142,14 @@ L_{\text{MAE}}
 \lVert \hat{x}_i - x_i \rVert^{2}
 $$
 
-
-
-
 ### 3. Key Findings and Results
 
 Experiment Setting:
 Pre-training performed on ImageNet-1K using ViT-Large (ViT-L/16) as the backbone.  
-Evaluated with: 1) Linear probing: training a linear classifier on frozen encoder features. 2) Fine-tuning: updating the entire encoder on downstream tasks.  
+Result: Baseline MAE with ViT-L achieve 84.9% accuracy on ImageNet-1K, while using ViT-H can achieve 87.8% accuracy[2].  
 
-Masking Ratio: A very high masking ratio of around 75% works best for both linear probing and fine-tuning, which shows that MAE benefits from massive masking. In addition, the authors show that an MAE pre-trained with a 75% mask ratio can still produce plausible reconstructions even when evaluated with much higher masking ratios. The model generates semantically reasonable predictions that differ plausibly from the original images, demonstrating strong generalization of the learned representations.
+
+Masking Ratio: A very high masking ratio of around 75% works best for both linear probing and fine-tuning, which shows that MAE benefits from massive masking[2]. This is because high masking ratio prevent model from simply learning from surrounding patches without learning from high-level information. In addition, the authors show that an MAE pre-trained with a 75% mask ratio can still produce plausible reconstructions even when evaluated with much higher masking ratios, demonstrating strong generalization of the learned representations.
 
 ![SimCLR Aug]({{ '/assets/images/team40/mask_ratio.png' | relative_url }})
 *Fig 2. MAE reconstructions under increasing masking ratios* [2].
@@ -156,11 +160,11 @@ Mask Token Placement: Adding mask tokens after the encoder is better than adding
 
 Normalized Pixel Targets: Predicting normalized pixel values significantly improves reconstruction quality and downstream performance, as encoder is encouraged to learn structure, shape, and texture, instead of memorizing absolute pixel colors.
 
-Minimal Augumentation: MAE performs well without strong data augmentation. Unlike contrastive learning (e.g., SimCLR), MAE relies primarily on the masking operation as its augmentation. 
+Minimal Augmentation: MAE performs well without strong data augmentation. Unlike contrastive learning such as SimCLR, MAE relies primarily on the masking operation as its augmentation. 
 
 ## DINO: self-distillation with no labels
 
-DINO (self-distillation with no labels) is a self-supervised learning framework based on knowledge co-distillation, where a student network is trained to match the output distribution produced by a teacher network.   
+DINO (self-distillation with no labels) is a self-supervised learning framework based on knowledge co-distillation, where a student network is trained to match the output distribution produced by a teacher network[3].   
 Both networks share the same architecture (e.g., ViT or ResNet) and consist of a backbone encoder followed by a projection head.
 
 ### Model Structure
@@ -186,19 +190,18 @@ $$
 
 The student uses a higher temperature $$\tau$$ to avoid over-confidence, while the teacher uses a low temperature $$\tau$$ to produce informative targets.
 
-#### Risk of collapse
-Since DINO does not use negative samples, the embeddings for all images may collapse to a trivial uniform distribution to minimize loss. To avoid this, DINO introduces (1) Centering to prevent single-neuron domination (2) Sharpening to ensures teacher outputs are not uniform (3) EMA to provide stable targets.
-
 ### Workflow
-1. Given an input image, DINO generates a set of augmented views V: (1) Two global crops x₁ and x₂ (resolution 224 × 224), (2) multiple local crops (resolution 96 × 96).  
+1. Given an input image, DINO generates a set of augmented views V: (1) Two global crops x1 and x2 (resolution 224 × 224), (2) multiple local crops (resolution 96 × 96).  
 
 1. Teacher only processes global views, and student processes all crops. This asymmetry teaches the student viewpoint invariance and encourages learning high-level semantic representations.
 
-1. The objective is to make the student’s output distribution match the teacher’s across corresponding views. This is done by minimizing the cross enrtopy loss with respect to student network:  
+1. The objective is to make the student output distribution match the teacher’s across corresponding views. This is done by minimizing the cross enrtopy loss with respect to student parameter:  
 
     $$
     L = - \sum_{k} P^{(t)}_{k} \log\left(P^{(s)}_{k}\right)
     $$
+
+where $$P^{(t)}_{k}$$ denotes the probability from teacher network to the $$k$$-th output dimension, and $$P^{(s)}_{k}$$ denotes the probability from the student network. The summation is taken over all output dimensions $$k$$.
 
 1. Student network's parameters are updated via SGD, and teacher network's parameter are updated using EMA of student weights (no backpropagation).
 
@@ -207,11 +210,23 @@ Since DINO does not use negative samples, the embeddings for all images may coll
 ### Key Findings & techniques
 
 Avoiding Collapse:
-
 DINO achieves non-trivial representations without negative samples by combining three stabilizing mechanisms:
 1. Centering: Maintaining balanced activations across dimensions and preventing the model from collapsing to a single dominant feature or neuron.
 2. Sharpening: Using low-temperature softmax on teacher outputs to ensure teacher outputs are peaked and non-uniform.
 3. EMA Teacher Updating: Teacher parameters are updated slowly to provide stable optimization in training.
+
+Multi-crop training: DINO reveals that multi-crop training is highly effective for learning viewpoint invariant representations. By training the student on both global and local views while restricting the teacher to global views only, DINO encourages the model to connect fine-grained local details with global semantic context.
+
+Patch size: The performance will be improved if using smaller patch size, even though more memory will be taken.
+
+Semantic properties: The self attention map of DINO-pretrained ViT align well with object boundary as shown in Fig 6, which mean that self-distillation not only improves downstream performance but also leads to learning more interpretable and spatially meaningful representations.
+
+![SimCLR Aug]({{ '/assets/images/team40/dino_feature.png' | relative_url }})
+*Fig 5. Attention map of DINO pretrained ViT* [3]. 
+
+
+## Conclusion
+Self-supervised learning enables models to learn meaningful representations directly from unlabeled data. In this report, we examined three representative self-supervised approaches—SimCLR, Masked Autoencoders (MAE), and DINO. SimCLR uses strong data augmentations and large batches to learn discriminative representations. MAE approaches through the perspective of reconstructing the image, showing that high masking ratios can encourage models to focus on semantic structure rather than low-level pixel statistics. DINO introduces a self-distillation framework without negative samples and uses several stablizing techniques to learn invariant features and prevent collapsing. All these methods utilize the dataset itself to design pretext task and reduce reliance on labeled data while achieving competitive performance. As datasets continue to grow in size and labeling costs remain high, self-supervised learning is likely to play an increasingly important role in modern computer vision systems.
 
 ## Reference
 
