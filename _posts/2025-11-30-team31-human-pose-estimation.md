@@ -32,7 +32,7 @@ The advantages of MMPose is its comprehensive "model zoo" that includes both acc
   <img src="{{ '/assets/images/assets/images/905972224/map.png' | relative_url }}" 
        alt="YOLO UMAP" 
        style="width: 600px; max-width: 100%;" />
-  <p><em>Fig 2. UMAP of datasets with root subtraction. (Image source: <https://wangzheallen.github.io/cross-dataset-generalization> [2].</em></p>
+  <p><em>Fig 2. UMAP of datasets with root subtraction. (Image source: <a href="https://wangzheallen.github.io/cross-dataset-generalization">https://wangzheallen.github.io/cross-dataset-generalization</a>)</em></p>
 </div>
 
 
