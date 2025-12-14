@@ -9,11 +9,9 @@ date: 2025-11-19
 > Optical flow is simply the problem of estimating motion in images, with real world applications in other fields such as autonomous driving. As such, there have been many different approaches to this problem. We compare three of these approaches: FlowNet, RAFT, and UFlow. We explore each of these models in depth, before moving on to a comparative analysis and discussion of the three models. This analysis highlights the key differences between each approach, when they are most applicable, and how they each handle common problems in the optical flow field such as the lack of available training data.
 
 <!--more-->
-
 {: class="table-of-content"}
-
 -  TOC
-   {:toc}
+{:toc}
 
 ## 1. Introduction
 
@@ -61,7 +59,7 @@ At a high level, FlowNet is built using an encoder-decoder structure, with infor
 
 <img src="{{ site.baseurl }}/assets/images/team27/FlowNet-Architecture.png" />
 
-_Figure 2. High level picture of the FlowNet Architecture [4]._
+_Figure 2. High level picture of the FlowNet Architecture [1]._
 
 In the contractive portion, there are 9 covolution layers total, 6 of them using a stride of 2 to act as a pooling mechanism. Each of them contain a ReLU activation to introduce non-linearity. In these 9 layers, there are no fully-connected layers, allowing for images of any size.
 
@@ -73,7 +71,7 @@ FlowNet actually has two seperate models, both with their own strengths.
 
 <img src="{{ site.baseurl }}/assets/images/team27/FlowNetS-vs-FlowNetC.png" />
 
-_Figure 3. Comparison between FlowNetSimple vs. FlowNetCorrelated architectures [4]._
+_Figure 3. Comparison between FlowNetSimple vs. FlowNetCorrelated architectures [1]._
 
 In FlowNetSimple, both images are just stacked together along the channel dimension, and fed through the generic convolutional network. Because of this, the network has complete freedom on to learn how to process the pair of images, with no constraints on the internal representations on matching strategies.
 
@@ -99,7 +97,7 @@ FlowNet was evaluated on many different datasets with many options, but a table 
 
 <img src="{{ site.baseurl }}/assets/images/team27/FlowNet-Results.png" />
 
-_Figure 4. Evaluation Metrics on different datasets and FlowNet model options [4]._
+_Figure 4. Evaluation Metrics on different datasets and FlowNet model options [1]._
 
 The different options used in evaluating FlowNet were +v and +ft, which correspond to the variatonal refinement and finetuning options respectively.
 
@@ -346,12 +344,11 @@ Clearly, the problem of optical flow is an important one, as there are many opti
 
 Please make sure to cite properly in your work, for example:
 
-[1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." _Proceedings of the IEEE conference on computer vision and pattern recognition_. 2016.
+[1] Fischer, Philipp, et al. "FlowNet: Learning Optical Flow with Convolutional Networks". 2015.
 
 [2] Isik, Senem, Shawn Zixuan Kang, and Zander Lack. “Optical Flow Models and Training Techniques in Data-Constrained Environment.” CS231N: Convolutional Neural Networks for Visual Recognition, Stanford University. 2022.
 
 [3] Jonschkowski, Rico, et al. "What Matters in Unsupervised Optical Flow." _European Conference on Computer Vision (ECCV)_. 2020.
 
-[4] Fischer, Philipp, et al. "FlowNet: Learning Optical Flow with Convolutional Networks". 2015.
 
 ---
