@@ -176,8 +176,39 @@
 
 <!--more-->
 
-<ul class="table-of-content">
-  <li>TOC</li>
+<ul class="table-of-content" id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#background-on-vlas" id="markdown-toc-background-on-vlas">Background on VLAs</a></li>
+  <li><a href="#rt-2-google-deepmind" id="markdown-toc-rt-2-google-deepmind">RT-2 (Google Deepmind)</a>    <ul>
+      <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+      <li><a href="#architecture" id="markdown-toc-architecture">Architecture</a></li>
+      <li><a href="#tokenization-method-and-action-output" id="markdown-toc-tokenization-method-and-action-output">Tokenization Method and Action Output</a></li>
+      <li><a href="#training-for-next-token-generation" id="markdown-toc-training-for-next-token-generation">Training for Next Token Generation</a></li>
+      <li><a href="#training-configuration" id="markdown-toc-training-configuration">Training Configuration</a></li>
+    </ul>
+  </li>
+  <li><a href="#openvla-stanford-uc-berkeley-toyota-research-institute" id="markdown-toc-openvla-stanford-uc-berkeley-toyota-research-institute">OpenVLA (Stanford, UC Berkeley, Toyota Research Institute)</a>    <ul>
+      <li><a href="#overview-1" id="markdown-toc-overview-1">Overview</a></li>
+      <li><a href="#architecture-1" id="markdown-toc-architecture-1">Architecture</a></li>
+      <li><a href="#action-representation" id="markdown-toc-action-representation">Action Representation</a></li>
+      <li><a href="#training" id="markdown-toc-training">Training</a></li>
+    </ul>
+  </li>
+  <li><a href="#octo-uc-berkeley" id="markdown-toc-octo-uc-berkeley">Octo (UC Berkeley)</a>    <ul>
+      <li><a href="#overview-2" id="markdown-toc-overview-2">Overview</a></li>
+      <li><a href="#architecture-2" id="markdown-toc-architecture-2">Architecture</a></li>
+      <li><a href="#action-representation-1" id="markdown-toc-action-representation-1">Action Representation</a></li>
+      <li><a href="#training-1" id="markdown-toc-training-1">Training</a></li>
+    </ul>
+  </li>
+  <li><a href="#discussion" id="markdown-toc-discussion">Discussion</a>    <ul>
+      <li><a href="#performance-vs-scale" id="markdown-toc-performance-vs-scale">Performance vs Scale</a></li>
+      <li><a href="#discrete-tokens-for-actions-vs-continous-diffusion" id="markdown-toc-discrete-tokens-for-actions-vs-continous-diffusion">Discrete Tokens for Actions vs Continous Diffusion</a></li>
+      <li><a href="#accessibility" id="markdown-toc-accessibility">Accessibility</a></li>
+    </ul>
+  </li>
+  <li><a href="#limitations" id="markdown-toc-limitations">Limitations</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
 </ul>
 
 <h2 id="introduction">Introduction</h2>
@@ -473,7 +504,7 @@ Pretrained on web-scale vision-language tasks</p>
 <ul>
   <li>Frozen T5-Base model (111M parameters)</li>
   <li>Encodes natural language instructions into embeddings</li>
-  <li>Language conditioning is optional—Octo can also accept goal images</li>
+  <li>Language conditioning is optional as Octo can also accept goal images</li>
 </ul>
 
 <p><strong>Transformer Backbone:</strong></p>

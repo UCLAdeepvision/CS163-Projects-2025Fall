@@ -11,9 +11,8 @@ date: 2025-12-13
 <!--more-->
 
 {: class="table-of-content"}
-
-- TOC
-  {:toc}
+* TOC
+{:toc}
 
 ## Introduction
 
@@ -186,7 +185,7 @@ Octo features a custom transformer architecture with modular input-output mechan
 
 - Frozen T5-Base model (111M parameters)
 - Encodes natural language instructions into embeddings
-- Language conditioning is optional—Octo can also accept goal images
+- Language conditioning is optional as Octo can also accept goal images
 
 **Transformer Backbone:**
 
