@@ -7,7 +7,7 @@ date: 2025-12-13
 ---
 
 
-> Image super-resolution is a natural, ill-posed vision problem, being the task of recovering a high-resolution, clean image from a low-resolution, degraded image. In this post, we survey 3 recent methods of image super-resolution, each highly distinct with its own advantages and disadvantages. Finally, we conduct an experiment in modifying the structure of one of these methods.
+> Image super-resolution is a natural, ill-posed computer vision problem, being the task of recovering a high-resolution, clean image from a low-resolution, degraded image. In this post, we survey 3 recent methods of image super-resolution, each highly distinct with its own advantages and disadvantages. Finally, we conduct an experiment in modifying the structure of one of these methods.
 
 <!--more-->
 <!--bundle exec jekyll serve-->
@@ -115,7 +115,7 @@ Contrary to the standard Swin, projection to the desired channel dimension is do
 {: style="max-width: 80%;"}
 *Fig 8. LAM results for different SR methods [1].*
 
-In practice, the HAT does, indeed, use a larger portion of the input image for reconstruction than other Transformer-based SR methods. Above is a comparison of Local Attribution Maps (LAM) between different methods, which is a method for measuring which portions of the input were most influential for a given patch of the output. We see that HAT is highly nonlocal compared to other methods in terms of LAM, and performs better for it.
+In practice, the HAT does, indeed, use a larger portion of the input image for reconstruction than other Transformer-based SR methods. Above is a comparison of Local Attribution Maps (LAM) between different models, which is a method for measuring which portions of the input were most influential for a given patch of the output. We see that HAT is highly nonlocal compared to other methods in terms of LAM, and performs better for it.
 
 ![Quantitative Results]({{ '/assets/images/01/quantitativeresultshat.png' | relative_url }})
 {: style="max-width: 90%;"}
@@ -132,7 +132,7 @@ The HAT is a notable modification of the Swin Transformer architecture, designed
 There have been relatively few attempts to make modern deep learning-based methods of super-resolution computationally efficient enough for common consumer applications such as cameras, mobile phones, and televisions. Look-Up Table (LUT) methods, as described in [3], aim to bridge this gap by using a precomputed LUT, where the output values from a deep SR network are stored in advance; during inference, the system can quickly retrieve these high-resolution values by querying the LUT with low-resolution input pixels.
 
 ![LUT architecture]({{ '/assets/images/01/lut_architecture.png' | relative_url }})
-{: style="max-width: 80%;"}
+{: style="max-width: 90%;"}
 *Fig 10. LUT Method Overview [3].*
 
 #### The LUT
@@ -163,7 +163,7 @@ This can be seen clearly from the structure of the LUT; there are $$2^8$$ possib
 
 ![LUT sizes]({{ '/assets/images/01/lutsizes.png' | relative_url }})
 {: style="max-width: 70%;"}
-*Fig 11. A comparison of LUT sizes [3].*
+*Fig 11. A comparison of LUT sizes for $$r=4$$ [3].*
 
 Of course, this sampled LUT introduces the issue of indexing: how do we index from the LUT if the input patch doesn't match a patch that was seen while filling out the table? For this, the authors used interpolation; instead of indexing one upscaled patch, we can interpolate between up to $$2^n$$ patches, for a RF size $$n$$. For instance, for a LUT where $$n=2$$, using a sampling interval of $$2^4$$, getting the upscaled patch for an input patch where $$I_0 = 8, I_1 = 8$$ would require interpolating between $$LUT[0][0], LUT[0][1], LUT[1][0], LUT[1][1]$$. Using this sampling interval, these nearest points can actually be found easily by looking at the bit representation of $$I_j$$: the first 4 bits, when converted to integer, will be the index of the lower part of the interpolation (e.g. for $$I_j = 20$$, 20 $$\to$$ 00010100, and then 0001 $$\to$$ 1, meaning that $$LUT[1]$$ will be the lower part of the interpolation and $$LUT[2]$$ will be the upper part); this method of indexing for the interpolation points adds even further to the LUT's speed. The issue of interpolating between points in $$n$$ dimensional space is complex in its own right, though we note that the authors found that linear interpolation was slower than triangular interpolation (and its higher-dimensional couterparts), especially for larger $$n$$.
 
@@ -177,7 +177,7 @@ Additionally, during training and testing, the authors employed the strategy of 
 
 - rotating each input by 90, 180, and 270 (and 0) degrees
 
-- feeding each of 4 rotations of the input into the model
+- feeding each of the 4 rotations of the input into the model
 
 - rotating each the super-resolution outputs such that they are all at their original orientation
 
@@ -189,7 +189,7 @@ This method is well-suited to our task; images that are rotated still fall under
 {: style="max-width: 80%;"}
 *Fig 13. An illustration of the effect of rotational ensemble on the receptive field; a 2x2 RF is effectively increased to a 3x3 RF [3].*
 
-During training, rotational ensemble simply works well as a way to increase your dataset size. However, this method can be used in inference as well; we can construct 4 different super-resolution predictions using the LUT, and then average them together. For a 2x2 square RF, one can see, in the illustration above representing 2x upsampling, that the relative position of the patch in the output corresponding to the RF in the input will be determined by the relative position of the top-left pixel of the RF in the input image; that is, any RF in the input, no matter the rotation of the image, will correspond to the same patch in the output as long as the top-left pixel of the RF is the same across those RFs in the input. So, when we look at the RFs across our rotational ensemble when the top-left pixel is kept constant, we see that their union will be a 3x3 area in the input, which means that the given output patch will be influenced by all pixels in the 3x3 area, effectively increasing our inference RF size to 9.
+During training, rotational ensemble simply works well as a way to increase your dataset size. However, this method can be used in inference as well; we can construct 4 different super-resolution predictions using the LUT, and then average them together. For a 2x2 square RF, one can see, in the illustration above representing 2x upscaling, that the relative position of the patch in the output corresponding to the RF in the input will be determined by the relative position of the top-left pixel of the RF in the input image; that is, any RF in the input, no matter the rotation of the image, will correspond to the same patch in the output as long as the top-left pixel of the RF is the same across those RFs in the input. So, when we look at the RFs across our rotational ensemble when the top-left pixel is kept constant, we see that their union will be a 3x3 area in the input, which means that the given output patch will be influenced by all pixels in the 3x3 area, effectively increasing our inference RF size to 9.
 
 While this does increase our inference computation time by a factor of 4 (discounting rotations and averaging), it is likely a worthy trade-off for such a substantial increase in RF size, which would normally require increasing the LUT size to an unmanageable degree.
 
@@ -197,7 +197,7 @@ While this does increase our inference computation time by a factor of 4 (discou
 
 ![LUT Comparison Table]({{ '/assets/images/01/lut_comparison.png' | relative_url }})
 {: style="max-width: 80%;"}
-*Fig 14. peak signal-to-noise ratio (PSNR) and runtime of various methods for 320 x 180 -> 1280 x 720 upsampling [3].*
+*Fig 14. Peak signal-to-noise ratio (PSNR) and runtime of various methods for 320 x 180 -> 1280 x 720 upscaling [3].*
 
 There are 3 models mentioned in the paper: V, F, and S, which have a receptive field of 2, 3, and 4, respectively. F and S use a sampled LUT with a sampling interval of $$2^4$$, while V uses a full LUT. We see that the LUT methods provide a good tradeoff in terms of speed vs reconstruction quality, where F is even faster than bicubic interpolation, and V is even faster than bilinear interpolation.
 
@@ -209,7 +209,7 @@ There are 3 models mentioned in the paper: V, F, and S, which have a receptive f
 {: style="max-width: 90%;"}
 *Fig 16. Quantitative comparison of results; runtimes for all methods besides sparse coding are on a Galaxy S7 phone [3].*
 
-We see that, quantitatively, all LUT variants perform substantially better than traditional interpolation upsampling methods, and are competitive with methods that require far greater runtime and/or storage space. Interestingly, there are some cases where the F model seems to perform quantitatively better than the S model, despite the fact that the only difference between them is that S has a larger receptive field. This likely just indicates a plateau in performance wrt receptive field size, or the differently shaped receptive fields may fare differently on different datasets (since RF=3 for F and RF=4 for S, the RF for F is a line and the RF for S is a square).
+We see that, quantitatively, all LUT variants perform substantially better than traditional interpolation upscaling methods, and are competitive with methods that require far greater runtime and/or storage space. Interestingly, there are some cases where the F model seems to perform quantitatively better than the S model, despite the fact that the only difference between them is that S has a larger receptive field. This likely just indicates a plateau in performance wrt receptive field size, or the differently shaped receptive fields may fare differently on different datasets (since RF=3 for F and RF=4 for S, the RF for F is a line and the RF for S is a square).
 
 LUT methods are an interesting way to make super-resolution more efficient; instead of making a more efficient network, it avoids using a network for inference altogether. However, there are some obvious flaws: the quantitative results do not make it state-of-the-art in that regard, and the methodology of using the same LUT for each color channel independently seems somewhat unintuitive. Additionally, a given LUT is confined to a fixed receptive field size and upscaling factor; an entirely new SR network and table must be created to change these factors, which restricts the method's practical use.
 
@@ -219,7 +219,7 @@ Since its invention in 2021, there have been numerous published papers for exten
 
 Now, we go through the structure of the IM-LUT.
 
-##### IM-Net
+#### IM-Net
 
 ![IM Net]({{ '/assets/images/01/imnet.png' | relative_url }})
 {: style="max-width: 90%;"}
@@ -254,17 +254,17 @@ and the final loss that we optimize over is
 $$\mathcal{L} = \mathcal{L}_{\text{rec}} + \lambda \mathcal{L}_{\text{guide}}$$ 
 where $$\lambda$$ is our trade-off hyperparameter. With this, we can optimize both the refinement and the weight map predictions at once, and we can vary the upscaling factor to ensure that the network can adapt well to different amounts of upscaling.
 
-##### IM-LUT
+#### IM-LUT
 
 ![IM LUT]({{ '/assets/images/01/imlut.png' | relative_url }})
 {: style="max-width: 90%;"}
 *Fig 18. An overview of the way in which the LUTs are created and used [5].*
 
-Now, we have to transfer the IM-Net to LUTs. Given that IM-Net has 3 distinct sub-networks (scaling factor network, weight map network, and refinement network), we will have 3 LUTs; note that the refinement and weight map networks each use convolutional networks that leave each pixel of the output with a 2x2 receptive field in the input, as was seen with the original LUT. Additionally, each LUT is created with a sampling-interval scheme and interpolated indexing, as was also seen with the standard LUT (except for the scale LUT, which uses nearest neighbor interpolation). Specifically, the scale modulator LUT is indexed by a single number and outputs a vector of $$K$$ weights, making it small and efficient; the weight map LUT is indexed by 4 pixel values and outputs $$K$$ pixel values (since the weight map network *does not* perform any resizing), making it similar in size to the standard LUT; the refiner LUT is indexed by 4 pixels and outputs 1 pixel value (again, no resizing), making it smaller than the standard LUT. We see that, unlike the standard LUT, the size of the LUTs has no dependence on the scale factor; however, given that the refiner LUT will be used on the entire upscaled image, the overall computational complexity will increase with the scale factor (though, they note in the paper, it does not increase substantially with upscale factor).
+Now, we have to transfer the IM-Net to LUTs. Given that IM-Net has 3 distinct sub-networks (scaling factor network, weight map network, and refinement network), we will have 3 LUTs; note that the refinement and weight map networks each use convolutional networks that leave each pixel of the output with a 2x2 receptive field in the input, as was seen with the original LUT. Additionally, each LUT is created with a sampling-interval scheme and interpolated indexing, as was also seen with the standard LUT (except for the scale LUT, which uses nearest neighbor interpolation). Specifically, the scale modulator LUT is indexed by a single number and outputs a vector of $$K$$ weights, making it small and efficient; the weight map LUT is indexed by 4 pixel values and outputs $$K$$ pixel values (since the weight map network *does not* perform any resizing), making it similar in size to the standard LUT; the refiner LUT is indexed by 4 pixels and outputs 1 pixel value (again, no resizing), making it smaller than the standard LUT. We see that, unlike the standard LUT, the size of the LUTs has no dependence on the scale factor; however, given that the refiner LUT will be used on the entire upscaled image, the overall computational complexity will increase with the scale factor (though, as noted in [5], it does not increase substantially).
 
 Once the LUTs are computed, they can be used as stand-ins for the networks (as in the standard LUT), and then images can be upscaled as they were in IM-Net.
 
-##### Results
+#### Results
 
 ![IM LUT qualitative]({{ '/assets/images/01/imlutqualitative.png' | relative_url }})
 {: style="max-width: 90%;"}
@@ -282,19 +282,19 @@ Given the freedom to choose interpolation functions, the authors highlight a few
 
 From the color-coded weight maps above, we see that the model is, in fact, using the weight maps to adapt to the input image. For instance, when nearest-neighbor and bilinear interpolation are used together, we see that the bilinear interpolation is prioritized in areas of low brightness, while the nearest neighbor method is used elsewhere. However, we also see that when nearest-neighbor, bilinear, and bicubic interpolation are used together, the nearest-neighbor interpolation has very little influence, indicating that one could even use the weight maps as a form of interpolation function selection, similar to how L1 regularization is used as variable selection in linear regression.
 
-##### Conclusion
+#### Conclusion
 
-The IM-Net is already an interesting kind of reparameterization of the problem of learning-based super-resolution; instead of directly learning how to upscale an image, the network instead learns how to ensemble a set of given interpolation functions to do upscaling. This modular design allows for a great deal of flexibility in the model, as it can be combined with any arbitrary-scale upscaling method, even other learning-based methods, without any change to the core architecture. Of course, in this case, our real goal is a LUT-based method; in the realm of LUT-based methods, IM-LUT still stands out for its capability of arbitrary-scale super-resolution. Dynamically adapting to different scales will be a practical necessity for any super-resolution method, so it will be ineteresting to see if, as time goes on, efficient super-resolution methods will expand further in the direction of the IM-LUT, or if an entirely different architecture will rise to the top; the obvious downside of LUT methods is their low accuracy, so it will be especially noteworthy if a whole new kind of model structure can improve on this while retaining the benefits of LUT and allowing for arbitrary scales.
+The IM-Net is already an interesting kind of reparameterization of the problem of learning-based super-resolution; instead of directly learning how to upscale an image, the network instead learns how to ensemble a set of given interpolation functions to do upscaling. This modular design allows for a great deal of flexibility in the model, as it can be combined with any arbitrary-scale upscaling method, even other learning-based methods, without any change to the core architecture. Of course, in this case, our real goal is a LUT-based method; in the realm of LUT-based methods, IM-LUT still stands out for its capability of arbitrary-scale super-resolution. Dynamically adapting to different scales will be a practical necessity for any super-resolution method, so it will be interesting to see if, as time goes on, efficient super-resolution methods will expand further in the direction of the IM-LUT, or if an entirely different architecture will rise to the top; the obvious downside of LUT methods is their low accuracy, so it will be especially noteworthy if a whole new kind of model structure can improve on this while retaining the benefits of LUT and allowing for arbitrary scales.
 
 ### Unfolding Networks
 
-The "unfolding" in "unfolding network" refers to splitting up the problem of image reconstruction into two distinct subproblems, that being (1) unblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.
+The "unfolding" in "unfolding network" refers to splitting up the problem of image reconstruction into two distinct subproblems, that being (1) deblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.
 
 Now, we can go through and derive the method ourselves to illustrate how it arises:
 
 #### Derivation
 
-The basic assumption will be that the input image for the method will be the blurred, downscaled, and additive white Gaussian noise-ed version of a ground-truth image, or in other words, our degraded image $$\vec y$$ is
+The basic assumption will be that the input image for the method will be the blurred, downsampled, and additive white Gaussian noise-ed version of a ground-truth image, or in other words, our degraded image $$\vec y$$ is
 
 $$
 \vec y = (\vec x \otimes \vec k)\downarrow_s + \vec N
@@ -308,7 +308,7 @@ where:
 Given that $$\vec y \sim N((\vec x \otimes \vec k)\downarrow_s, \sigma^2 I)$$, its PDF is
 
 $$
-P(\vec y | \vec x) = \frac 1 {(2\pi\sigma^2)^{\frac d 2}}e^{-\frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2}
+P(\vec y | \vec x) = \frac 1 {(2\pi\sigma^2)^{\frac p 2}}e^{-\frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2}
 $$
 
 Furthermore, it will be useful to have an image prior, which we will define as
@@ -380,14 +380,14 @@ $$
 Now, as alluded, $$\vec z_j$$ actually still has a closed form solution:
 
 $$
-\vec z_j  = \mathcal{F}^{-1} \left(\frac{1}{\alpha_j}\left(d - \overline{\mathcal{F}(j)} \odot_s \frac{(\mathcal{F}(j)d) \Downarrow_s}{(\overline{\mathcal{F}(j)}\mathcal{F}(j))\Downarrow_s + \alpha_j} \right) \right)
+\vec z_j  = \mathcal{F}^{-1} \left(\frac{1}{\alpha_j}\left(\vec d - \overline{\mathcal{F}(\vec k)} \odot_s \frac{(\mathcal{F}(\vec k)\vec d) \Downarrow_s}{(\overline{\mathcal{F}(\vec k)}\mathcal{F}(\vec k))\Downarrow_s + \alpha_j} \right) \right)
 $$
 
 where
 
 $$
 
-d = \overline{\mathcal{F}(j)}\mathcal{F}(\vec y \uparrow_s) + \alpha_j \mathcal{F}(x_{j-1})
+\vec d = \overline{\mathcal{F}(\vec k)}\mathcal{F}(\vec y \uparrow_s) + \alpha_j \mathcal{F}(\vec x_{j-1})
 
 $$
 
@@ -409,9 +409,9 @@ The paper in question uses a "ResUNet", which is a variant of a UNet:
 {: style="max-width: 80%;"}
 *Fig 22. UNet architecture as depicted in  [6].*
 
-The ResUNet involves four scales, in which 2x2 strided convolutions and 2x2 transposed convolutions are adopted for down- and up-sampling, respectively, and residual blocks with the same structure as from ResNet are added between these size changes; of course, skip connections between downscaling and upscaling are also employed, as in the regular UNet.
+The ResUNet involves four scales, in which 2x2 strided convolutions and 2x2 transposed convolutions are adopted for down- and up-scaling, respectively, and residual blocks with the same structure as from ResNet are added between these size changes; of course, skip connections between downscaling and upscaling are also employed, as in the regular UNet.
 
-In order to ensure adaptibility and nonblind-ness of the method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The paper's method for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended on the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
+In order to ensure adaptibility and nonblind-ness of the method, it is useful to incorporate the noise level $$\beta_j$$ into the network input. The method in [2] for doing this is fairly simple: given an input image $$3 \times H \times W$$, a constant matrix with size $$H \times W$$ with all entries equal to $$\beta_j$$ is appended on the channel dimension to create an input of shape $$4 \times H \times W$$, which is fed into the network as normal. 
 
 #### Network Modules
 
@@ -432,15 +432,15 @@ $$
 As alluded, this encapsulates the denoising ResUNet.
 
 Lastly, the hyperparameter module $$ \mathcal{H} $$ is introduced to allow for dynamic hyperparameter selection.
-This module takes in $$ \sigma $$ and $$s$$ and uses a MLP to predict optimal $$\lambda$$ and $$\mu_1, ..., \mu_J$$ for the given problem, which can then be used to compute $$\alpha_1, ..., \alpha_J$$ and $$\beta_1, ..., \beta_J$$.
+This module takes in the noise level $$ \sigma $$ and scale factor $$s$$ and uses a MLP to predict optimal $$\lambda$$ and $$\mu_1, ..., \mu_J$$ for the given problem, which can then be used to compute $$\alpha_1, ..., \alpha_J$$ and $$\beta_1, ..., \beta_J$$.
 
 #### Overall Model Structure
 
 ![Unfolding Network]({{ '/assets/images/01/unfoldingstructure.png' | relative_url }})
 {: style="max-width: 90%;"}
-*Fig 23. The full architecture of the unfolding network  [6].*
+*Fig 23. The full architecture of the unfolding network [2].*
 
-These modules are combined by first predicting hyperparameters $$\alpha_j$$ and $$\beta_j$$ through the hyperparameter module, and then stacking the data and prior modules sequentially, performing iterative optimization.
+These modules are combined by first predicting hyperparameters $$\alpha_j$$ and $$\beta_j$$ through the hyperparameter module, and then stacking the data and prior modules sequentially, performing iterative optimization on the low resolution input image (which is first upsampled with nearest-neighbor interpolation to be the target size before being fed into the network).
 
 With all of this, the authors note that the model is trained in a end-to-end fashion, where scaling factors, blurring kernels, and noise levels are sampled from a pool throughout training to generate LR samples. While certain portions of the network can explicitly adapt to these factors, the denoising network (and hyperparameter module) cannot do so in the same manner, and so varying these values throughout training ensures that the network, as a whole, is robust and adaptable.
 
@@ -450,12 +450,11 @@ With all of this, the authors note that the model is trained in a end-to-end fas
 {: style="max-width: 90%;"}
 *Fig 24. Quantitative and qualitative results of various methods [2].*
 
-As shown, the model from this paper outperforms its state-of-the-art peers.
-Additionally, the qualitative results are favorable for the model; to note, the GAN variant of the model has generally sharper resolution, which can be attributed to the introduction of the more complex discriminator loss, compared to something like simple L1 loss. Due to the explicit adaptibility to the blur kernel, noise level, and scaling factor, the deep unfolding network can even be effective even at parsing images that humans may have trouble with:
+We see that the unfolding network performs favorably compared to its peers, both qualitatively and quantitatively, for a variety of scaling factors, noise levels, and blurring kernels. Due to the explicit adaptibility to these factors, the model can even be effective even at parsing images that humans may have trouble with:
 
 ![Unfolding Performance]({{ '/assets/images/01/unfoldingres2.png' | relative_url }})
 {: style="max-width: 80%;"}
-*Fig 25. Qualitative results of deep unfolding network with the associated blur kernel [2].*
+*Fig 25. Qualitative results of deep unfolding network with the associated blurring kernels [2].*
 
 #### Conclusion
 
@@ -467,9 +466,9 @@ However, in all, the deep unfolding network is an interesting blend of model-bas
 
 ### Adaptive Sparse Transformer (AST)
 
-While Transformers have shown immense success in vision tasks due to their ability to model complex, long-range relationships, this can also be a detriment; for reconstructing a given portion of an image, there are likely many parts of the image that are not relevant, and trying to use information from those parts will only add noise to your reconstruction. The self-attention mechanism of the regular Transformer has all tokens attend to all other tokens, with (Softmax) attention weights that will always be greater than 0. While the Transformer can use very small attention scores as a way of giving less attention to irrelevant tokens, it is likely useful to give the model more direct flexibility in selecting relevant image regions that does not require assigning scores of large magnitude; for this, [7] proposes the Adaptive Sparse Transformer (AST).
+While Transformers have shown immense success in vision tasks due to their ability to model complex, long-range relationships, this can also be a detriment; for reconstructing a given portion of an image, there are likely many parts of the image that are not relevant, and trying to use information from those parts will only add noise to the reconstruction. The self-attention mechanism of the regular Transformer has all tokens attend to all other tokens, with (Softmax) attention weights that will always be greater than 0. While the Transformer can use very small attention scores as a way of giving less attention to irrelevant tokens, it is likely useful to give the model more direct flexibility in selecting relevant image regions that does not require assigning scores of large magnitude; for this, [7] proposes the Adaptive Sparse Transformer (AST).
 
-The AST changes the standard Transformer architecture in two ways: first, instead of just using Softmax on our attention scores to get attention weights, it introduces sparse score selection by using a weighted sum of the Softmax and squared-ReLU of the attention scores to get the attention weights, where the weight between the two schemes is a learnable parameter. With this, our Transformer has both "dense" (Softmax) attention weights, which allow all weights to be greater than 0, and "sparse" (squared ReLU) weights, where many weights will be exactly 0 and larger weights will be further amplified, and the model can learn how best to balance these two methods for the task at hand. This self-attention mechanism is known as Adaptive Sparse Self-Attention (ASSA), and it is notable as a potentially powerful modification to the self-attention mechanism that requires just 1 extra parameter (as the weights can be computed as $$\text{sigmoid}(b), 1-\text{sigmoid}(b)$$ for learnable $$b$$).
+The AST changes the standard Transformer architecture in two ways: first, instead of just using Softmax on the attention scores to get attention weights, it introduces sparse score selection by using a weighted sum of the Softmax and squared-ReLU of the attention scores to get the attention weights, where the weight between the two schemes is a learnable parameter. With this, our Transformer has both "dense" (Softmax) attention weights, which makes all weights greater than 0, and "sparse" (squared ReLU) weights, where many weights will be exactly 0 and larger weights will be further amplified, and the model can learn how best to balance these two methods for the task at hand. This self-attention mechanism is known as Adaptive Sparse Self-Attention (ASSA), and it is notable as a potentially powerful modification to the self-attention mechanism that requires just 1 extra parameter (as the weights can be computed as $$\text{sigmoid}(b), 1-\text{sigmoid}(b)$$ for learnable $$b$$).
 
 ![AST Architecture]({{ '/assets/images/01/assa.png' | relative_url }})
 {: style="max-width: 70%;"}
@@ -491,9 +490,9 @@ Recall the structure of the Hybrid Attention Transformer (HAT):
 {: style="max-width: 90%;"}
 *Fig 28. HAT Architecture Overview [1].*
 
-One can see that the OCAB at the end of each RHAG acts as a sort of "gate" between blocks. Additionally, given the large key and value windows for the OCA, part of the purpose of the OCAB is to give each portion of the image a chance to incorporate together information from a larger portion of the image. However, it is likely that portions of these larger windows are not useful for the image reconstruction task, so this larger window allows for ample noise to seep through into our image tokens. So, we propose a modification to the HAT architecture that replaces the attention mechanism of the OCA with the sparse attention of the AST, and, subsequently, replaces the MLP of the OCAB with the FRFN. We hypothesize that this can temper the OCA and prevent noise issues from the larger windows, but can also act as a overall information gate for each window itself at the end of the RHAG, as the windows will perform cross-attention where the set of key and value pixel tokens are a superset of the query pixel tokens. Given that the principal design goal of the HAT is to use as much of the image as possible during reconstruction, the sparse attention may work well to temper that image-overuse, resulting in a model that has access to a large portion of the image but which can easily select which portions of the image are most useful.
+One can see that the OCAB at the end of each RHAG acts as a sort of "gate" between RHAG blocks. Additionally, given the large key and value windows for the OCA, part of the purpose of the OCAB is to give each portion of the image a chance to incorporate together information from a larger portion of the image. However, it is likely that portions of these larger windows are not useful for the image reconstruction task, so this larger window allows for ample noise to seep through into our image tokens. So, we propose a modification to the HAT architecture that replaces the attention mechanism of the OCA with the Adaptive Sparse Attention scheme of the AST, and, subsequently, replaces the MLP of the OCAB with the FRFN. We hypothesize that this can temper the OCA and prevent noise issues from the larger windows, but can also act as a overall information gate for each window itself at the end of the RHAG, as the windows will perform cross-attention where the set of key and value pixel tokens are a superset of the query pixel tokens. Given that the principal design goal of the HAT is to use as much of the image as possible during reconstruction, the sparse attention may work well to balance that image-overuse, resulting in a model that has access to a large portion of the image but which can easily select which portions of the image are most useful.
 
-Since we are giving the model this selective capability, we can likely afford to increase the size of the OCA window; in the original HAT paper, they had found that a overlap ratio of 0.5 was optimal (meaning that key and value windows were 1.5x as large as the query window in each dimension), but a value of 0.75 produced slightly worse results. So, we propose that increasing the overlap ratio to 0.75 will better utilize the sparse attention, giving the model access to more information that it can select from, while remaining computationally efficient during the windowed cross-attention.
+Since we are giving the model this selective capability, we can likely afford to increase the size of the OCA window; in [1], they had found that an overlap ratio of 0.5 was optimal (meaning that key and value windows were 1.5x as large as the query window in each dimension), but a value of 0.75 produced slightly worse results. So, we propose that increasing the overlap ratio to 0.75 will better utilize the sparse attention, giving the model access to more information that it can select from, while remaining computationally efficient during the windowed cross-attention.
 
 Specifically, in our experiment, we will be modifying the architecture of the HAT-S, the smallest HAT model, for practical reasons, and training it for doing 4x image upscaling.
 
