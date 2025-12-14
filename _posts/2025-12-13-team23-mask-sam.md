@@ -5,13 +5,15 @@ title: "From Labeling to Prompting: The Paradigm Shift in Image Segmentation"
 author: Abdallah Fares, Dean Ali, Olana Abraham
 date: 2025-12-13
 team: team23
-mathjax: true
+math: true
 ---
 
 > The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM's decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.
 
+<!--more-->
+{: class="table-of-content"}
 * TOC
-{:toc .table-of-content}
+{:toc}
 
 ## Introduction
 
@@ -21,7 +23,7 @@ To formalize this limitation, the 2024 survey introduces a unified formulation f
 $$
 f: \mathcal{X} \mapsto \mathcal{Y} \quad \text{where} \quad \mathcal{X} = \mathcal{I} \times \mathcal{P}
 $$
-Here, $\mathcal{I}$ represents the image and $\mathcal{P}$ represents the user prompt. In the specialist era of Mask R-CNN, the prompt set was empty ($\mathcal{P} = \emptyset$), forcing the model to rely entirely on learned semantics to determine the output. \[1\]
+Here, I represents the image and P represents the user prompt. In the specialist era of Mask R-CNN, the prompt set was empty, forcing the model to rely entirely on learned semantics to determine the output. \[1\]
 
 ![Image 1]({{ site.baseurl }}/assets/images/team23/fig1imageseg.png) 
 *Figure 1 from “Image Segmentation in Foundation Model Era: A Survey”.*
