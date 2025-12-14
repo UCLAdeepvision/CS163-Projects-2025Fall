@@ -92,7 +92,19 @@ Given the depth images from our dataset, each depth image can be projected back 
 
 This estimated transformation represents the relative camera motion between frames, and accumulating these relative motions forms the camera trajectory. This process is related to RGB-Dodometry, which produces a sequence of relative poses instead of globally optimized absolute reconstruction. 
 
-### Code Block
+![YOLO]({{ '/assets/images/team28/icp.svg' | relative_url }})
+{: style="width: 600px; max-width: 100%;"}
+*Fig 1. Overview of how ICP works.* [1].
+
+![YOLO]({{ '/assets/images/team28/icp2.gif' | relative_url }})
+{: style="width: 600px; max-width: 100%;"}
+*Fig 1. Overview of how ICP works.* [1].
+
+By Biggerj1 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=88265436
+
+https://learnopencv.com/iterative-closest-point-icp-explained/
+
+Here is our code for going from the depth images to the point cloud: 
 ```
 def depth_to_pointcloud(depth_path, intrinsics):
     depth = cv2.imread(depth_path, cv2.IMREAD_ANYDEPTH)
@@ -112,23 +124,49 @@ def depth_to_pointcloud(depth_path, intrinsics):
     return pcd.voxel_down_sample(0.02)
 ```
 
+The transformation matrix from ICP encodes the relative camera motion between the consecutive frames, and accumulates them the estimated camera trajectory.
+```
+reg = o3d.pipelines.registration.registration_icp(
+    source_pcd, target_pcd,
+    max_correspondence_distance=0.05,
+    init=np.eye(4),
+    estimation_method=o3d.pipelines.registration.TransformationEstimationPointToPoint()
+)
 
+relative_transform = reg.transformation
+```
 https://learnopencv.com/iterative-closest-point-icp-explained/ 
 
 <!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
 -->
 
-## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
+## Metrics
 
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
+Now we will be going over the key metrics we used and why we used them. 
 
-Please cite the image if it is taken from other people's work.
+### Absolute Trajectory Error (ATE)
+
+Absolute trajectory error (ATE) is a metric that is used to evaluate the accuracy of the estimated camera trajectory compared to the ground-truth trajectory. It measures the difference between the points of the true and estimated trajectory.  
+
+![YOLO]({{ '/assets/images/team28/ate.png' | relative_url }})
+{: style="width: 600px; max-width: 100%;"}
+*Fig 1. Overview of how ICP works.* [1].
+
+https://cvg.cit.tum.de/data/datasets/rgbd-dataset/tools
+https://docs.openvins.com/eval-metrics.html 
+
+### Relative Translation Error (RLE)
+
+Relative translation error (RTE) is a metric that measures the accuracy of the frame-to-frame translational motion of the camera. It is a local motion accuracy metric that evaluates if the camera moved the correct distance and direction between consecutive frames, independent of global drift. 
+
+### Relative Orientation Error (ROE)
+
+Relative orientation error (ROE) is a local rotation accuracy metric, which checks if the camera rotated by the correct amount and in the correct direction between two consecutive frames. It looks at the relative rotation in the estimated trajectory compared to the ground-truth relative rotation. 
+
+## Findings and Analysis
+
+
 
 
 ### Table
@@ -141,25 +179,7 @@ Here is an example for creating tables, including alignment syntax.
 
 
 
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
 
-
-### Formula
-Please use latex to generate formulas, such as:
-
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
-
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
 
 ## Reference
 Please make sure to cite properly in your work, for example:

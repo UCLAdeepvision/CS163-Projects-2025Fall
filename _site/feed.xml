@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T22:48:26-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T23:25:55-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
   <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.</p>
 </blockquote>
 
@@ -12,15 +12,16 @@
       <li><a href="#colmap" id="markdown-toc-colmap">COLMAP</a></li>
       <li><a href="#vggsfm-visual-geometry-grounded-deep-structure-from-motion" id="markdown-toc-vggsfm-visual-geometry-grounded-deep-structure-from-motion">VGGSfM (Visual Geometry Grounded Deep Structure From Motion)</a></li>
       <li><a href="#depth-based-estimation-with-icp-iterative-closest-point" id="markdown-toc-depth-based-estimation-with-icp-iterative-closest-point">Depth-based Estimation with ICP (Iterative Closest Point)</a></li>
-      <li><a href="#code-block" id="markdown-toc-code-block">Code Block</a></li>
     </ul>
   </li>
-  <li><a href="#basic-syntax" id="markdown-toc-basic-syntax">Basic Syntax</a>    <ul>
-      <li><a href="#image" id="markdown-toc-image">Image</a></li>
+  <li><a href="#metrics" id="markdown-toc-metrics">Metrics</a>    <ul>
+      <li><a href="#absolute-trajectory-error-ate" id="markdown-toc-absolute-trajectory-error-ate">Absolute Trajectory Error (ATE)</a></li>
+      <li><a href="#relative-translation-error-rle" id="markdown-toc-relative-translation-error-rle">Relative Translation Error (RLE)</a></li>
+      <li><a href="#relative-orientation-error-roe" id="markdown-toc-relative-orientation-error-roe">Relative Orientation Error (ROE)</a></li>
+    </ul>
+  </li>
+  <li><a href="#findings-and-analysis" id="markdown-toc-findings-and-analysis">Findings and Analysis</a>    <ul>
       <li><a href="#table" id="markdown-toc-table">Table</a></li>
-      <li><a href="#code-block-1" id="markdown-toc-code-block-1">Code Block</a></li>
-      <li><a href="#formula" id="markdown-toc-formula">Formula</a></li>
-      <li><a href="#more-markdown-syntax" id="markdown-toc-more-markdown-syntax">More Markdown Syntax</a></li>
     </ul>
   </li>
   <li><a href="#reference" id="markdown-toc-reference">Reference</a></li>
@@ -106,7 +107,17 @@ https://colmap.github.io/tutorial.html</p>
 
 <p>This estimated transformation represents the relative camera motion between frames, and accumulating these relative motions forms the camera trajectory. This process is related to RGB-Dodometry, which produces a sequence of relative poses instead of globally optimized absolute reconstruction.</p>
 
-<h3 id="code-block">Code Block</h3>
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/icp.svg" alt="YOLO" /></p>
+<p><em>Fig 1. Overview of how ICP works.</em> [1].</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/icp2.gif" alt="YOLO" /></p>
+<p><em>Fig 1. Overview of how ICP works.</em> [1].</p>
+
+<p>By Biggerj1 - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=88265436</p>
+
+<p>https://learnopencv.com/iterative-closest-point-icp-explained/</p>
+
+<p>Here is our code for going from the depth images to the point cloud:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def depth_to_pointcloud(depth_path, intrinsics):
     depth = cv2.imread(depth_path, cv2.IMREAD_ANYDEPTH)
     h, w = depth.shape
@@ -125,21 +136,45 @@ https://colmap.github.io/tutorial.html</p>
     return pcd.voxel_down_sample(0.02)
 </code></pre></div></div>
 
+<p>The transformation matrix from ICP encodes the relative camera motion between the consecutive frames, and accumulates them the estimated camera trajectory.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reg = o3d.pipelines.registration.registration_icp(
+    source_pcd, target_pcd,
+    max_correspondence_distance=0.05,
+    init=np.eye(4),
+    estimation_method=o3d.pipelines.registration.TransformationEstimationPointToPoint()
+)
+
+relative_transform = reg.transformation
+</code></pre></div></div>
 <p>https://learnopencv.com/iterative-closest-point-icp-explained/</p>
 
 <!--
 Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
 -->
 
-<h2 id="basic-syntax">Basic Syntax</h2>
-<h3 id="image">Image</h3>
-<p>Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.</p>
+<h2 id="metrics">Metrics</h2>
 
-<p style="width: 400px; max-width: 100%;">You can add an image to your survey like this:
-<img src="/CS163-Projects-2025Fall/assets/images/UCLAdeepvision/object_detection.png" alt="YOLO" /></p>
-<p><em>Fig 1. YOLO: An object detection method in computer vision</em> [1].</p>
+<p>Now we will be going over the key metrics we used and why we used them.</p>
 
-<p>Please cite the image if it is taken from other people’s work.</p>
+<h3 id="absolute-trajectory-error-ate">Absolute Trajectory Error (ATE)</h3>
+
+<p>Absolute trajectory error (ATE) is a metric that is used to evaluate the accuracy of the estimated camera trajectory compared to the ground-truth trajectory. It measures the difference between the points of the true and estimated trajectory.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team28/ate.png" alt="YOLO" /></p>
+<p><em>Fig 1. Overview of how ICP works.</em> [1].</p>
+
+<p>https://cvg.cit.tum.de/data/datasets/rgbd-dataset/tools
+https://docs.openvins.com/eval-metrics.html</p>
+
+<h3 id="relative-translation-error-rle">Relative Translation Error (RLE)</h3>
+
+<p>Relative translation error (RTE) is a metric that measures the accuracy of the frame-to-frame translational motion of the camera. It is a local motion accuracy metric that evaluates if the camera moved the correct distance and direction between consecutive frames, independent of global drift.</p>
+
+<h3 id="relative-orientation-error-roe">Relative Orientation Error (ROE)</h3>
+
+<p>Relative orientation error (ROE) is a local rotation accuracy metric, which checks if the camera rotated by the correct amount and in the correct direction between two consecutive frames. It looks at the relative rotation in the estimated trajectory compared to the ground-truth relative rotation.</p>
+
+<h2 id="findings-and-analysis">Findings and Analysis</h2>
 
 <h3 id="table">Table</h3>
 <p>Here is an example for creating tables, including alignment syntax.</p>
@@ -165,22 +200,6 @@ Your survey starts here. You can refer to the [source code](https://github.com/l
     </tr>
   </tbody>
 </table>
-
-<h3 id="code-block-1">Code Block</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample code block
-import torch
-print (torch.__version__)
-</code></pre></div></div>
-
-<h3 id="formula">Formula</h3>
-<p>Please use latex to generate formulas, such as:</p>
-
-\[\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}\]
-
-<p>or you can write in-text formula \(y = wx + b\).</p>
-
-<h3 id="more-markdown-syntax">More Markdown Syntax</h3>
-<p>You can find more Markdown syntax at <a href="https://www.markdownguide.org/basic-syntax/">this page</a>.</p>
 
 <h2 id="reference">Reference</h2>
 <p>Please make sure to cite properly in your work, for example:</p>
