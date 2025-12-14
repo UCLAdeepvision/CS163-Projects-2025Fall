@@ -7,7 +7,7 @@ date: 2025-12-12
 ---
 
 
-> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained Segformer model. We explore 3 approaches to enhance the model performance, and analyze the result of each. You can find the code [here](https://colab.research.google.com/drive/1zyYjBVjg5Cb8FCsuKu3ZdRixrpnStUDx)
+> [Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained SegFormer model. We explore 3 approaches to enhance the model performance, and analyze their result. You can find the code [here](https://colab.research.google.com/drive/1zyYjBVjg5Cb8FCsuKu3ZdRixrpnStUDx)
 
 <!--more-->
 {: class="table-of-content"}
@@ -675,7 +675,7 @@ trainer.save_model("./segformer-thin-structures-hybrid-final")
 
 
 
-## Results and Analyses
+## Result and Analysis
 After all training and evaluations are done, we print the result, and compare it with the baseline model performance (The fully-finetuned SegFormer-B0 model). The results are shown below.
 
 Approach 1 - BASNet Hybrid Loss:
