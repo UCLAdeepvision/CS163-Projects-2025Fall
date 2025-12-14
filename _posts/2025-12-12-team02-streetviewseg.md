@@ -669,14 +669,15 @@ After all training and evaluations are done, we print the result, and compare it
 
 Approach 1 - BASNet Hybrid Loss:
 
-Class,Baseline,BAS,Improvement
-fence,0.3438,0.3960,+0.0522
-car,0.8964,0.8943,-0.0021
-vegetation,0.8968,0.8948,-0.0020
-pole,0.3119,0.3379,+0.0259
-traffic sign,0.5653,0.5819,+0.0166
-traffic light,0.4583,0.4730,+0.0147
-mIoU,0.5788,0.5963,+0.0176
+| Class | Baseline | BAS | Improvement |
+| :--- | :---: | :---: | :---: |
+| fence | 0.3438 | 0.3960 | +0.0522 |
+| car | 0.8964 | 0.8943 | -0.0021 |
+| vegetation | 0.8968 | 0.8948 | -0.0020 |
+| pole | 0.3119 | 0.3379 | +0.0259 |
+| traffic sign | 0.5653 | 0.5819 | +0.0166 |
+| traffic light | 0.4583 | 0.4730 | +0.0147 |
+| **mIoU** | **0.5788** | **0.5963** | **+0.0176** |
 
 ![BAS]({{ '/assets/images/team02/BAS.png' | relative_url }}){: style="width: 400px; max-width: 100%;"}
 
