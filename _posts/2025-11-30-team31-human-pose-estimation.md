@@ -156,6 +156,13 @@ where $$Q$$, $$K$$, and $$V$$, are query, key, and value matrices derived from f
 ## 3D Human Pose Estimation 
 3D pose estimation extends the 2D formulation by predicting depth information for each joint and predicting the image-plan coordinates (x,y) of each joing, as well as estimating the depth $$z$$, thereby reconstructing the full three-dimensinoal structure of the human body. The task is inherently ill-posed because multiple 3D poses can project to the same 2D configuration. Many approaches therefore, rely on multi-view supervision, temporal constraints, or learned priors over human anatomy. 
 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/3D.webp' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 9. A baseline model for 3d human pose estimation by Martinez et al.  [9].</em></p>
+</div>
+
 A common formulation predicts 3D joints ($$x_i$$, $$y_i$$, $$z_i$$) from 2D detections: 
 
 $$
@@ -193,6 +200,13 @@ Three-dimensional human pose estimation extends the traditional 2D pose estimati
 
 To address these challenges, many approaches incorporate additional sources of information to constrain the solution space. Multi-view methods leverage synchronized images from multiple cameras to triangulate joint positions in 3D space, significantly reducing depth ambiguity and improving accuracy. While effective, these approaches often require careful calibration and controlled setups, limiting their scalability in real-world environments. Temporal models exploit motion continuity across video frames, enforcing smoothness and physical plausibility in predicted poses by assuming that human motion evolves gradually over time. Learned priors over human anatomy and kinematics further constrain predictions by embedding structural knowledge, such as limb length consistency and joint angle limits, into the model.
 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/multiview.jpg' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 10. The framework of deep multi-view concept learning method (DMCL).  [10].</em></p>
+</div>
+
 Recent deep learning approaches have shown remarkable success by learning implicit 3D pose priors from large annotated datasets. These models can infer plausible 3D poses even from single images by exploiting statistical regularities in human motion and body structure. Nevertheless, despite substantial progress, 3D pose estimation remains an active area of research due to persistent challenges in generalization, robustness to occlusion, and performance in unconstrained, in-the-wild settings. 
 
 The emergence of human pose estimation algorithms represents a paradigm shift in the quantitative analysis of human movement. Powered by advances in computer vision and deep learning, modern pose estimation methods enable automatic tracking of human body joints from simple video recordings captured using widely available, low-cost devices such as smartphones, tablets, and laptop cameras. This accessibility has dramatically lowered the barriers to motion analysis, making pose-based measurement feasible in everyday environments rather than restricted laboratory settings. One of the most promising application areas is human health and performance. In clinical contexts, pose estimation allows clinicians to conduct quantitative motor assessments remotely, potentially within a patient’s home, without the need for expensive motion capture systems or wearable sensors. Similarly, researchers without access to specialized laboratory equipment can analyze movement kinematics using consumer-grade video data, while coaches and trainers can evaluate athletic performance directly on the field. These capabilities offer significant advantages in terms of cost, scalability, and ecological validity.
@@ -221,6 +235,13 @@ $$
 
 Where $$Y$$ is the input image, $$*$$ denotes convolution, $$W_i$$ and $$B_i$$ are the weights and biases of the $$i$$-th layer, and max (0,⋅) represents the ReLU activation. SRCNN's simplicity allows fast training and easy integration into pipelines where low-resolution keypoint heatmaps are upscaled to higher resolution for finer localization. 
 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/SRCNN.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 11. Architecture of SRCNN.  [11].</em></p>
+</div>
+
 While SRCNN was originally designed for image super-resolution, its principles have influenced pose estimation pipelines—particularly in heatmap-based keypoint localization. In pose estimation, models often predict low-resolution heatmaps for each joint, which must then be upsampled to higher resolutions for precise localization. SRCNN-like architectures can be used to refine or super-resolve these heatmaps, improving joint accuracy without substantially increasing computational cost. In this context, SRCNN-style models serve as post-processing or refinement modules, learning a mapping from coarse joint confidence maps to sharper, more spatially precise outputs. The ill-posed nature of heatmap super-resolution mirrors that of image SR, as multiple high-resolution joint configurations can correspond to the same low-resolution heatmap.
 
 ### Implementation of SRCNN 
@@ -246,6 +267,13 @@ While SRCNN provides a foundation for feature extraction, it suffers in hgih com
 
 ### ViTPose (Vision Transformer for Pose Estimation)
 ViTPose is a transformer-based approach to human pose estimation that leverages the global modeling capabilities of Vision Transformers (ViTs) to address limitations inherent in convolutional neural networks. Unlike CNN-based methods, which rely on local receptive fields and hierarchical feature aggregation, ViTPose models long-range spatial dependencies directly through self-attention. This property is particularly advantageous for pose estimation in crowded or complex scenes, where joints may be spatially distant, heavily occluded, or visually ambiguous.
+
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/vitpose.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 12. Architecture of the ViTPose model. It consists of a Transformer encoder and two different kinds of decoders.  [12].</em></p>
+</div>
 
 In ViTPose, the input image is first divided into fixed-size patches that are linearly embedded and processed by a transformer encoder. Through multi-head self-attention, the model captures global contextual relationships among different body parts, enabling more coherent reasoning about human structure and inter-joint constraints. This global awareness allows ViTPose to better disambiguate challenging poses, such as overlapping limbs or interactions between multiple individuals, which are common failure cases for purely convolutional architectures.
 
@@ -335,56 +363,46 @@ In modern pose estimation pipelines, ViTPose is often integrated with convolutio
 ## Conclusion 
 Human pose estimation has emerged as a fundamental problem in modern computer vision, driven by deep learning, large datasets, and powerful toolkits such as MMPose. Through structured representations of the human body, pose estimation enables machines to reason about motion, posture, and interaction at a fine-grained level. As models continue to evolve toward 3D, whole-body, and real-time systems, pose estimation will remain a critical component of intelligent visual understanding. 
 
-
-
-
-## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
-
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
-
-Please cite the image if it is taken from other people's work.
-
-
-### Table
-Here is an example for creating tables, including alignment syntax.
-
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
-
-
-
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
-
-
-### Formula
-Please use latex to generate formulas, such as:
-
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
-
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
-
 ## Reference
 Please make sure to cite properly in your work, for example:
 
-[1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2016.
+[1] Redmon, J., Divvala, S., Girshick, R., & Farhadi, A. You only look once: Unified, real-time object detection. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016.
 
-Your survey starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+[2] Dong, C., Loy, C. C., He, K., & Tang, X. Image super-resolution using deep convolutional networks. IEEE Transactions on Pattern Analysis and Machine Intelligence, 38(2), 295–307, 2016.
+(Architecture figure source: ResearchGate)
+https://www.researchgate.net/publication/378907335/figure/fig1/AS:11431281252590961@1718783506447/Architecture-of-SRCNN-SRCNN-consists-of-feature-block-extraction-and-representation.png
+
+[3] Dong, C., Loy, C. C., He, K., & Tang, X. Learning a deep convolutional network for image super-resolution. arXiv preprint arXiv:1501.00092, 2015.
+https://arxiv.org/pdf/1501.00092v3
+
+[4] Cao, Z., Hidalgo, G., Simon, T., Wei, S. E., & Sheikh, Y. OpenPose: Realtime multi-person 2D pose estimation using part affinity fields. IEEE Transactions on Pattern Analysis and Machine Intelligence, 43(1), 172–186, 2021.
+(Heatmap visualization example)
+https://www.researchgate.net/figure/The-examples-of-generated-joint-heatmap-limb-heatmap-and-joint-limb-heatmap_fig3_368320282
+
+[5] Toshev, A., & Szegedy, C. DeepPose: Human pose estimation via deep neural networks. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2014.
+
+[6] Sun, Y., Wang, W., Tang, X., & Liu, X. Human pose estimation in the wild: A survey. Neurocomputing, 2021.
+https://www.sciencedirect.com/science/article/pii/S0925231221004768
+
+[7] Kocabas, M., Athanasiou, N., & Black, M. J. HMR 2.0: Advances in human mesh recovery. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2023.
+(Example visualization)
+https://blog.metaphysic.ai/wp-content/uploads/2023/06/hmr2-examples-1024x397.jpg
+
+[8] Ashfaq, N., et al. Intelligent monitoring systems using human pose estimation. Sensors, 2022.
+(Figure source)
+https://www.researchgate.net/profile/Niaz-Ashfaq/publication/366703501/figure/fig3/AS:11431281111105083@1672881081850/ntelligent-monitoring-system.ppm
+
+[9] Kim, J., et al. Vision-based human activity recognition: A comprehensive review. Sustainability, 15(18), 13363, 2023.
+https://www.mdpi.com/2071-1050/15/18/13363
+
+[10] Mathis, A., et al. DeepLabCut: Markerless pose estimation of user-defined body parts with deep learning. Nature Neuroscience, 21(9), 1281–1289, 2018.
+(Application and clinical context)
+https://pmc.ncbi.nlm.nih.gov/articles/PMC8588262/
+
+[11] Xu, Y., Zhang, J., & Zhang, Y. Vision Transformer-based pose estimation. arXiv preprint, 2022.
+(ViTPose architecture visualization)
+https://debuggercafe.com/wp-content/uploads/2025/02/vitpose-architecture.png
+
+
 
 ---
