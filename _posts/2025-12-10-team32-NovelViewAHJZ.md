@@ -109,7 +109,7 @@ The expressivity is moved from neural layers into the geometric primitives of 3D
 
 ![3DGS Architecture]({{ '/assets/images/32/3dgs_architecture.png' | relative_url }})
 {: style="width: 700px; max-width: 100%;"}
-_Fig. Optimization of sparse SfM point cloud to create a set of 3D Gaussians, which are tiled for the optimization strategy by rasterization._
+_Fig 1. Optimization of sparse SfM point cloud to create a set of 3D Gaussians, which are tiled for the optimization strategy by rasterization [1]._
 
 The optimization starts with a sparse SfM point cloud, which is used at initialization to produce the set of initial 3D Gaussian parameters. Each SfM point provides: mean (3D position), isotropic covariance (size), opacity $$\alpha$$, and color (via spherical harmonics).
 
@@ -121,19 +121,19 @@ Passing through the differentiable rasterizer, the gradients flow through both t
 
 #### Results
 
-Bernhard et al. tested the model for image synthesis against previous NeRF methods.
+Kerbl et al. tested the model for image synthesis against previous NeRF methods.
 
 The paper evaluated 3D Gaussian Splatting across a diverse set of datasets against 13 real scenes from published datasets and the synthetic Blender dataset. The scenes were chosen for different capture styles, covering both indoor and outdoor environments. Results are compared to state-of-the-art quality methods at the time (Mip-NeRF360) as well as the fastest NeRF methods (InstantNGP and Plenoxels) as benchmarks for quality and speed, respectively.
 
 ![Comparison of 3DGS to previous methods]({{ '/assets/images/32/3dgs_comparison_photos.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-_Fig. Comparison of 3D Gaussian Splatting to previous methods and ground truth from the Mip-NeRF360 dataset._
+_Fig 2. Comparison of 3D Gaussian Splatting to previous methods and ground truth from the Mip-NeRF360 dataset [1]._
 
 The image comparisons above demonstrate that 3D Gaussian Splatting achieves comparable quality to Mip-NeRF360. Critical examples are highlighted in each image with zoom-ins or red arrows.
 
 ![Results Table]({{ '/assets/images/32/3dgs_results_table.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-_Table 1. Quantitative evaluation of 3DGS (labeled "Ours-7k" and "Ours-30k") compared to previous work, computed over three datasets. Results marked with a dagger (†) have been directly adopted from the original paper; all others were obtained in the 3DGS paper._
+_Table 1. Quantitative evaluation of 3DGS (labeled "Ours-7k" and "Ours-30k") compared to previous work, computed over three datasets. Results marked with a dagger (†) have been directly adopted from the original paper; all others were obtained in the 3DGS paper [1]._
 
 For a more quantitative focus, the table above shows that 3D Gaussian Splatting either performs comparably to or outperforms NeRF methods in quality measures, while achieving low training times proportional to quality outputs. A critical value to note is the FPS of 3D Gaussian Splatting, which for the first time enabled real-time rendering speeds. The main drawback, aside from comparison to Plenoxels, is that 3D Gaussian Splatting is highly memory-intensive, requiring significantly more storage than NeRF methods.
 
@@ -149,13 +149,13 @@ Overall, 3DGS takes a fundamentally different approach from previous methods of 
 
 #### Running the Codebase
 
-We use the popular open-source implementation [OpenSplat](https://github.com/pierotofy/OpenSplat), since it includes detailed instructions for building on different OSes as well as on Colab. On MacOS, it was as simple as installing the dependencies with `brew`, cloning the repository, and running   
+We use the popular open-source implementation [OpenSplat](https://github.com/pierotofy/OpenSplat) [3], since it includes detailed instructions for building on different OSes as well as on Colab. On MacOS, it was as simple as installing the dependencies with `brew`, cloning the repository, and running   
 `cmake -DCMAKE_PREFIX_PATH=/path/to/libtorch/ .. && make -j$(nproc)`.   
 `./opensplat ../data/banana -n 2000` finished running in around 2 minutes and produced the expected banana model, viewed on [https://antimatter15.com/splat/](https://antimatter15.com/splat/).
 
 ![banana]({{ '/assets/images/32/banana.png' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-_Fig. Banana splat rendered on antimatter_
+_Fig 3. Banana splat rendered on antimatter_
 
 #### Creating a Dataset
 
@@ -215,7 +215,7 @@ Much debugging later, we were able to get a passable reconstruction of our video
 
 ![pipeline]({{ '/assets/images/32/pipeline.gif' | relative_url }})
 {: style="width: 400px; max-width: 100%;"}
-_Fig. Splat of a team member's dining table after frame extraction, SfM, and OpenSplat_
+_Fig 4. Splat of a team member's dining table after frame extraction, SfM, and OpenSplat_
 
 #### Exploring Activation Functions
 The paper applies a sigmoid activation to per-Gaussian opacity (α) to constrain it in the [0, 1) range and an exponential activation to the covariance scale parameters in the name of smooth gradients. We investigate Softplus as an alternative covariance scale activation choice and evaluate its impact on reconstruction quality.
@@ -225,10 +225,10 @@ In Gaussian splatting, the covariance parameters must remain positive to ensure 
 To explore this effect, we replace the exponential activation with the softplus function: `Softplus(p) = ln(1+exp(p))`. The gradient of this activation with respect to the parameter p is the sigmoid function `exp(p) / (1 + exp(p))`. As p approaches infinity, the gradient saturates at 1. Unlike the exponential function, Softplus essentially imposes a linear update rule for large Gaussians. Using Softplus activation for covariance scale, we expect to see more stability in large features during optimization.
 
 ![exp1]({{ '/assets/images/32/comparison1.gif' | relative_url }}){: style="width: 800px; max-width: 100%;"}
-_Fig. Comparison of Exp and Softmax activation functions over 7000 iterations, view 1_
+_Fig 5. Comparison of Exp and Softplus activation functions over 7000 iterations, view 1_
 
 ![exp1]({{ '/assets/images/32/comparison2.gif' | relative_url }}){: style="width: 800px; max-width: 100%;"}
-_Fig. Comparison of Exp and Softmax activation functions over 7000 iterations, view 2_
+_Fig 6. Comparison of Exp and Softplus activation functions over 7000 iterations, view 2_
 
 Both models reconstruct the overall scene fairly well, but there are a few noticeable differences. Softplus more accurately one table corner, whereas the exponential activation leaves it somewhat blurry. Softplus also renders the diagonal shadow cast by the rear box more sharply in the first view, aligning more closely with the ground truth images. While not the difference in large Gaussians that we expected, this behavior is still nonetheless interesting.
 
@@ -293,7 +293,7 @@ The first is an $$\textbf{encoder-decoder LVSM}$$. It consists of an encoder, wh
 
 ![LVSM Architecture]({{ '/assets/images/32/lvsm_architecture.png' | relative_url }})
 {: style="width: 700px; max-width: 100%;"}
-_Fig. LVSM architectures: (a) Encoder-Decoder LVSM and (b) Decoder-Only LVSM._
+_Fig 7. LVSM architectures: (a) Encoder-Decoder LVSM and (b) Decoder-Only LVSM [2]._
 
 #### Results
 
@@ -309,12 +309,11 @@ For scene level testing, they compared the results of LVSM with pixelNeRF, GPNR,
 
 ![LVSM Object Level Comparison]({{ '/assets/images/32/lvsm_object_comparison.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-_Fig. Qualitative comparison for object level testing._
+_Fig 8. Qualitative comparison for object level testing [2]._
 
 ![LVSM Scene Level Comparison]({{ '/assets/images/32/lvsm_scene_comparison.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
-_Fig. Qualitative comparison on the RealEstate10K dataset for scene level testing._
-
+_Fig 9. Qualitative comparison on the RealEstate10K dataset for scene level testing [2]._
 
 #### Discussion
 
@@ -344,6 +343,8 @@ The exploration of 3D Gaussian Splatting and the Large View Synthesis Model show
 
 [1] Kerbl, Bernhard, et al. "3D Gaussian Splatting for Real-Time Radiance Field Rendering." _ACM Transactions on Graphics (SIGGRAPH)_, vol. 42, no. 4, 2023.
 
-[2] Jin, Haian, et al. “LVSM: A Large View Synthesis Model with Minimal 3D Inductive Bias.” arXiv.Org, 2 Apr. 2025, arxiv.org/abs/2410.17242.
+[2] Jin, Haian, et al. “LVSM: A Large View Synthesis Model with Minimal 3D Inductive Bias.” arXiv.org, 2 Apr. 2025, arxiv.org/abs/2410.17242.
+
+[3] Pierotofy. “Pierotofy/OpenSplat: Production-Grade 3d Gaussian Splatting with CPU/GPU Support for Windows, Mac and Linux 🚀.” GitHub, 2024, github.com/pierotofy/OpenSplat.
 
 ---
