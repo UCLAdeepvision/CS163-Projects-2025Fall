@@ -4,6 +4,7 @@ comments: true
 title: XAI in Facial Recognition
 author: Erick Rosas Gonzalez, Maya Josifovska, Andrew Rubio, Wanda Barahona
 date: 2025-12-13
+mathjax: true
 ---
 
 > Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME (Weng et al., 2023) which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) (Lu et al., 2024), which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability (Huber et al., 2024), which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.
@@ -217,6 +218,14 @@ Moving forward, the integration of these XAI tools into the standard development
 
 [4] N. Weng et al., "Fast diffusion-based counterfactuals for shortcut removal and generation," *arXiv:2312.14223*, Dec. 2023. [Online]. Available: https://arxiv.org/abs/2312.14223
 
-<script type="text/javascript" async
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script type="text/javascript" id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
