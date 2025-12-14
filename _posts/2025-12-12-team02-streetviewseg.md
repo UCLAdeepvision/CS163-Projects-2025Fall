@@ -460,17 +460,15 @@ trainer.save_model("./segformer-thin-structures-ba_aug-final")
 
 
 ### Approach 3 - SSIM + Lovasz Loss + Copy-Paste Augmentation
-In the BASNet hybrid loss, the IoU loss attempts to approximate the Jaccard index directly by aggregating softmax probabilities across the entire image. Instead of discrete counts ($$0$$ or $$1$$), it uses continuous probability predictions.
+In our third approach, we replace the soft IoU loss from the BASNet hybrid loss with the Lovász-Softmax loss, while retaining SSIM loss and copy-paste augmentation. The motivation is to explore whether Lovász-Softmax, which directly optimizes for the IoU metric through a convex surrogate, can provide better supervision than the standard soft IoU loss.
 
-We inspect that a critical issue with this approach is that everything is calculated inside global sums. Consequently, there is no explicit mechanism to "fix the worst pixels first,", and small or thin objects can be washed out by larger classes. More specifically, for a very small object like poles, the contribution to the global loss numerator/denominator is negligible compare to the bacground even if the model is 100% wrong. As a result, gradient is tiny and the optimizer effectively ignores the mistakes on the small object because it is drowned out by the correctly classified background pixels.
+Unlike soft IoU loss which computes a differentiable approximation of IoU, Lovász-Softmax loss leverages the Lovász extension to create a convex surrogate that directly optimizes the Jaccard index [4]. The key mechanism involves sorting pixels by their prediction error magnitude and applying class-specific gradient weighting derived from the Lovász extension. Critically, the loss uses per-class averaging, where each class contributes equally to the total loss regardless of its pixel count:
 
-So we employ the Lovasz-Softmax loss, which serves as a convex surrogate for the IoU loss. It addresses the issue through two steps:
+$$\ell_{lovasz} = \frac{1}{C} \sum_{c=1}^{C} \Delta_{J_c}(m(c))$$
 
-1.  **Sorting ($$e_{(1)} \ge e_{(2)} \dots$$)** We rank every pixel by how confident the model is in its mistake.
+where $$\Delta J$$ is the Lovasz extension of the IoU loss for class $$c$$, and $$m(c)$$ represents the vector of errors for that class
 
-2.  **Weighting ($$\Delta J$$)** We assign weights based on the marginal drop in IoU
-
-By sorting and multiplying by corresponding IoU loss, we force a specific alignment which aligns biggest error with steepest penalty and smallest error with flat penalty. As a result this ensures that a small object, if completely misclassified, generates a large, sharp gradient that cuts through the noise of the background
+In addition to using Lovasz loss, we introduce explicit class weighting in the cross-entropy loss to further address class imbalance. We assign higher weights to underrepresented fine-grained structures:
 
 The detailed implementaion of this approach is shown below:
 
