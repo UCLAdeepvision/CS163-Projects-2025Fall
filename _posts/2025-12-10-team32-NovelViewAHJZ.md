@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: Comparing Modern Novel View Generation Models
+title: "Project Track: Exploring Modern Novel View Generation Methods"
 author: Team 32
 date: 2025-12-10
 ---
@@ -53,9 +53,7 @@ Inline formula: $$y = mx + b$$
 
 ## Motivation
 
-As generative models become commonplace in our society, there are many applications of such models in creating visual representations of our world. While image generation (such as Stable Diffusion) is already quite popular, other fields of interest are worth exploring too. More notably, there have been advances in novel-view synthesis in the past year that are worth exploring through this report. 
-
-With a demand for faster and clearer generation, novel-view synthesis has evolved from NeRF-style volumetric radiance field approaches, which are costly to train and create images with low quality. With 3D Gaussian Splatting and the Large View Synthesis Model, researchers have taken multiple approaches to reduce the computational cost of generating novel views while still improving performance. Comparing these two paradigms provides insight into the tradeoffs between geometry-aware and fully data-driven approaches. 
+Historically, novel view synthesis (NVS) has relied on volumetric radiance field approaches, such as NeRF. While effective, these methods are often computationally expensive to train and prohibitively slow to render for real-time applications. To address these limitations, researchers have developed new architectures that reduce computational costs while maintaining or exceeding visual fidelity. This report examines two distinct solutions to this challenge: 3D Gaussian Splatting (3DGS) and the Large View Synthesis Model (LVSM).
 
 ## Current Novel View Generation Methodologies
 
