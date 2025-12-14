@@ -54,7 +54,7 @@ $$
 The higher the IoU and mIoU value is, the better is the model performance.
 
 ## Baseline Methods
-We fully fine-tuned a SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head, and we are going to use this fully-finetuned SegFormer-B0 as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, and the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
+We fully fine-tuned a SegFormer-B0 segmentation model from a Cityscapes-fine-tuned checkpoint, with a newly initialized 7-class (six fine-grained urban structure classes + background) segmentation head, and we are going to use this fully-finetuned SegFormer-B0 as our baseline model. The reason is that due to limited computational resources, SegFormer-B0 is the most suitable starting point, the original head and label set don't match our remapped classes, and a fine-tuned baseline gives a strong, task-aligned reference so any gains can be attributed to our methods rather than simply training the model on the target data. The training setup is shown in the code below:
 ```
 model_base = SegformerForSemanticSegmentation.from_pretrained(
     "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
