@@ -41,6 +41,13 @@ Accompanying the implementation is a curated collection of seminal and research 
 ## Why Does Human Pose Estimation Work Now? 
 Although pose estimation has been studied for decades, its recent success can largely be attributed to three converging facts. These factors are data, computation, and model design. Modern pose estimation models rely on large-scale annotated datasets such as COCO, MPII, Human3.6M, and 3DPW, which provide diverse human poses across different viewpoints, environments, and levels of occlusion. Without these datasets, learning representations of human articulation would not be possible. 
 
+<div style="text-align: center;">
+  <img src="{{ '/assets/images/assets/images/905972224/3DPose.png' | relative_url }}" 
+       alt="YOLO UMAP" 
+       style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 1. Examples of 3D pose estimation for Human3.6M  [1].</em></p>
+</div>
+
 Just as important is the availability of powerful computational resources. Training deep neural networks for pose estimation involves optimizing millions of parameters and processing high-resolution feature maps. GPUs and specialized accelerators make it possible to train models efficiently and deploy them in real-time systems. 
 
 Finally, deep learning architectures are designed to learning spatial dependencies between joints. Unlike traditional hand-crafted approaches, deep models can automatically learn hierarchical representations that encode both local joint appearance and global body structure. This allows pose estimation systems to scale effectively as data size increases, improving performance rather than saturating.  
