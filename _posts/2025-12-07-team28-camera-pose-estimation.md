@@ -142,8 +142,7 @@ Your survey starts here. You can refer to the [source code](https://github.com/l
 -->
 
 ## Metrics
-
-Now we will be going over the key metrics we used and why we used them. 
+Now we will be going over the three key metrics that we used and what each of them are calculating. 
 
 ### Absolute Trajectory Error (ATE)
 
@@ -166,19 +165,14 @@ Relative orientation error (ROE) is a local rotation accuracy metric, which chec
 
 ## Findings and Analysis
 
-
-
-
 ### Table
 Here is an example for creating tables, including alignment syntax.
 
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
-
-
-
+| Method  | ATE    | RTE           | ROE          |
+|---------|--------|---------------|--------------|
+| VGG     | 0.0214 | 0.00493       | 0.3298       |
+| ICP     | 0.0842 | 0.0172        | 1.5116       |
+| COLMAP  | 0.0477 m | 0.0073 m/frame | 0.9050 °/frame |
 
 
 ## Reference

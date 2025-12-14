@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T23:25:55-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-13T23:29:21-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Camera Pose Estimation</title><link href="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html" rel="alternate" type="text/html" title="Camera Pose Estimation" /><published>2025-12-07T00:00:00-08:00</published><updated>2025-12-07T00:00:00-08:00</updated><id>http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation</id><content type="html" xml:base="http://localhost:4000/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html"><![CDATA[<blockquote>
   <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.</p>
 </blockquote>
 
@@ -153,8 +153,7 @@ Your survey starts here. You can refer to the [source code](https://github.com/l
 -->
 
 <h2 id="metrics">Metrics</h2>
-
-<p>Now we will be going over the key metrics we used and why we used them.</p>
+<p>Now we will be going over the three key metrics that we used and what each of them are calculating.</p>
 
 <h3 id="absolute-trajectory-error-ate">Absolute Trajectory Error (ATE)</h3>
 
@@ -182,21 +181,30 @@ https://docs.openvins.com/eval-metrics.html</p>
 <table>
   <thead>
     <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: center">column 1</th>
-      <th style="text-align: right">column 2</th>
+      <th>Method</th>
+      <th>ATE</th>
+      <th>RTE</th>
+      <th>ROE</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: left">row1</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
+      <td>VGG</td>
+      <td>0.0214</td>
+      <td>0.00493</td>
+      <td>0.3298</td>
     </tr>
     <tr>
-      <td style="text-align: left">row2</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
+      <td>ICP</td>
+      <td>0.0842</td>
+      <td>0.0172</td>
+      <td>1.5116</td>
+    </tr>
+    <tr>
+      <td>COLMAP</td>
+      <td>0.0477 m</td>
+      <td>0.0073 m/frame</td>
+      <td>0.9050 °/frame</td>
     </tr>
   </tbody>
 </table>

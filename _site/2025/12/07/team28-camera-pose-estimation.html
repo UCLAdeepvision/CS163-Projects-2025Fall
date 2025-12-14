@@ -325,8 +325,7 @@ Your survey starts here. You can refer to the [source code](https://github.com/l
 -->
 
 <h2 id="metrics">Metrics</h2>
-
-<p>Now we will be going over the key metrics we used and why we used them.</p>
+<p>Now we will be going over the three key metrics that we used and what each of them are calculating.</p>
 
 <h3 id="absolute-trajectory-error-ate">Absolute Trajectory Error (ATE)</h3>
 
@@ -354,21 +353,30 @@ https://docs.openvins.com/eval-metrics.html</p>
 <table>
   <thead>
     <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: center">column 1</th>
-      <th style="text-align: right">column 2</th>
+      <th>Method</th>
+      <th>ATE</th>
+      <th>RTE</th>
+      <th>ROE</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: left">row1</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
+      <td>VGG</td>
+      <td>0.0214</td>
+      <td>0.00493</td>
+      <td>0.3298</td>
     </tr>
     <tr>
-      <td style="text-align: left">row2</td>
-      <td style="text-align: center">Text</td>
-      <td style="text-align: right">Text</td>
+      <td>ICP</td>
+      <td>0.0842</td>
+      <td>0.0172</td>
+      <td>1.5116</td>
+    </tr>
+    <tr>
+      <td>COLMAP</td>
+      <td>0.0477 m</td>
+      <td>0.0073 m/frame</td>
+      <td>0.9050 °/frame</td>
     </tr>
   </tbody>
 </table>
