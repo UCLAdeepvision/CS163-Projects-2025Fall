@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: "Project Track: Project 8 - Street-view Semantic Segmentation"
+title: "Street-view Semantic Segmentation"
 author: "Zach Liu, Tianze Zhao, Ruizhe Cheng, Ahmad Khan"
 date: 2025-12-12
 ---
