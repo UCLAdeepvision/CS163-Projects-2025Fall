@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Streetview Semantic Segmentation</title>
+
+    <meta name="description" content="[Project Track: Project 8]Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Streetview Semantic Segmentation" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="[Project Track: Project 8]Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object boundaries critical for safety-relevant perception. This project presents a diagnostic-driven framework for understanding segmentation failures on Cityscapes and introduces a SAM3-guided boundary supervision method that injects geometric priors into..." property="og:description">
+    
+    
+        <meta content="/2025/12/13/team43-urban-segmentation.html" property="og:url">
+    
+<!--
+    
+        <meta content="Griffin Galimi, Yahvin Gali, Joseph Hu, and Pravir Chugh" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/13/team43-urban-segmentation.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Streetview Semantic Segmentation">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>[Project Track: Project 8]Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object boundaries critical for safety-relevant perception.  This project presents a diagnostic-driven framework for understanding segmentation failures on Cityscapes and introduces a SAM3-guided boundary supervision method that injects geometric priors into SegFormer. By combining cross-model difficulty analysis with geometry-aware auxiliary training, we demonstrate targeted improvements on thin and boundary-sensitive classes without increasing inference cost.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Streetview Semantic Segmentation</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Griffin Galimi, Yahvin Gali, Joseph Hu, and Pravir Chugh</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team43-urban-segmentation.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>[Project Track: Project 8]Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object boundaries critical for safety-relevant perception.  This project presents a diagnostic-driven framework for understanding segmentation failures on Cityscapes and introduces a SAM3-guided boundary supervision method that injects geometric priors into SegFormer. By combining cross-model difficulty analysis with geometry-aware auxiliary training, we demonstrate targeted improvements on thin and boundary-sensitive classes without increasing inference cost.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#diagnosing-and-improving-boundary-failures-in-urban-semantic-segmentation-via-sam3-guided-supervision" id="markdown-toc-diagnosing-and-improving-boundary-failures-in-urban-semantic-segmentation-via-sam3-guided-supervision">Diagnosing and Improving Boundary Failures in Urban Semantic Segmentation via SAM3-Guided Supervision</a>    <ul>
+      <li><a href="#1-introduction" id="markdown-toc-1-introduction">1. Introduction</a></li>
+      <li><a href="#2-background-and-related-work" id="markdown-toc-2-background-and-related-work">2. Background and Related Work</a>        <ul>
+          <li><a href="#21-semantic-segmentation-in-urban-scenes" id="markdown-toc-21-semantic-segmentation-in-urban-scenes">2.1 Semantic Segmentation in Urban Scenes</a></li>
+          <li><a href="#22-mask-based-and-universal-segmentation-models" id="markdown-toc-22-mask-based-and-universal-segmentation-models">2.2 Mask-Based and Universal Segmentation Models</a></li>
+          <li><a href="#23-foundation-models-and-geometric-priors" id="markdown-toc-23-foundation-models-and-geometric-priors">2.3 Foundation Models and Geometric Priors</a></li>
+        </ul>
+      </li>
+      <li><a href="#3-cross-model-difficulty-analysis-framework" id="markdown-toc-3-cross-model-difficulty-analysis-framework">3. Cross-Model Difficulty Analysis Framework</a>        <ul>
+          <li><a href="#31-motivation" id="markdown-toc-31-motivation">3.1 Motivation</a></li>
+          <li><a href="#32-difficulty-clustering" id="markdown-toc-32-difficulty-clustering">3.2 Difficulty Clustering</a></li>
+          <li><a href="#33-attribute-and-pattern-analysis" id="markdown-toc-33-attribute-and-pattern-analysis">3.3 Attribute and Pattern Analysis</a></li>
+        </ul>
+      </li>
+      <li><a href="#4-improving-the-baseline-ohem-and-oversampling" id="markdown-toc-4-improving-the-baseline-ohem-and-oversampling">4. Improving the Baseline: OHEM and Oversampling</a>        <ul>
+          <li><a href="#41-online-hard-example-mining-ohem" id="markdown-toc-41-online-hard-example-mining-ohem">4.1 Online Hard Example Mining (OHEM)</a></li>
+          <li><a href="#42-thin-object-oversampling" id="markdown-toc-42-thin-object-oversampling">4.2 Thin Object Oversampling</a></li>
+        </ul>
+      </li>
+      <li><a href="#5-method-overview-geometry-aware-supervision" id="markdown-toc-5-method-overview-geometry-aware-supervision">5. Method Overview: Geometry-Aware Supervision</a>        <ul>
+          <li><a href="#51-design-rationale" id="markdown-toc-51-design-rationale">5.1 Design Rationale</a></li>
+          <li><a href="#52-why-sam3" id="markdown-toc-52-why-sam3">5.2 Why SAM3?</a></li>
+          <li><a href="#53-key-idea" id="markdown-toc-53-key-idea">5.3 Key Idea</a></li>
+        </ul>
+      </li>
+      <li><a href="#6-model-architecture" id="markdown-toc-6-model-architecture">6. Model Architecture</a>        <ul>
+          <li><a href="#61-high-level-architecture" id="markdown-toc-61-high-level-architecture">6.1 High-Level Architecture</a></li>
+          <li><a href="#62-boundary-head" id="markdown-toc-62-boundary-head">6.2 Boundary Head</a></li>
+        </ul>
+      </li>
+      <li><a href="#7-implementation-details" id="markdown-toc-7-implementation-details">7. Implementation Details</a>        <ul>
+          <li><a href="#71-framework-and-tools" id="markdown-toc-71-framework-and-tools">7.1 Framework and Tools</a></li>
+          <li><a href="#72-data-preparation" id="markdown-toc-72-data-preparation">7.2 Data Preparation</a></li>
+          <li><a href="#73-training-strategies" id="markdown-toc-73-training-strategies">7.3 Training Strategies</a></li>
+        </ul>
+      </li>
+      <li><a href="#8-experimental-setup" id="markdown-toc-8-experimental-setup">8. Experimental Setup</a>        <ul>
+          <li><a href="#81-dataset" id="markdown-toc-81-dataset">8.1 Dataset</a></li>
+          <li><a href="#82-models-evaluated" id="markdown-toc-82-models-evaluated">8.2 Models Evaluated</a></li>
+          <li><a href="#83-metrics" id="markdown-toc-83-metrics">8.3 Metrics</a></li>
+        </ul>
+      </li>
+      <li><a href="#9-results" id="markdown-toc-9-results">9. Results</a>        <ul>
+          <li><a href="#91-quantitative-results" id="markdown-toc-91-quantitative-results">9.1 Quantitative Results</a></li>
+          <li><a href="#overall-performance-comparison" id="markdown-toc-overall-performance-comparison">Overall Performance Comparison</a></li>
+          <li><a href="#impact-of-sam3-boundary-supervision-on-thin-classes" id="markdown-toc-impact-of-sam3-boundary-supervision-on-thin-classes">Impact of SAM3 Boundary Supervision on Thin Classes</a></li>
+          <li><a href="#cross-model-comparison-on-thin-structures" id="markdown-toc-cross-model-comparison-on-thin-structures">Cross-Model Comparison on Thin Structures</a></li>
+          <li><a href="#92-qualitative-results" id="markdown-toc-92-qualitative-results">9.2 Qualitative Results</a></li>
+        </ul>
+      </li>
+      <li><a href="#10-analysis-and-observations" id="markdown-toc-10-analysis-and-observations">10. Analysis and Observations</a></li>
+      <li><a href="#11-limitations" id="markdown-toc-11-limitations">11. Limitations</a></li>
+      <li><a href="#12-conclusion" id="markdown-toc-12-conclusion">12. Conclusion</a></li>
+      <li><a href="#13-future-work" id="markdown-toc-13-future-work">13. Future Work</a>        <ul>
+          <li><a href="#131-adaptive-class-aware-auxiliary-supervision" id="markdown-toc-131-adaptive-class-aware-auxiliary-supervision">13.1 Adaptive, class-aware auxiliary supervision</a></li>
+          <li><a href="#132-temporal-consistency-in-video-segmentation" id="markdown-toc-132-temporal-consistency-in-video-segmentation">13.2 Temporal consistency in video segmentation</a></li>
+          <li><a href="#133-dedicated-thin-object-evaluation-benchmarks" id="markdown-toc-133-dedicated-thin-object-evaluation-benchmarks">13.3 Dedicated thin-object evaluation benchmarks</a></li>
+          <li><a href="#134-boundary-specific-metrics" id="markdown-toc-134-boundary-specific-metrics">13.4 Boundary-specific metrics</a></li>
+        </ul>
+      </li>
+      <li><a href="#references" id="markdown-toc-references">References</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="diagnosing-and-improving-boundary-failures-in-urban-semantic-segmentation-via-sam3-guided-supervision">Diagnosing and Improving Boundary Failures in Urban Semantic Segmentation via SAM3-Guided Supervision</h1>
+
+<h2 id="1-introduction">1. Introduction</h2>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/SAM3_output.png" alt="Difference" style="width: 1000px; max-width: 100%;" />
+  <p><em>
+    Fig 1. SAM3 output and example of the semantic segmentation problem in urban scenes.
+  </em></p>
+</div>
+
+<p>Semantic segmentation of urban street scenes (Example shown in <em>Figure 1</em>) is a foundational task for autonomous driving, robotics, and urban mapping. Modern deep learning models—particularly transformer-based architectures—achieve strong performance on large, visually dominant classes such as roads, buildings, and sky. However, despite high mean Intersection-over-Union (mIoU), these models exhibit consistent failure modes when segmenting <strong>thin structures</strong> (e.g., poles, traffic signs, bicycle frames) and <strong>complex object boundaries</strong>. This can be seen clearly in <em>Figure 2</em>, which highlights the performance disparity between the large, dominant classes with sharp peaks near perfect IoU, indicating consistent reliability. In contrast, the thin categories show broad, flattened distributions, visually confirming the high variance and frequent failure modes associated with segmenting thin geometry.</p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/SegFormer_ridgeline.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <p><em>
+    Fig 2. Per-Category IoU distributions (Ridgeline Plot) for the SegFormer baseline.
+  </em></p>
+</div>
+
+<p>These failure modes are problematic for two reasons. First, thin objects often correspond to safety-critical infrastructure. Second, boundary errors frequently propagate to downstream tasks such as tracking and planning. Yet, aggregate metrics like mIoU obscure <em>why</em> these failures occur and <em>which</em> images or structures are most affected.</p>
+
+<p>This project takes a <strong>diagnostic-first approach</strong>. Rather than focusing solely on improving global performance, we first analyze segmentation difficulty across models and images to identify systematic weaknesses. Motivated by this analysis, we propose a <strong>SAM3-guided boundary supervision strategy</strong> that distills geometric priors from a large foundation model into a lightweight semantic segmentation network.</p>
+
+<h2 id="2-background-and-related-work">2. Background and Related Work</h2>
+
+<h3 id="21-semantic-segmentation-in-urban-scenes">2.1 Semantic Segmentation in Urban Scenes</h3>
+
+<p>Early semantic segmentation approaches relied on hand-crafted features and graphical models such as Conditional Random Fields. While effective at modeling local boundaries, these methods struggled with semantic consistency at scale.</p>
+
+<p>The introduction of fully convolutional networks (FCNs) enabled end-to-end semantic segmentation, later improved by architectures such as DeepLab through atrous convolutions and multi-scale context. More recently, transformer-based models such as SegFormer have demonstrated strong performance by modeling long-range dependencies with efficient attention mechanisms [2].</p>
+
+<p>Despite these advances, <strong>boundary precision remains a known weakness</strong>, particularly for thin or elongated structures.</p>
+
+<h3 id="22-mask-based-and-universal-segmentation-models">2.2 Mask-Based and Universal Segmentation Models</h3>
+
+<p>Mask-based architectures, such as Mask2Former, unify semantic, instance, and panoptic segmentation through mask classification. These methods improve object delineation but are computationally heavier and less suitable for lightweight deployment.</p>
+
+<h3 id="23-foundation-models-and-geometric-priors">2.3 Foundation Models and Geometric Priors</h3>
+
+<p>Foundation models such as the Segment Anything Model (SAM) and its successor SAM3 are trained on large-scale data to produce high-quality object masks with strong geometric fidelity [4]. However, these models are class-agnostic and are not directly optimized for semantic segmentation benchmarks.</p>
+
+<p>Recent work suggests that such models can act as <strong>teachers</strong>, providing structural priors that complement task-specific learners.</p>
+
+<h2 id="3-cross-model-difficulty-analysis-framework">3. Cross-Model Difficulty Analysis Framework</h2>
+
+<h3 id="31-motivation">3.1 Motivation</h3>
+
+<p>Standard evaluation metrics fail to explain <em>where</em> and <em>why</em> segmentation models fail. To address this limitation, we introduce a framework for analyzing segmentation difficulty at the <strong>image level</strong> across multiple architectures.</p>
+
+<h3 id="32-difficulty-clustering">3.2 Difficulty Clustering</h3>
+
+<p>For each image in the validation set, we compute a performance vector containing per-class IoU scores from multiple models. We then apply simple clustering methods to group images by shared difficulty patterns based on their per model IoU.</p>
+
+<p>The resulting clusters were observed as:</p>
+<ul>
+  <li><strong>Universally Easy</strong>: all models perform well</li>
+  <li><strong>Universally Hard</strong>: all models fail</li>
+  <li><strong>Model-Specific</strong>: performance varies by architecture</li>
+  <li><strong>Ambiguous</strong>: inconsistent or unstable behavior</li>
+</ul>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/SAM3_vs_SegFormer.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <p><em>
+    Fig 3. Venn Diagram Analysis of Model Consensus on Thin Object Classes.
+    Comparison of successful predictions (IoU &gt; 0.6) and failure cases (IoU &lt; 0.5)
+    across SAM3-solo, SegFormer (Baseline), and our proposed SegFormer+SAM3 method.
+    (Left) Shared Success: Our method (blue) not only retains the majority of
+    baseline successes (102 shared instances) but also uniquely correctly segments
+    59 difficult instances that both the standalone SegFormer and SAM3 failed to
+    capture. (Right) Shared Failure: The proposed method demonstrates superior
+    robustness, having the fewest unique failures (9) compared to SAM3-solo (62)
+    and SegFormer (22), indicating that the boundary supervision effectively
+    corrects errors inherent to the individual models.
+  </em></p>
+</div>
+
+<h3 id="33-attribute-and-pattern-analysis">3.3 Attribute and Pattern Analysis</h3>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/worst_IoUs.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <p><em>
+    Fig 4. Top row is 5 images from the 'Universally Easy' category on top with the lowest loss—highest IoUs—and bottom row is 5 images from the 'Universally Hard' category that includes images that collectively had some of the lowest performance independent of model.
+  </em></p>
+</div>
+
+<p>We manually analyzed correlations between difficulty clusters and image attributes such as object size, occlusion, clutter, and boundary density. This analysis revealed that thin structures and boundary-heavy scenes are overrepresented in hard clusters, particularly for transformer-based models. In the ‘hardest’ of images, it seems a mix of poor lighting and low resolution features</p>
+
+<h2 id="4-improving-the-baseline-ohem-and-oversampling">4. Improving the Baseline: OHEM and Oversampling</h2>
+
+<p>To establish a stronger baseline and address the inherent class imbalance in urban scene segmentation, we implemented a variant of SegFormer enhanced with Online Hard Example Mining (OHEM) and targeted oversampling [5].</p>
+
+<h3 id="41-online-hard-example-mining-ohem">4.1 Online Hard Example Mining (OHEM)</h3>
+
+<p>Standard cross-entropy loss often gets dominated by easy examples (e.g., road, sky) which comprise the majority of pixels. OHEM [5] addresses this by selecting only the top \(k\) pixels with the highest loss values for backpropagation. This forces the model to focus on difficult regions—often boundaries and thin structures—where predictions are uncertain.</p>
+
+\[\mathcal{L}_{OHEM} = \frac{1}{N_{hard}} \sum_{i \in \mathcal{P}_{hard}} -\log(p_{y_i})\]
+
+<p>where \(\mathcal{P}_{hard}\) represents the set of pixels with the highest loss.</p>
+
+<h3 id="42-thin-object-oversampling">4.2 Thin Object Oversampling</h3>
+
+<p>Thin classes such as poles, traffic signs, and bicycles are severely underrepresented in the Cityscapes dataset. To counter this, we employ an oversampling strategy where images containing these rare classes are sampled more frequently during training. This ensures the model sees enough examples of thin structures to learn robust features, preventing them from being ignored in favor of dominant classes.</p>
+
+<h2 id="5-method-overview-geometry-aware-supervision">5. Method Overview: Geometry-Aware Supervision</h2>
+
+<h3 id="51-design-rationale">5.1 Design Rationale</h3>
+
+<p>Our analysis indicates that many segmentation failures arise not from semantic confusion, but from <strong>poor geometric localization</strong>. We therefore seek to inject geometric priors into a standard semantic segmentation model without altering its inference-time complexity. As SAM3 is a master at geometric bounding, it provides reasonable suspicion that joining SAM3 and a traditional semantic segmentation model could generate some improved results.</p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/SAM3_output2.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <p><em>
+    Fig 5. Segmented output of SAM3 from multi-prompt input, which was given as category names (e.g. 'cars', 'poles').
+  </em></p>
+</div>
+
+<h3 id="52-why-sam3">5.2 Why SAM3?</h3>
+
+<p>SAM3 provides high-quality, class-agnostic object boundaries learned from large-scale data. Rather than using SAM3 directly for semantic segmentation, we employ it as a <strong>frozen geometry teacher</strong> during training. As you can see in <em>Figure 5</em>, SAM3 does a great job at segmenting “anything” but that does come at the cost of not easily combining categories into the general Cityscapes categories.</p>
+
+<h3 id="53-key-idea">5.3 Key Idea</h3>
+
+<p>We augment SegFormer with an auxiliary boundary prediction task. During training, the model learns to:</p>
+<ol>
+  <li>Predict semantic labels (standard objective)</li>
+  <li>Predict object boundaries aligned with SAM3 outputs (auxiliary objective)</li>
+</ol>
+
+<p>Importantly, this auxiliary loss is applied <strong>only to thin and boundary-sensitive classes</strong>, preventing over-regularization of large regions.</p>
+
+<h2 id="6-model-architecture">6. Model Architecture</h2>
+
+<h3 id="61-high-level-architecture">6.1 High-Level Architecture</h3>
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/architecture_model.png" alt="Hybrid model" style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 6. High level architecture of SAM3 guided SegFormer</em></p>
+</div>
+
+<p>The proposed system consists of:</p>
+<ul>
+  <li>A SegFormer backbone (MiT-B1)</li>
+  <li>A standard semantic segmentation head</li>
+  <li>An auxiliary boundary prediction head</li>
+  <li>A frozen SAM3 model used to generate boundary targets</li>
+</ul>
+
+<p>At inference time, only the SegFormer model is used.</p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/code_architecture.png" alt="Hybrid model" style="width: 800px; max-width: 100%;" />
+  <p><em>Fig 7. PyTorch Module definition for our Guided SegFormer.</em></p>
+</div>
+
+<h3 id="62-boundary-head">6.2 Boundary Head</h3>
+
+<p>The boundary head is a lightweight convolutional module attached to intermediate feature maps. It predicts a boundary probability map supervised by edges extracted from SAM3 masks.</p>
+
+<p>The total training loss is:</p>
+
+\[\mathcal{L} = \mathcal{L}_{seg} + \lambda \mathcal{L}_{boundary}\]
+
+<p>where \(\mathcal{L}_{boundary}\) is applied only on pixels belonging to thin classes.</p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/thin_class.png" alt="SAM3" style="width: 600px; max-width: 100%;" />
+  <p><em>Fig 8. Example boundary target generated by SAM3.</em></p>
+</div>
+
+<h2 id="7-implementation-details">7. Implementation Details</h2>
+
+<h3 id="71-framework-and-tools">7.1 Framework and Tools</h3>
+
+<ul>
+  <li>PyTorch</li>
+  <li>HuggingFace Transformers</li>
+  <li>Cityscapes dataset API</li>
+</ul>
+
+<h3 id="72-data-preparation">7.2 Data Preparation</h3>
+
+<ul>
+  <li>Cityscapes class mapping</li>
+  <li>Thin-class mask generation</li>
+  <li>SAM3 boundary extraction and binarization</li>
+</ul>
+
+<h3 id="73-training-strategies">7.3 Training Strategies</h3>
+
+<ul>
+  <li>Baseline SegFormer training</li>
+  <li>Online Hard Example Mining (OHEM)</li>
+  <li>Oversampling of underrepresented classes</li>
+  <li>SAM3-guided auxiliary supervision</li>
+</ul>
+
+<h2 id="8-experimental-setup">8. Experimental Setup</h2>
+
+<h3 id="81-dataset">8.1 Dataset</h3>
+
+<p>Experiments are conducted on the Cityscapes dataset using the official train/validation split.</p>
+
+<h3 id="82-models-evaluated">8.2 Models Evaluated</h3>
+
+<ul>
+  <li>SegFormer (B1)</li>
+  <li>SegFormerOHEM</li>
+  <li>Mask2Former</li>
+  <li>DDRNet-23 Slim</li>
+  <li>SAM3 (zero-shot evaluation)</li>
+  <li>SAM3-Guided SegFormer (proposed)</li>
+</ul>
+
+<h3 id="83-metrics">8.3 Metrics</h3>
+
+<ul>
+  <li>Per-class IoU</li>
+  <li>Mean IoU</li>
+  <li>Thin-class focused analysis</li>
+</ul>
+
+<h2 id="9-results">9. Results</h2>
+
+<h3 id="91-quantitative-results">9.1 Quantitative Results</h3>
+
+<p>We evaluate all models on the Cityscapes validation set using mean Intersection-over-Union (mIoU) and per-class IoU. Results are reported for standard semantic segmentation models, zero-shot SAM3, and our proposed SAM3-guided SegFormer variants.</p>
+
+<h3 id="overall-performance-comparison">Overall Performance Comparison</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Model</th>
+      <th style="text-align: center">mIoU ↑</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>DDRNet-23 Slim</strong></td>
+      <td style="text-align: center"><strong>76.83</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>SegFormer + OHEM (Ours)</strong></td>
+      <td style="text-align: center"><strong>73.45</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>SegFormer + SAM3 Boundary (Ours)</strong></td>
+      <td style="text-align: center"><strong>73.32</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SegFormer</td>
+      <td style="text-align: center">70.95</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Mask2Former</td>
+      <td style="text-align: center">64.53</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SAM3 (Zero-shot)</td>
+      <td style="text-align: center">62.14</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Table 1.</strong> <em>Mean IoU comparison across evaluated models on the Cityscapes validation set.</em></p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/all_boxwhisker.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <p><em>
+    Fig 9. Box and Whisker plot equivalent of Table 1.
+  </em></p>
+</div>
+
+<p>DDRNet-23 Slim achieves the highest overall mIoU (76.83%), reflecting its strong inductive bias toward preserving fine spatial detail through a dual-resolution architecture. However, this performance comes at the cost of architectural specialization and reduced flexibility compared to transformer-based models.</p>
+
+<p>Among transformer-based approaches, SegFormer serves as a strong baseline but lags behind both of our finetuned variants. SegFormer with Online Hard Example Mining (OHEM) achieves the highest mIoU among SegFormer variants (73.45%), indicating that emphasizing difficult samples improves global robustness. The proposed SAM3-guided SegFormer achieves a comparable mIoU (73.32%) while specifically targeting boundary-related failure modes, as discussed next.</p>
+
+<p>Mask2Former and zero-shot SAM3 trail behind due to, respectively, heavy architectural overhead and lack of semantic supervision.</p>
+
+<h3 id="impact-of-sam3-boundary-supervision-on-thin-classes">Impact of SAM3 Boundary Supervision on Thin Classes</h3>
+
+<p>To isolate the effect of geometry-aware supervision, we compare SegFormer against its SAM3-guided counterpart on thin and boundary-sensitive classes.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>SegFormer</th>
+      <th>Our Hybrid</th>
+      <th style="text-align: right">Δ IoU</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Pole</strong></td>
+      <td>51.49</td>
+      <td><strong>56.06</strong></td>
+      <td style="text-align: right"><strong>+4.57</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Fence</strong></td>
+      <td>51.84</td>
+      <td><strong>55.73</strong></td>
+      <td style="text-align: right"><strong>+3.89</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Traffic Light</strong></td>
+      <td>61.06</td>
+      <td><strong>66.53</strong></td>
+      <td style="text-align: right"><strong>+5.47</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Traffic Sign</strong></td>
+      <td>71.66</td>
+      <td><strong>75.37</strong></td>
+      <td style="text-align: right"><strong>+3.71</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Rider</strong></td>
+      <td>37.35</td>
+      <td><strong>52.51</strong></td>
+      <td style="text-align: right"><strong>+15.16</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Motorcycle</strong></td>
+      <td>47.29</td>
+      <td><strong>61.22</strong></td>
+      <td style="text-align: right"><strong>+13.93</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Bicycle</strong></td>
+      <td>69.62</td>
+      <td><strong>73.46</strong></td>
+      <td style="text-align: right"><strong>+3.84</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Table 2.</strong> <em>Per-class IoU improvements obtained by SAM3-guided boundary supervision on thin and boundary-sensitive categories.</em></p>
+
+<p>The proposed SAM3-guided SegFormer improves mean IoU by <strong>+2.37</strong> over the baseline SegFormer, with gains concentrated almost exclusively on thin and boundary-dominated classes. The most pronounced improvements are observed for <em>rider</em> (+15.16) and <em>motorcycle</em> (+13.93), classes characterized by overlapping instances and ambiguous boundaries.</p>
+
+<p>These results strongly support the central hypothesis of this project: <strong>injecting geometric priors via boundary supervision disproportionately benefits thin and overlapping objects</strong>, which are poorly served by region-based losses alone.</p>
+
+<h3 id="cross-model-comparison-on-thin-structures">Cross-Model Comparison on Thin Structures</h3>
+
+<p>We further compare performance on thin classes across all evaluated models to contextualize the improvements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Class</th>
+      <th style="text-align: right">SegFormer</th>
+      <th style="text-align: right">SegFormer OHEM</th>
+      <th style="text-align: right">SegFormer + SAM3</th>
+      <th style="text-align: right">DDRNet-23</th>
+      <th style="text-align: right">Mask2Former</th>
+      <th style="text-align: right">SAM3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Wall</td>
+      <td style="text-align: right">51.08</td>
+      <td style="text-align: right">54.12</td>
+      <td style="text-align: right"><strong>55.50</strong></td>
+      <td style="text-align: right">51.33</td>
+      <td style="text-align: right">54.95</td>
+      <td style="text-align: right">42.63</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Fence</td>
+      <td style="text-align: right">51.84</td>
+      <td style="text-align: right">55.42</td>
+      <td style="text-align: right"><strong>55.73</strong></td>
+      <td style="text-align: right"><strong>61.48</strong></td>
+      <td style="text-align: right">43.25</td>
+      <td style="text-align: right">54.71</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Pole</td>
+      <td style="text-align: right">51.49</td>
+      <td style="text-align: right">53.41</td>
+      <td style="text-align: right"><strong>56.06</strong></td>
+      <td style="text-align: right"><strong>58.11</strong></td>
+      <td style="text-align: right">39.15</td>
+      <td style="text-align: right"><strong>58.37</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Traffic Light</td>
+      <td style="text-align: right">61.06</td>
+      <td style="text-align: right">64.20</td>
+      <td style="text-align: right"><strong>66.53</strong></td>
+      <td style="text-align: right"><strong>67.96</strong></td>
+      <td style="text-align: right">47.58</td>
+      <td style="text-align: right"><strong>69.71</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Traffic Sign</td>
+      <td style="text-align: right">71.66</td>
+      <td style="text-align: right">74.12</td>
+      <td style="text-align: right"><strong>75.37</strong></td>
+      <td style="text-align: right">75.20</td>
+      <td style="text-align: right">61.54</td>
+      <td style="text-align: right">68.34</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Rider</td>
+      <td style="text-align: right">37.35</td>
+      <td style="text-align: right">51.16</td>
+      <td style="text-align: right"><strong>52.51</strong></td>
+      <td style="text-align: right"><strong>62.19</strong></td>
+      <td style="text-align: right">37.02</td>
+      <td style="text-align: right">8.30</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Motorcycle</td>
+      <td style="text-align: right">47.29</td>
+      <td style="text-align: right">56.83</td>
+      <td style="text-align: right"><strong>61.22</strong></td>
+      <td style="text-align: right">59.68</td>
+      <td style="text-align: right">27.24</td>
+      <td style="text-align: right"><strong>72.11</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Bicycle</td>
+      <td style="text-align: right">69.62</td>
+      <td style="text-align: right">72.53</td>
+      <td style="text-align: right"><strong>73.46</strong></td>
+      <td style="text-align: right"><strong>75.53</strong></td>
+      <td style="text-align: right">60.65</td>
+      <td style="text-align: right">57.85</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Table 3.</strong> <em>Per-class IoU comparison across models for thin and boundary-sensitive categories.</em></p>
+
+<p>DDRNet-23 Slim consistently performs well on thin structures due to its architectural emphasis on high-resolution features. However, the SAM3-guided SegFormer closes much of this gap while retaining the flexibility and efficiency of a transformer-based backbone.</p>
+
+<p>Zero-shot SAM3 achieves high IoU on some thin classes (e.g., motorcycle) but performs poorly on semantic consistency, especially for rider and terrain-related categories. This reinforces the conclusion that <strong>SAM3 is best leveraged as a geometry teacher rather than a standalone semantic segmentation model</strong>.</p>
+
+<p>Importantly, large “stuff” classes such as road, building, vegetation, and sky (not shown) remain stable across SegFormer variants, indicating that thin-class-only boundary supervision avoids over-regularization. A regression is observed for the <em>train</em> class in the SAM3-guided model, likely due to class rarity and ambiguous boundaries, and is discussed further in the limitations section.</p>
+
+<p>Together, these results demonstrate that distilling geometric knowledge from a foundation model into a lightweight segmentation architecture yields <strong>targeted, interpretable improvements</strong> on known failure modes without increasing inference-time complexity.</p>
+
+<h3 id="92-qualitative-results">9.2 Qualitative Results</h3>
+
+<p>Qualitative comparisons reveal sharper boundaries, improved instance separation, and reduced fragmentation in complex scenes. Although the difference in IoU isn’t ground breaking, with only 5 epochs of training and a batch size of 8 images on an A100 GPU, there are substantial visible markers of emerging improved recognition of these difficult objects as seen in <em>Figure 10</em>.</p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/43/SegFormer_combined.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <!-- <img src="/CS163-Projects-2025Fall/assets/images/43/SegFormer_images.png"
+       alt="Difference"
+       style="width: 800px; max-width: 100%;" />
+  <img src="/CS163-Projects-2025Fall/assets/images/43/OurSegFormer_results.png"
+       alt="Difference"
+       style="width: 800px; max-width: 100%;" /> -->
+  <img src="/CS163-Projects-2025Fall/assets/images/43/SegFormer_labeled.png" alt="Difference" style="width: 800px; max-width: 100%;" />
+  <p><em>
+    Fig 10. Side-by-side segmentation outputs for baseline vs SAM3-guided model. Middle left is SegFormer results. Middle right is our SAM3-Guided SegFormer results. Bottom row highlights specific regions of improvement.
+  </em></p>
+</div>
+
+<h2 id="10-analysis-and-observations">10. Analysis and Observations</h2>
+
+<ul>
+  <li>Boundary supervision yields targeted improvements without degrading large classes</li>
+  <li>Rider and motorcycle classes benefit most</li>
+  <li>A regression on the train class is observed and discussed in context of class rarity and boundary ambiguity</li>
+</ul>
+
+<h2 id="11-limitations">11. Limitations</h2>
+
+<ul>
+  <li>SAM3 introduces additional training-time computational cost</li>
+  <li>Boundary supervision does not fully resolve all thin-object errors</li>
+  <li>A dedicated thin-object benchmark was proposed but not fully implemented</li>
+</ul>
+
+<h2 id="12-conclusion">12. Conclusion</h2>
+
+<p>This project demonstrates that difficulty-aware analysis can reveal systematic weaknesses in semantic segmentation models. By distilling geometric priors from SAM3 into SegFormer through auxiliary boundary supervision, we achieve targeted improvements on thin and boundary-sensitive classes without increasing inference cost.</p>
+
+<h2 id="13-future-work">13. Future Work</h2>
+
+<h3 id="131-adaptive-class-aware-auxiliary-supervision">13.1 Adaptive, class-aware auxiliary supervision</h3>
+<p>Currently, we use the same weight for the boundary auxiliary loss across all thin classes. However, our error analysis showed that classes with unclear internal textures, like Train, had more mistakes. In the future, we could try adaptive auxiliary weighting, where the boundary supervision strength changes based on the model’s uncertainty or the object’s size. This approach could help avoid breaking up large, rare objects too much, while still keeping high accuracy for small, thin structures.</p>
+
+<h3 id="132-temporal-consistency-in-video-segmentation">13.2 Temporal consistency in video segmentation</h3>
+<p>Urban perception is naturally a video task, but our current evaluation looks at each frame separately. Thin objects, such as poles and traffic signs, often appear to flicker between frames in standard models. A logical next step is to add temporal consistency constraints, using optical flow or temporal attention modules, to help our model keep sharp boundaries stable over time.</p>
+
+<h3 id="133-dedicated-thin-object-evaluation-benchmarks">13.3 Dedicated thin-object evaluation benchmarks</h3>
+<p>Future research should create dedicated thin-object benchmarks to rigorously test model performance on safety-critical structures. Evaluating on large-scale datasets needs a more efficient pipeline. Right now, our method relies on offline pre-computation, which uses a lot of storage. Switching to an online distillation framework with lighter foundation models like MobileSAM would let us scale our method to these benchmarks using regular consumer hardware, without the storage bottleneck.</p>
+
+<h3 id="134-boundary-specific-metrics">13.4 Boundary-specific metrics</h3>
+<p>Standard mIoU often hides improvements in fine geometric details. To better measure progress, we suggest using and standardizing Boundary IoU (BIoU) or Trimap-based metrics for urban benchmarks. These metrics would directly penalize alignment errors along object edges, giving a fairer and more safety-focused evaluation of segmentation models for autonomous driving.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] Cordts, M., et al. <em>The Cityscapes Dataset for Semantic Urban Scene Understanding</em>. CVPR, 2016.<br />
+[2] Xie, E., et al. <em>SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers</em>. NeurIPS, 2021.<br />
+[3] Cheng, B., et al. <em>Masked-attention Mask Transformer for Universal Image Segmentation</em>. CVPR, 2022.<br />
+[4] Kirillov, A., et al. <em>Segment Anything</em>. ICCV, 2023.<br />
+[5] Shrivastava, A., et al. <em>Training Region-Based Object Detectors with Online Hard Example Mining</em>. CVPR, 2016.</p>
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html">&larr; XAI in Facial Recognition</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team47-mia.html">Membership Inference Attacks against Vision Deep Learning Models &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
