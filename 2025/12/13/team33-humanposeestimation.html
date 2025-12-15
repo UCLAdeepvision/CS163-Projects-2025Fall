@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Evolution of Human Pose Estimation - From Deep Regression to YOLO-Pose</title>
+
+    <meta name="description" content="Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, ...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Evolution of Human Pose Estimation - From Deep Regression to YOLO-Pose" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, and shoulders of a person through images or video. By predicting these keypoints or predefined body landmarks, models can infer a structured, skeleton-like representation of the..." property="og:description">
+    
+    
+        <meta content="/2025/12/13/team33-humanposeestimation.html" property="og:url">
+    
+<!--
+    
+        <meta content="Felicia Chen, Megan Luu, Derek Wu, Mallerly Mena" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/13/team33-humanposeestimation.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Evolution of Human Pose Estimation - From Deep Regression to YOLO-Pose">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, and shoulders of a person through images or video. By predicting these keypoints or predefined body landmarks, models can infer a structured, skeleton-like representation of the human body, which enables further exploration into understanding human posture, motion, and interactions with the environment. As such, this field is a crucial area of research that is used in various real-world applications like action recognition or healthcare. In this project, we study a variety of different deep learning approaches to 2D human pose estimation, beginning first with early end-to-end regression models and progressing towards more structured and context-aware architectures. In particular, we delve deeper into how modeling choices around global context, spatial precision, and body structure influence pose estimation performances.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Evolution of Human Pose Estimation - From Deep Regression to YOLO-Pose</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Felicia Chen, Megan Luu, Derek Wu, Mallerly Mena</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team33-humanposeestimation.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, and shoulders of a person through images or video. By predicting these keypoints or predefined body landmarks, models can infer a structured, skeleton-like representation of the human body, which enables further exploration into understanding human posture, motion, and interactions with the environment. As such, this field is a crucial area of research that is used in various real-world applications like action recognition or healthcare. In this project, we study a variety of different deep learning approaches to 2D human pose estimation, beginning first with early end-to-end regression models and progressing towards more structured and context-aware architectures. In particular, we delve deeper into how modeling choices around global context, spatial precision, and body structure influence pose estimation performances.</p>
+</blockquote>
+
+<!--more-->
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#background--fundamentals">Background &amp; Fundamentals</a>
+    <ul>
+      <li><a href="#deeppose">DeepPose</a></li>
+      <li><a href="#datasets">Datasets</a></li>
+      <li><a href="#challenges">Challenges</a></li>
+      <li><a href="#evaluation">Evaluation</a></li>
+    </ul>
+  </li>
+  <li><a href="#stacked-hourglass-networks">Stacked Hourglass Networks</a>
+    <ul>
+      <li><a href="#hourglass-architecture">The Architecture</a></li>
+      <li><a href="#hourglass-implementation">Implementation details</a></li>
+      <li><a href="#hourglass-results">Results</a></li>
+      <li><a href="#hourglass-conclusion">Conclusion</a></li>
+    </ul>
+  </li>
+  <li><a href="#adversarial-learning">Adversarial Learning of Structure-Aware Fully Convolutional Networks</a>
+    <ul>
+      <li><a href="#adversarial-architecture">The Architecture</a></li>
+      <li><a href="#generative-network">Generative Network</a></li>
+      <li><a href="#discriminative-network">Discriminative Network</a></li>
+      <li><a href="#adversarial-training">Adversarial Training</a></li>
+      <li><a href="#loss-objective">Loss &amp; Objective Functions</a></li>
+    </ul>
+  </li>
+  <li><a href="#yolo-pose">YOLO-Pose: Real-Time Multi-Person Pose Estimation</a>
+    <ul>
+      <li><a href="#yolo-arch">Architecture: YOLOv5 as a pose backbone</a></li>
+      <li><a href="#formulation">Formulation: “inherent grouping”</a></li>
+      <li><a href="#loss">Loss design</a></li>
+      <li><a href="#inference">Inference and robustness</a></li>
+      <li><a href="#Results">Results &amp; Ablations</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a></li>
+  <li><a href="#references">References</a></li>
+</ul>
+
+<p><a id="introduction"></a></p>
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="project-overview">Project Overview</h3>
+
+<p>Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, and shoulders of a person through images or video. By predicting these keypoints or predefined body landmarks, models can infer a structured, skeleton-like representation of the human body, which enables further exploration into understanding human posture, motion, and interactions with the environment. As such, this field is a crucial area of research that is used in various real-world applications like action recognition or healthcare. In this project, we study a variety of different deep learning approaches to 2D human pose estimation, beginning first with early end-to-end regression models and progressing towards more structured and context-aware architectures. In particular, we delve deeper into how modeling choices around global context, spatial precision, and body structure influence pose estimation performances.</p>
+
+<h3 id="problem-statement">Problem Statement</h3>
+
+<p>Accurately estimating human pose is challenging due to a few inherent factors. Human bodies are highly articulated, which can lead to large variations in joint configurations across different poses. Additionally, occlusions and cluttered backgrounds can further complicate joint localization, especially for those smaller or ambiguous joints such as wrists and ankles. Pose estimation also requires pixel-level precision, since correct joint placement often depends on understanding the overall global configuration of the entire body rather than just the local image cues themselves.</p>
+
+<h3 id="paper-scope">Paper Scope</h3>
+
+<p>This paper focuses on single-person and multi-person 2D human pose estimation using deep learning methods. We will begin first by introducing DeepPose, one of the earliest and foundational deep learning approaches to pose estimation, which framed the task as a direct joint regression problem. We then discuss later models, such as Stacked Hour Glass Networks, Adversarial Structure-Aware approaches, and YOLO-based pose estimators. Our analysis will focus on architectural design choices, dataset usage, evaluation metrics, and how each method and their approaches improved structural reasoning and robustness in this field.</p>
+
+<h3 id="use-cases">Use Cases</h3>
+
+<p>Human pose estimation is widely used across various domains. For example, in sports analytics, pose estimation helps enable motion analysis and performance feedback. In healthcare, it supports everything from physical therapy monitoring to fall detection. In addition, with recent developments in animation, robotics, and gaming, pose estimation plays an important role as it allows real-world human actions to be transferred to digital characters and experiences. With such varied applications, human pose models continue to evolve in both accuracy and robustness to challenging visual conditions.</p>
+
+<p><a id="background--fundamentals"></a></p>
+
+<h2 id="background--fundamentals">Background &amp; Fundamentals</h2>
+
+<p><a id="deeppose"></a></p>
+
+<h3 id="deeppose">DeepPose</h3>
+
+<p>First we will take a look at DeepPose, which was introduced by Alexander Toshev and Christian Szegedy from Google. It was one of the first works to apply deep convolutional neural networks to human pose estimation, and instead of relying on part-based detectors or graphical models, DeepPose formulated pose estimation as a direct regression problem. Specifically, a single CNN predicted the 2D coordinates of all the body joints simultaneously from the full input image.</p>
+
+\[L = \sum_{i=1}^{k} \|\hat{y}_i - y_i\|_2^2\]
+
+<p><em>Fig 1. Joint regression loss: K is the number of body joints, $y_i$ is the ground truth 2D location of joint i, and $\hat{y}_i$ is the predicted joint location.</em></p>
+
+<p>The model uses an AlexNet-style architecture to produce an initial course prediction of joint location, and then to improve accuracy, it adds a coarse-to-fine cascade, where subsequent stages will crop local image regions around each predicted joint to refine their position in an iterative process. This approach allows the network to progressively increase spatial precision, while still maintaining its awareness of the global body layout as a whole.</p>
+
+<p>DeepPose demonstrated that end-to-end CNN regression is viable for pose estimation and it achieved state-of-the-art results at the time on benchmarks such as FLIC and LSP. Its primary areas of improved performance included the previously discussed difficult wrist and elbow joints. As such, DeepPose established itself as a foundational paradigm that many later methods would refine and extend.</p>
+
+<p>While revolutionary, DeepPose did have its limitations. Specifically, direct coordinate regressions are known to struggle with multi-modal outputs, and also lack explicit spatial structure, which in turn makes it difficult to enforce various anatomical constraints or recover from large initial errors. These shortcomings are what motivated later approaches to adopt heatmap-based representations and repeated multi-scale reasoning which we will later discuss.</p>
+
+<p><a id="datasets"></a></p>
+
+<h3 id="datasets">Datasets</h3>
+
+<p>In terms of datasets, human pose estimation models are commonly evaluated on a small set of standard benchmark datasets. Early deep learning approaches like DeepPose or Stacked Hourglass Networks mainly used the FLIC and MPII Human Pose datasets. FLIC focuses on upper-body joints from sources like movie scenes, and it serves as an early benchmark for joint localization accuracy. MPII provides full-body annotations across a wide range of everyday activities and poses, and is more comprehensive and adopted as a benchmark for single-person pose estimation.</p>
+
+<p>Some additional datasets worth noting as they help evaluate the robustness of the model as they include more complex conditions. For instance, the Leeds Sports Pose (LSP) dataset has extreme athletic poses, and is commonly used for performance tests on highly articulated joints. More recent methods such as the multi-person approach with YOLO-Pose, use MS COCO Keypoints dataset, which includes crowded scenes and multiple interacting people. Overall, these datasets reflect the range of possible poses, and also the increasing complexity that modern models hope to tackle.</p>
+
+<p><a id="challenges"></a></p>
+
+<h3 id="challenges">Challenges</h3>
+
+<p>Human pose estimation presents several recurring challenges that are faced across different architectures and the datasets that they are evaluated on. Occlusion, which in this case is partiall or fully hidden joints, is one of the biggest issues. Additionally, there are cases of ambiguity when image evidence might be not be enough to distinguish between symmetric limbs or overlapping body parts. Scale variation and viewpoint changes, which are prevalent in many areas of computer vision research, add additional complications to joint localization as well. All in all, balancing global structural consistency with the pixel-level accuracy needed presents an interesting challenge for different models as they consider the tradeoffs that ultimately lead to different architectural design choices.</p>
+
+<p><a id="evaluation"></a></p>
+
+<h3 id="evaluation">Evaluation</h3>
+
+<p>Pose estimation models are commonly evaluated using metrics such as Percentage of Correct Keypoints (PCK) or PCKh, which measures whether or not the predicted joints are within the normalized distance threshold of the ground-truth location. These metrics focus on both the localization accuracy, and how well the model is to extend across various joints. Evaluations are usually reported per joint and averaged across the dataset, which allows additional insights on the more difficult joints and more general overviews.</p>
+
+<p><a id="stacked-hourglass-networks"></a></p>
+
+<h2 id="stacked-hourglass-networks-for-human-pose-estimation">Stacked Hourglass Networks for Human Pose Estimation</h2>
+
+<p>One of the main problems that DeepPose and other human pose estimation models faced was that joint predictions must be really precise (down to the pixel), but their correct placement heavily depends on the global body configuration. When looking at a local section of an image, where to place the joint is often ambiguous (especially under occlusion). The Stacked Hourglass Networks for Human Pose Estimation paper by Alejandro Newell, Kaiyu Yang, and Jia Deng from the University of Michigan argues that strong pose estimation requires repeated reasoning across scales, not just a single pass through a multi-scale network like previous models.</p>
+
+<p><a id="hourglass-architecture"></a></p>
+
+<h3 id="the-architecture">The Architecture</h3>
+
+<p>The central component of the model is the hourglass module, named after its symmetric structure. Each hourglass performs bottom-up processing through convolution and max pooling, which gradually reduces the spatial resolution until it reaches a very small representation (sometimes as small as 4×4). At this scale, the features have a global receptive field and can encode relationships between really distant joints (such as the relative positions of hips, knees, and shoulders).</p>
+
+<p>Then, the network performs a top-down processing, which uses nearest-neighbor upsampling to recover the spatial resolution. This is similar to a U-Net architecture. Skip connections are added to merge features from corresponding resolutions both on the way down and up, which enables the model to preserve really precise spatial detail while still incorporating global context. The importance of the module is its symmetrical design, since the hourglass from earlier fully convolutional or encoder–decoder designs emphasize bottom-up computation more.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/hourglassmodule.png" alt="Hourglass Module" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 2. The stacked hourglass module architecture.</em></p>
+
+<p>The model then stacks these multiple hourglass modules end-to-end. Each hourglass module takes the features and predictions of the previous stage as input and produces a new set of pose predictions. This is how the network is able to iteratively refine its pose estimates.</p>
+
+<p>The paper discusses that most pose errors come from structural inconsistencies. This includes things like assigning a wrist to the incorrect arm or confusing right and left limbs. This is really challenging to fix with just local refinement, but by continuing to perform bottom-up and top-down inference, the later hourglass modules can refine their earlier predictions with a better understanding of the global pose.</p>
+
+<p>Supervision and Loss Function
+The model uses dense supervision by training on ground-truth heatmaps, where for each joint k, a ground-truth heatmap H*k is created that is represented as a 2D Gaussian distribution which is centered at the true joint location l_k.</p>
+
+\[H^*_{k}(x, y) = \exp\left( - \frac{\|(x, y)-l_k\|^2}{2\sigma^2} \right)\]
+
+<p>They use the mean squared error of the predicted and ground-truth heatmaps as their loss function. One key design choice to point out is that they used intermediate supervision, which means this loss is applied after every hourglass module. This forces each stage of training to check itself and improve performance and convergence speed.</p>
+
+<p><a id="hourglass-implementation"></a></p>
+
+<h3 id="implementation-details">Implementation details</h3>
+
+<p>The paper also discusses the use of residual models throughout the architecture. They avoid filters over 3x3 to ensure that the parameter counts stay manageable. The input image is resized to 256x256, and the prediction output size is 64x64. The final predictions are further refined by a small (less than a pixel) offset based on the neighboring heatmap activations.</p>
+
+<p>They utilized data augmentation during their training including rotation and scaling, but they avoided using translation. This is mainly due to the fact that the model is trained to predict the pose of the centered person in the image, which simplifies the problem. This means that the model is not able to do multi-person reasoning.</p>
+
+<p><a id="hourglass-results"></a></p>
+
+<h3 id="results">Results</h3>
+
+<p>The model at the time of publication achieved state-of-the-art performance on both FLIC and MPII benchmarks. Gains are especially large for difficult joints such as wrists, elbows, knees, and ankles, where global context is critical. Ablation experiments show that stacking hourglasses improves accuracy even when total model capacity is held constant, and that intermediate supervision provides additional gains.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/flicresults.png" alt="FLIC Results" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 3. PCKh results on the FLIC benchmark dataset.</em></p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/mpiihumanpose.png" alt="MPII Results" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 4. PCKh results on the MPII Human Pose benchmark dataset.</em></p>
+
+<p><a id="hourglass-conclusion"></a></p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>The equations in Stacked Hourglass Networks are intentionally simple but what makes them incredibly powerful is the architectural design. By repeatedly applying the same prediction mechanism and using intermediate supervision at every stage, the network learns to correct its own structural mistakes. This work was really influential in later pose estimation models and established stacked, heatmap-based architectures with intermediate supervision as a standard approach for human pose estimation.</p>
+
+<p><a id="adversarial-learning"></a></p>
+
+<h2 id="adversarial-learning-of-structure-aware-fully-convolutional-networks-for-landmark-localization">Adversarial Learning of Structure-Aware Fully Convolutional Networks for Landmark Localization</h2>
+
+<p>In 2019, a new structure-aware approach to pose estimation was introduced in Adversarial Learning of Structure-Aware Fully Convolutional Networks for Landmark Localization. Researchers Yu Chen, Chunhua Shen, Hao Chen, Xiu-Shen Wei, Lingqiao Liu, and Jian Yang found inspiration in human vision, which is capable of both inferring potential poses and excluding implausible ones (even in the presence of severe occlusions). Prior solutions, such as stacked hourglass, imposed no constraints on potentially producing biologically implausible pose predictions and continue to struggle to overcome common challenges in pose estimation such as heavy occlusions and background clutter (see comparison below). This paper proposes a solution to integrate the concept of geometric constraints into pose estimation by utilizing Generative Adversarial Networks (GANs).</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_1.png" alt="Adversarial Learning Comparison" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 5. Prediction samples on the MPII set comparing stacked hourglass (HG) and adversarial learning (Ours).</em></p>
+
+<p><a id="adversarial-architecture"></a></p>
+
+<h3 id="the-architecture-1">The Architecture</h3>
+
+<p style="width: 640px; max-width: 100%;">A GAN sets up two networks as competitors in a zero-sum game: a generator G and a discriminator P. The GAN described in this paper encourages P to classify the plausibility of a pose configuration and G to generate pose heatmaps aimed to fool the discriminator. The authors additionally made other minor architectural changes (e.g. designing stacked multi-task networks) that achieved improved results for 2D pose estimation. The discriminator learns the structure of body joints implicitly through the following designs of the generator and discriminator.
+<img src="/CS163-Projects-2025Fall/assets/images/team34/adver_2.png" alt="Structure-Aware Adversarial Training Model" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 5. Structure-Aware Adversarial Training Model</em></p>
+
+<p><a id="generative-network"></a></p>
+
+<h3 id="generative-network">Generative Network</h3>
+
+<p>The fully convolutional generative network implements the Stacked Hourglass architecture previously discussed to combine local joint features with global body context, ensuring neurons maintain large receptive fields. Like stacked hourglass, the image is processed using a convolution, residual bloc, and max pooling. The network then includes multiple stacking modules where pose heatmaps (body part locations) and occlusion heatmaps (hidden parts) are jointly predicted to calculate the intermediate losses. Additionally, the network can access previous estimates and features through the stacked modules, enabling the system to re-evaluate the joint predictions of poses and occlusions at any latter stage. Note, this paper discusses both 2D and 3D pose estimation; however, we will be focusing on 2D pose estimation in this discussion. In each block, 1 x 1 convolutions with residual connections reduce the number of feature maps down to the number of body parts then obtain the final predicted heatmaps. The resulting multi-task generative network is the baseline model in the paper’s framework whose goal is to learn a function 𝒢 that can project an image x to both the corresponding pose heatmaps y and the occlusion heatmaps z. The direct goal of 𝒢 is to minimize the Mean Squared Error between the predicted and ground-truth heatmaps to align spatial accuracy.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_3.png" alt="Generative Network G" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 6. Generative Network G.</em></p>
+
+<p><a id="discriminative-network"></a></p>
+
+<h3 id="discriminative-network">Discriminative Network</h3>
+
+<p>The pose discriminator employs an encoder-decoder architecture with skip connections to utilize the pose and occlusion heatmaps from the generator to predict whether each provided pose is physically reasonable. Both low-level details (local patches) and high-level context (global relationships) are crucial for judging pose plausibility. Skip connections between parallel layers help integrate local and global information. The discriminators additionally consider the original RGB image to ensure the model exclusively matches poses to the current image subject to avoid any poses that may potentially be plausible for another image but incorrect for the specific image subject. To enforce these constraints onto the generator, the design treats the GAN as a conditional GAN (cGAN) as P aims to maximize the objective function that classifies physically plausible poses as “real”.</p>
+
+<p>The auxiliary discriminator, or confidence discriminator, is a specialized discriminator aimed to eliminate occlusion struggles using Gaussian centering by discriminating high-confidence predictions. The confidence discriminator heavily relies on the surrounding structure of an occlusion.</p>
+
+<p><a id="adversarial-training"></a></p>
+
+<h3 id="adversarial-training">Adversarial Training</h3>
+
+<p>The generator G generates poses and occlusion information via heatmaps given to the discriminator. It is a fully convolutional neural network trained in an adversarial manner to deceive the discriminator. Following the standard implementation of a GAN, The discriminator P is designed to distinguish between real and fake poses and is trained to learn geometrically implausible poses as priors. The implicit logic is as follows: “G can “deceive” P =&gt; successfully learned priors” (explicitly learning keypoint constraints is difficult, motivating the implicit approach of the GAN). The paper aims to take priors into account by learning body joint distribution. The auxiliary discriminator also plays a specialized role but more or less follows the design of a standard adversarial minimax game.</p>
+
+<p><a id="loss-objective"></a></p>
+
+<h3 id="loss--objective-functions">Loss &amp; Objective Functions</h3>
+
+<p><em>Generative Network Loss</em></p>
+
+<p>Given a training set {xi, yi, zi}Mi=1, for M training images, the loss function is the following:</p>
+
+\[\mathcal{L}_G(\Theta) = \frac{1}{2MN} \sum_{n=1}^{N} \sum_{i=1}^{M} \left( \|\boldsymbol{y}^i - \hat{\boldsymbol{y}}_n^i\|^2 + \|\boldsymbol{z}^i - \hat{\boldsymbol{z}}_n^i\|^2 \right)\]
+
+<p><em>Discriminitive Network Loss</em></p>
+
+<p>Given the generator outputs G(x), the ground truth pose and occlusion heatmaps, and the ground truth label for the pose discriminator, the loss function is the following:</p>
+
+\[\mathcal{L}_P(G, P) = \mathbb{E}[\log P(\boldsymbol{y}, \boldsymbol{z}, \boldsymbol{x})] + \mathbb{E}[\log(1 - |P(G(\boldsymbol{x}), \boldsymbol{x}) - \boldsymbol{p}_{\text{fake}}|)]\]
+
+<p><em>Confidence Discriminator Network Loss</em></p>
+
+<p>Given Cfake is the ground truth confidence level, the loss function is the following:</p>
+
+\[\mathcal{L}_C(G, C) = \mathbb{E}[\log C(\boldsymbol{y}, \boldsymbol{z})] + \mathbb{E}[\log(1 - |C(G(\boldsymbol{x})) - \boldsymbol{c}_{\text{fake}}|)]\]
+
+<p><em>Adversarial Objective</em></p>
+
+<p>Given the hyperparameters and and the calculated losses, the final objective function is:</p>
+
+\[\arg \min_G \max_{P,C} \mathcal{L}_G(\Theta) + \alpha \mathcal{L}_C(G, C) + \beta \mathcal{L}_P(G, P)\]
+
+<p><strong>Training</strong></p>
+
+<p>Training the adversarial network follows this algorithm:</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_4.png" alt="Adversarial Training Algorithm" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 7. Adversarial training algorithm.</em></p>
+
+<p>The algorithm iteratively learns the generator G, discriminator P, and confidence discriminator C. For both discriminators, each i-th fake label t is set to 1 if the normalized distance di between the prediction and ground truth is less than a threshold or , and 0 otherwise. These initializations for the discriminators coerce G into generating biologically plausible poses with high-confidence. The algorithm then iteratively learns the generator G, discriminator P, and confidence discriminator C with respect to each loss function and the combined objective function.</p>
+
+<p><strong>Results</strong></p>
+
+<p>Numerically, the proposed architecture in this paper did make improvements upon the state-of-the-art competitors at the time. The paper evaluated the 2D Human Pose estimation on Leeds Sports Poses (LPS), MPII Human Pose, and MSCOCO Keypoints dataset. Accuracy is evaluated on percentage of correct keypoints (PCK). For the LSP dataset, this method achieved the second-best performance with a 2.4% improvement over previous methods on average. For the MPII Human Pose dataset, this method achieves the best PCK with a score of 91.9% with notable improvements on difficult joints such as wrists and ankles.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_5.png" alt="Results on Leeds Sports Poses and MPII Human Pose" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 8. Results on Leeds Sports Poses.</em></p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_6.png" alt="Qualitative Comparison" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 9. Results on MPII Human Pose</em></p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_7.png" alt="Results" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 10. Results on MSCOCO.</em></p>
+
+<p>Qualitatively, visualizations demonstrated improved handling of occlusions, cropped out body parts, and invisible limbs that raised issues for stacked hourglass. The authors compared a 2-stacked hourglass network to their 2-stacked network and saw better information absorption due to recognizing plausible joint structure.</p>
+
+<p>However, the authors acknowledge their proposal failed in challenging edge cases with twisted limbs at the edge, overlapping people and occluded body parts, and in some cases where the authors speculate a human wouldn’t be able to estimate the pose correctly either.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/adver_8.png" alt="Ours vs HG" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 11. Ours vs HG.</em></p>
+
+<p><strong>Conclusion</strong></p>
+
+<p>Integration of adversarial learning with fully convolutional networks significantly enhanced pose estimation by leveraging geometric constraints of the human body. The architecture is intuitively designed to mimic the capabilities human vision has in distinguishing plausible postures. To overcome challenges associated with explicitly mathematically modeling, the authors utilize a conditional GAN. Structural priors implicitly encoded within the discriminator coerce the generator to produce biologically plausible poses. This mechanism allows the model to recover from severe occlusions where baseline methods, such as Stacked Hourglass, typically fail. The approach achieved state-of-the-art performance on the MPII and LSP datasets, establishing stacked multi-task and adversarial learning as significant milestones in pose estimation.</p>
+
+<p><a id="yolo-pose"></a></p>
+
+<h2 id="yolo-pose-real-time-multi-person-pose-estimation">YOLO-Pose: Real-Time Multi-Person Pose Estimation</h2>
+
+<h4 id="motivation-why-the-field-swings-back-toward-single-stage-efficiency">Motivation: why the field swings back toward single-stage efficiency</h4>
+
+<p>YOLO-Pose is motivated by a practical bottleneck: the highest-accuracy pipelines in multi-person pose estimation are often <strong>multi-stage</strong> (detect people, then run a single-person pose model per person), so runtime scales roughly with the number of detected individuals. In contrast, bottom-up approaches run once but rely on <strong>non-trivial post-processing</strong> (peak finding, refinement, and grouping) that is often non-differentiable and difficult to accelerate. YOLO-Pose targets a middle path: <strong>a single forward pass</strong> that jointly predicts person boxes and their corresponding 2D skeletons, avoiding per-person reruns and avoiding heavy grouping heuristics.</p>
+
+<p>A key observation is that many challenges in pose estimation mirror those in object detection—scale variation, occlusion, and non-rigid deformation—so the authors argue that advances in object detection should transfer cleanly if pose can be expressed as “detection + structured regression.”</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/Qualitative_result_on_a_crowded.jpg" alt="YOLO-Pose Comparison" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 12. YOLO-Pose highlights "inherent grouping" (keypoints tied to each detected person) vs. bottom-up grouping failures in crowded scenes [4].</em></p>
+
+<p><a id="yolo-arch"></a></p>
+
+<h4 id="architecture-yolov5-as-a-pose-backbone-with-a-keypoint-head">Architecture: YOLOv5 as a pose backbone with a keypoint head</h4>
+
+<p>YOLO-Pose is built directly on <strong>YOLOv5</strong>, chosen for its accuracy–compute trade-off on detection. The pipeline keeps the standard YOLOv5 structure—<strong>CSP-Darknet53</strong> backbone with <strong>PANet</strong> feature fusion—and predicts at <strong>four scales</strong> (feature maps denoted ${P3, P4, P5, P6}$. Each detection head is <em>decoupled</em> into (i) a <strong>box head</strong> and (ii) a <strong>keypoint head</strong>.</p>
+
+<p>What changes is the output space per anchor. In YOLOv5 detection, each anchor predicts a vector containing box parameters plus class/objectness terms (for COCO detection, the paper notes 85 elements per anchor in the standard setting). For pose, the task becomes a <strong>single class (person)</strong> detector with <strong>17 keypoints</strong>, and each keypoint has a location and a confidence, totaling <strong>51 keypoint values per anchor</strong>. The paper states that the <strong>keypoint head predicts 51 elements</strong> and the <strong>box head predicts 6 elements</strong> per anchor.</p>
+
+<p>A clean way to write the per-anchor prediction is:</p>
+
+<ul>
+  <li>Bounding box (6 values): typically representing box geometry + objectness/class terms for the single “person” class (the paper summarizes this as 6 predicted elements).</li>
+  <li>Keypoints (51 values): For each of the 17 keypoints, predict (x, y, c), resulting in 17 × 3 = 51 values.</li>
+</ul>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/YOLO_pose_architecture.jpg" alt="YOLO-Pose Architecture" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 13. YOLO-Pose extends YOLOv5: CSP-Darknet backbone → PANet fusion → multi-scale heads, each branching into a box head and a keypoint head [4].</em></p>
+
+<p><a id="formulation"></a></p>
+
+<h4 id="formulation-anchor-based-pose-as-inherent-grouping">Formulation: anchor-based pose as “inherent grouping”</h4>
+
+<p>The core modeling decision is: <strong>an anchor (or anchor point) matched to a ground-truth person box stores that person’s full pose</strong>. This makes the person instance the atomic unit of prediction: keypoints are not predicted “globally” and later assigned; they are predicted <em>conditionally</em> on the anchor/person match.</p>
+
+<p>Concretely, both boxes and keypoints are predicted relative to the <strong>anchor center</strong>. Box coordinates are transformed with respect to the anchor center, and box dimensions are normalized by anchor size; keypoints are also transformed relative to the anchor center, but (as stated) keypoints are <strong>not</strong> normalized by anchor width/height. Because the keypoint formulation is not tied to anchor dimensions, the paper argues the approach can transfer to <strong>anchor-free</strong> detectors as well.</p>
+
+<p>This design directly targets a known failure mode of bottom-up heatmap pipelines in crowds: even if two people’s wrists are spatially close, if they are matched to different anchors, their predictions remain separated (and already grouped).</p>
+
+<p><a id="confidence"></a></p>
+
+<h4 id="keypoint-confidence-training-signal-vs-evaluation-signal">Keypoint confidence: training signal vs. evaluation signal</h4>
+
+<p>Each keypoint includes a confidence c_j. The paper trains this confidence using the dataset’s visibility flags: if a keypoint is visible or occluded, its target confidence is 1; if it is outside the field of view, the target is 0. At inference time, keypoints with predicted confidence (&gt; 0.5) are retained, and the rest are discarded to avoid “dangling” keypoints that would visually deform the skeleton. The paper also notes that this predicted confidence is <strong>not</strong> used directly in the COCO evaluation, but it is important for filtering out-of-view joints.</p>
+
+<p><a id="loss"></a></p>
+
+<h4 id="loss-design-extending-iou-style-supervision-from-boxes-to-keypoints">Loss design: extending IoU-style supervision from boxes to keypoints</h4>
+
+<p>YOLO-Pose mirrors modern detection training by using an IoU-based regression loss for boxes and then introduces the analogous idea for keypoints.</p>
+
+<h5 id="bounding-box-loss-ciou">Bounding-box loss (CIoU)</h5>
+
+<p>For bounding boxes, the model uses <strong>CIoU loss</strong>, aligning the regression objective with the scale-invariant overlap-based detection metric family. The paper defines:</p>
+
+\[\mathcal{L}*{\text{box}}(s,i,j,k) = 1 - \mathrm{CIoU}\left(B^{s,i,j,k}*{gt}, B^{s,i,j,k}_{pred}\right)\]
+
+<p>(where (s) indexes scale and (k) indexes anchors at a grid location).</p>
+
+<h5 id="keypoint-loss-oks-loss-as-keypoint-iou">Keypoint loss (OKS loss as “keypoint IoU”)</h5>
+
+<p>The main novelty is to optimize <strong>Object Keypoint Similarity (OKS)</strong> directly. The authors argue that the commonly used L1 regression loss for keypoints is not equivalent to maximizing OKS: it ignores instance scale and treats all keypoints uniformly, while OKS is scale-normalized and uses keypoint-dependent tolerances (e.g., head keypoints are penalized more for the same pixel error than torso/leg keypoints).</p>
+
+<p>They treat OKS as an IoU-like quantity for keypoints and define the loss as:</p>
+
+\[\mathcal{L}_{\text{kpt}}(s,i,j,k) ;=; 1 - \mathrm{OKS}(s,i,j,k)\]
+
+<p>and the paper defines OKS as a sum of exponential penalties applied to normalized squared errors (with visibility gating), meaning keypoints are compared using an exp(·) penalty with scale and keypoint-specific constants.</p>
+
+<p>Two practical claims are emphasized:</p>
+
+<ul>
+  <li>OKS loss is <strong>scale-invariant</strong> and inherits COCO’s keypoint-wise weighting.</li>
+  <li>Unlike vanilla IoU, OKS loss “never plateaus” for non-overlapping cases (the authors compare this behavior to DIoU-style losses).</li>
+</ul>
+
+<h5 id="keypoint-confidence-loss--total-loss">Keypoint-confidence loss + total loss</h5>
+
+<p>The paper adds a confidence loss for keypoints trained from visibility flags (binary classification) and sums losses over scales/anchors/locations. It also reports the balancing weights used in experiments; in their notation, the weights are:</p>
+
+<ul>
+  <li>
+\[\lambda\_{\text{box}} = 0.5\]
+  </li>
+  <li>
+\[\lambda\_{\text{obj}} = 0.05\]
+  </li>
+  <li>
+\[\lambda\_{\text{kpt}} = 0.1\]
+  </li>
+  <li>
+\[\lambda\_{\text{kpt-conf}} = 0.5\]
+  </li>
+</ul>
+
+<p>as hyperparameters to balance contributions across terms and scales.</p>
+
+<p><a id="inference"></a></p>
+
+<h4 id="inference-and-robustness-standard-detection-post-processing--keypoints-beyond-the-box">Inference and robustness: standard detection post-processing + keypoints beyond the box</h4>
+
+<p>A major systems claim is that YOLO-Pose uses <strong>standard object-detection post-processing</strong> (rather than specialized bottom-up grouping/refinement pipelines). Because keypoints are attached to each detected box/anchor, the output is already instance-separated.</p>
+
+<p>The authors also emphasize a robustness advantage under occlusion: keypoints are <strong>not constrained to lie inside the predicted bounding box</strong>. If an occluded limb’s keypoint falls outside the visible box extent, YOLO-Pose can still predict it, whereas a strict top-down crop-based pipeline may miss it when the box is imperfect.</p>
+
+<p style="width: 640px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team34/yolo_pose_occlusion.jpg" alt="YOLO-Pose Occlusion" /></p>
+<p style="text-align:center; font-size:0.9em;"><em>Fig 14. The paper's examples show keypoints predicted outside the detected box under occlusion and imperfect localization [4].</em></p>
+
+<h4 id="test-time-augmentation-why-no-tta-is-a-meaningful-constraint">Test-time augmentation: why “no TTA” is a meaningful constraint</h4>
+
+<p>The paper argues that many state-of-the-art pose systems rely on test-time augmentation (TTA), especially <strong>flip-test</strong> and <strong>multi-scale testing</strong>, to boost accuracy, often at a substantial compute and latency cost. They estimate that flip-test is about 2×, multi-scale testing over scales 0.5, 1, and 2 costs 0.25 + 1 + 4 = 5.25, and combining both results in a 10.5× cost. They also note that the data transforms themselves (flip and resize) may not be hardware-accelerated and can therefore be expensive on embedded devices. All headline results in the paper are reported <strong>without</strong> TTA.</p>
+
+<h4 id="experiments-coco-setup-and-training-recipe">Experiments: COCO setup and training recipe</h4>
+
+<p>The model is evaluated on the <strong>COCO Keypoints</strong> dataset, which contains over <strong>200k images</strong> and about <strong>250k people</strong>, each labeled with <strong>17 body keypoints</strong>. The dataset is split into <strong>train2017 (57k images)</strong>, <strong>val2017 (5k images)</strong>, and <strong>test-dev2017 (20k images)</strong>. Performance is measured using OKS-based metrics such as <strong>AP, AP50, AP75, APL, and AR</strong>.</p>
+
+<p>Training follows a setup similar to <strong>YOLOv5</strong>. Images are augmented using random scaling (0.5 to 1.5), random translation (−10 to 10), horizontal flipping with 50% probability, mosaic augmentation (always applied), and color augmentations. The model is trained using <strong>SGD with a cosine learning-rate schedule</strong>, a base learning rate of <strong>0.01</strong>, and runs for <strong>300 epochs</strong>.</p>
+
+<p>At test time, each image is resized so that its longer side matches the target size while keeping the aspect ratio, and then padded to form a square input.</p>
+
+<p><a id="Results"></a></p>
+
+<h4 id="results-coco-val2017-and-test-dev2017-ap50--efficiency">Results: COCO val2017 and test-dev2017 (AP50 + efficiency)</h4>
+
+<p><strong>val2017 @ 960 (Table 1):</strong> [4]</p>
+
+<ul>
+  <li><strong>YOLOv5s6-pose:</strong> AP 63.8, AP50 87.6, 22.8 GMACS</li>
+  <li><strong>YOLOv5m6-pose:</strong> AP 67.4, AP50 89.1, 66.3 GMACS</li>
+  <li><strong>YOLOv5l6-pose:</strong> AP 69.4, <strong>AP50 90.2</strong>, 145.6 GMACS</li>
+</ul>
+
+<p><strong>test-dev2017 (Table 2):</strong> [4]</p>
+
+<ul>
+  <li><strong>YOLOv5m6-pose:</strong> AP50 89.8</li>
+  <li><strong>YOLOv5l6-pose:</strong> <strong>AP50 90.3</strong></li>
+</ul>
+
+<p>Interpretation: the strong <strong>AP50</strong> is attributed to reliable person localization + <strong>inherent grouping</strong> (keypoints tied to each detected instance), improving looser-threshold precision.</p>
+
+<h4 id="ablations-what-actually-matters-loss-resolution-quantization">Ablations: what actually matters (loss, resolution, quantization)</h4>
+
+<p><strong>(1) OKS loss vs. L1 (Table 3):</strong> [4] for YOLOv5-s6 @ 960, <strong>OKS</strong> gives <strong>63.8 / 87.6</strong>, beating <strong>L1 58.9 / 84.3</strong> and scale-normalized L1 <strong>59.7 / 84.9</strong>.</p>
+
+<p><strong>(2) Input resolution (Table 4):</strong> [4] accuracy improves with resolution but saturates beyond 960: <strong>640 → 57.5 / 84.3</strong>, <strong>960 → 63.8 / 87.6</strong>, <strong>1280 → 64.9 / 88.4</strong> (higher GMACS).</p>
+
+<p><strong>(3) Quantization (Table 5):</strong> [4] for deployment, they retrain with <strong>ReLU</strong> (~1–2% drop vs SiLU). <strong>16-bit</strong> quantization is essentially lossless (AP 61.8 vs 61.9; AP50 86.7), while <strong>8-bit</strong> drops more; <strong>mixed precision</strong> recovers most performance (<strong>60.6 / 85.4</strong>) with ~30% layers kept at 16-bit.</p>
+
+<h4 id="deployability-why-onnx-export-matters">Deployability: why ONNX export matters</h4>
+
+<p>YOLO-Pose is designed so it can be <strong>exported to ONNX from end to end</strong>. This is possible because it avoids custom or non-standard post-processing steps that many bottom-up pose methods rely on, such as complex keypoint grouping. As a result, a single exported ONNX model can directly output both <strong>bounding boxes and poses</strong>, making deployment much simpler, especially on embedded or production systems.</p>
+
+<p><a id="conclusion"></a></p>
+
+<h2 id="conclusion-1">Conclusion</h2>
+
+<p>Human pose estimation has evolved significantly from early regression-based approaches like DeepPose to sophisticated architectures that leverage multi-scale reasoning, adversarial learning, and efficient single-stage detection. Stacked Hourglass Networks introduced repeated bottom-up and top-down processing with intermediate supervision, enabling iterative refinement of pose predictions. Adversarial learning approaches further improved robustness by implicitly encoding geometric constraints through discriminator networks, helping models produce anatomically plausible poses even under heavy occlusion. Finally, YOLO-Pose demonstrated that pose estimation can be unified with object detection in a single efficient forward pass, achieving real-time performance while maintaining competitive accuracy. Together, these methods highlight the importance of global context, structural priors, and computational efficiency in human pose estimation.</p>
+
+<p><a id="references"></a></p>
+
+<h2 id="references">References</h2>
+
+<p>[1] A. Toshev and C. Szegedy, “DeepPose: Human Pose Estimation via Deep Neural Networks,” <em>Proc. IEEE Conf. Computer Vision and Pattern Recognition (CVPR)</em>, 2014.</p>
+
+<p>[2] A. Newell, K. Yang, and J. Deng, “Stacked Hourglass Networks for Human Pose Estimation,” <em>Proc. European Conf. Computer Vision (ECCV)</em>, 2016.</p>
+
+<p>[3] Y. Chen, C. Wang, B. Han, and J. Liu, “Adversarial Learning of Structure-Aware Fully Convolutional Networks for Landmark Localization,” <em>IEEE Trans. Pattern Analysis and Machine Intelligence (TPAMI)</em>, 2019.</p>
+
+<p>[4] D. Maji, S. Nagori, M. Mathew, and D. Poddar, “YOLO-Pose: Enhancing YOLO for Multi-Person Pose Estimation Using Object Keypoint Similarity Loss,” Texas Instruments Inc., 2022.</p>
+
+\[\]
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team33-food-detection.html">&larr; Food Detection</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team35-coral-reef-segmentation.html">Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3 &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
