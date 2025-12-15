@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>From Classifiers to Assistants: The Evolution of Visual Question Answering</title>
+
+    <meta name="description" content="Visual Question Answering (VQA) represents a fundamental challenge in artificial intelligence: the ability to understand both visual content and natural lang...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="From Classifiers to Assistants: The Evolution of Visual Question Answering" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Visual Question Answering (VQA) represents a fundamental challenge in artificial intelligence: the ability to understand both visual content and natural language, then reason across these modalities to produce meaningful answers. This report traces the evolution of VQA from its formal definition as a classification task in 2015, through the era..." property="og:description">
+    
+    
+        <meta content="/2025/12/13/team38-vqa.html" property="og:url">
+    
+<!--
+    
+        <meta content="Andy Xu" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/13/team38-vqa.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="From Classifiers to Assistants: The Evolution of Visual Question Answering">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Visual Question Answering (VQA) represents a fundamental challenge in artificial intelligence: the ability to understand both visual content and natural language, then reason across these modalities to produce meaningful answers. This report traces the evolution of VQA from its formal definition as a classification task in 2015, through the era of sophisticated attention mechanisms, to its modern integration into Large Multimodal Models. We analyze three papers that define this trajectory, revealing how VQA transformed from a specialized benchmark into a core capability of general-purpose AI assistants.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">From Classifiers to Assistants: The Evolution of Visual Question Answering</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Andy Xu</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team38-vqa.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Visual Question Answering (VQA) represents a fundamental challenge in artificial intelligence: the ability to understand both visual content and natural language, then reason across these modalities to produce meaningful answers. This report traces the evolution of VQA from its formal definition as a classification task in 2015, through the era of sophisticated attention mechanisms, to its modern integration into Large Multimodal Models. We analyze three papers that define this trajectory, revealing how VQA transformed from a specialized benchmark into a core capability of general-purpose AI assistants.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#1-the-foundation-defining-vqa-as-a-task" id="markdown-toc-1-the-foundation-defining-vqa-as-a-task">1. The Foundation: Defining VQA as a Task</a>    <ul>
+      <li><a href="#11-the-vqa-dataset" id="markdown-toc-11-the-vqa-dataset">1.1 The VQA Dataset</a></li>
+      <li><a href="#12-formulation-as-classification" id="markdown-toc-12-formulation-as-classification">1.2 Formulation as Classification</a></li>
+      <li><a href="#13-the-baseline-architecture" id="markdown-toc-13-the-baseline-architecture">1.3 The Baseline Architecture</a></li>
+      <li><a href="#14-evaluation-metric" id="markdown-toc-14-evaluation-metric">1.4 Evaluation Metric</a></li>
+      <li><a href="#15-the-problem-of-language-bias" id="markdown-toc-15-the-problem-of-language-bias">1.5 The Problem of Language Bias</a></li>
+    </ul>
+  </li>
+  <li><a href="#2-the-architectural-shift-attention-over-objects" id="markdown-toc-2-the-architectural-shift-attention-over-objects">2. The Architectural Shift: Attention Over Objects</a>    <ul>
+      <li><a href="#21-bottom-up-attention-object-proposals" id="markdown-toc-21-bottom-up-attention-object-proposals">2.1 Bottom-Up Attention: Object Proposals</a></li>
+      <li><a href="#22-top-down-attention-question-guided-weighting" id="markdown-toc-22-top-down-attention-question-guided-weighting">2.2 Top-Down Attention: Question-Guided Weighting</a></li>
+      <li><a href="#23-the-complete-architecture" id="markdown-toc-23-the-complete-architecture">2.3 The Complete Architecture</a></li>
+      <li><a href="#24-results-and-impact" id="markdown-toc-24-results-and-impact">2.4 Results and Impact</a></li>
+      <li><a href="#25-qualitative-analysis" id="markdown-toc-25-qualitative-analysis">2.5 Qualitative Analysis</a></li>
+      <li><a href="#26-limitations-of-the-pre-transformer-era" id="markdown-toc-26-limitations-of-the-pre-transformer-era">2.6 Limitations of the Pre-Transformer Era</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-the-paradigm-shift-vqa-as-a-capability-of-llms" id="markdown-toc-3-the-paradigm-shift-vqa-as-a-capability-of-llms">3. The Paradigm Shift: VQA as a Capability of LLMs</a>    <ul>
+      <li><a href="#31-architecture-connecting-vision-to-language" id="markdown-toc-31-architecture-connecting-vision-to-language">3.1 Architecture: Connecting Vision to Language</a></li>
+      <li><a href="#32-visual-instruction-tuning-the-data-innovation" id="markdown-toc-32-visual-instruction-tuning-the-data-innovation">3.2 Visual Instruction Tuning: The Data Innovation</a></li>
+      <li><a href="#33-training-procedure" id="markdown-toc-33-training-procedure">3.3 Training Procedure</a></li>
+      <li><a href="#34-comparison-classification-vs-generation" id="markdown-toc-34-comparison-classification-vs-generation">3.4 Comparison: Classification vs. Generation</a></li>
+      <li><a href="#35-results" id="markdown-toc-35-results">3.5 Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-analysis-the-evolution-of-vqa" id="markdown-toc-4-analysis-the-evolution-of-vqa">4. Analysis: The Evolution of VQA</a>    <ul>
+      <li><a href="#41-architectural-evolution" id="markdown-toc-41-architectural-evolution">4.1 Architectural Evolution</a></li>
+      <li><a href="#42-what-changed-and-what-didnt" id="markdown-toc-42-what-changed-and-what-didnt">4.2 What Changed and What Didn’t</a></li>
+      <li><a href="#43-the-attention-trajectory" id="markdown-toc-43-the-attention-trajectory">4.3 The Attention Trajectory</a></li>
+    </ul>
+  </li>
+  <li><a href="#5-conclusion" id="markdown-toc-5-conclusion">5. Conclusion</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Computer Vision has historically been defined by narrow, well-specified tasks. Image classification asks: <em>Is there a cat in this image?</em> Object detection asks: <em>Where is the cat?</em> Semantic segmentation asks: <em>Which pixels belong to the cat?</em> While each task pushed the field forward, they shared the fundamental limitation that the question was always predetermined by the researcher, not posed by a user.</p>
+
+<p>Visual Question Answering (VQA) broke this paradigm. By allowing any natural language question about any image, VQA became what some researchers called the “Visual Turing Test”, a task that, if solved perfectly, would require human-level understanding of both vision and language.</p>
+
+<p>In this survey, we analyze three papers that chart the evolution of VQA:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Paper</th>
+      <th style="text-align: center">Year</th>
+      <th style="text-align: left">Key Contribution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">VQA: Visual Question Answering [1]</td>
+      <td style="text-align: center">2015</td>
+      <td style="text-align: left">Formalized the task and introduced the benchmark</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Bottom-Up and Top-Down Attention [2]</td>
+      <td style="text-align: center">2018</td>
+      <td style="text-align: left">Object-level attention via Faster R-CNN</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Visual Instruction Tuning (LLaVA) [3]</td>
+      <td style="text-align: center">2023</td>
+      <td style="text-align: left">Merged VQA into Large Language Models</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These papers represent three distinct eras: <strong>problem definition</strong>, <strong>architectural optimization</strong>, and <strong>paradigm shift</strong>. Together, they tell the story of how a classification task became a conversation.</p>
+
+<hr />
+
+<h2 id="1-the-foundation-defining-vqa-as-a-task">1. The Foundation: Defining VQA as a Task</h2>
+
+<p><strong>Paper:</strong> <em>VQA: Visual Question Answering</em> - Antol et al., ICCV 2015 <a href="https://arxiv.org/abs/1505.00468">[arxiv]</a></p>
+
+<p>Before 2015, the intersection of vision and language was largely limited to image captioning, which is generating a single description for an image. While valuable, captioning provides no mechanism for targeted queries. A user cannot ask <em>“What color is the hat?”</em> and expect a relevant response from a captioning model.</p>
+
+<p>Antol et al. formalized Visual Question Answering as a distinct task: given an image \(I\) and a free-form natural language question \(Q\), the system must produce an answer \(A\).</p>
+
+<h3 id="11-the-vqa-dataset">1.1 The VQA Dataset</h3>
+
+<p>The authors introduced VQA v1.0, one of the largest vision-language datasets of its time:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Statistic</th>
+      <th style="text-align: right">Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Images (COCO + Abstract Scenes)</td>
+      <td style="text-align: right">~254,000</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Questions</td>
+      <td style="text-align: right">~764,000</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Answers (crowdsourced)</td>
+      <td style="text-align: right">~10,000,000</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The dataset included both real photographs from MS-COCO and synthetic abstract scenes. This dual setup allowed researchers to isolate reasoning capabilities from visual recognition challenges.</p>
+
+<p>Questions spanned multiple categories:</p>
+
+<ul>
+  <li><strong>Object Recognition:</strong> <em>“What is the man holding?”</em></li>
+  <li><strong>Counting:</strong> <em>“How many birds are in the image?”</em></li>
+  <li><strong>Spatial Reasoning:</strong> <em>“Is the cat on the left or right of the dog?”</em></li>
+  <li><strong>Common Sense:</strong> <em>“Why is the person wearing a helmet?”</em></li>
+  <li><strong>Yes/No:</strong> <em>“Is it raining?”</em></li>
+</ul>
+
+<p style="width: 400px; max-width: 100%; display: block; margin: 0 auto;"><img src="/CS163-Projects-2025Fall/assets/images/team38/vqa_example.png" alt="VQA Example" /></p>
+<p><em>Fig 1. Typical VQA input/output examples [1].</em></p>
+
+<h3 id="12-formulation-as-classification">1.2 Formulation as Classification</h3>
+
+<p>A critical design decision was to treat VQA as a multi-class classification problem. Rather than generating free-form text, models select from a fixed vocabulary of the most frequent answers (typically the top 1000).</p>
+
+<p>This simplification made training tractable with 2015-era techniques but introduced a fundamental constraint: the model could never produce an answer outside its vocabulary, even if the correct answer was obvious.</p>
+
+<h3 id="13-the-baseline-architecture">1.3 The Baseline Architecture</h3>
+
+<p>The paper proposed a two-channel “fusion” architecture:</p>
+
+<p><strong>Image Channel:</strong>
+A VGGNet (pre-trained on ImageNet) processes the image and outputs a 4096-dimensional feature vector from the final fully-connected layer.</p>
+
+<p><strong>Question Channel:</strong>
+An LSTM reads the question word-by-word, producing a fixed-length encoding from its final hidden state.</p>
+
+<p><strong>Fusion:</strong>
+The image and question vectors are combined via element-wise multiplication:</p>
+
+\[h = \text{tanh}(W_I \cdot v_I) \odot \text{tanh}(W_Q \cdot v_Q)\]
+
+<p><strong>Output:</strong>
+A softmax classifier over the answer vocabulary produces the final prediction.</p>
+
+<p style="width: 520px; max-width: 100%; display: block; margin: 0 auto;"><img src="/CS163-Projects-2025Fall/assets/images/team38/vqa_arch.png" alt="VQA Architecture" /></p>
+<p><em>Fig 2. Their best performing VQA model (LSTM + VGGNet) [2].</em></p>
+
+<h3 id="14-evaluation-metric">1.4 Evaluation Metric</h3>
+
+<p>The authors introduced an evaluation metric that accounts for answer variability:</p>
+
+\[\text{Accuracy} = \min\left(\frac{n}{3}, 1\right)\]
+
+<p>where \(n\) is the number of annotators (out of 10) who provided that answer.</p>
+
+<p>An answer receives full credit if at least 3 out of 10 annotators provided it, partial credit otherwise. This soft metric acknowledges that questions like <em>“What color is the sky?”</em> might legitimately have answers like “blue”, “light blue”, or “azure”.</p>
+
+<h3 id="15-the-problem-of-language-bias">1.5 The Problem of Language Bias</h3>
+
+<p>The authors discovered that models could exploit language priors to achieve surprisingly high accuracy without truly understanding images. By analyzing the dataset, they found strong correlations between question patterns and answers. For example, questions beginning with “How many…” were frequently answered with small numbers, regardless of the image content.</p>
+
+<p>This revealed a fundamental challenge: models could achieve respectable scores while barely “looking” at images. This problem would motivate later work on VQA v2.0, which was designed to reduce such language biases by balancing the answer distribution.</p>
+
+<hr />
+
+<h2 id="2-the-architectural-shift-attention-over-objects">2. The Architectural Shift: Attention Over Objects</h2>
+
+<p><strong>Paper:</strong> <em>Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering</em> - Anderson et al., CVPR 2018 <a href="https://arxiv.org/abs/1707.07998">[arxiv]</a></p>
+
+<p>By 2017, attention mechanisms had become standard in VQA. Models would compute attention weights over a spatial grid of CNN features (e.g., a \(14 \times 14\) grid from ResNet), allowing the model to “focus” on relevant regions for each question.</p>
+
+<p>However, Anderson et al. identified a fundamental limitation: grids are unnatural. When a human answers <em>“What is the man holding?”</em>, they don’t scan a uniform grid, but instead they focus on semantically meaningful <em>objects</em>. A grid cell might contain half of a tennis racket and part of the sky, mixing useful and irrelevant information.</p>
+
+<h3 id="21-bottom-up-attention-object-proposals">2.1 Bottom-Up Attention: Object Proposals</h3>
+
+<p>The key innovation was to replace grid-based features with <strong>object-level features</strong> extracted by a Faster R-CNN detector pre-trained on Visual Genome.</p>
+
+<p><strong>Bottom-Up Process:</strong></p>
+<ol>
+  <li>Faster R-CNN proposes bounding boxes for salient objects/regions</li>
+  <li>For each box, extract a feature vector \(v_i \in \mathbb{R}^{2048}\) from the pooled ROI</li>
+  <li>Keep the top \(k\) proposals (found \(k = 36\) works well)</li>
+</ol>
+
+<p>The result is a set of features \(V = \{v_1, v_2, ..., v_k\}\) where each \(v_i\) corresponds to a semantically meaningful region (a person, a hat, a tennis racket) rather than an arbitrary grid cell.</p>
+
+<h3 id="22-top-down-attention-question-guided-weighting">2.2 Top-Down Attention: Question-Guided Weighting</h3>
+
+<p>Once objects are detected, the model must determine which objects are relevant to the question. This is the <strong>top-down</strong> component of task-conditioned attention.</p>
+
+<p>Given the question encoding \(q\), attention weights are computed:</p>
+
+\[a_i = w_a^T \cdot \text{tanh}(W_v v_i + W_q q)\]
+
+\[\alpha_i = \text{softmax}(a_i)\]
+
+<p>The final visual representation is a weighted sum:</p>
+
+\[\widehat{v} = \sum_{i=1}^{k} \alpha_i v_i\]
+
+<p>This \(\widehat{v}\) is then combined with the question encoding to produce the answer.</p>
+
+<h3 id="23-the-complete-architecture">2.3 The Complete Architecture</h3>
+
+<p style="width: 650px; max-width: 100%; display: block; margin: 0 auto;"><img src="/CS163-Projects-2025Fall/assets/images/team38/updown_arch.png" alt="Up-Down Attention" /></p>
+<p><em>Fig 3. Bottom-up regions (from a detector) combined with top-down, question-guided attention for VQA [2].</em></p>
+
+<p>The fusion mechanism used in this work was based on element-wise multiplication with a gating mechanism, but the object-level attention was compatible with various fusion strategies.</p>
+
+<h3 id="24-results-and-impact">2.4 Results and Impact</h3>
+
+<p>On the VQA v2.0 validation set, the Up-Down model significantly outperformed ResNet baselines across all question types:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Model</th>
+      <th style="text-align: center">Yes/No</th>
+      <th style="text-align: center">Number</th>
+      <th style="text-align: center">Other</th>
+      <th style="text-align: center">Overall</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ResNet (7×7)</td>
+      <td style="text-align: center">77.6</td>
+      <td style="text-align: center">37.7</td>
+      <td style="text-align: center">51.5</td>
+      <td style="text-align: center">59.4</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Up-Down</td>
+      <td style="text-align: center">80.3</td>
+      <td style="text-align: center">42.8</td>
+      <td style="text-align: center">55.8</td>
+      <td style="text-align: center">63.2</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>On the official VQA v2.0 test-standard server, an ensemble of 30 Up-Down models achieved first place in the 2017 VQA Challenge:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Model</th>
+      <th style="text-align: center">Yes/No</th>
+      <th style="text-align: center">Number</th>
+      <th style="text-align: center">Other</th>
+      <th style="text-align: center">Overall</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Up-Down (Ensemble)</td>
+      <td style="text-align: center">86.60</td>
+      <td style="text-align: center">48.64</td>
+      <td style="text-align: center">61.15</td>
+      <td style="text-align: center">70.34</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This paper had significant impact on the field. The authors released pre-extracted object features publicly, which many subsequent VQA systems adopted as a standard visual representation.</p>
+
+<h3 id="25-qualitative-analysis">2.5 Qualitative Analysis</h3>
+
+<p>The attention weights provided interpretability. For the question <em>“What sport is being played?”</em>, the model would attend strongly to:</p>
+<ul>
+  <li>The player’s uniform</li>
+  <li>The ball</li>
+  <li>The sports equipment</li>
+</ul>
+
+<p>This provided evidence that the model was “reasoning” about relevant objects rather than exploiting spurious correlations.</p>
+
+<h3 id="26-limitations-of-the-pre-transformer-era">2.6 Limitations of the Pre-Transformer Era</h3>
+
+<p>Despite its success, bottom-up attention had inherent constraints:</p>
+
+<ol>
+  <li>
+    <p><strong>Fixed Object Vocabulary:</strong> The Faster R-CNN was trained on Visual Genome’s 1,600 object classes. Objects outside this vocabulary were poorly represented.</p>
+  </li>
+  <li>
+    <p><strong>Two-Stage Pipeline:</strong> The object detector was frozen during VQA training, preventing end-to-end optimization.</p>
+  </li>
+  <li>
+    <p><strong>Limited Reasoning:</strong> While attention helped localization, complex reasoning (e.g., <em>“If the left traffic light turns red, should the car stop?”</em>) remained challenging.</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="3-the-paradigm-shift-vqa-as-a-capability-of-llms">3. The Paradigm Shift: VQA as a Capability of LLMs</h2>
+
+<p><strong>Paper:</strong> <em>Visual Instruction Tuning</em> - Liu et al., NeurIPS 2023 <a href="https://arxiv.org/abs/2304.08485">[arxiv]</a></p>
+
+<p>The emergence of Large Language Models (LLMs) like GPT-3 and LLaMA fundamentally changed the landscape of AI. These models demonstrated remarkable reasoning capabilities through pure text, but they were blind to images.</p>
+
+<p>Liu et al. introduced <strong>LLaVA (Large Language-and-Vision Assistant)</strong>, demonstrating that connecting a vision encoder to an LLM creates a powerful multimodal system where VQA is just one of many emergent capabilities.</p>
+
+<h3 id="31-architecture-connecting-vision-to-language">3.1 Architecture: Connecting Vision to Language</h3>
+
+<p>LLaVA’s architecture is elegantly simple:</p>
+
+<p><strong>Vision Encoder (CLIP ViT-L/14):</strong>
+A frozen CLIP visual encoder processes the image into a sequence of visual tokens:</p>
+
+\[Z_v = \text{ViT}(I) \in \mathbb{R}^{N \times D_v}\]
+
+<p>where \(N\) is the number of image patches and \(D_v\) is the visual feature dimension.</p>
+
+<p><strong>Projection Layer:</strong>
+A trainable linear projection maps visual features to the LLM’s embedding space:</p>
+
+\[H_v = W \cdot Z_v, \quad W \in \mathbb{R}^{D_l \times D_v}\]
+
+<p>where \(D_l\) is the LLM’s hidden dimension.</p>
+
+<p><strong>Language Model (Vicuna/LLaMA):</strong>
+The projected visual tokens \(H_v\) are concatenated with text token embeddings and fed to the LLM:</p>
+
+\[P(X_a \mid H_v, X_q) = \prod_{i=1}^{L} P(x_i \mid H_v, X_q, X_{a,&lt;i})\]
+
+<p>where \(X_q\) is the question and \(X_a\) is the generated answer.</p>
+
+<p style="width: 520px; max-width: 100%; display: block; margin: 0 auto;"><img src="/CS163-Projects-2025Fall/assets/images/team38/llava_arch.png" alt="LLaVA Architecture" /></p>
+<p><em>Fig 4. LLaVA-style setup: vision encoder → projector → LLM decoder that generates the answer [3].</em></p>
+
+<h3 id="32-visual-instruction-tuning-the-data-innovation">3.2 Visual Instruction Tuning: The Data Innovation</h3>
+
+<p>The architectural contribution was matched by a data innovation. Rather than collecting standard VQA pairs, the authors used GPT-4 to generate <strong>instruction-following data</strong> from image captions and bounding boxes.</p>
+
+<p>Three types of data were generated:</p>
+
+<p><strong>1. Conversation:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User: What do you see in this image?
+Assistant: I see a busy city street with people walking and cars...
+
+User: What's the weather like?
+Assistant: Based on the shadows and bright lighting, it appears to be 
+           a sunny day...
+</code></pre></div></div>
+
+<p><strong>2. Detailed Description:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User: Describe this image in detail.
+Assistant: This image shows a cozy kitchen with wooden cabinets, a 
+           marble countertop, and stainless steel appliances. On the 
+           counter, there are fresh vegetables including tomatoes and 
+           cucumbers, suggesting someone is preparing a meal...
+</code></pre></div></div>
+
+<p><strong>3. Complex Reasoning:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User: What might happen next in this scene?
+Assistant: Given that the traffic light is yellow and the pedestrian 
+           is in the crosswalk, the cars will likely stop soon, and 
+           the pedestrian will finish crossing before the light changes...
+</code></pre></div></div>
+
+<p>This instruction-following format taught the model to generate helpful, detailed, conversational responses rather than just single-word answers.</p>
+
+<h3 id="33-training-procedure">3.3 Training Procedure</h3>
+
+<p>LLaVA uses a two-stage training process:</p>
+
+<p><strong>Stage 1: Pre-training (Feature Alignment)</strong></p>
+<ul>
+  <li>Freeze: Vision encoder + LLM</li>
+  <li>Train: Projection layer \(W\)</li>
+  <li>Data: 595K image-text pairs (filtered from CC3M)</li>
+  <li>Objective: Next-token prediction</li>
+</ul>
+
+<p><strong>Stage 2: Fine-tuning (End-to-End)</strong></p>
+<ul>
+  <li>Freeze: Vision encoder</li>
+  <li>Train: Projection layer \(W\) + LLM</li>
+  <li>Data: 158K visual instruction-following samples</li>
+  <li>Objective: Next-token prediction on assistant responses</li>
+</ul>
+
+<h3 id="34-comparison-classification-vs-generation">3.4 Comparison: Classification vs. Generation</h3>
+
+<p>The shift from classification to generation fundamentally changed what VQA models could do:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Aspect</th>
+      <th style="text-align: center">Classification (2015-2020)</th>
+      <th style="text-align: center">Generation (2023+)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Answer format</td>
+      <td style="text-align: center">Single word/phrase</td>
+      <td style="text-align: center">Free-form text</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Answer vocabulary</td>
+      <td style="text-align: center">Fixed (1000-3000)</td>
+      <td style="text-align: center">Unlimited</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Reasoning</td>
+      <td style="text-align: center">Implicit</td>
+      <td style="text-align: center">Explicit (can explain)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Multi-turn</td>
+      <td style="text-align: center">No</td>
+      <td style="text-align: center">Yes (conversation)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Training signal</td>
+      <td style="text-align: center">Cross-entropy on labels</td>
+      <td style="text-align: center">Next-token prediction</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="35-results">3.5 Results</h3>
+
+<p>On the Science QA multimodal benchmark, LLaVA achieved strong performance compared to prior methods:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Method</th>
+      <th style="text-align: center">Average</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Human</td>
+      <td style="text-align: center">88.40</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">LLaVA</td>
+      <td style="text-align: center">90.92</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">LLaVA + GPT-4 (judge)</td>
+      <td style="text-align: center">92.53</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>LLaVA achieved 90.92% accuracy, outperforming humans (88.40%). When combined with GPT-4 as a judge, performance increased to 92.53%, setting a new state-of-the-art on this benchmark.</p>
+
+<hr />
+
+<h2 id="4-analysis-the-evolution-of-vqa">4. Analysis: The Evolution of VQA</h2>
+
+<h3 id="41-architectural-evolution">4.1 Architectural Evolution</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Era</th>
+      <th style="text-align: left">Visual Representation</th>
+      <th style="text-align: left">Language Model</th>
+      <th style="text-align: left">Fusion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">2015</td>
+      <td style="text-align: left">Global CNN features</td>
+      <td style="text-align: left">LSTM</td>
+      <td style="text-align: left">Element-wise product</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">2018</td>
+      <td style="text-align: left">Object proposals (R-CNN)</td>
+      <td style="text-align: left">GRU/LSTM</td>
+      <td style="text-align: left">Bilinear attention</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">2023</td>
+      <td style="text-align: left">CLIP patch embeddings</td>
+      <td style="text-align: left">LLM (7B-70B params)</td>
+      <td style="text-align: left">Projection + concatenation</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="42-what-changed-and-what-didnt">4.2 What Changed and What Didn’t</h3>
+
+<p><strong>Changed:</strong></p>
+<ul>
+  <li>Model scale: From millions to billions of parameters</li>
+  <li>Training data: From curated VQA pairs to web-scale + synthetic</li>
+  <li>Output: From classification to generation</li>
+  <li>Evaluation: From accuracy to human preference</li>
+</ul>
+
+<p><strong>Didn’t Change:</strong></p>
+<ul>
+  <li>The core challenge: grounding language in visual content</li>
+  <li>The need for reasoning beyond pattern matching</li>
+  <li>Sensitivity to language priors (now called “hallucinations”)</li>
+</ul>
+
+<h3 id="43-the-attention-trajectory">4.3 The Attention Trajectory</h3>
+
+<p>Attention mechanisms evolved significantly:</p>
+
+<ol>
+  <li><strong>2015:</strong> No explicit attention (used global image features)</li>
+  <li><strong>2017:</strong> Spatial attention over CNN grids</li>
+  <li><strong>2018:</strong> Object-level attention via detection</li>
+  <li><strong>2023:</strong> Self-attention within Transformers (implicit in ViT and LLM)</li>
+</ol>
+
+<p>Modern LLMs perform attention internally as the question tokens attend to visual tokens through the Transformer’s multi-head attention. This is more flexible than explicit attention layers but less interpretable.</p>
+
+<hr />
+
+<h2 id="5-conclusion">5. Conclusion</h2>
+
+<p>The evolution of Visual Question Answering tells a broader story about AI research:</p>
+
+<ol>
+  <li>
+    <p><strong>Define the problem</strong>: The 2015 VQA paper introduced an entirely new evaluation paradigm for multimodal AI. By creating a large-scale dataset and standardized metrics, it enabled the research community to systematically measure progress on vision-language understanding.</p>
+  </li>
+  <li>
+    <p><strong>Optimize within the paradigm</strong>: Bottom-up attention showed that better visual grounding (objects vs. grids) improved performance within the classification framework.</p>
+  </li>
+  <li>
+    <p><strong>Shift the paradigm</strong>: Visual instruction tuning demonstrated that VQA could become a natural capability of general-purpose language models, removing the need for task-specific architectures.</p>
+  </li>
+</ol>
+
+<p>Today, VQA is no longer a standalone task but a capability of multimodal assistants like GPT, Gemini, and Claude. The best VQA “models” are simply vision-language models prompted to answer questions.</p>
+
+<p>This trajectory suggests that future progress will come not from VQA-specific innovations but from advances in:</p>
+<ul>
+  <li>Visual representation learning (better vision encoders)</li>
+  <li>Language model scaling and alignment (larger, safer LLMs)</li>
+  <li>Multimodal training data (more diverse, higher quality)</li>
+</ul>
+
+<p>The question for researchers is no longer <em>“How do we build a VQA model?”</em> but rather <em>“How do we build AI systems that truly understand the visual world?”</em> VQA was a extremely valuable stepping stone on this longer journey and continues to be a crucial part of the way we measure the ability of vision-language models. More VQA benchmarks are being created all the time, with specific focuses on a wide variety of tasks and subjects that align with people’s needs.</p>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<p>[1] Antol, S., Agrawal, A., Lu, J., Mitchell, M., Batra, D., Zitnick, C.L., &amp; Parikh, D. (2015). VQA: Visual Question Answering. <em>Proceedings of the IEEE International Conference on Computer Vision (ICCV)</em>.</p>
+
+<p>[2] Anderson, P., He, X., Buehler, C., Teney, D., Johnson, M., Gould, S., &amp; Zhang, L. (2018). Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering. <em>Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>.</p>
+
+<p>[3] Liu, H., Li, C., Wu, Q., &amp; Lee, Y.J. (2023). Visual Instruction Tuning. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.</p>
+
+<hr />
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team35-coral-reef-segmentation.html">&larr; Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html">XAI in Facial Recognition &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
