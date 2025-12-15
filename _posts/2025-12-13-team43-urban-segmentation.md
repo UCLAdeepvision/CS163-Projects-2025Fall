@@ -1,14 +1,12 @@
 ---
 layout: post
 comments: true
-title: Project Track, Project 8 - Streetview Semantic Segmentation
+title: Streetview Semantic Segmentation
 author: Griffin Galimi, Yahvin Gali, Joseph Hu, and Pravir Chugh
 date: 2025-12-13
 ---
 
-> Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object boundaries critical for safety-relevant perception.  
->  
-> This project presents a diagnostic-driven framework for understanding segmentation failures on Cityscapes and introduces a SAM3-guided boundary supervision method that injects geometric priors into SegFormer. By combining cross-model difficulty analysis with geometry-aware auxiliary training, we demonstrate targeted improvements on thin and boundary-sensitive classes without increasing inference cost.
+> [Project Track: Project 8]Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object boundaries critical for safety-relevant perception.  This project presents a diagnostic-driven framework for understanding segmentation failures on Cityscapes and introduces a SAM3-guided boundary supervision method that injects geometric priors into SegFormer. By combining cross-model difficulty analysis with geometry-aware auxiliary training, we demonstrate targeted improvements on thin and boundary-sensitive classes without increasing inference cost.
 
 <!--more-->
 {: class="table-of-content"}
