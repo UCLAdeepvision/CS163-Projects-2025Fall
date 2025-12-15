@@ -26,11 +26,12 @@ Diffusion models are generative models that create images by learning to reverse
 ### 1.1 Forward and Reverse Processes
 The forward process progressively adds noise to an image over some predefined number of steps. Eventually, this results in a sample that bears no resemblance to the original content, but the noising schedule is carefully designed so the corruption is predictable. The reverse process, which the model learns, takes a noisy image and removes noise one step at a time. Each such denoising step is handled by a neural network, usually a U-Net, that predicts the noise added at that stage. The model can generate new images or modify existing ones by chaining these predictions together.
 
-![Diffusion pipeline](/assets/images/team37/forward.png)
+![Diffusion pipeline]({{ '/assets/images/team37/forward.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
 *Fig 1. Overview of the diffusion process. 
     Left: forward noising, where Gaussian noise is incrementally added to the image over $T$ steps. 
     Right: reverse denoising, which the model learns to perform step by step to reconstruct an image sample. 
-    This formulation underlies all subsequent diffusion-based editing techniques. *
+    This formulation underlies all subsequent diffusion-based editing techniques.*
 
 ### Why Diffusion Models Support Image Editing
 
@@ -83,7 +84,8 @@ Starting from a lightly noised version of the input image, the method applies re
 This visualizes why SDEdit excels at structure-preserving edits.
 
 ![SDEdit editing pipeline]({{ '/assets/images/team37/sde.png' | relative_url }})
-*Fig. X. Illustration of SDEdit’s editing procedure. The input image is first perturbed with a controlled amount of noise and then refined through the reverse diffusion (SDE) process.
+{: style="width: 800px; max-width: 100%;"}
+*Fig. X. Illustration of SDEdit's editing procedure. The input image is first perturbed with a controlled amount of noise and then refined through the reverse diffusion (SDE) process.
 The overall structure of the original image is largely preserved while stylistic or semantic changes are introduced.
 Reprinted from Meng et al. (2021).*
 
@@ -100,6 +102,7 @@ These examples illustrate how SDEdit can preserve scene layout while making sign
 This ability to maintain structure distinguishes SDEdit from earlier GAN-based editing techniques.
 
 ![SDEdit editing examples]({{ '/assets/images/team37/strokebasedediting.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
 *Fig. X. Examples of SDEdit editing tasks, including stroke painting, stroke-based editing, and image compositing.
 SDEdit preserves the underlying image structure while enabling stylistic and semantic changes.
 Reprinted from Meng et al. (2021).*
@@ -155,6 +158,7 @@ Figure~\ref{fig:p2p_attention} shows how the pixel-level queries interact with t
 The word swap, prompt refinement, and attention re-weighting editing strategies correspond directly to replacing or mixing these attention maps across timesteps.
 
 ![Cross-attention visualization in Prompt-to-Prompt]({{ '/assets/images/team37/03_ca_diagram.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
 *Fig. X. Visualizing text-to-image cross-attention in Prompt-to-Prompt.  
 Top: pixel-level queries interact with prompt tokens to form cross-attention maps.  
 Bottom: three attention manipulation strategies for editing—word substitution, prompt refinement, and attention re-weighting.  
