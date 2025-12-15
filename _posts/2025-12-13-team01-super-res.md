@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: Team 01 - Deep Learning for Image Super-Resolution
+title: Deep Learning for Image Super-Resolution
 author: Thomas Peeler, Dylan Truong, Asher Christian, Daniel Chvat
 date: 2025-12-13
 ---
