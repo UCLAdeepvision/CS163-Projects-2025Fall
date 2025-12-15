@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Unsupervised Domain Adaptation for Semantic Segmentation</title>
+
+    <meta name="description" content="Data annotation is widely considered a major bottleneck in semantic segmentation. It leads to domain gaps between labeled source data and unlabeled target da...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Unsupervised Domain Adaptation for Semantic Segmentation" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Data annotation is widely considered a major bottleneck in semantic segmentation. It leads to domain gaps between labeled source data and unlabeled target data and stresses the need for unsupervised domain adaptation (UDA) methods. This post covers DAFormer, a recent transformer-based UDA method which significantly improved state-of-the-art performance, as well..." property="og:description">
+    
+    
+        <meta content="/2025/12/12/team46-UDA-semantic-segmentation.html" property="og:url">
+    
+<!--
+    
+        <meta content="Brandon Wu" property="article:author">
+        <meta content="/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-12T00:00:00+00:00" property="article:published_time">
+        <meta content="/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="/CS163-Projects-2025Fall/2025/12/12/team46-UDA-semantic-segmentation.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Unsupervised Domain Adaptation for Semantic Segmentation">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Data annotation is widely considered a major bottleneck in semantic segmentation. It leads to domain gaps between labeled source data and unlabeled target data and stresses the need for unsupervised domain adaptation (UDA) methods. This post covers DAFormer, a recent transformer-based UDA method which significantly improved state-of-the-art performance, as well as two more recent performance-improving approaches to UDA (HRDA and MIC).</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Unsupervised Domain Adaptation for Semantic Segmentation</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-12T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 12, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Brandon Wu</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/12/team46-UDA-semantic-segmentation.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Data annotation is widely considered a major bottleneck in semantic segmentation. It leads to domain gaps between labeled source data and unlabeled target data and stresses the need for unsupervised domain adaptation (UDA) methods. This post covers DAFormer, a recent transformer-based UDA method which significantly improved state-of-the-art performance, as well as two more recent performance-improving approaches to UDA (HRDA and MIC).</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#-introduction-" id="markdown-toc--introduction-"><u> Introduction </u></a>    <ul>
+      <li><a href="#unsupervised-domain-adaptation-uda" id="markdown-toc-unsupervised-domain-adaptation-uda">Unsupervised Domain Adaptation (UDA)</a></li>
+    </ul>
+  </li>
+  <li><a href="#-daformer-" id="markdown-toc--daformer-"><u> DAFormer </u></a>    <ul>
+      <li><a href="#architecture" id="markdown-toc-architecture">Architecture</a></li>
+      <li><a href="#self-training-for-uda" id="markdown-toc-self-training-for-uda">Self-Training for UDA</a></li>
+      <li><a href="#additional-training-strategies" id="markdown-toc-additional-training-strategies">Additional Training Strategies</a></li>
+    </ul>
+  </li>
+  <li><a href="#-hrda-" id="markdown-toc--hrda-"><u> HRDA </u></a>    <ul>
+      <li><a href="#context-crop" id="markdown-toc-context-crop">Context Crop</a></li>
+      <li><a href="#detail-crop" id="markdown-toc-detail-crop">Detail Crop</a></li>
+      <li><a href="#multi-resolution-fusion" id="markdown-toc-multi-resolution-fusion">Multi-Resolution Fusion</a></li>
+    </ul>
+  </li>
+  <li><a href="#-mic-" id="markdown-toc--mic-"><u> MIC </u></a></li>
+  <li><a href="#-evaluation-" id="markdown-toc--evaluation-"><u> Evaluation </u></a></li>
+  <li><a href="#-conclusion-" id="markdown-toc--conclusion-"><u> Conclusion </u></a></li>
+  <li><a href="#-references-" id="markdown-toc--references-"><u> References </u></a></li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="-introduction-"><u> Introduction </u></h1>
+<p>Semantic segmentation is the computer vision task of assigning a class label to every pixel in an image in the pursuit of understanding the image’s content with pixel-level precision. Due to its impact in popular research fields such as autonomous vehicles and medical imaging, it has been a prominent area of study within deep learning. The introduction of CNNs a decade ago allowed major breakthroughs in semantic segmentation, and in recent years, after revolutionizing natural language processing, Transformers have quickly adapted to many computer vision tasks such as this one. However, Transformers were not quick to supplant CNNs in Unsupervised Domain Adaptation (UDA) approaches to semantic segmentation. It was only three years ago when such an attempt was systematically made. We will explore this novel architecture (DAFormer) and its influence on UDA performance of semantic segmentation, as well as state-of-the-art upgrades (HRDA and MIC).</p>
+
+<h3 id="unsupervised-domain-adaptation-uda">Unsupervised Domain Adaptation (UDA)</h3>
+<p>UDA is a learning paradigm that addresses the challenge of domain shift, a phenomenon where a model overfits on a labeled source domain and performs poorly on a different, unlabeled, target domain. In the context of semantic segmentation, the motivation for UDA arises because in many settings, pixel-level annotations for a target dataset can be expensive to obtain or even unavailable. UDA is necessary to transfer knowledge from the source dataset, which is much cheaper to label, to the target dataset. Common domain gaps include lighting, textures, resolution, and small objects. UDA methods primarily focus on learning domain-invariate representations that capture semantic similarities in both domains, enabling models to generalize well to novel conditions and environments. Ultimately, progression in this field reduces the need for expensive, manual annotations of the target domain.</p>
+
+<p><br /></p>
+
+<h1 id="-daformer-"><u> DAFormer </u></h1>
+
+<h3 id="architecture">Architecture</h3>
+<p>Previous UDA methods mostly used CNN network architectures, which were beginning to become outdated. Researchers hypothesized that the dynamic self-attention mechanism in Transformers would improve robustness and produce more adaptive models. In particular, the design of Mix Transformers (MiT) was tailored for semantic segmentation, and was chosen for DAFormer. MiT uses smaller image patches than Vision Transformers (ViT) to capture finer details. The self-attention blocks use sequence reduction to compensate the increased feature resolution. Additionally, MiT has an encoder-decoder architecture. The encoder produces multi-level feature maps defined as</p>
+
+\[F_i \in \mathbb{R}^{\frac{H}{2^{i+1}} \times \frac{W}{2^{i+1}} \times C_i},  \hspace{1mm} i \in \{1,2,3,4\}\]
+
+<p>The decoder, in addition to exploiting local information from bottleneck features like a typical decoder, also uses context across features from different encoder levels. The earlier features provide insightful low-level understandings for semantic segmentation at a high resolution. First, each feature map \( F_i \) is aligned to the same number of channels and to the same size of \( F_1 \), and then they are stacked together. The context-aware feature fusion then fuses the respective outputs from applying multiple parallel 3 x 3 depthwise separable convolutions with varying dilation rates on the stack.</p>
+
+<p><br /></p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/team46/DAFormer-architecture.png" alt="DAFormer network architecture" style="width: 600px; max-width: 100%; display: inline-block;" />
+  <p><em>Fig 1. DAFormer architecture: encoder with a feature pyramid, context-aware fusion decoder </em> [1].</p>
+</div>
+
+<p><br /></p>
+
+<h3 id="self-training-for-uda">Self-Training for UDA</h3>
+
+<p>Due to the lack of labels for images in the target domain, naively training a neural network with categorical cross-entropy loss on the source domain causes the network to generalize poorly on the target domain. Self-training has been the most effective strategy for addressing this domain gap.</p>
+
+<p>Self-training uses a teacher network \( h_{\phi} \) to generate pseudo-labels for target domain data. The pseudo-labels are defined as</p>
+
+\[p_T^{(i,j,c)} = [c = \mathrm{argmax}_{c^\prime} h_\phi(x_T^{(i)})^{(j,c^\prime)} ]\]
+
+<p>where \( [\cdot]\) denotes the Iverson bracket.</p>
+
+<p>Additionally, the pseudo-labels are weighted with a confidence estimate defined as</p>
+
+\[q_T^{(i)} = \frac{\sum_{j=1}^{H \times W} [\max_{c^\prime} h_\phi(x_T^{(i)})^{(j,c^\prime)} &gt; \tau]} {H \cdot W}\]
+
+<p>where \( \tau \) is a threshold of the maximum softmax probability.</p>
+
+<p>These two quantities are used to build a new loss function for the network \( g_\theta \) that can train on the target domain:</p>
+
+\[\mathscr{L}_T^{(i)} = - \sum^{H \times W}_{j=1} \sum^C_{c=1} q_T^{(i)} p_T^{(i,j,c)} \log g_\theta(x_T^{(i)})^{(j,c)}\]
+
+<p>The teacher network is implemented as an Exponential Moving Average (EMA) teacher, which means the weights of the teacher network (\( \phi \)) are updated based on the weights of the student network (\( \theta \)) after each training step t as follows:</p>
+
+\[\phi_{t+1} \leftarrow \alpha \phi_t + (1-\alpha)\theta_t\]
+
+<p><br /></p>
+
+<h3 id="additional-training-strategies">Additional Training Strategies</h3>
+
+<h4 id="rare-class-sampling-rcs">Rare Class Sampling (RCS)</h4>
+
+<p>It was observed that rarer classes in the source domain performed inconsistently over different runs. The order in which the data was sampled decided when the classes were learned, and classes that were learned later were more likely to perform worse. To prevent the model from being overly biased towards common classes in later training iterations, rare class sampling samples images with rare classes from the source domain more often so that these classes may be learned better and earlier.</p>
+
+<h4 id="thing-class-imagenet-feature-distance-fd">Thing-Class ImageNet Feature Distance (FD)</h4>
+<p>DAFormer is pretrained on the ImageNet-1K classification dataset, which provides information on high-level semantic classes (bus vs. train) that often pose a challenge to UDA. It was observed that such classes were segmentable by DAFormer early on during training, but were forgotten after a few hundred training steps. The learned synthetic source data features began to override the ImageNet features. To preserve these generic features, the model is regularized with the feature distance between bottleneck features of the segmentation model and the bottleneck features of the ImageNet model, but for only thing-classes (well-defined objects) which comprised most of the ImageNet data.</p>
+
+<h4 id="learning-rate-warmup">Learning Rate Warmup</h4>
+
+<p>Warming up the learning rate has commonly been applied to models to improve network generalization by stabilizing initial training. For UDA purposes, a learning rate warmup would prevent distortion of important ImageNet features early on in training. Up to iteration \( t_{warm} \), the learning rate at iteration t is defined as</p>
+
+\[\eta_t = \eta_{base} \cdot t/t_{warm}\]
+
+<p><br />
+<br /></p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/team46/DAFormer-UDA-framework.png" alt="DAFormer UDA framework" style="width: 700px; max-width: 100%; display: inline-block;" />
+  <p><em>Fig 2. DAFormer UDA framework: self-training with EMA teacher network, rare class sampling of source data, thing-class feature distance regularization using ImageNet encoder</em> [1].</p>
+</div>
+
+<p><br /></p>
+
+<h1 id="-hrda-"><u> HRDA </u></h1>
+
+<p>UDA methods require images from multiple domains, additional networks, and more loss functions to train, so due to GPU memory constraints, most previous works, including DAFormer, only use low resolution (LR) inputs. Consequently, excluding high-/multi-resolution (HR) inputs hinders a model’s ability to recognize smaller objects and produce fine segmentation borders. Context-aware high-resolution domain-adaptive semantic segmentation (HRDA) addresses this issue by introducing a large LR context crop and a small HR detail crop. The context crop exploits the benefits of LR by learning long-range context relations while the detail crop focuses on HR to recognize small objects and produce fine segmentation details. HRDA is a training approach that can be adapted to various UDA methods such as DAFormer.</p>
+
+<h3 id="context-crop">Context Crop</h3>
+
+<p>Beginning with an HR image \(x_{HR} \in \mathbb{R}^{H \times W \times 3}\), it is cropped such that</p>
+
+\[x_{c, HR} = x_{HR} = [b_{c,1} : b_{c,2}, b_{c,3} : b_{c,4}]\]
+
+<p>where \( b_c \) is a bounding box that is randomly sampled from a discrete uniform distribution bounded by the size of the image, or more specifically</p>
+
+\[b_{c,1} \sim \mathscr{U}\{0, (H - sh_c) / k\} \cdot k, \hspace{3mm} b_{c,2} = b_{c,1} + sh_c\]
+
+\[b_{c,3} \sim \mathscr{U}\{0, (W - sw_c) / k\} \cdot k, \hspace{3mm} b_{c,4} = b_{c,3} + sw_c\]
+
+<p>\( k \) is defined as \( k = o \cdot s \) where \(o\) is the output stride of the segmentation network while \( s \) is the factor used to bilinear downsample \(x_{c, HR}\) to obtain the context crop \(x_c \in \mathbb{R}^{h_c \times w_c \times 3}\).</p>
+
+\[x_c = \zeta(x_{c, HR}, 1/s)\]
+
+<p>The intuition behind the choice of \(k\) is to ensure exact alignment later on in the network because the coordinates of the bounding box \(b_c\) are defined to be divisible by \(k\).</p>
+
+<h3 id="detail-crop">Detail Crop</h3>
+
+<p>The context crop is then used to generate the detail crop \(x_d \in \mathbb{R}^{h_d \times w_d \times 3}\). It has a similar definition, but without downsampling:</p>
+
+\[x_d = x_{c, HR} = [b_{d,1} : b_{d,2}, b_{d,3} : b_{d,4}]\]
+
+\[b_{d,1} \sim \mathscr{U}\{0, (sh_c - h_d) / k\} \cdot k, \hspace{3mm} b_{d,2} = b_{d,1} + sh_d\]
+
+\[b_{d,3} \sim \mathscr{U}\{0, (sw_c - w_d) / k\} \cdot k, \hspace{3mm} b_{d,4} = b_{d,3} + sw_d\]
+
+<p>To balance resources between both crops and have equal tradeoffs between context-aware and detailed predictions, the researchers set \(h_c = h_d\) and \(w_c = w_d\). By using a downscale factor of \(s=2\), the context crop essentially comprises 4 times more content than the detail crop.</p>
+
+<h3 id="multi-resolution-fusion">Multi-Resolution Fusion</h3>
+<p>As mentioned earlier, the HR detail crop and LR context crop have different strengths and address the other’s weaknesses. To maximize the performances of both, their predictions are fused using a learned scale attention which essentially weighs the trustworthiness of their predictions.</p>
+
+<p>Following the architecture of DAFormer, HRDA uses a feature encoder \(f^E \) and a semantic decoder \(f^S\), which are shared for HR and LR inputs. Hence we have the context semantic segmentation</p>
+
+\[\widehat{y}_c  = f^S(f^E(x_c)) \in \mathbb{R}^{\frac{h_c}{o} \times \frac{w_c}{o} \times C}\]
+
+<p>and the detail semantic segmentation</p>
+
+\[\widehat{y}_d  = f^S(f^E(x_d)) \in \mathbb{R}^{\frac{h_d}{o} \times \frac{w_d}{o} \times C}\]
+
+<p>To predict the scale attention \(a_c\), the researchers selected a lightweight SegFormer MLP decoder as the scale attention decoder \(f^A\), such that</p>
+
+\[a_c = \sigma(f^A(f^E(x_c))) \in [0,1]^{\frac{h_c}{o} \times \frac{w_c}{o} \times C}\]
+
+<p>The attention is predicted on the context crop, and the sigmoid is used since the scaled attention represents a ratio of focus, where a value closer to 1 means on a focus on the HR detail crop and a value closer to 0 means a focus on the LR context crop. Since the detail crop exists within the context crop, only \( a_c \) values within the bounds of the detail crop are kept, and denoted as \( a_c’ \).</p>
+
+<p>For fusion purposes, the detail crop must be aligned with the context crop by padding it with zeros, and the result is denoted as \( y_d’ \).Then the fused multi-scale prediction is constructed as follows:</p>
+
+\[\widehat{y}_{c, F} = \zeta((1-a_c') \odot \widehat{y}_c,s) + \zeta(a_c',s) \odot \widehat{y}_d'\]
+
+<p>With the ground truth \(y_{c, HR}^S\) / \( y_d^S\) for the source domain, the encoder, segmentation head, and attention head are trained with the loss function</p>
+
+\[\mathscr{L}^S_{HRDA} = (1-\lambda_d) \mathscr{L}_{ce} (\widehat{y}_{c,F}^S, y_{c,HR}^S, 1)  + \lambda_d \mathscr{L}_{ce}(\widehat{y}_d^S, y_d^S, 1)\]
+
+<p>The detail loss weight \( \lambda_d\) is a hyperparameter that is chosen empirically as 0.1. An additional cross-entropy loss is included for direct supervision of the detail crop in order to learn more robust features of HR inputs independent of the scaled attention.</p>
+
+<p>Likewise, the target loss function is defined as</p>
+
+\[\mathscr{L}^T_{HRDA} = (1-\lambda_d) \mathscr{L}_{ce} (\widehat{y}_{c,F}^T, p_{c,HR}^T, q_{c, F}^T)  + \lambda_d \mathscr{L}_{ce}(\widehat{y}_d^T, p_d^T, q_d^T)\]
+
+<p>where \(p \) and \(q \) respectively signify pseudo-labels and their confidence estimates as described previously in the self-training process of DAFormer. Here, \(p_{c,HR}^T\) are pseudo-labels generated using a similar multi-resolution fusion process, in which scale attention decides which resolution to trust more for each prediction. Specifically, the teacher network makes an LR prediction on \(x_c\) and a HR prediction on \(x_{c, HR}\). Since the HR prediction is on the non-downsampled context crop, a sliding window approach is used over the entire context crop to generate overlapping predictions, which are then averaged. The fused prediction, using the full scale attention \( a_c \) instead of the masked scale attention is hence</p>
+
+\[\widehat{y}_{c, F}^T = \zeta((1-a_c^T) \odot \widehat{y}_c^T,s) + \zeta(a_c^T,s) \odot \widehat{y}_{c, HR}^T\]
+
+<p>This fused prediction is the output of the teacher network, and through the self-training method outlined in DAFormer, we can obtain the pseudo-labels necessary for the student network to learn the target loss.</p>
+
+<p><br /></p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/team46/HRDA-network.png" alt="HRDA network" style="width: 700px; max-width: 100%; display: inline-block;" />
+  <p><em>Fig 3. HRDA network: HR image converted to detail and context crops to produce fused prediction using scale attention</em> [2].</p>
+</div>
+
+<p><br /></p>
+
+<h1 id="-mic-"><u> MIC </u></h1>
+
+<p>In DAFormer, UDA is addressed using the standard self-training method, in which a teacher network generates pseudo-labels for an unlabeled target domain. However, due to the lack of ground truth labels in the target domain, self-supervised losses are too weak to properly exploit the learning of context relations on the target domain. Consequently, many classes with a similar visual appearance on the target domain are often confused with one another. Masked Image Consistency (MIC), which aims to facilitate learning of context relations on the target domain, is a plug-and-play module that can be applied to existing UDA methods.</p>
+
+<p>MIC randomly masks out patches of the target image as follows:</p>
+
+\[M_{mb+1:(m+1)b, nb+1:(n+1)b} = [v &gt; r], \hspace{4mm} v \sim \mathscr{U}(0,1)\]
+
+<p>with \([\cdot]\) denoting the Iverson bracket, \( b \) as the patch size, \( r \) as the mask ratio, and \(m, n\) as the patch indices.</p>
+
+<p>With this mask, the masked target image is constructed as</p>
+
+\[x^M = M \odot x^T\]
+
+<p>where \(x^T\) are images from the target domain.</p>
+
+<p>Hence, the prediction of the semantic segmentation network \(f_\theta\) on the masked target image is</p>
+
+\[\widehat{y}^{M} = f_\theta(x^M)\]
+
+<p>The masking process eliminates most local information, making the prediction more difficult and forces the network to use the remaining context clues to segment the masked image. The network is then trained on an additional MIC loss defined as</p>
+
+\[\mathscr{L}^M = q^T\mathscr{L}_{ce}(\widehat{y}^M, p^T)\]
+
+<p>where \(p^T\) and \(q^T\) are the pseudo-labels and their confidence estimates as described previously in the self-training method for DAFormer.</p>
+
+<p><br /></p>
+
+<div style="text-align: center;">
+  <img src="/CS163-Projects-2025Fall/assets/images/team46/MIC-UDA-framework.png" alt="MIC UDA framework" style="width: 700px; max-width: 100%; display: inline-block;" />
+  <p><em>Fig 4. MIC UDA framework: network receives masked input images to learn MIC loss </em> [3].</p>
+</div>
+
+<p><br /></p>
+
+<h1 id="-evaluation-"><u> Evaluation </u></h1>
+<p>DAFormer is trained on the Cityscapes street scene dataset for the target domain, and on GTA and Synthia datasets for the source domain. It significantly outperforms previous methods, achieving 68.3 mIOU on GTA \(\rightarrow\) Cityscapes and 60.9 mIOU on Synthia \(\rightarrow\) Cityscapes, a 10.8 mIOU and 5.4 mIOU improvement in state-of-the-art performance, respectively.</p>
+
+<p>With the HRDA modification to the DAFormer approach, the resulting model achieves 73.8 mIOU on GTA \(\rightarrow\) Cityscapes and 65.8 mIOU on Synthia \(\rightarrow\) Cityscapes, a 5.5 mIOU and 4.9 mIOU improvement from before, respectively.</p>
+
+<p>With both the HRDA and MIC additions to the DAFormer approach, the resulting model achieves 75.9 mIOU on GTA \(\rightarrow\)Cityscapes and 67.3 mIOU on Synthia \(\rightarrow\) Cityscapes, a 2.1 mIOU and 1.5 mIOU improvement from before, respectively.</p>
+
+<p>Additionally, more tests were conducted on different domain transfer pairs. The tests above are synthetic-to-real adaptations, and the researchers also studied clear-to-adverse weather (Cityscapes \(\rightarrow\) DarkZurich) and day-to-nighttime adaptations (Cityscapes \(\rightarrow\) ACDC). Similarly, DAFormer with HRDA and MIC was the best-performing approach, raising state-of-the-art performance by 4.3 mIOU on Cityscapes \(\rightarrow\) DarkZurich and 2.4 mIOU on Cityscapes \(\rightarrow\) ACDC.</p>
+
+<p><br /></p>
+
+<h1 id="-conclusion-"><u> Conclusion </u></h1>
+
+<p>DAFormer shows that Transformer-based architectures, when combined with effective self-training and stabilization methods, significantly advances UDA for semantic segmentation. HRDA navigates around the GPU memory bottleneck for UDA methods and allows use of HR inputs for capturing fine details, while MIC strengthens contextual learning on unlabeled target images. Together, these methods achieve state-of-the-art results across multiple domain shifts, and further reinforce UDA as a solution towards costly annotations as well as a means of making semantic segmentation models more robust and adaptable to real-world environments.</p>
+
+<p><br /></p>
+
+<h1 id="-references-"><u> References </u></h1>
+
+<p>[1] Hoyer, Lukas et al. “DAFormer: Improving Network Architectures and Training Strategies for Domain-Adaptive Semantic Segmentation.” 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2021): 9914-9925.</p>
+
+<p>[2] Hoyer, Lukas et al. “HRDA: Context-Aware High-Resolution Domain-Adaptive Semantic Segmentation.” ArXiv abs/2204.13132 (2022): n. pag.</p>
+
+<p>[3] Hoyer, Lukas et al. “MIC: Masked Image Consistency for Context-Enhanced Domain Adaptation.” 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2022): 11721-11732.</p>
+
+<hr />
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/12/team19-instruction-to-post.html">&larr; From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html">Facial Emotion Recognition &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
