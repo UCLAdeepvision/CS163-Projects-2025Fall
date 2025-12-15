@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-15T00:40:44+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Streetview Semantics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html" rel="alternate" type="text/html" title="Streetview Semantics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-15T01:29:31+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Streetview Semantics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html" rel="alternate" type="text/html" title="Streetview Semantics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html"><![CDATA[<blockquote>
   <p>[Project Track] Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Then, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Our last contribution is a boundary-aware auxillary supervision strategy that explicitly promotes boundary preservation for thin and small objects while maintaining architectural simplicity. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.</p>
 </blockquote>
 
@@ -1801,7 +1801,231 @@ The grid generator applies the affine transformation above to each pixel in the 
 
 <p>[6] Yalçin, N., &amp; Alisawi, M. (2024). Introducing a novel dataset for facial emotion recognition and demonstrating significant enhancements in deep learning performance through pre-processing techniques. <em>Heliyon</em>, <em>10</em>(20), e38913. <a href="https://doi.org/10.1016/j.heliyon.2024.e38913">https://doi.org/10.1016/j.heliyon.2024.e38913</a></p>
 
-<p>[7] Zhenggeng Qu, Danying Niu. Leveraging ResNet and label distribution in advanced intelligent systems for facial expression recognition. Mathematical Biosciences and Engineering, 2023, 20(6): 11101-11115. doi: 10.3934/mbe.2023491 <a href="https://www.aimspress.com/article/doi/10.3934/mbe.2023491">https://www.aimspress.com/article/doi/10.3934/mbe.2023491</a></p>]]></content><author><name>Max Fukuhara, Nathan Chan, Jason Tran, Michael Co</name></author><summary type="html"><![CDATA[This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.]]></summary></entry><entry><title type="html">Vision Language Action Models for Robotics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html" rel="alternate" type="text/html" title="Vision Language Action Models for Robotics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html"><![CDATA[<blockquote>
+<p>[7] Zhenggeng Qu, Danying Niu. Leveraging ResNet and label distribution in advanced intelligent systems for facial expression recognition. Mathematical Biosciences and Engineering, 2023, 20(6): 11101-11115. doi: 10.3934/mbe.2023491 <a href="https://www.aimspress.com/article/doi/10.3934/mbe.2023491">https://www.aimspress.com/article/doi/10.3934/mbe.2023491</a></p>]]></content><author><name>Max Fukuhara, Nathan Chan, Jason Tran, Michael Co</name></author><summary type="html"><![CDATA[This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.]]></summary></entry><entry><title type="html">MLP-based Architectures for Computer Vision</title><link href="/CS163-Projects-2025Fall/2025/12/13/team04.html" rel="alternate" type="text/html" title="MLP-based Architectures for Computer Vision" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team04</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team04.html"><![CDATA[<blockquote>
+  <p>In recent years, the field of computer vision has been dominated by attention-based and convolution-based architectures. As a result, MLP-based architectures were largely overshadowed due to their lack of inherent inductive bias. This paper reviews and compares three MLP-based architectures: MLP-Mixer, ResMLP, and Caterpillar. We explore their architectural designs, inductive biases, accuracy, and computational efficiency in comparison to attention-based and convolutional architectures. Across standard ImageNet benchmarks, these models achieved accuracies close to state-of-the-art models while outperforming them in computational efficiency. Although each model introduces locality through different mechanisms, they all rely primarily on dense matrix multiplications, which can be easily parallelized on modern GPU and TPU hardware. These findings demonstrate that MLP-based architectures can achieve high accuracy while remaining computationally efficient, making them a promising area for future computer vision research.</p>
+</blockquote>
+
+<!--more-->
+
+<ol class="table-of-content">
+  <li>Introduction</li>
+  <li>Overview of Selected Papers
+    <ul>
+      <li>2.1 MLP-Mixer: An all-MLP Architecture for Vision</li>
+      <li>2.2 Caterpillar: A Pure-MLP Architecture with Shifted-Pillars-Concatenation</li>
+      <li>2.3 ResMLP: Feedforward networks for image classification with data-efficient training</li>
+    </ul>
+  </li>
+  <li>Methodological Comparison
+    <ul>
+      <li>3.1 Structural Approaches to “Mixing” Information</li>
+      <li>3.2 Model Architectures and Dimensionality</li>
+      <li>3.3 Training Strategies &amp; Datasets</li>
+      <li>3.4 Evaluation Metrics</li>
+    </ul>
+  </li>
+  <li>Results and Performance Comparison
+    <ul>
+      <li>4.1 Accuracy against SOTA Baselines</li>
+      <li>4.2 Computational Efficiency and Hardware Alignment</li>
+    </ul>
+  </li>
+  <li>Cross-Paper Analysis</li>
+  <li>Conclusion</li>
+  <li>References</li>
+</ol>
+
+<h2 id="1-introduction">1. Introduction</h2>
+
+<p>In recent years the field of computer vision has undergone several shifts in the primary paradigms used to define and train models. Before convolutional layers were introduced and widely adopted, most SOTA (state of the art) approaches relied on MLPs (multi-layer perceptrons). These models faced several challenges. At the time, memory and compute constraints were far more stringent than they are today, and the dense nature of MLPs created issues with training feasibility. A naive classifier for a \(32 \times 32 \times 3\) image would require an input layer with \(3072\) units, which is compute-intensive and was not scalable to large amounts of data.</p>
+
+<p>These limitations contributed to convolutional networks becoming the dominant paradigm for computer vision [1,2]. Convolutions preserve the locality of visual information while allowing models to reach meaningful depth with far fewer parameters. Additionally, the CPU-bound nature of convolutions made them more suitable for older hardware than MLPs. Once convolutional networks became dominant, significant engineering effort went into improving these architectures. The residual connection, Adam optimizer, pruning methods, and many other techniques were originally introduced and tested in the context of convolutional networks [3–5].
+More recently, transformers have become dominant because they capture global relationships more effectively and benefit from dense matrix operations [6,7]. With the introduction of the Vision Transformer, many methods previously developed for computer vision, as well as a subset of methods from NLP (natural language processing), have been adopted to achieve superior performance [6,7]. Even though some edge-device use cases still rely on convolutions to achieve the best performance, the state-of-the-art has shifted toward transformers [6,7].
+Parallel to the rise of transformers, we have seen an increased abundance of cheap and capable compute resources. Over the past 10 years, at the consumer price range, available VRAM has more than doubled while processing speed at full precision has increased more than fourfold. However, this does not even begin to capture the large gains in mixed- and lower-precision processing. At the datacenter level, the NVIDIA Tesla K80, the SOTA GPU in 2015, had an FP32 processing speed of roughly 8.7 TFLOPs, while a modern NVIDIA H100 reaches over 1,900 TFLOPs at FP16.</p>
+
+<p>This progress raises an important question: as modern hardware is optimized for large dense matrix multiplications and compute constraints are less restrictive, can MLPs once again serve as competitive vision architectures that provide superior performance to convolutional layers and faster inference than transformers? Recent work on all-MLP architectures and surveys of visual MLPs suggests that this may be possible [8,9].</p>
+
+<p>The thesis of this paper is that MLP-based architectures can achieve near state-of-the-art performance while aligning more naturally with modern hardware acceleration than either transformers or convolutions [8,9].</p>
+
+<p>The remainder of this paper presents three important works demonstrating the potential of MLP-based approaches to computer vision and discusses the similarities, differences, and potential of each approach.</p>
+
+<h2 id="2-overview-of-selected-papers">2. Overview of Selected Papers</h2>
+
+<p>In this section we will present a set of three papers that we feel are representative of the base ideas being explored in the research regarding modern MLP-based architectures for computer vision. We present different approaches to the same basic problem of formulating a dense processing module for an image, and the different problems that come with the approaches. These include getting locality through patching or shifting images, mixing information between patches or between rows and columns of the image, and more.</p>
+
+<h3 id="21-paper-1-mlp-mixer-an-all-mlp-architecture-for-vision">2.1 Paper 1: MLP-Mixer: An all-MLP Architecture for Vision</h3>
+
+<p>The MLP-Mixer paper challenges the assumption that modern computer vision must rely on convolutions (CNNs) or attention mechanisms (ViTs). Instead, the authors proposed an idea of using an architecture that is exclusively based on MLPs, the MLP-Mixer. An MLP-Mixer block contains two types of layers. The first is applied independently to image patches in order to “mix” information across feature channels within each patch. The second is applied across patches to “mix” spatial information, which enables local patch information to be propagated globally within an image.</p>
+
+<p style="&quot;width: 1600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team_4/figure1.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"> <caption>Figure 1. MLP-Mixer Architecture [8]</caption></p>
+
+<p>Figure 1 shows a schematic view of the MLP Mixer block, which is the main building block of the architecture. The input data for a MLP mixer has size \(P \times C\), where \(P\) is the number of patches and \(C\) is the number of channels per patch, effectively acting as a sequence of tokens. The input is first normalized through a layernorm, and then it is transposed to get a \(C \times P\) view of the data. Then the data is processed through an MLP, with the C dimension acting as a batch dimension for the purposes of the MLP. The MLP itself consists of two fully connected layers with a hidden size dependent on the size of the MLP Mixer instance and a GELU activation function. Once we get the output of the MLP block, we have a tensor where the information contained across patches corresponding to the same channel has been mixed. After this we transpose the inputs again to get back to the original \(P \times C\) size, and push them through another MLP with a similar architecture to the first one. At the end of this whole process we get back an output tensor of data with the same size as the input but with information propagated both across channels and across patches at a cost trivial in comparison to what it would be if we used a flattened image as the input to a fully connected layer.</p>
+
+<p>A typical configuration such as Mixer-B/16 contains 12 MLP blocks with patch resolution 16x16. The model takes 224x224 RGB images and splits them into 196 patches. Mixer-B/16 contains about 59 million parameters and achieves a throughput of 1384 images/sec/core using TPUv3, making it slightly faster than ViT-B/16 (with 861 image/sec/core using TPUv3).</p>
+
+<p style="&quot;width: 1600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team_4/figure2.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"> <caption>Figure 2. MLP-Mixer Configurations [8]</caption></p>
+
+<p>When trained with large datasets and proper regularization, MLP-Mixer attains competitive performance on image classification benchmarks while keeping pre-training and inference cost comparable to state-of-the-art models. For example, when Mixer-B/16 and ViT-B/16 models were both pre-trained for 300 epochs, the ImageNet top-1 accuracy for Mixer-B/16 (76.44%) was comparable to ViT-B/16 accuracy (79.67%).</p>
+
+<p>Additionally, an important factor in deciding what model to use is the scalability of the model with respect to increasing amounts of training data. The authors found that the MLP-Mixer has comparable performance to ViT as training data increases.</p>
+
+<p style="&quot;width: 1600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team_4/figure3.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"> <caption>Figure 3. MLP-Mixer Scaling Laws [8]</caption></p>
+
+<p>This paper suggests that neither convolution nor attention mechanisms are necessary to attain high performance on image classification problems. An architecture composed entirely of MLP layers can still sufficiently learn a rich feature space.</p>
+
+<h3 id="22-paper-2-caterpillar-a-pure-mlp-architecture-with-shifted-pillars-concatenation">2.2 Paper 2: Caterpillar: A Pure-MLP Architecture with Shifted-Pillars-Concatenation</h3>
+
+<p>This paper introduces the Caterpillar architecture for computer vision tasks. The main aim is to take existing SOTA work in MLP-based architectures while reintroducing the spatial locality information that convolutions provide. To this end, the paper combines an existing MLP-based architecture, the sMLP, with a novel idea on how to inject locality. Locality is injected through a Shifted-Pillars-Concatenation (SPC) module, which acts as both a processing layer and a locality-inducing layer for the model.</p>
+
+<p>The sMLP block is an architectural building block that was first introduced by Tang et al. The main idea of this block is that, instead of patching, we can use information from the row and column of a given pixel to get a better view of the context in which that pixel operates. As such, given some input tensor \(X\) with shape \(H \times W\), for each pixel at its corresponding row and columns, we project them through linear weights and concatenate them with the original pixel. The pseudocode for this operation is given by:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>proj_h = nn.Linear(H, H)
+proj_w = nn.Linear(W, W)
+fuse = nn.Linear(3C, C)
+def sparse_mlp(x):
+    x_h = self.proj_h(x.permute(2,1,0)).permute(2,1,0)
+    x_w = self.proj_w(x.permute(0,2,1)).permute(0,2,1)
+    x = torch.concat([x_h, x_w, x], dim=2)
+    x = self.fuse(x)
+    return x
+</code></pre></div></div>
+
+<p>The sMLP block is a lot more parameter efficient than the naive MLP approach, scaling with \(N^{3/2}\) of the number of patches that we would find in an image.</p>
+
+<p>The original paper introducing this block later goes on to augment it with a convolutional layer, introducing an inefficient processing step into the architecture. The Caterpillar paper aims to replace the convolutional layer with an MLP for a pure-MLP architecture. However, the original reason for why the MLP was introduced was to enrich the pixels with local information surrounding the pixel that is not present in its corresponding row and column. To this end, the paper introduces the SPC module.</p>
+
+<p>The SPC module operates on a very simple idea. We can include local information surrounding a pixel in a parallelizable way by shifting the whole image by one pixel in all four directions and concatenating the pixel values from each direction into a single channel. The logic is as follows: an image of shape \(H \times W \times C\) is taken and shifted into the direction that we want to capture. We can shift every pixel up, down, left, and right depending on which direction we need. After shifting, we have to pad the image in the newly opened row or column so we still have an \(H \times W \times C\) image. Thus, we get four shifted versions of the image: \(X_u\), \(X_d\), \(X_l\), \(X_r\).</p>
+
+<p style="&quot;width: 1600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team_4/figure4.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"> <caption>Figure 4. SPC Schematic [10]</caption></p>
+
+<p>The next processing step is projecting each of these with a matrix multiplication using the corresponding learned matrix \(W_u\), \(W_d\), \(W_l\), or \(W_r\). Thus, the final output of the SPC module is given by the expression:</p>
+
+\[\text{SPC}(X) = \text{Concat}(X_uW_u, X_dW_d, X_lW_l, X_rW_r)W\]
+
+<p>where \(W\) is a final projection mixing information from every shifted image.</p>
+
+<p>Thus, a single Caterpillar block is given by a sequence of BatchNorm, GeLU, SPC, BatchNorm, GeLU, sMLP, LinearNorm, and MLP. The Caterpillar architecture stacks these blocks together and finally feeds the output into a classification head.</p>
+
+<p>The Caterpillar architecture shows that a pure-MLP design with SPC-based locality can match or surpass strong convolutional, transformer, and hybrid baselines on both small- and large-scale benchmarks. However, the most interesting evaluation shown by the authors was in taking the standard ResNet architecture and swapping out convolutions with SPC blocks. This yielded up to a 4.7% performance improvement for a ResNet-18-style architecture, showing that the MLP-only architecture is capable of fully replacing and outperforming convolutions at similar sizes.</p>
+
+<h3 id="23-paper-3-resmlp-feedforward-networks-for-image-classification-with-data-efficient-training">2.3 Paper 3: ResMLP: Feedforward networks for image classification with data-efficient training</h3>
+
+<p>ResMLP is an architecture that is built entirely based on MLPs. ResMLP contains two blocks, the cross-patch sublayer and cross-channel sublayer. The cross-patch linear layer is applied to all channels independently, to mix across patches. The cross-channel sublayer is applied independently to all patches, to mix information locally.</p>
+
+<p style="&quot;width: 1600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team_4/figure5.png" alt="YOLO" /></p>
+
+<p style="text-align: center;"> <caption>Figure 5. ResMLP Block [11]</caption></p>
+
+<p>In ResMLP, images are first split into \(N \times N\) non-overlapping patches (usually 16x16). The patches are independently passed through a linear layer to form a set of \(N^2\) \(d\)-dimensional embeddings. These embeddings are passed into the ResMLP layer. Each sublayer of the ResMLP layer runs in parallel with a residual connection. The first step is an Affine transformation defined by:</p>
+
+\[\text{Aff}_{\alpha, \beta}(x) = \text{Diag}(\alpha)x + \beta\]
+
+<p>Where \(\alpha\) and \(\beta\) are learnable weight vectors. The embeddings are then passed into a linear layer after transposing to mix across patches. It is transposed back to receive the original shape before the first affine transformation, and fed into a different affine transformation. The affine transformation at the beginning (pre-normalization) is initialized with \(\alpha = 1\) and \(\beta = 0\). The affine transformation at the end of the residual block (post-normalization) is initialized with a small \(\alpha\) value. These embeddings are recombined with its residual connection and fed into the cross-channel sublayer. The cross-channel sublayer follows a similar layout with affine transformations in the beginning and end of the sublayer. In the middle, two linear layers separated by GeLU activation function are present. Lastly an average pooling is done the d-dimensional patches and fed into a linear classifier to predict a label associated with the image. The ResMLP Layer can be described by the following:</p>
+
+\[Z = X + \text{Aff}((A \cdot \text{Aff}(X)^T)^T)\]
+
+\[Y = Z + \text{Aff}(C \cdot \text{GeLU}(B \cdot \text{Aff}(Z)))\]
+
+<p>where \(A\), \(B\), \(C\) are learnable weight matrices.
+One baseline model is the ResMLP-S12 model. It contains 12 ResMLP blocks with patch resolution \(16 \times 16\). The model takes \(224 \times 224\) RGB with hidden dimension \(384\). This model takes 1.54 million parameters and has a throughput of 1415.1 image/sec, where DeiT-S had a throughput of 940.4 images/sec when trained on a single V100-32GB GPU with batch size of \(32\).</p>
+
+<p>ResMLP attains similar accuracy to Transformers and Convolution networks. For example, when ResMLP-S12, EfficientNet-B3, and DeiT-S models were pre-trained on ImageNet, top-1 accuracy for ResMLP-S12 (76.6%) came very close to both EfficientNet-B3 accuracy (81.1%) and DeiT-S accuracy (79.8%).</p>
+
+<p>The ResMLP architecture demonstrates that a purely MLP design using the combination of residual connections and affine transformations can reach SOTA performance with significantly higher throughput.</p>
+
+<h2 id="methodology-comparison">Methodology Comparison</h2>
+
+<h3 id="31-structural-approaches-to-mixing-information">3.1 Structural Approaches to “Mixing” Information</h3>
+
+<p>The three papers that we presented all try to grapple with the problem of inductive bias when working with image data. Convolutions, even though they may be computationally inefficient, have a very strong inductive bias towards locality. Locality is a very useful inductive bias for image data, so adding it into a model architecture is a central problem in designing models for computer vision. MLPs do not natively have any kind of inductive bias, so the presented papers all try to introduce locality bias to reach SOTA performance as well as get the improved computational efficiency of MLPs.</p>
+
+<p>The MLP mixer and ResMLP models have locality built into them through the per-patch MLP processing. These models have a \(P \times C\) shaped input, where \(P\) is the number of patches and \(C\) is the number of channels per patch. When we run this input through an MLP across the \(P\) dimension, the MLP processes each patch individually, meaning it sees all the local information in the patch. This process introduces strong inductive bias towards locality.</p>
+
+<p>The Caterpillar model has a different approach. The original paper introducing Caterpillar’s main MLP module, the sMLP, used convolutions in their main processing block to introduce locality. However, the Caterpillar models use a shifted pillars concatenation method, which takes each pixel’s neighbors and concatenates all of the data contained within those neighbors into a single local feature. This is then processed by the sparse MLP, which now sees local information surrounding each pixel.</p>
+
+<h3 id="32-model-architectures-and-dimensionality">3.2 Model Architectures and Dimensionality</h3>
+
+<p>The three presented models all approach the data processing from different sides. The MLP-Mixer model treats input images as sequences of tokens, whereas the Caterpillar model has a different approach that focuses on modifying the content of pixels inside a feature map through shifting, padding, and looking at rows and columns of the feature map.</p>
+
+<p>These models also take different approaches to normalization. MLP-Mixer utilizes Layer Norms for normalization before every mixing step. The ResMLP model takes this a step further, by introducing a special learned affine transformation both as a pre and post normalization to manage the signal propagation through the network without using BatchNorm or LayerNorm in its computational blocks. The Caterpillar model uses BatchNorm combined with GeLU activation in its own block structure. Thus, each of these models have a unique way of normalizing the inputs to their processing blocks to manage how well gradients can propagate and data can be processed inside them.</p>
+
+<p>The models also take different approaches when it comes to the reduction and expansion of the representation of its input data. MLP-Mixer and ResMLP patch the input images and run their respective MLPs across the resized data while keeping the overall size constant throughout the process. Caterpillar projects the shifted pixel data it creates via matrix multiplication thus in some way having a similar idea to the channels of convolutional layers.</p>
+
+<h3 id="33-training-strategies--datasets">3.3 Training Strategies &amp; Datasets</h3>
+
+<p>The MLP-Mixer model requires large datasets and regularization to learn, reminiscent of transformer models. Also similarly to transformer models, it has been shown to scale linearly with data volume, tracking ViTs very closely in performance vs data graphs.</p>
+
+<p>The ResMLP was explicitly designed to be as data-efficient as possible, utilizing specific initializations for both their MLPs and their affine transformation to make gradient flows stable and efficient.</p>
+
+<h3 id="34-evaluation-metrics">3.4 Evaluation Metrics</h3>
+
+<p>The promise of MLP based models is that they could harness the efficiency of large parallelized matrix multiplications, while not compromising on model performance. Thus, the metrics presented in the papers as well as the metrics we focus on in this literature review are the throughput/inference speed and accuracy, with accuracy being important but somewhat secondary to throughput as long as it is at a similar level to the SOTA.</p>
+
+<p>All of the presented models have been shown to be able to reach near-SOTA performance at much lower processing cost and much higher throughput. MLP-Mixer B/16 is able to process over 1300 images per second per core on the TPUv3 hardware, compared to the 280 images per second per core for the ViT model, at only 5% less accuracy for ImageNet. ResMLP also shows this extremely high computational efficiency, reaching over 1400 images per second on the V100 GPU. These performance numbers are a function of MLPs being able to utilize the hardware acceleration focus of GPUs on matrix multiplication, allowing them to reach much closer to the peak FLOPs of the utilized hardware than convolution based networks. Thus, all the models presented here have shown that one could harness both computational advantages of the MLP as well as get high accuracy on the modeling tasks.</p>
+
+<h2 id="4-results-and-performance-comparison">4. Results and Performance Comparison</h2>
+
+<h3 id="41-accuracy-against-sota-baselines">4.1 Accuracy against SOTA Baselines</h3>
+
+<p>Results for the MLP-Mixer model, especially when compared with the Vision Transformer, indicate that the MLP architecture can achieve accuracy comparable to the attention-based models while being significantly faster. The Mixer-B/16 model was trained to match the ViT-B/16 model’s 300 epochs of pre-training, with the MLP-Mixer achieving a 76.44% accuracy. This is competitive but slightly lower than the accuracy achieved by the ViT, which was 79.67%. This suggests that the ViT adds some inductive biases through the attention mechanism that are not present in the MLP-mixer’s approach.</p>
+
+<p>The ResMLP model shows a similar trend. The ResMLP-S12 model achieves a Top-1 accuracy of 76.6% on ImageNet, which brings it close to the convolution-based EfficientNet-B3 and transformer-based DeiT-S models. One thing that we must remember, however, is that the convolution and transformer models are highly optimized and engineered, making the near-SOTA performance of the MLP based model more encouraging. This is achieved while being faster than both the EfficientNet and DeiT models.</p>
+
+<p>The Caterpillar model measures a very interesting effect. One question asked by the paper is, what if we took an existing convolution based model and swapped out the convolution for a MLP-based module. The Caterpillar work modified the ResNet-18 architecture with their shifted pillars concatenation blocks to observe the performance change with respect to the original ResNet-18. The modification resulted in a performance improvement of up to 4.7%. This gain highlights the potential of the SPC module as a pure MLP-based module to introduce important inductive biases into architectures while still harnessing the computational efficiency of large matrix multiplications.</p>
+
+<h3 id="42-computational-efficiency-and-hardware-alignment">4.2 Computational Efficiency and Hardware Alignment</h3>
+
+<p>As we stated earlier, accuracy is not the only metric that we would like to address here. An arguably more important metric for the purposes of this analysis is the computational efficiency of the models. Here, MLP-based architectures have a clear advantage due to their structure. For example, the Mixer-B/16 model achieved a throughput of 1384 images per second per core on the TPUv3. This can be compared to the ViT-B/16 model which has a processing speed that is 38% slower. This efficiency gap generalizes to the ResMLP architecture, where the ResMLP-S12 achieves a throughput speed that is over 30% faster than the DeiT-S model on the V100 GPU. These metrics show what we posited originally, that the hardware architecture of GPUs and TPUs, as well as the amount of optimization that goes into matrix multiplication, makes MLPs a clear advantage in speed.</p>
+
+<p>This advantage in speed is also easier to scale through optimization. The current hardware architectures lend themselves very easily to multi-precision processing. Matrix multiplication is one of the easiest operations to implement for native INT8 and FP4 precisions, which makes both the processing time more than double, and the memory movements of the large matrices significantly faster. Thus, MLPs being an architecture that uses matrix multiplication very heavily, makes them perfect for fast inference and efficient training, especially compared to convolutions.</p>
+
+<h2 id="5-cross-paper-analysis">5. Cross-Paper Analysis</h2>
+
+<p>One of the implied consequences of the MLP-based approach to modeling is the rejection of the large importance of inductive bias. This includes both the local inductive bias of convolutions, and global inductive bias of transformers. Each architecture is built mostly on the premise that a rich feature space can be learned through matrix multiplications without large inductive biases. Of course, this conclusion is limited to an extent by the architecture of the models, which in all three cases attempts to encode some inductive biases through either the approach to patch processing for MLP-Mixer and ResMLP, or the SPC module for the Caterpillar model. Regardless, however, the inductive bias introduced by these techniques are significantly less strong than those encoded in transformers and convolutions.</p>
+
+<p>The different attempts to encode said inductive biases have some interesting differences as well as similarities between the models. The MLP-Mixer and ResMLP models approach locality through mixing local information within patches with global information across patches. The ResMLP model additionally utilizes the affine transformation to handle signal propagation through this locality-inducing operation. The Caterpillar model approaches locality very differently. There is no patching for the Caterpillar model, but rather explicit locality introduced through features from spatial neighbors of a given pixel being concatenated together into a single feature vector. While this seems to be a very explicit inclusion of locality as inductive bias, it is not nearly as strong as the inductive bias encoded in convolutional layers. Thus the three models reject strong inductive biases in favor of weaker biases coupled with dense matrix multiplications as the primary modeling approach. While this gets the models most of the way to SOTA performance, some gains are still required to show complete equivalence of performance to current SOTA approaches with stronger inductive biases.</p>
+
+<p>These differences in approach are, mostly, orthogonal to each other. As shown by Caterpillar, one can get large performance gains through adding SPC based modules to existing models like the ResNet-18. This suggests that integrating an SPC-like method into the MLP-Mixer or ResMLP could lead to performance superior to the original models. Additionally, the insight gained through ResMLP’s use of affine transformations in place of normalization is also possible to leverage in designing MLP based models. In principle, the affine transformation can be simply put into place instead of BatchNorm or LayerNorm in the other models. Finally, it is important to recognize the differences in scale in these models. The ResMLP model is a highly parameter-efficient model, showing that MLP based models can achieve good performance with few parameters. In contrast, MLP-Mixer shows that MLPs can scale at least as well as vision transformers with the amount of data, training compute, and number of parameters.</p>
+
+<h2 id="6-conclusion">6. Conclusion</h2>
+
+<p>This literature review explored three MLP-based architectures, the MLP-Mixer, ResMLP, and Caterpillar. The aim of the review was to show that MLP-based architectures can reach near-SOTA performance, while having more efficient hardware utilization and faster inference. This thesis is largely supported by the data found in the papers.</p>
+
+<p>The presented methods reach accuracies on ImageNet that are within 5% of comparable-sized SOTA models, and within 10% of overall SOTA. The MLP-Mixer model achieves an accuracy of over 76% on ImageNet, compared to similarly sized ViT-B’s 79%. This shows the accuracy part of our thesis to be valid. Additionally, the authors report an over 30% increase in throughput compared to the same model, showing that the theoretical performance gains that come with such a matrix multiplication heavy model can materialize into large actual speedups.</p>
+
+<h2 id="7-references">7. References</h2>
+
+<p>[1] LeCun et al., “Gradient-Based Learning Applied to Document Recognition,” 1998.</p>
+
+<p>[2] Krizhevsky et al., “ImageNet Classification with Deep Convolutional Neural Networks,” 2012.</p>
+
+<p>[3] He et al., “Deep Residual Learning for Image Recognition,” 2016.</p>
+
+<p>[4] Kingma &amp; Ba, “Adam: A Method for Stochastic Optimization,” 2015.</p>
+
+<p>[5] Han et al., “Learning Both Weights and Connections for Efficient Neural Networks,” 2015.</p>
+
+<p>[6] Dosovitskiy et al., “An Image is Worth 16×16 Words: Transformers for Image Recognition at Scale,” 2021.</p>
+
+<p>[7] “Vision Transformer,” Wikipedia.</p>
+
+<p>[8] Tolstikhin et al., “MLP-Mixer: An All-MLP Architecture for Vision,” 2021.</p>
+
+<p>[9] Liu et al., “Are We Ready for a New Paradigm Shift? A Survey on Visual Deep MLP,” 2022.</p>
+
+<p>[10] Sun et al., “Caterpillar: A Pure-MLP Architecture with Shifted-Pillars-Concatenation,” 2024.</p>
+
+<p>[11] Touvron et al., “ResMLP: Feedforward networks for image classification with data-efficient training,” 2021.</p>
+
+<hr />]]></content><author><name>Karen Mosoyan, Nathan Chen</name></author><summary type="html"><![CDATA[In recent years, the field of computer vision has been dominated by attention-based and convolution-based architectures. As a result, MLP-based architectures were largely overshadowed due to their lack of inherent inductive bias. This paper reviews and compares three MLP-based architectures: MLP-Mixer, ResMLP, and Caterpillar. We explore their architectural designs, inductive biases, accuracy, and computational efficiency in comparison to attention-based and convolutional architectures. Across standard ImageNet benchmarks, these models achieved accuracies close to state-of-the-art models while outperforming them in computational efficiency. Although each model introduces locality through different mechanisms, they all rely primarily on dense matrix multiplications, which can be easily parallelized on modern GPU and TPU hardware. These findings demonstrate that MLP-based architectures can achieve high accuracy while remaining computationally efficient, making them a promising area for future computer vision research.]]></summary></entry><entry><title type="html">Vision Language Action Models for Robotics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html" rel="alternate" type="text/html" title="Vision Language Action Models for Robotics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html"><![CDATA[<blockquote>
   <p>The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.</p>
 </blockquote>
 
@@ -3382,600 +3606,4 @@ Fig 9. Attention maps for traditional self-attention vs. relation-aware self-att
 
 <p>[4] Cheng, B., Misra, I., Schwing, A. G., Kirillov, A., &amp; Girdhar, R. (2021). Masked-attention Mask Transformer for Universal Image Segmentation. arXiv. https://arxiv.org/abs/2112.01527</p>
 
-<p>[5] Lu, J., &amp; Deng, J. (2025). Relation3D: Enhancing Relation Modeling for Point Cloud Instance Segmentation. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).</p>]]></content><author><name>Kayla Hamakawa, Alyssa Leung, Meryl Mathew, Angela Quan</name></author><summary type="html"><![CDATA[Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.]]></summary></entry><entry><title type="html">Unupervised Domain Adaptation with GTA -&amp;gt; Cityscapes</title><link href="/CS163-Projects-2025Fall/2025/12/13/team20-UDA.html" rel="alternate" type="text/html" title="Unupervised Domain Adaptation with GTA -&amp;gt; Cityscapes" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team20-UDA</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team20-UDA.html"><![CDATA[<div style="font-size: 0.7em; font-weight: normal; color: inherit;">
-  <ul>
-    <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#dann">DANN</a>
-      <ul>
-        <li><a href="#dann-arch">Architecure</a></li>
-        <li><a href="#dann-conc">Conclusion</a></li>
-      </ul>
-    </li>
-    <li><a href="#cycada">CyCADA</a>
-      <ul>
-        <li><a href="#cycada-core">Core Methodology</a></li>
-        <li><a href="#cycada-arch">Architecture</a></li>
-        <li><a href="#cycada-obj">Optimization Objective</a></li>
-        <li><a href="#cycada-conc">Conclusion</a></li>
-      </ul>
-    </li>
-    <li><a href="#advent">ADVENT</a>
-      <ul>
-        <li><a href="#advent-theory">Theoretical Foundation</a></li>
-        <li><a href="#advent-advform">Adversarial Formulation</a></li>
-        <li><a href="#advent-outspace">Advantages of Output-Space Adapation</a></li>
-        <li><a href="#advent-conc">Conclusion</a></li>
-      </ul>
-    </li>
-    <li><a href="#daformer">DAFormer</a>
-      <ul>
-        <li><a href="#daformer-arch">Architectural Foundation: The MiT Encoder</a></li>
-        <li><a href="#daformer-train">Novel Training Strategies</a></li>
-      </ul>
-    </li>
-    <li><a href="#conclusion">Performance Comparison &amp; Conclusion</a></li>
-    <li><a href="#references">References</a></li>
-  </ul>
-</div>
-
-<p><a id="introduction"></a></p>
-<h1 id="introduction"><strong>Introduction</strong></h1>
-
-<p>Imagine spending millions of dollars training a self-driving car in the streets of California, only to watch it fail when deployed on the streets of London. Or picture an autonomous vehicle that performs flawlessly in video game simulations like GTA5, but can’t recognize a simple stop sign when it encounters real-world weathering and reflections. This is one of the most critical challenges facing computer vision today: the domain gap.</p>
-
-<p>The field of domain adaptation attempts to handle this problem of different distributions of data in computer vision. Under supervised learning, deep learning models excel when training and testing data come from the same distribution. Train a segmentation model on synthetic data, and it achieves near-perfect accuracy on more synthetic data. But the moment you deploy it in the real world, performance plummets. Roads become unrecognizable, pedestrians vanish, and traffic signs blur into the background. This is due to the model having overfit to the training data. The task therefore is to minimize the discrepancy between performance on the source domain and the target domain.</p>
-
-<p>Over the past decade, researchers have developed increasingly sophisticated techniques to bridge this domain gap. Our blog will examine the specific focus of unsupervised domain adaptation (UDA) from training on GTA5 to performance on CityScapes dataset. This means that we are examining how purely simulation data will affect performance on real-world images, providing a good benchmark for how an autonomous vehicle would perform in the real world. After providing context with the foundational DANN model, we will examine the evolution of UDA architectures, models, and techniques from the pixel-level adaptation with CyCADA, entropy-based methods like Advent, and finally the state-of-the-art Transformer-based DAFormer.</p>
-
-<p><a id="dann"></a></p>
-<h2 id="domain-adversarial-neural-network-dann">Domain-Adversarial Neural Network (DANN)</h2>
-
-<p>Faced with the problem of unsupervised domain adaptation, the research team decided to make a model with the goal of embedding “domain adaptation into the process of learning representation” such that the final classification is based on features “both discriminative and invariant to the change of domains.” These scientists decided that to counter the problem of overfitting, they are going to have their model intentionally learn on features that are common to both the training and test domain. For example, an overfitting on the synthetic data might classify a stop sign as perfectly bright red. However, by focusing on domain invariant features, the model would be able to correctly classify a faded or reflective stop sign as a stop sign, potentially by focusing on instead on geometric features.</p>
-
-<p><a id="dann-arch"></a></p>
-<h3 id="architecture"><strong>Architecture</strong></h3>
-
-<p>DANN augments a standard feed-forward neural network with a separate branch dedicated to classifying the domain of the input. It consists of three main components.</p>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/dann_arch.png" alt="" /></p>
-<p><em>Figure 1: DANN architecture for domain-adversarial feature learning <a href="#ref-1">1</a></em>
-<br />
-—</p>
-
-<h4 id="1-feature-extractor-g_f">1. <strong>Feature Extractor (\(G_f\))</strong></h4>
-
-<p>This is the common trunk of the network.</p>
-
-<p>It takes an input \(x\) and produces a feature vector:</p>
-
-\[z = G_f(x; \theta_f)\]
-
-<p>Its parameters \(\theta_f\) are shared by both the task and domain branches and are trained with a dual, conflicting objective.</p>
-
-<hr />
-
-<h4 id="2-label-predictor-g_y">2. <strong>Label Predictor (\(G_y\))</strong></h4>
-
-<p>The main classifier.</p>
-
-<p>It takes the feature \(z\) and predicts the class label:</p>
-
-\[\hat{y} = G_y(z; \theta_y)\]
-
-<p>It is trained only on the <strong>labeled source data</strong> to perform the primary task.</p>
-
-<hr />
-
-<h4 id="3-domain-classifier-g_d">3. <strong>Domain Classifier (\(G_d\))</strong></h4>
-
-<p>The adversarial component.</p>
-
-<p>It takes the feature \(z\) and predicts the domain label:</p>
-
-\[\hat{d} = G_d(z; \theta_d),
-\quad d = 0 \text{ (source)}, \; d = 1 \text{ (target)}\]
-
-<p>It is trained on both the source and target data to accurately distinguish the domains.</p>
-
-<h3 id="adversarial-objective-and-loss-function"><strong>Adversarial Objective and Loss Function</strong></h3>
-
-<p>The training process for DANN is a single-step optimization that simultaneously minimizes the task loss and plays the adversarial game to align features.</p>
-
-<h4 id="a-the-optimization-goal"><strong>A. The Optimization Goal</strong></h4>
-
-<p>The DANN optimization seeks to find the optimal parameters<br />
-\(\theta_f,\ \theta_y,\ \theta_d^{*}\)
-that satisfy the following two competing objectives:</p>
-
-<ol>
-  <li>
-    <p><strong>Task Loss Minimization</strong>:<br />
-The label predictor (\(G_y\)) and feature extractor (\(G_f\)) are optimized to
-minimize the error on the source domain labels. This ensures the model is
-<em>discriminative</em> for the classification task.</p>
-  </li>
-  <li>
-    <p><strong>Domain Confusion</strong>:<br />
-The domain classifier (\(G_d\)) is optimized to minimize its error
-(i.e., maximize its ability to distinguish the domains), <strong>while</strong> the
-feature extractor (\(G_f\)) is optimized to <em>maximize</em> the domain classifier’s
-error (i.e., make the domains indistinguishable). This forces the features
-to become <strong>domain-invariant</strong>.</p>
-  </li>
-</ol>
-
-<h4 id="b-the-total-loss-function"><strong>B. The Total Loss Function</strong></h4>
-
-<p>The final combined loss function \(E\) for the entire network is:</p>
-
-<p>\(E(\theta_f, \theta_y, \theta_d)
-= L_y(\theta_f, \theta_y) - \lambda L_d(\theta_f, \theta_d)\)
-Where:</p>
-
-<ul>
-  <li>
-    <p>\(L_y\): The <strong>Task Loss</strong> (e.g., standard cross-entropy) computed only on the labeled source data. It is minimized:
-\(\theta_f, \theta_y \leftarrow \arg\min L_y\)</p>
-  </li>
-  <li>\(L_d\): The <strong>Domain Loss</strong> (e.g., binary cross-entropy) computed on both source and target features.
-    <ul>
-      <li>\(\theta_d\) is trained to <strong>minimize</strong> \(L_d\) (get better at domain classification).</li>
-      <li>\(\theta_f\) is trained to <strong>maximize</strong> \(L_d\) (get worse at domain classification, confusing the discriminator).</li>
-    </ul>
-  </li>
-  <li>\(\lambda\): A positive hyperparameter that controls the trade-off between the two losses.<br />
-A common practice is to dynamically increase \(\lambda\) during training using a function like
-\(\lambda_p = \frac{2}{1 + e^{-\gamma p}} - 1\)
-where \(p\) is the training progress.</li>
-</ul>
-
-<p>The optimization can be summarized as:</p>
-
-\[\theta_f^{*}, \theta_y^{*}
-= \arg\min_{\theta_f, \theta_y} E
-\quad \text{and} \quad
-\theta_d^{*}
-= \arg\min_{\theta_d} L_d\]
-
-<p>This is equivalent to:</p>
-
-\[\theta_f^{*}, \theta_y^{*}
-= \arg\min_{\theta_f, \theta_y}
-\bigl( L_y + \lambda \cdot \text{Maximizing } L_d \bigr)\]
-
-<h3 id="gradient-reversal-layer-grl"><strong>Gradient Reversal Layer (GRL)</strong></h3>
-
-<p>The most crucial component of DANN is the <strong>Gradient Reversal Layer (GRL)</strong>, which enables the two conflicting objectives—minimizing \(L_y\) and maximizing \(L_d\) with respect to \(\theta_f\)—to be trained simultaneously using standard backpropagation.<br />
-The GRL is placed between the feature extractor \(G_f\) and the domain classifier \(G_d\).</p>
-
-<p>The GRL operates as follows:</p>
-
-<ul>
-  <li>
-    <p><strong>Forward Pass</strong>:<br />
-The GRL acts as an <strong>identity function</strong>, passing the feature vector \(z\) through unchanged:
-\(R_\lambda(z) = z\)</p>
-  </li>
-  <li>
-    <p><strong>Backward Pass (Backpropagation)</strong>:<br />
-During backpropagation, the GRL multiplies the gradient flowing from the domain classifier by a negative scalar \(-\lambda\) before passing it to the feature extractor:
-\(\frac{\partial R_\lambda}{\partial z} = -\lambda I
-\quad \text{(where } I \text{ is the identity matrix)}\)</p>
-  </li>
-</ul>
-
-<h4 id="how-the-grl-achieves-adversarial-training"><strong>How the GRL Achieves Adversarial Training</strong></h4>
-
-<ol>
-  <li>
-    <p><strong>For the Domain Classifier (\(\theta_d\))</strong>:<br />
-The parameters \(\theta_d\) are updated using the gradient of \(L_d\) to <strong>minimize</strong> \(L_d\).<br />
-The domain classifier receives the gradient <em>before</em> the sign reversal introduced by the GRL.</p>
-  </li>
-  <li>
-    <p><strong>For the Feature Extractor (\(\theta_f\))</strong>:<br />
-When the gradient flows back through the GRL to \(\theta_f\), its sign is flipped.<br />
-Since backpropagation performs gradient descent
-\(\theta \leftarrow \theta - \alpha \frac{\partial E}{\partial \theta},\)
-multiplying the gradient of \(L_d\) by \(-\lambda\) effectively converts the minimization of \(L_d\) into the <strong>maximization</strong> of \(L_d\) with respect to the shared parameters \(\theta_f\).</p>
-  </li>
-</ol>
-
-<p><a id="dann-conc"></a></p>
-<h3 id="conclusion">Conclusion:</h3>
-<p>While DANN acts as one of the first foundational papers in image-level UDA, the real-world autonomous vehicles need pixel-level labels or semantic segmentation. For example, DANN excels in identifying that a picture is of a dog, however, a useful model would need to identify that there is a dog in the center of the screen, crossing the road. The rest of the blog will explore how models can become spatially and structurally more aware, and therefore more useful for real-world application.</p>
-
-<p><a id="cycada"></a></p>
-<h2 id="cycada-cycle-consistent-adversarial-domain-adaptation"><strong>CyCADA: Cycle-Consistent Adversarial Domain Adaptation</strong></h2>
-
-<p>CyCADA (Cycle-Consistent Adversarial Domain Adaptation) is a highly influential <strong>Unsupervised Domain Adaptation (UDA)</strong> method designed to address the challenges of domain shift in <strong>dense prediction tasks</strong>, primarily semantic segmentation. It advances beyond earlier approaches like DANN by introducing adaptation across two fundamental representation spaces: the <strong>pixel space</strong> and the <strong>feature space</strong>.</p>
-
-<hr />
-
-<p><a id="cycada-core"></a></p>
-<h3 id="1-core-methodology-dual-level-adaptation"><strong>1. Core Methodology: Dual-Level Adaptation</strong></h3>
-
-<p>The basic idea behind CyCADA is that to minimize the domain gap, you need to use consistent constraints at different levels of the network. The architecture simultaneously enforces three key properties during training:</p>
-
-<ol>
-  <li><strong>Pixel-Level Alignment:</strong> The appearance, or <strong>style</strong>, of the source domain (\(D\_S\)) is translated into the target domain’s style (\(D\_T\)). This reduces the low-level, high-frequency disparity (textures, lighting).</li>
-  <li><strong>Feature-Level Alignment:</strong> The high-level <strong>semantic features</strong> extracted from both the translated source images and the raw target images are statistically aligned, ensuring the representations are domain-invariant.</li>
-  <li><strong>Semantic Consistency:</strong> The fundamental content and structure (the ground truth mask) of the source image must remain unaltered after the style translation. This is crucial for maintaining label validity.</li>
-</ol>
-
-<p>Essentially, what CyCADA achieves is using style transfer techniques, it transforms synthetic images to have the visual appearance of real-world data, while keeping their pixel labels intact. The model then learns from these realistic-looking images with guaranteed correct labels, and aligns features at a deeper level to ensure the translation preserves semantic meaning.</p>
-
-<hr />
-
-<p><a id="cycada-arch"></a></p>
-<h3 id="2-architectural-components"><strong>2. Architectural Components</strong></h3>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image2.png" alt="" /></p>
-<p><em>Figure 2: CyCADA architecture combining cycle-consistent image translation and feature-level adversarial learning for unsupervised domain adaptation <a href="#ref-2">2</a></em>
-<br /></p>
-
-<p>CyCADA integrates three specialized modules to achieve its objectives:</p>
-
-<h4 id="21-cycle-consistent-generative-adversarial-network-cyclegan"><strong>2.1. Cycle-Consistent Generative Adversarial Network (CycleGAN)</strong></h4>
-
-<p>The <strong>pixel-level adaptation</strong> is implemented using a CycleGAN framework, which utilizes two generators
-(\(G_{S \to T}\) and \(G_{T \to S}\)) and corresponding discriminators
-(\(D_T\) and \(D_S\)).
-The core capability is to perform style transfer between the unpaired source and target datasets.</p>
-
-<p>The generator \(G_{S \to T}\) is essential, as it produces the stylized source images
-\(x_s^{T} = G_{S \to T}(x_s),\)
-which retain the original labels \(y_s\) while adopting the target-domain style.</p>
-
-<h4 id="22-semantic-segmentation-network"><strong>2.2. Semantic Segmentation Network</strong></h4>
-
-<p>A standard <strong>Fully Convolutional Network (FCN)</strong>, denoted as \(f\), serves as the backbone for the task. The feature extractor component of \(f\) is shared across both domains, while the classifier head is trained solely on the stylized source data.</p>
-
-<h4 id="23-feature-level-discriminator-d_feat"><strong>2.3. Feature-Level Discriminator (\(D\_{feat}\))</strong></h4>
-
-<p>This component is conceptually derived from DANN. \(D\_{feat}\) is attached to an intermediate feature map of the segmentation network \(f\). It is trained to distinguish between features originating from raw target images (\(x\_t\)) and features originating from stylized source images (\(x\_s^T\)).</p>
-
-<hr />
-
-<p><a id="cycada-obj"></a></p>
-<h3 id="3-optimization-objective"><strong>3. Optimization Objective</strong></h3>
-
-<p>The total loss function, \(L\_{total}\), is a composite objective comprising five distinct terms, weighted by hyperparameters \(\\lambda\):</p>
-
-\[L_{total}
-= L_{task}
-+ \lambda_{cyc} L_{cyc}
-+ \lambda_{sem} L_{sem}
-+ \lambda_{GAN} L_{GAN}
-+ \lambda_{feat} L_{feat}\]
-
-<h4 id="31-l_task-segmentation-loss"><strong>3.1. \(L\_{task}\) (Segmentation Loss)</strong></h4>
-
-<p>This is the standard cross-entropy loss applied to the primary task on the labeled, <strong>stylized source images</strong> (\(x\_s^T\)):</p>
-
-\[L_{task}
-= L_{CE}\bigl(f(x_s^{T}), y_s\bigr)\]
-
-<h4 id="32-l_cyc-cycle-consistency-loss"><strong>3.2. \(L\_{cyc}\) (Cycle-Consistency Loss)</strong></h4>
-
-<p>A standard \(\\ell\_1\) loss minimizing the reconstruction error, ensuring the style transfer does not destroy image structure:</p>
-
-\[L_{cyc}
-= \lVert G_{T \to S}\bigl(G_{S \to T}(x_s)\bigr) - x_s \rVert_1
-+ \lVert G_{S \to T}\bigl(G_{T \to S}(x_t)\bigr) - x_t \rVert_1\]
-
-<h4 id="33-l_sem-semantic-consistency-loss"><strong>3.3. \(L\_{sem}\) (Semantic Consistency Loss)</strong></h4>
-
-<p>This novel term is critical for semantic segmentation. It minimizes the distance between the segmentation predictions generated by \(f\) for the <strong>original source image</strong> \(x\_s\) and the <strong>stylized source image</strong> \(x\_s^T\). This enforces that the domain translation preserves high-level semantics:</p>
-
-\[L_{sem}
-= L_{CE}\bigl(f(x_s), f(x_s^{T})\bigr)\]
-
-<h3 id="34-l_feat-feature-adversarial-loss"><strong>3.4. \(L\_{feat}\) (Feature Adversarial Loss)</strong></h3>
-
-<p>The adversarial loss driving the domain alignment of intermediate features. The feature extractor of \(f\) is trained to maximize this loss (confuse \(D\_{feat}\)), while \(D\_{feat}\) is trained to minimize it:</p>
-
-\[L_{feat}
-= \min_{f} \max_{D_{feat}}
-\mathbb{E}_{x_s \in D_S}
-\bigl[ \log D_{feat}\bigl(f(G_{S \to T}(x_s))\bigr) \bigr]
-+ \mathbb{E}_{x_t \in D_T}
-\bigl[ \log \bigl(1 - D_{feat}(f(x_t))\bigr) \bigr]\]
-
-<p>By combining these constraints, CyCADA achieved stability and performance gains that were unattainable with earlier global feature alignment methods, marking a significant step toward robust domain adaptation for dense prediction.</p>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image8.png" alt="" /></p>
-<p><em>Figure 3: Qualitative comparison of source-only and CyCADA segmentation predictions on Cityscapes <a href="#ref-2">2</a></em>
-<br /></p>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image9.png" alt="" /></p>
-<p><em>Table 1: Per-class IoU, mean IoU, and pixel accuracy for adaptation from GTA5 to Cityscapes. CyCADA significantly outperforms source-only baselines across architectures <a href="#ref-2">2</a></em>
-<br /></p>
-
-<p><a id="cycada-conc"></a></p>
-<h3 id="conclusion-1">Conclusion:</h3>
-
-<p>While the performance of CyCADA receives a 39.5 mIoU, the computation done to modify the source domain to the target domain’s statistics before being classified is an image-to-image transformation. Recognizing these limitations, subsequent research shifted focus from modifying the input features to regularizing the model’s output. This evolution led to ADVENT, a method that eschews style transfer entirely and instead leverages the adversarial principle to enforce confidence by minimizing prediction entropy in the target domain’s output space.</p>
-
-<p><a id="advent"></a></p>
-<h2 id="advent-adversarial-entropy-minimization-for-domain-adaptation"><strong>ADVENT: Adversarial Entropy Minimization for Domain Adaptation</strong></h2>
-
-<p><strong>ADVENT</strong> is based around a simple, yet insightful observation: when models are confident, they work well. On synthetic data, models tend to make confident predictions, whereas on real-world data, predictions tend to become fuzzy. So instead of transforming images or aligning internal features, ADVENT directly forces the model to be confident on real-world data.</p>
-
-<p>More formally, <strong>ADVENT</strong> (Adversarial Entropy Minimization) is an Unsupervised Domain Adaptation (UDA) technique specifically tailored for <strong>semantic segmentation</strong> that approaches the domain shift problem by focusing on the <strong>output space</strong> of the model rather than intermediate feature statistics. Unlike methods that modify input images (like CyCADA) or align internal feature representations (like DANN), ADVENT uses an adversarial discriminator that can spot uncertain predictions and leverages the principle of <strong>entropy minimization</strong> to enforce confidence and stability in the target domain predictions.</p>
-
-<hr />
-
-<p><a id="advent-theory"></a></p>
-<h2 id="1-theoretical-foundation-entropy-as-a-domain-gap-metric"><strong>1. Theoretical Foundation: Entropy as a Domain Gap Metric</strong></h2>
-
-<p>As mentioned prior, ADVENT is founded on the observation that predictions made on the source domain (\(D\_S\)) are generally <strong>low-entropy</strong> (high confidence), whereas predictions on the target domain (\(D\_T\)) often exhibit <strong>high-entropy</strong> (high uncertainty) due to domain shift.</p>
-
-<h3 id="11-entropy-definition"><strong>1.1. Entropy Definition</strong></h3>
-
-<p>For a prediction map \(P(y \mid x_t)\) generated by the segmentation network \(f\)
-for a target image \(x_t\), the local entropy \(H_{i,j}\) at pixel \((i,j)\) is defined as:</p>
-
-\[H(P(y \mid x_t))
-= H_{i,j}
-= -\sum_{c=1}^{K} p_{i,j}^{c} \log p_{i,j}^{c}\]
-
-<p>where \(p_{i,j}^{c}\) is the predicted probability for class \(c\) at pixel \((i,j)\),
-and \(K\) is the total number of classes.</p>
-
-<h3 id="12-the-objective"><strong>1.2. The Objective</strong></h3>
-
-<p>The core objective of ADVENT is to train the segmentation network \(f\) to produce output probability maps for \(D\_T\) that possess <strong>low entropy</strong>, effectively minimizing the uncertainty induced by the domain gap. Direct minimization of entropy can lead to trivial local minima; therefore, ADVENT introduces an adversarial mechanism to implicitly enforce this constraint.</p>
-
-<hr />
-
-<p><a id="advent-advform"></a></p>
-<h2 id="2-adversarial-formulation"><strong>2. Adversarial Formulation</strong></h2>
-
-<p>ADVENT utilizes an adversarial setup to implicitly enforce entropy minimization by aligning the <strong>distribution of uncertainty</strong> across domains.</p>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image7.png" alt="" /></p>
-<p><em>Figure 4: ADVENT architecture for unsupervised domain adaptation <a href="#ref-3">3</a></em>
-<br /></p>
-
-<h3 id="21-architectural-components"><strong>2.1. Architectural Components</strong></h3>
-
-<ol>
-  <li><strong>Semantic Segmentation Network (\(f\)):</strong> A standard FCN or DeepLab network that performs the pixel-level classification. Its parameters \(\\theta\_f\) are the primary target of optimization.</li>
-  <li><strong>Domain Discriminator (\(D\)):</strong> A convolutional network trained to distinguish between the <strong>uncertainty profiles</strong> of \(D\_S\) and \(D\_T\).</li>
-</ol>
-
-<h3 id="22-the-input-to-the-discriminator"><strong>2.2. The Input to the Discriminator</strong></h3>
-
-<p>Crucially, the discriminator \(D\) does <strong>not</strong> take the raw feature map as input.
-Instead, it takes the <strong>output probability map</strong> \(P(y \mid x)\) from the segmentation
-network \(f\). Specifically, it often uses the <strong>weighted self-information map</strong></p>
-
-\[I(x) = P(y \mid x) \cdot H\bigl(P(y \mid x)\bigr),\]
-
-<p>which provides a structured representation that emphasizes regions of high
-uncertainty for the discriminator.</p>
-
-<h3 id="23-the-adversarial-game"><strong>2.3. The Adversarial Game</strong></h3>
-
-<p>The optimization is formulated as a minimax game:</p>
-
-<ul>
-  <li><strong>Discriminator (\(D\)) Goal:</strong> The discriminator parameters \(\\theta\_D\) are optimized to <strong>minimize</strong> the Binary Cross-Entropy (BCE) loss when correctly classifying the source output (assigned label 0) versus the target output (assigned label 1). This forces \(D\) to explicitly model the uncertainty difference between the two domains.</li>
-  <li><strong>Segmentation Network (\(f\)) Goal:</strong> The network parameters \(\\theta\_f\) are trained to <strong>maximize</strong> the discriminator loss for the target output. By maximizing \(D\)’s confusion, \(f\) is forced to generate target outputs that mimic the characteristics of source outputs (i.e., low entropy).</li>
-</ul>
-
-<h3 id="24-total-optimization-loss"><strong>2.4. Total Optimization Loss</strong></h3>
-
-<p>The total loss \(L\) used to train the segmentation network \(f\) is a combination
-of the task-specific supervised loss on \(D_S\) and the adversarial loss on \(D_T\):</p>
-
-\[L(\theta_f, \theta_D)
-= L_{CE}(\theta_f; D_S)
-+ \lambda_{adv} L_{adv}(\theta_f; D_T)\]
-
-<p>Where:</p>
-
-<ul>
-  <li>
-    <p>\(L_{CE}(\theta_f; D_S)\): The standard <strong>cross-entropy task loss</strong> calculated only
-on the labeled source domain.</p>
-  </li>
-  <li>
-    <p>\(L_{adv}(\theta_f; D_T)\): The <strong>adversarial loss</strong> calculated on the unlabeled
-target domain. This term guides \(\theta_f\) to align the output entropy.</p>
-  </li>
-  <li>
-    <p>\(\lambda_{adv}\): A hyperparameter that controls the influence of the adversarial
-regularization.</p>
-  </li>
-</ul>
-
-<p>This iterative optimization process results in a segmentation network whose predictions on the target domain are structurally confident and robust against domain shift.</p>
-
-<p>Note that for some datasets with significantly different layouts/viewpoints, ADVENT can lead to poor inference decisions, specifically for rare classes. The researchers utilize a class-ratio prior to encourage the presence of all classes, as to not ignore rare classes. They choose to use a value of 0.5, right in between having no prior and enforcing the exact class-ratio prior. DAFormer expands on this imbalance in the later section, tackling it with RCS.</p>
-
-<hr />
-<p><a id="advent-outspace"></a></p>
-<h2 id="3-advantages-of-output-space-adaptation"><strong>3. Advantages of Output-Space Adaptation</strong></h2>
-
-<p>ADVENT’s focus on the output space provides several distinct advantages over traditional feature-level adversarial methods:</p>
-
-<ul>
-  <li><strong>Enhanced Stability:</strong> Aligning the output probability distribution, which is intrinsically lower dimensional than intermediate feature maps, leads to a <strong>more stable</strong> adversarial training process.</li>
-  <li><strong>Direct Task Correlation:</strong> Regularizing the output directly enforces a desirable property (confidence/low uncertainty) that is highly correlated with strong final task performance, offering a more direct path to adaptation success.</li>
-  <li><strong>Computational Efficiency:</strong> The method avoids the computational overhead associated with training and running image-to-image translation models, as required by approaches like CyCADA.</li>
-</ul>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image6.png" alt="" /></p>
-<p><em>Table 2: Comparison of mean IoU and oracle performance for unsupervised domain adaptation from GTA5 to Cityscapes. ADVENT improves segmentation performance over prior methods <a href="#ref-3">3</a></em>
-<br /></p>
-
-<p><a id="advent-conc"></a></p>
-<h3 id="conclusion-2">Conclusion:</h3>
-<p>Not only does ADVENT improve on CyCADA with an mIoU of 45.5, ADVENT is a lot less computationally demanding. There is no need to perform transformations mapping one image to the test domain, but instead can allow training solely on the entropy loss. However, ADVENT still uses adversarial training which introduces optimization instability, due to balancing two opposite loss functions. In addition, the architectural backbone is still CNNs. Through exploring a new foundation with the transformer architecture model, this blog will now focus on the DAFormer model.</p>
-
-<p><a id="daformer"></a></p>
-<h2 id="daformer-domain-adaptive-transformer"><strong>DAFormer: Domain-Adaptive Transformer</strong></h2>
-
-<p><strong>DAFormer</strong> (Domain-Adaptive Transformer) represents a paradigm shift in Unsupervised Domain Adaptation (UDA) for semantic segmentation, moving away from conventional Convolutional Neural Network (CNN) backbones and feature alignment tricks toward leveraging the inherent <strong>domain generalization capabilities</strong> of the <strong>Transformer architecture</strong>. The work introduces architectural enhancements and novel training strategies that collectively achieve a substantial improvement in performance on benchmarks like GTA5 → Cityscapes.</p>
-
-<hr />
-
-<p><a id="daformer-arch"></a></p>
-<h2 id="1-architectural-foundation-the-mit-encoder"><strong>1. Architectural Foundation: The MiT Encoder</strong></h2>
-
-<p>DAFormer is built upon a high-performance segmentation architecture, replacing the typical ResNet/VGG backbone with the <strong>Mix Transformer (MiT)</strong> encoder.</p>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image5.png" alt="" /></p>
-<p><em>Figure 5: DAFormer architecture for domain-adaptive semantic segmentation using transformer-based feature alignment and context-aware fusion <a href="#ref-4">4</a></em>
-<br /></p>
-
-<h3 id="11-mix-transformer-mit"><strong>1.1. Mix Transformer (MiT)</strong></h3>
-
-<p>The MiT encoder, used in the <strong>SegFormer</strong> architecture, naturally benefits UDA due to its ability to capture <strong>global context</strong> via self-attention mechanisms. Unlike CNNs, which have local receptive fields, Transformers can model long-range dependencies across the entire input image. This global context is crucial because the semantic meaning of pixels in the target domain often depends heavily on distant elements in the scene (e.g., classifying a small road sign relies on understanding the surrounding road and sky). This global view makes the feature representation inherently more robust to local texture and style shifts common in domain gaps, allowing it to make more accurate predictions on unlabeled images in the target domain.</p>
-
-<h3 id="12-context-aware-feature-fusion"><strong>1.2. Context-Aware Feature Fusion</strong></h3>
-
-<p>The decoder utilizes a lightweight, context-aware mechanism that effectively fuses multi-scale features generated by the MiT encoder. This fusion is essential for recovering fine details necessary for accurate pixel-level segmentation boundaries.</p>
-
-<p><a id="daformer-train"></a></p>
-<h2 id="2-novel-training-strategies"><strong>2. Novel Training Strategies</strong></h2>
-
-<p>The architectural shift is complemented by three highly effective training strategies designed to maximize the domain robustness of the Transformer backbone, particularly for challenging classes.</p>
-<h3 id="21-rare-class-sampling-rcs"><strong>2.1. Rare Class Sampling (RCS)</strong></h3>
-
-<p>The unsupervised adaptation process often suffers from a <strong>class-imbalance bias</strong>.
-Common classes (e.g., road, building, sky) are easily pseudo-labeled, leading to
-high confidence and strong alignment, while <strong>rare classes</strong> (e.g., traffic sign,
-bicycle, train) are poorly adapted.</p>
-
-<p>RCS addresses this issue by modifying the sampling distribution of the labeled
-<strong>source domain</strong> \(D_S\) used during adaptation. Images containing rare classes
-are sampled <strong>more frequently</strong> than under a uniform distribution. This ensures
-that both the adversarial and task losses receive sufficient contribution from
-minority classes, preventing them from being ignored during feature alignment.</p>
-
-<p>Let \(N_c\) denote the number of pixels belonging to class \(c\) in the source
-dataset. The sampling probability for image \(i\), denoted by \(P(i)\), is computed
-based on the class frequencies present in the image:</p>
-
-\[P(i)
-= \frac{\sum_{c \in I_i} f_c^{-1}}{\sum_c f_c^{-1}},
-\qquad
-f_c = \log(\tau + N_c)\]
-
-<p>where \(I_i\) is the set of classes present in image \(i\), and \(\tau \ge 1\) is a
-hyperparameter that moderates the inverse frequency. This procedure effectively
-prioritizes images containing underrepresented classes, ensuring more robust
-feature learning across all categories.</p>
-
-<hr />
-
-<h3 id="22-thing-class-imagenet-feature-distance-t-cifd"><strong>2.2. Thing-Class ImageNet Feature Distance (T-CIFD)</strong></h3>
-
-<p>Transformers are typically initialized with weights pre-trained on large-scale
-classification datasets such as <strong>ImageNet</strong>. This pre-training is crucial for
-learning rich and transferable object representations for <strong>“thing” classes</strong>
-(objects with countable instances such as people or cars). However, domain
-adaptation can cause the model to drift away from these pretrained features.</p>
-
-<p>T-CIFD introduces a regularization term that preserves feature transferability for
-thing classes by minimizing the <strong>feature distance</strong> between the source-domain and
-target-domain representations, while applying this constraint <strong>only to thing
-classes</strong>.</p>
-
-\[L_{\text{T-CIFD}}
-= \frac{1}{|C_{\text{thing}}|}
-\sum_{c \in C_{\text{thing}}}
-\left\|
-\mu(F_c^{\text{source}})
-- \mu(F_c^{\text{target}})
-\right\|_2^2\]
-
-<p>where \(C_{\text{thing}}\) is the set of thing classes, and \(\mu(F_c)\) denotes the
-mean feature vector of all pixels belonging to class \(c\). This constraint
-prevents the feature extractor from drastically altering learned object
-representations, while still allowing <strong>“stuff” classes</strong> (e.g., road, sky) to
-adapt flexibly to the target domain.</p>
-
-<h3 id="23-learning-rate-warmup"><strong>2.3. Learning Rate Warmup</strong></h3>
-
-<p>Due to the sensitivity of Transformer models to initial training instability, DAFormer uses a simple but effective linear <strong>learning rate warmup</strong> at the beginning of the adaptation phase. This stabilizes the training process and is shown to significantly contribute to the final performance gain.</p>
-
-<p>By combining the powerful, context-aware MiT backbone with strategic training methods like RCS and T-CIFD, DAFormer achieved state-of-the-art performance, demonstrating that <strong>architecture and targeted regularization</strong> are more impactful than simple GAN-based alignment in modern UDA for semantic segmentation.</p>
-
-<p style="width: 600px; max-width: 100%;"><br />
-<img src="/CS163-Projects-2025Fall/assets/images/20/image10.png" alt="" /></p>
-<p><em>Table 3: Per-class IoU and mean IoU for unsupervised domain adaptation from GTA5 to Cityscapes, comparing DAFormer with prior methods <a href="#ref-4">4</a></em>
-<br /></p>
-
-<p>With an mIoU of 68.3, DAFormer beats both CyCADA and advent with its transformer based architecture. As the foundational transformer based architecture model, it paved the way for future papers to build off of it. In fact, the DAFormer team also published Hierarchical Domain-invariant Representation Alignment (HDRA) which performed with 73.8 mIoU.</p>
-
-<p><a id="conclusion"></a></p>
-<h2 id="performance-comparison--conclusion">Performance Comparison &amp; Conclusion</h2>
-
-<p>The progression from CyCADA to DAFormer shows dramatic performance improvements in domain adaptation research. Testing on the standard GTA5 → Cityscapes benchmark reveals just how far the field has advanced:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Method</th>
-      <th style="text-align: left">Backbone</th>
-      <th style="text-align: left">Architecture Type</th>
-      <th style="text-align: left">mIoU (%)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><strong>CyCADA</strong></td>
-      <td style="text-align: left">ResNet-101</td>
-      <td style="text-align: left">CNN + GAN</td>
-      <td style="text-align: left">39.5</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>Advent</strong></td>
-      <td style="text-align: left">ResNet-101</td>
-      <td style="text-align: left">CNN + Entropy</td>
-      <td style="text-align: left">45.5</td>
-    </tr>
-    <tr>
-      <td style="text-align: left"><strong>DAFormer</strong></td>
-      <td style="text-align: left">MiT-B5</td>
-      <td style="text-align: left">Transformer</td>
-      <td style="text-align: left"><strong>68.3</strong></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>CyCADA’s solution in bridging the domain gap was on the pixel-level foundation. It transformed GTA5 images to look like real photographs through style transfer, then trained on these “realistic” synthetic images. Thus by reducing low-level appearance differences (color, texture, lighting), CyCADA makes it easier for the CNN to recognize familiar patterns. However, the method is computationally expensive, requiring training complex GAN-based image translation networks. And more critically, perfect pixel-level alignment is near impossible. Real-world images have variations that can’t be captured by translating synthetic data. The CNN backbone also struggles to leverage global context, limiting how well features can align.</p>
-
-<p>ADVENT took a different approach through focusing on making the model’s predictions confident. By working directly in the output space and minimizing entropy, ADVENT achieved better results with far less computational overhead since it avoids the computational burden of image translation while addressing the core problem: uncertain predictions on target data. But ADVENT still uses a CNN backbone (ResNet-101) that relies on local receptive fields. So when low-level textures differ significantly between domains, CNNs can struggle to make confident predictions no matter how much the entropy loss tries to force confidence.</p>
-
-<p>This is where DAFormer introduces a major shift in the approach to architecture. By switching to a Transformer backbone, DAFormer gains the ability to capture global context through self-attention, making it naturally more robust to local appearance differences. The self-attention mechanism essentially lets the model consider the entire image when making predictions, which allows it to use spatial and structural relationships to make consistent predictions across domains. And through smart training strategies such as RCS, which ensures rare classes aren’t ignored during adaptation, it further increases the model’s ability in recognizing objects between images in different domains. This paradigm shift explains the jump from 45.4% to 68.3% in mIoU.</p>
-
-<p>As these unsupervised domain adaptation models drastically increase in performance with new architectures each year, it’s only a matter of time before we see these systems deployed on real roads. When CyCADA was first published in 2017, the state of the art model that trained on the target domain (not the source domain like our UDA models), only had 67.4 mIoU. Compare that to HDRA’s 2023 result training on the source domain at 73.8 mIoU.</p>
-
-<p>In order for vehicles to achieve true autonomy, they need rigorous training and many test runs in the real-world. However, with improved UDA models, this real-life test time can be drastically reduced. With these models, the models can be trained to align features between Day/Night, Clear/Foggy, and even US/India roads! While these different domains are very different, improvement in the models can lead to a future where the Tesla trained on the GTA5 dataset set in America can be deployed to China with minimal modifications.</p>
-
-<p><a id="references"></a></p>
-<h2 id="references"><strong>References</strong></h2>
-
-<p><a id="ref-1"></a>
-[1] Ganin, Y., et al. “Domain-adversarial training of neural networks.” JMLR 2016.</p>
-
-<p><a id="ref-2"></a>
-[2] Hoffman, J., et al. “CyCADA: Cycle-Consistent Adversarial Domain Adaptation.” ICML 2018.</p>
-
-<p><a id="ref-3"></a>
-[3] Vu, T., et al. “ADVENT: Adversarial Entropy Minimization for Domain Adaptation in Semantic Segmentation.” CVPR 2019.</p>
-
-<p><a id="ref-4"></a>
-[4] Hoyer, L., et al. “DAFormer: Improving Network Architectures and Training Strategies for Domain-Adaptive Semantic Segmentation.” CVPR 2022.</p>]]></content><author><name>Na Yoon Kang and Gabe Macatula</name></author><summary type="html"><![CDATA[Introduction DANN Architecure Conclusion CyCADA Core Methodology Architecture Optimization Objective Conclusion ADVENT Theoretical Foundation Adversarial Formulation Advantages of Output-Space Adapation Conclusion DAFormer Architectural Foundation: The MiT Encoder Novel Training Strategies Performance Comparison &amp; Conclusion References Introduction Imagine spending millions of dollars training a self-driving car in the streets of California, only to watch it fail when deployed on the streets of London. Or picture an autonomous vehicle that performs flawlessly in video game simulations like GTA5, but can’t recognize a simple stop sign when it encounters real-world weathering and reflections. This is one of the most critical challenges facing computer vision today: the domain gap. The field of domain adaptation attempts to handle this problem of different distributions of data in computer vision. Under supervised learning, deep learning models excel when training and testing data come from the same distribution. Train a segmentation model on synthetic data, and it achieves near-perfect accuracy on more synthetic data. But the moment you deploy it in the real world, performance plummets. Roads become unrecognizable, pedestrians vanish, and traffic signs blur into the background. This is due to the model having overfit to the training data. The task therefore is to minimize the discrepancy between performance on the source domain and the target domain. Over the past decade, researchers have developed increasingly sophisticated techniques to bridge this domain gap. Our blog will examine the specific focus of unsupervised domain adaptation (UDA) from training on GTA5 to performance on CityScapes dataset. This means that we are examining how purely simulation data will affect performance on real-world images, providing a good benchmark for how an autonomous vehicle would perform in the real world. After providing context with the foundational DANN model, we will examine the evolution of UDA architectures, models, and techniques from the pixel-level adaptation with CyCADA, entropy-based methods like Advent, and finally the state-of-the-art Transformer-based DAFormer. Domain-Adversarial Neural Network (DANN) Faced with the problem of unsupervised domain adaptation, the research team decided to make a model with the goal of embedding “domain adaptation into the process of learning representation” such that the final classification is based on features “both discriminative and invariant to the change of domains.” These scientists decided that to counter the problem of overfitting, they are going to have their model intentionally learn on features that are common to both the training and test domain. For example, an overfitting on the synthetic data might classify a stop sign as perfectly bright red. However, by focusing on domain invariant features, the model would be able to correctly classify a faded or reflective stop sign as a stop sign, potentially by focusing on instead on geometric features. Architecture DANN augments a standard feed-forward neural network with a separate branch dedicated to classifying the domain of the input. It consists of three main components. Figure 1: DANN architecture for domain-adversarial feature learning 1 — 1. Feature Extractor (\(G_f\)) This is the common trunk of the network. It takes an input \(x\) and produces a feature vector: \[z = G_f(x; \theta_f)\] Its parameters \(\theta_f\) are shared by both the task and domain branches and are trained with a dual, conflicting objective. 2. Label Predictor (\(G_y\)) The main classifier. It takes the feature \(z\) and predicts the class label: \[\hat{y} = G_y(z; \theta_y)\] It is trained only on the labeled source data to perform the primary task. 3. Domain Classifier (\(G_d\)) The adversarial component. It takes the feature \(z\) and predicts the domain label: \[\hat{d} = G_d(z; \theta_d), \quad d = 0 \text{ (source)}, \; d = 1 \text{ (target)}\] It is trained on both the source and target data to accurately distinguish the domains. Adversarial Objective and Loss Function The training process for DANN is a single-step optimization that simultaneously minimizes the task loss and plays the adversarial game to align features. A. The Optimization Goal The DANN optimization seeks to find the optimal parameters \(\theta_f,\ \theta_y,\ \theta_d^{*}\) that satisfy the following two competing objectives: Task Loss Minimization: The label predictor (\(G_y\)) and feature extractor (\(G_f\)) are optimized to minimize the error on the source domain labels. This ensures the model is discriminative for the classification task. Domain Confusion: The domain classifier (\(G_d\)) is optimized to minimize its error (i.e., maximize its ability to distinguish the domains), while the feature extractor (\(G_f\)) is optimized to maximize the domain classifier’s error (i.e., make the domains indistinguishable). This forces the features to become domain-invariant. B. The Total Loss Function The final combined loss function \(E\) for the entire network is: \(E(\theta_f, \theta_y, \theta_d) = L_y(\theta_f, \theta_y) - \lambda L_d(\theta_f, \theta_d)\) Where: \(L_y\): The Task Loss (e.g., standard cross-entropy) computed only on the labeled source data. It is minimized: \(\theta_f, \theta_y \leftarrow \arg\min L_y\) \(L_d\): The Domain Loss (e.g., binary cross-entropy) computed on both source and target features. \(\theta_d\) is trained to minimize \(L_d\) (get better at domain classification). \(\theta_f\) is trained to maximize \(L_d\) (get worse at domain classification, confusing the discriminator). \(\lambda\): A positive hyperparameter that controls the trade-off between the two losses. A common practice is to dynamically increase \(\lambda\) during training using a function like \(\lambda_p = \frac{2}{1 + e^{-\gamma p}} - 1\) where \(p\) is the training progress. The optimization can be summarized as: \[\theta_f^{*}, \theta_y^{*} = \arg\min_{\theta_f, \theta_y} E \quad \text{and} \quad \theta_d^{*} = \arg\min_{\theta_d} L_d\] This is equivalent to: \[\theta_f^{*}, \theta_y^{*} = \arg\min_{\theta_f, \theta_y} \bigl( L_y + \lambda \cdot \text{Maximizing } L_d \bigr)\] Gradient Reversal Layer (GRL) The most crucial component of DANN is the Gradient Reversal Layer (GRL), which enables the two conflicting objectives—minimizing \(L_y\) and maximizing \(L_d\) with respect to \(\theta_f\)—to be trained simultaneously using standard backpropagation. The GRL is placed between the feature extractor \(G_f\) and the domain classifier \(G_d\). The GRL operates as follows: Forward Pass: The GRL acts as an identity function, passing the feature vector \(z\) through unchanged: \(R_\lambda(z) = z\) Backward Pass (Backpropagation): During backpropagation, the GRL multiplies the gradient flowing from the domain classifier by a negative scalar \(-\lambda\) before passing it to the feature extractor: \(\frac{\partial R_\lambda}{\partial z} = -\lambda I \quad \text{(where } I \text{ is the identity matrix)}\) How the GRL Achieves Adversarial Training For the Domain Classifier (\(\theta_d\)): The parameters \(\theta_d\) are updated using the gradient of \(L_d\) to minimize \(L_d\). The domain classifier receives the gradient before the sign reversal introduced by the GRL. For the Feature Extractor (\(\theta_f\)): When the gradient flows back through the GRL to \(\theta_f\), its sign is flipped. Since backpropagation performs gradient descent \(\theta \leftarrow \theta - \alpha \frac{\partial E}{\partial \theta},\) multiplying the gradient of \(L_d\) by \(-\lambda\) effectively converts the minimization of \(L_d\) into the maximization of \(L_d\) with respect to the shared parameters \(\theta_f\). Conclusion: While DANN acts as one of the first foundational papers in image-level UDA, the real-world autonomous vehicles need pixel-level labels or semantic segmentation. For example, DANN excels in identifying that a picture is of a dog, however, a useful model would need to identify that there is a dog in the center of the screen, crossing the road. The rest of the blog will explore how models can become spatially and structurally more aware, and therefore more useful for real-world application. CyCADA: Cycle-Consistent Adversarial Domain Adaptation CyCADA (Cycle-Consistent Adversarial Domain Adaptation) is a highly influential Unsupervised Domain Adaptation (UDA) method designed to address the challenges of domain shift in dense prediction tasks, primarily semantic segmentation. It advances beyond earlier approaches like DANN by introducing adaptation across two fundamental representation spaces: the pixel space and the feature space. 1. Core Methodology: Dual-Level Adaptation The basic idea behind CyCADA is that to minimize the domain gap, you need to use consistent constraints at different levels of the network. The architecture simultaneously enforces three key properties during training: Pixel-Level Alignment: The appearance, or style, of the source domain (\(D\_S\)) is translated into the target domain’s style (\(D\_T\)). This reduces the low-level, high-frequency disparity (textures, lighting). Feature-Level Alignment: The high-level semantic features extracted from both the translated source images and the raw target images are statistically aligned, ensuring the representations are domain-invariant. Semantic Consistency: The fundamental content and structure (the ground truth mask) of the source image must remain unaltered after the style translation. This is crucial for maintaining label validity. Essentially, what CyCADA achieves is using style transfer techniques, it transforms synthetic images to have the visual appearance of real-world data, while keeping their pixel labels intact. The model then learns from these realistic-looking images with guaranteed correct labels, and aligns features at a deeper level to ensure the translation preserves semantic meaning. 2. Architectural Components Figure 2: CyCADA architecture combining cycle-consistent image translation and feature-level adversarial learning for unsupervised domain adaptation 2 CyCADA integrates three specialized modules to achieve its objectives: 2.1. Cycle-Consistent Generative Adversarial Network (CycleGAN) The pixel-level adaptation is implemented using a CycleGAN framework, which utilizes two generators (\(G_{S \to T}\) and \(G_{T \to S}\)) and corresponding discriminators (\(D_T\) and \(D_S\)). The core capability is to perform style transfer between the unpaired source and target datasets. The generator \(G_{S \to T}\) is essential, as it produces the stylized source images \(x_s^{T} = G_{S \to T}(x_s),\) which retain the original labels \(y_s\) while adopting the target-domain style. 2.2. Semantic Segmentation Network A standard Fully Convolutional Network (FCN), denoted as \(f\), serves as the backbone for the task. The feature extractor component of \(f\) is shared across both domains, while the classifier head is trained solely on the stylized source data. 2.3. Feature-Level Discriminator (\(D\_{feat}\)) This component is conceptually derived from DANN. \(D\_{feat}\) is attached to an intermediate feature map of the segmentation network \(f\). It is trained to distinguish between features originating from raw target images (\(x\_t\)) and features originating from stylized source images (\(x\_s^T\)). 3. Optimization Objective The total loss function, \(L\_{total}\), is a composite objective comprising five distinct terms, weighted by hyperparameters \(\\lambda\): \[L_{total} = L_{task} + \lambda_{cyc} L_{cyc} + \lambda_{sem} L_{sem} + \lambda_{GAN} L_{GAN} + \lambda_{feat} L_{feat}\] 3.1. \(L\_{task}\) (Segmentation Loss) This is the standard cross-entropy loss applied to the primary task on the labeled, stylized source images (\(x\_s^T\)): \[L_{task} = L_{CE}\bigl(f(x_s^{T}), y_s\bigr)\] 3.2. \(L\_{cyc}\) (Cycle-Consistency Loss) A standard \(\\ell\_1\) loss minimizing the reconstruction error, ensuring the style transfer does not destroy image structure: \[L_{cyc} = \lVert G_{T \to S}\bigl(G_{S \to T}(x_s)\bigr) - x_s \rVert_1 + \lVert G_{S \to T}\bigl(G_{T \to S}(x_t)\bigr) - x_t \rVert_1\] 3.3. \(L\_{sem}\) (Semantic Consistency Loss) This novel term is critical for semantic segmentation. It minimizes the distance between the segmentation predictions generated by \(f\) for the original source image \(x\_s\) and the stylized source image \(x\_s^T\). This enforces that the domain translation preserves high-level semantics: \[L_{sem} = L_{CE}\bigl(f(x_s), f(x_s^{T})\bigr)\] 3.4. \(L\_{feat}\) (Feature Adversarial Loss) The adversarial loss driving the domain alignment of intermediate features. The feature extractor of \(f\) is trained to maximize this loss (confuse \(D\_{feat}\)), while \(D\_{feat}\) is trained to minimize it: \[L_{feat} = \min_{f} \max_{D_{feat}} \mathbb{E}_{x_s \in D_S} \bigl[ \log D_{feat}\bigl(f(G_{S \to T}(x_s))\bigr) \bigr] + \mathbb{E}_{x_t \in D_T} \bigl[ \log \bigl(1 - D_{feat}(f(x_t))\bigr) \bigr]\] By combining these constraints, CyCADA achieved stability and performance gains that were unattainable with earlier global feature alignment methods, marking a significant step toward robust domain adaptation for dense prediction. Figure 3: Qualitative comparison of source-only and CyCADA segmentation predictions on Cityscapes 2 Table 1: Per-class IoU, mean IoU, and pixel accuracy for adaptation from GTA5 to Cityscapes. CyCADA significantly outperforms source-only baselines across architectures 2 Conclusion: While the performance of CyCADA receives a 39.5 mIoU, the computation done to modify the source domain to the target domain’s statistics before being classified is an image-to-image transformation. Recognizing these limitations, subsequent research shifted focus from modifying the input features to regularizing the model’s output. This evolution led to ADVENT, a method that eschews style transfer entirely and instead leverages the adversarial principle to enforce confidence by minimizing prediction entropy in the target domain’s output space. ADVENT: Adversarial Entropy Minimization for Domain Adaptation ADVENT is based around a simple, yet insightful observation: when models are confident, they work well. On synthetic data, models tend to make confident predictions, whereas on real-world data, predictions tend to become fuzzy. So instead of transforming images or aligning internal features, ADVENT directly forces the model to be confident on real-world data. More formally, ADVENT (Adversarial Entropy Minimization) is an Unsupervised Domain Adaptation (UDA) technique specifically tailored for semantic segmentation that approaches the domain shift problem by focusing on the output space of the model rather than intermediate feature statistics. Unlike methods that modify input images (like CyCADA) or align internal feature representations (like DANN), ADVENT uses an adversarial discriminator that can spot uncertain predictions and leverages the principle of entropy minimization to enforce confidence and stability in the target domain predictions. 1. Theoretical Foundation: Entropy as a Domain Gap Metric As mentioned prior, ADVENT is founded on the observation that predictions made on the source domain (\(D\_S\)) are generally low-entropy (high confidence), whereas predictions on the target domain (\(D\_T\)) often exhibit high-entropy (high uncertainty) due to domain shift. 1.1. Entropy Definition For a prediction map \(P(y \mid x_t)\) generated by the segmentation network \(f\) for a target image \(x_t\), the local entropy \(H_{i,j}\) at pixel \((i,j)\) is defined as: \[H(P(y \mid x_t)) = H_{i,j} = -\sum_{c=1}^{K} p_{i,j}^{c} \log p_{i,j}^{c}\] where \(p_{i,j}^{c}\) is the predicted probability for class \(c\) at pixel \((i,j)\), and \(K\) is the total number of classes. 1.2. The Objective The core objective of ADVENT is to train the segmentation network \(f\) to produce output probability maps for \(D\_T\) that possess low entropy, effectively minimizing the uncertainty induced by the domain gap. Direct minimization of entropy can lead to trivial local minima; therefore, ADVENT introduces an adversarial mechanism to implicitly enforce this constraint. 2. Adversarial Formulation ADVENT utilizes an adversarial setup to implicitly enforce entropy minimization by aligning the distribution of uncertainty across domains. Figure 4: ADVENT architecture for unsupervised domain adaptation 3 2.1. Architectural Components Semantic Segmentation Network (\(f\)): A standard FCN or DeepLab network that performs the pixel-level classification. Its parameters \(\\theta\_f\) are the primary target of optimization. Domain Discriminator (\(D\)): A convolutional network trained to distinguish between the uncertainty profiles of \(D\_S\) and \(D\_T\). 2.2. The Input to the Discriminator Crucially, the discriminator \(D\) does not take the raw feature map as input. Instead, it takes the output probability map \(P(y \mid x)\) from the segmentation network \(f\). Specifically, it often uses the weighted self-information map \[I(x) = P(y \mid x) \cdot H\bigl(P(y \mid x)\bigr),\] which provides a structured representation that emphasizes regions of high uncertainty for the discriminator. 2.3. The Adversarial Game The optimization is formulated as a minimax game: Discriminator (\(D\)) Goal: The discriminator parameters \(\\theta\_D\) are optimized to minimize the Binary Cross-Entropy (BCE) loss when correctly classifying the source output (assigned label 0) versus the target output (assigned label 1). This forces \(D\) to explicitly model the uncertainty difference between the two domains. Segmentation Network (\(f\)) Goal: The network parameters \(\\theta\_f\) are trained to maximize the discriminator loss for the target output. By maximizing \(D\)’s confusion, \(f\) is forced to generate target outputs that mimic the characteristics of source outputs (i.e., low entropy). 2.4. Total Optimization Loss The total loss \(L\) used to train the segmentation network \(f\) is a combination of the task-specific supervised loss on \(D_S\) and the adversarial loss on \(D_T\): \[L(\theta_f, \theta_D) = L_{CE}(\theta_f; D_S) + \lambda_{adv} L_{adv}(\theta_f; D_T)\] Where: \(L_{CE}(\theta_f; D_S)\): The standard cross-entropy task loss calculated only on the labeled source domain. \(L_{adv}(\theta_f; D_T)\): The adversarial loss calculated on the unlabeled target domain. This term guides \(\theta_f\) to align the output entropy. \(\lambda_{adv}\): A hyperparameter that controls the influence of the adversarial regularization. This iterative optimization process results in a segmentation network whose predictions on the target domain are structurally confident and robust against domain shift. Note that for some datasets with significantly different layouts/viewpoints, ADVENT can lead to poor inference decisions, specifically for rare classes. The researchers utilize a class-ratio prior to encourage the presence of all classes, as to not ignore rare classes. They choose to use a value of 0.5, right in between having no prior and enforcing the exact class-ratio prior. DAFormer expands on this imbalance in the later section, tackling it with RCS. 3. Advantages of Output-Space Adaptation ADVENT’s focus on the output space provides several distinct advantages over traditional feature-level adversarial methods: Enhanced Stability: Aligning the output probability distribution, which is intrinsically lower dimensional than intermediate feature maps, leads to a more stable adversarial training process. Direct Task Correlation: Regularizing the output directly enforces a desirable property (confidence/low uncertainty) that is highly correlated with strong final task performance, offering a more direct path to adaptation success. Computational Efficiency: The method avoids the computational overhead associated with training and running image-to-image translation models, as required by approaches like CyCADA. Table 2: Comparison of mean IoU and oracle performance for unsupervised domain adaptation from GTA5 to Cityscapes. ADVENT improves segmentation performance over prior methods 3 Conclusion: Not only does ADVENT improve on CyCADA with an mIoU of 45.5, ADVENT is a lot less computationally demanding. There is no need to perform transformations mapping one image to the test domain, but instead can allow training solely on the entropy loss. However, ADVENT still uses adversarial training which introduces optimization instability, due to balancing two opposite loss functions. In addition, the architectural backbone is still CNNs. Through exploring a new foundation with the transformer architecture model, this blog will now focus on the DAFormer model. DAFormer: Domain-Adaptive Transformer DAFormer (Domain-Adaptive Transformer) represents a paradigm shift in Unsupervised Domain Adaptation (UDA) for semantic segmentation, moving away from conventional Convolutional Neural Network (CNN) backbones and feature alignment tricks toward leveraging the inherent domain generalization capabilities of the Transformer architecture. The work introduces architectural enhancements and novel training strategies that collectively achieve a substantial improvement in performance on benchmarks like GTA5 → Cityscapes. 1. Architectural Foundation: The MiT Encoder DAFormer is built upon a high-performance segmentation architecture, replacing the typical ResNet/VGG backbone with the Mix Transformer (MiT) encoder. Figure 5: DAFormer architecture for domain-adaptive semantic segmentation using transformer-based feature alignment and context-aware fusion 4 1.1. Mix Transformer (MiT) The MiT encoder, used in the SegFormer architecture, naturally benefits UDA due to its ability to capture global context via self-attention mechanisms. Unlike CNNs, which have local receptive fields, Transformers can model long-range dependencies across the entire input image. This global context is crucial because the semantic meaning of pixels in the target domain often depends heavily on distant elements in the scene (e.g., classifying a small road sign relies on understanding the surrounding road and sky). This global view makes the feature representation inherently more robust to local texture and style shifts common in domain gaps, allowing it to make more accurate predictions on unlabeled images in the target domain. 1.2. Context-Aware Feature Fusion The decoder utilizes a lightweight, context-aware mechanism that effectively fuses multi-scale features generated by the MiT encoder. This fusion is essential for recovering fine details necessary for accurate pixel-level segmentation boundaries. 2. Novel Training Strategies The architectural shift is complemented by three highly effective training strategies designed to maximize the domain robustness of the Transformer backbone, particularly for challenging classes. 2.1. Rare Class Sampling (RCS) The unsupervised adaptation process often suffers from a class-imbalance bias. Common classes (e.g., road, building, sky) are easily pseudo-labeled, leading to high confidence and strong alignment, while rare classes (e.g., traffic sign, bicycle, train) are poorly adapted. RCS addresses this issue by modifying the sampling distribution of the labeled source domain \(D_S\) used during adaptation. Images containing rare classes are sampled more frequently than under a uniform distribution. This ensures that both the adversarial and task losses receive sufficient contribution from minority classes, preventing them from being ignored during feature alignment. Let \(N_c\) denote the number of pixels belonging to class \(c\) in the source dataset. The sampling probability for image \(i\), denoted by \(P(i)\), is computed based on the class frequencies present in the image: \[P(i) = \frac{\sum_{c \in I_i} f_c^{-1}}{\sum_c f_c^{-1}}, \qquad f_c = \log(\tau + N_c)\] where \(I_i\) is the set of classes present in image \(i\), and \(\tau \ge 1\) is a hyperparameter that moderates the inverse frequency. This procedure effectively prioritizes images containing underrepresented classes, ensuring more robust feature learning across all categories. 2.2. Thing-Class ImageNet Feature Distance (T-CIFD) Transformers are typically initialized with weights pre-trained on large-scale classification datasets such as ImageNet. This pre-training is crucial for learning rich and transferable object representations for “thing” classes (objects with countable instances such as people or cars). However, domain adaptation can cause the model to drift away from these pretrained features. T-CIFD introduces a regularization term that preserves feature transferability for thing classes by minimizing the feature distance between the source-domain and target-domain representations, while applying this constraint only to thing classes. \[L_{\text{T-CIFD}} = \frac{1}{|C_{\text{thing}}|} \sum_{c \in C_{\text{thing}}} \left\| \mu(F_c^{\text{source}}) - \mu(F_c^{\text{target}}) \right\|_2^2\] where \(C_{\text{thing}}\) is the set of thing classes, and \(\mu(F_c)\) denotes the mean feature vector of all pixels belonging to class \(c\). This constraint prevents the feature extractor from drastically altering learned object representations, while still allowing “stuff” classes (e.g., road, sky) to adapt flexibly to the target domain. 2.3. Learning Rate Warmup Due to the sensitivity of Transformer models to initial training instability, DAFormer uses a simple but effective linear learning rate warmup at the beginning of the adaptation phase. This stabilizes the training process and is shown to significantly contribute to the final performance gain. By combining the powerful, context-aware MiT backbone with strategic training methods like RCS and T-CIFD, DAFormer achieved state-of-the-art performance, demonstrating that architecture and targeted regularization are more impactful than simple GAN-based alignment in modern UDA for semantic segmentation. Table 3: Per-class IoU and mean IoU for unsupervised domain adaptation from GTA5 to Cityscapes, comparing DAFormer with prior methods 4 With an mIoU of 68.3, DAFormer beats both CyCADA and advent with its transformer based architecture. As the foundational transformer based architecture model, it paved the way for future papers to build off of it. In fact, the DAFormer team also published Hierarchical Domain-invariant Representation Alignment (HDRA) which performed with 73.8 mIoU. Performance Comparison &amp; Conclusion The progression from CyCADA to DAFormer shows dramatic performance improvements in domain adaptation research. Testing on the standard GTA5 → Cityscapes benchmark reveals just how far the field has advanced: Method Backbone Architecture Type mIoU (%) CyCADA ResNet-101 CNN + GAN 39.5 Advent ResNet-101 CNN + Entropy 45.5 DAFormer MiT-B5 Transformer 68.3 CyCADA’s solution in bridging the domain gap was on the pixel-level foundation. It transformed GTA5 images to look like real photographs through style transfer, then trained on these “realistic” synthetic images. Thus by reducing low-level appearance differences (color, texture, lighting), CyCADA makes it easier for the CNN to recognize familiar patterns. However, the method is computationally expensive, requiring training complex GAN-based image translation networks. And more critically, perfect pixel-level alignment is near impossible. Real-world images have variations that can’t be captured by translating synthetic data. The CNN backbone also struggles to leverage global context, limiting how well features can align. ADVENT took a different approach through focusing on making the model’s predictions confident. By working directly in the output space and minimizing entropy, ADVENT achieved better results with far less computational overhead since it avoids the computational burden of image translation while addressing the core problem: uncertain predictions on target data. But ADVENT still uses a CNN backbone (ResNet-101) that relies on local receptive fields. So when low-level textures differ significantly between domains, CNNs can struggle to make confident predictions no matter how much the entropy loss tries to force confidence. This is where DAFormer introduces a major shift in the approach to architecture. By switching to a Transformer backbone, DAFormer gains the ability to capture global context through self-attention, making it naturally more robust to local appearance differences. The self-attention mechanism essentially lets the model consider the entire image when making predictions, which allows it to use spatial and structural relationships to make consistent predictions across domains. And through smart training strategies such as RCS, which ensures rare classes aren’t ignored during adaptation, it further increases the model’s ability in recognizing objects between images in different domains. This paradigm shift explains the jump from 45.4% to 68.3% in mIoU. As these unsupervised domain adaptation models drastically increase in performance with new architectures each year, it’s only a matter of time before we see these systems deployed on real roads. When CyCADA was first published in 2017, the state of the art model that trained on the target domain (not the source domain like our UDA models), only had 67.4 mIoU. Compare that to HDRA’s 2023 result training on the source domain at 73.8 mIoU. In order for vehicles to achieve true autonomy, they need rigorous training and many test runs in the real-world. However, with improved UDA models, this real-life test time can be drastically reduced. With these models, the models can be trained to align features between Day/Night, Clear/Foggy, and even US/India roads! While these different domains are very different, improvement in the models can lead to a future where the Tesla trained on the GTA5 dataset set in America can be deployed to China with minimal modifications. References [1] Ganin, Y., et al. “Domain-adversarial training of neural networks.” JMLR 2016. [2] Hoffman, J., et al. “CyCADA: Cycle-Consistent Adversarial Domain Adaptation.” ICML 2018. [3] Vu, T., et al. “ADVENT: Adversarial Entropy Minimization for Domain Adaptation in Semantic Segmentation.” CVPR 2019. [4] Hoyer, L., et al. “DAFormer: Improving Network Architectures and Training Strategies for Domain-Adaptive Semantic Segmentation.” CVPR 2022.]]></summary></entry></feed>
+<p>[5] Lu, J., &amp; Deng, J. (2025). Relation3D: Enhancing Relation Modeling for Point Cloud Instance Segmentation. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).</p>]]></content><author><name>Kayla Hamakawa, Alyssa Leung, Meryl Mathew, Angela Quan</name></author><summary type="html"><![CDATA[Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.]]></summary></entry></feed>
