@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation</title>
+
+    <meta name="description" content="Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This surv...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density...." property="og:description">
+    
+    
+        <meta content="http://0.0.0.0:4000/2025/12/12/team19-instruction-to-post.html" property="og:url">
+    
+<!--
+    
+        <meta content="Shelby Falde, Joshua Li, Alexander Chen" property="article:author">
+        <meta content="http://0.0.0.0:4000/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-12T00:00:00+00:00" property="article:published_time">
+        <meta content="http://0.0.0.0:4000/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://0.0.0.0:4000/CS163-Projects-2025Fall/2025/12/12/team19-instruction-to-post.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator (2022), which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN (2024), a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-12T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 12, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Shelby Falde, Joshua Li, Alexander Chen</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/12/team19-instruction-to-post.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator (2022), which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN (2024), a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#planet-the-classification-approach-2016" id="markdown-toc-planet-the-classification-approach-2016">PlaNet: The Classification Approach (2016)</a>    <ul>
+      <li><a href="#the-concept-of-geocells" id="markdown-toc-the-concept-of-geocells">The Concept of Geocells</a></li>
+      <li><a href="#architecture-and-sequence-learning" id="markdown-toc-architecture-and-sequence-learning">Architecture and Sequence Learning</a></li>
+    </ul>
+  </li>
+  <li><a href="#translocator-a-new-architecture-2022" id="markdown-toc-translocator-a-new-architecture-2022">TransLocator: A New Architecture (2022)</a>    <ul>
+      <li><a href="#transformers--segmentaion" id="markdown-toc-transformers--segmentaion">Transformers + Segmentaion</a></li>
+      <li><a href="#comparison-to-planet" id="markdown-toc-comparison-to-planet">Comparison to PlaNet</a></li>
+      <li><a href="#persisting-limitations" id="markdown-toc-persisting-limitations">Persisting Limitations</a></li>
+    </ul>
+  </li>
+  <li><a href="#pigeon-the-semantic-shift-2023" id="markdown-toc-pigeon-the-semantic-shift-2023">PIGEON: The Semantic Shift (2023)</a>    <ul>
+      <li><a href="#semantic-geocells" id="markdown-toc-semantic-geocells">Semantic Geocells</a></li>
+      <li><a href="#haversine-smoothing-loss" id="markdown-toc-haversine-smoothing-loss">Haversine Smoothing Loss</a></li>
+      <li><a href="#clip-pre-training--retrieval" id="markdown-toc-clip-pre-training--retrieval">CLIP Pre-training &amp; Retrieval</a></li>
+      <li><a href="#results" id="markdown-toc-results">Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#ethan-2024" id="markdown-toc-ethan-2024">ETHAN (2024)</a>    <ul>
+      <li><a href="#vision-language-models" id="markdown-toc-vision-language-models">Vision-Language Models:</a></li>
+      <li><a href="#chain-of-thought-geolocation" id="markdown-toc-chain-of-thought-geolocation">Chain-Of-Thought Geolocation</a></li>
+      <li><a href="#gps-module-prompting-strategy" id="markdown-toc-gps-module-prompting-strategy">GPS Module Prompting Strategy:</a></li>
+      <li><a href="#deriving-coordinates" id="markdown-toc-deriving-coordinates">Deriving Coordinates</a></li>
+      <li><a href="#results-1" id="markdown-toc-results-1">Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Image geolocation is the task of predicting the geographic coordinates (latitude and longitude) of a given image. While humans rely on specific landmarks or cultural context, training a machine to recognize any location on Earth is a massive classification and regression challenge.</p>
+
+<p>Early approaches relied on matching images to databases of landmarks, but these failed in “in the wild” scenarios where no distinct landmark is visible (e.g., a random road in rural Norway). Deep learning has since shifted this paradigm by learning global feature distributions and characteristics around the world.</p>
+
+<p>In this survey, we explore how architectures have evolved from Convolutional Neural Networks (CNNs) to Transformers and CLIP-based models, specifically focusing on how they handle the partitioning of the Earth and the loss functions used to train them.</p>
+
+<h2 id="planet-the-classification-approach-2016">PlaNet: The Classification Approach (2016)</h2>
+
+<p>The pioneering paper <em>Photo Geolocation with Convolutional Neural Networks</em> [1], known as <em>PlaNet</em>, framed geolocation not as a regression problem (predicting raw coordinates), but as a classification problem.</p>
+
+<h3 id="the-concept-of-geocells">The Concept of Geocells</h3>
+<p>To treat the world as a classification target, PlaNet subdivides the Earth into discrete regions called <em>Geocells</em>.</p>
+
+<p>However, a uniform grid doesn’t work well because photo distribution is not uniform since there are millions of photos of Paris, but very few of the middle of the ocean for example. PlaNet thus introduces <em>adaptive partitioning</em>:</p>
+
+<ol>
+  <li>Start with an S2 geometry grid.</li>
+  <li>Recursively subdivide cells that contain too many photos.</li>
+  <li>Stop when a cell reaches a target photo count.</li>
+</ol>
+
+<p>This results in a map where dense urban areas have tiny, precise cells, while oceans and deserts have massive cells.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/planet_geocells.png" alt="PlaNet Geocells" /></p>
+<p><em>Fig 1. Adaptive partitioning of the world into Geocells based on photo density [1].</em></p>
+
+<h3 id="architecture-and-sequence-learning">Architecture and Sequence Learning</h3>
+<p>PlaNet utilizes an <em>Inception V3</em> architecture to classify images into one of these 26,263 geocells.</p>
+
+<p>A key innovation in PlaNet was the use of <em>LSTMs (Long Short-Term Memory)</em> networks. Geolocation often happens in the context of a photo album. Knowing that the previous photo was taken at the Eiffel Tower heavily implies the current photo of a generic croissant is likely in Paris.</p>
+
+<p>The model then outputs a probability distribution</p>
+
+\[P(c_i | I)\]
+
+<p>over all geocells using the features extracted by the CNN backbone.</p>
+
+<h2 id="translocator-a-new-architecture-2022">TransLocator: A New Architecture (2022)</h2>
+
+<p>The next major advancement in tackling geolocation as a classification problem is introduced in the paper <em>Where in the World is this Image?
+Transformer-based Geo-localization in the Wild</em>. The paper proposes TransLocator, a fundamentally different model architecture to PlaNet that makes use of transformers and semantic segmentation maps [2].</p>
+
+<h3 id="transformers--segmentaion">Transformers + Segmentaion</h3>
+
+<p>The TransLocator uses a vision transformer (ViT) as the backbone of the model, and contains two parallel ViT branches. One branch’s input is the RGB image, and the other’s is a semantic segmentation map of the image, obtained from HRNet pretrained on ADE20K.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/translocator.png" alt="TransLocator" /></p>
+<p><em>Fig 2. Overview of the proposed model TransLocator</em> [2].</p>
+
+<p>Both the RGB image and segmentation map are first divided into 16x16 pixel patches and passed into a trainable linear layer to create a sequence of tokens with added positional embeddings and a CLS token. Then, the token sequences are passed into two parallel 12-layer transformer encoders which interact with each other through Multimodal Feature Fusion (MFF). In MFF, after each layer, the CLS tokens from each branch are summed together before being passed back into the patch tokens of subsequent layers. After passing through all 12-layers, the representations from each branch are combined together using an attentive fusion mechanism called global attention. The final representation is then fed into 4 parallel classifier heads, where 3 of them predict the image’s location at 3 different resolutions (coarse, middle, fine) and 1 of them predicts the image’s scene category (e.g. indoor, urban, rural). Cross-entropy loss is used for each head, and the model is trained end to end with a weighted sum of losses from each of the four heads as follows:</p>
+
+\[\mathcal{L}_{total}=(1-\alpha-\beta)\mathcal{L}_{geo}^{coarse}+\alpha\mathcal{L}_{geo}^{middle}+\beta\mathcal{L}_{geo}^{fine}+\gamma\mathcal{L}_{scene}\]
+
+<p>This approach of adding complementary tasks (coarse and middle resolution prediction, scene prediction) to the main task (fine resolution prediction) has been known to improve the results of the main task [2].</p>
+
+<h3 id="comparison-to-planet">Comparison to PlaNet</h3>
+
+<p>The backbone of the PlaNet model, as mentioned earlier, utilizes the <em>Inception V3</em>, a CNN based architecture with fixed receptor field sizes. The authors argue that in the TransLocator, the self attention mechanism in the ViT layers gives TransLocator the ability to aggregate information from the entire image, allowing it to learn small but essential visual cues often missed by CNNs. PlaNet also trains on geo-tagged RGB images alone, while TransLocator’s additional semantic approach allows it to be more robust to extreme differences in appearance not necessarily caused by location (e.g. weather or time of day). These theoretical improvements are backed up by the clear outperformance of PlaNet by TransLocator across every dataset and distance scale [2].</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Dataset</th>
+      <th style="text-align: center">Method</th>
+      <th style="text-align: right">Street (1 km)</th>
+      <th style="text-align: right">City (25 km)</th>
+      <th style="text-align: right">Region (200 km)</th>
+      <th style="text-align: right">Country (750 km)</th>
+      <th style="text-align: right">Continent (2500 km)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Im2GPS</strong></td>
+      <td style="text-align: center">PlaNet</td>
+      <td style="text-align: right">8.4%</td>
+      <td style="text-align: right">24.5%</td>
+      <td style="text-align: right">37.6%</td>
+      <td style="text-align: right">53.6%</td>
+      <td style="text-align: right">71.3%</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Im2GPS</strong></td>
+      <td style="text-align: center">TransLocator</td>
+      <td style="text-align: right"><strong>19.9%</strong></td>
+      <td style="text-align: right"><strong>48.1%</strong></td>
+      <td style="text-align: right"><strong>64.6%</strong></td>
+      <td style="text-align: right"><strong>75.6%</strong></td>
+      <td style="text-align: right"><strong>86.7%</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Im2GPS3k</strong></td>
+      <td style="text-align: center">PlaNet</td>
+      <td style="text-align: right">8.5%</td>
+      <td style="text-align: right">24.8%</td>
+      <td style="text-align: right">34.3%</td>
+      <td style="text-align: right">48.4%</td>
+      <td style="text-align: right">64.6%</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Im2GPS3k</strong></td>
+      <td style="text-align: center">TransLocator</td>
+      <td style="text-align: right"><strong>11.8%</strong></td>
+      <td style="text-align: right"><strong>31.1%</strong></td>
+      <td style="text-align: right"><strong>46.7%</strong></td>
+      <td style="text-align: right"><strong>58.9%</strong></td>
+      <td style="text-align: right"><strong>80.1%</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>YFCC4k</strong></td>
+      <td style="text-align: center">PlaNet</td>
+      <td style="text-align: right">5.6%</td>
+      <td style="text-align: right">14.3%</td>
+      <td style="text-align: right">22.2%</td>
+      <td style="text-align: right">36.4%</td>
+      <td style="text-align: right">55.8%</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>YFCC4k</strong></td>
+      <td style="text-align: center">TransLocator</td>
+      <td style="text-align: right"><strong>8.4%</strong></td>
+      <td style="text-align: right"><strong>18.6%</strong></td>
+      <td style="text-align: right"><strong>27.0%</strong></td>
+      <td style="text-align: right"><strong>41.1%</strong></td>
+      <td style="text-align: right"><strong>60.4%</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>YFCC26k</strong></td>
+      <td style="text-align: center">PlaNet</td>
+      <td style="text-align: right">4.4%</td>
+      <td style="text-align: right">11.0%</td>
+      <td style="text-align: right">16.9%</td>
+      <td style="text-align: right">28.5%</td>
+      <td style="text-align: right">47.7%</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>YFCC26k</strong></td>
+      <td style="text-align: center">TransLocator</td>
+      <td style="text-align: right"><strong>7.2%</strong></td>
+      <td style="text-align: right"><strong>17.8%</strong></td>
+      <td style="text-align: right"><strong>28.0%</strong></td>
+      <td style="text-align: right"><strong>41.3%</strong></td>
+      <td style="text-align: right"><strong>60.6%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Table 1. Geolocational accuracy of PlaNet vs TransLocator compared to several datasets and distance scales</em> [2].</p>
+
+<h3 id="persisting-limitations">Persisting Limitations</h3>
+
+<p>Upon analyzing the errors made by TransLocator, the authors found that the model could not properly locate images without enough geo-locating clues. For example, images of just a cherry blossom tree were not accurately located by TransLocator, as there are many major locations around the world where cherry blossom trees reside. Likewise, images without sufficient background clues, such as plain beaches or desserts, cannot be consistently accurately predicted [2].</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/translocator_errors.png" alt="TransLocator Error Examples" /></p>
+<p><em>Fig 3. Some examples of incorrectly geo-located images</em> [2].</p>
+
+<h2 id="pigeon-the-semantic-shift-2023">PIGEON: The Semantic Shift (2023)</h2>
+
+<p>The next leap forward comes from <em>PIGEON</em> (Pre-trained Image GEO-localization Network) [3]. This model was designed to compete against top human <em>GeoGuessr</em> players. Geoguessr is a popular browser game designed around humans guessing where you are in the world based on an image or 3D explorable space travelable via Google Streetview.</p>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/pigeon_diagram.png" alt="Pigeon Geocells" /></p>
+<p><em>Fig 4. Prediction pipeline and main contributions of PIGEON.</em></p>
+
+<h3 id="semantic-geocells">Semantic Geocells</h3>
+<p>PIGEON refines the geocell concept. While PlaNet split cells based purely on photo density, PIGEON incorporates <em>administrative boundaries</em>.</p>
+
+<ul>
+  <li><em>PlaNet:</em> Splits a cell if it has too many photos, regardless of borders.</li>
+  <li><em>PIGEON:</em> Tries to respect country/region borders. This creates “Semantic Geocells,” preventing the model from confusing two neighboring countries that might look similar but have different road markings or signage.</li>
+</ul>
+
+<p style="width: 800px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team19/naive_semantic_geocells.png" alt="Pigeon Diagram" /></p>
+<p><em>Fig 5.      a) Old Naive geocells           b) Pigeon’s semantic geocells [3].</em></p>
+
+<h3 id="haversine-smoothing-loss">Haversine Smoothing Loss</h3>
+<p>A major limitation of PlaNet’s classification approach is that it penalizes “near misses” just as harshly as “far misses.” If the model guesses a cell 1km away from the correct one, standard One-Hot encoding treats it the same as guessing a cell on a different continent.</p>
+
+<p>To fix this, PIGEON replaces standard labels with <em>Haversine Smoothing</em>. Instead of the correct cell being a <code class="language-plaintext highlighter-rouge">1</code> and all others <code class="language-plaintext highlighter-rouge">0</code>, neighboring cells get a partial label based on their physical distance to the image.</p>
+
+<p>First, they define the <strong>Haversine Distance</strong> between two points \(\mathbf{p}_1\) and \(\mathbf{p}_2\) on Earth:</p>
+
+\[\text{Hav}(\mathbf{p}_1, \mathbf{p}_2) = 2r \arcsin \left( \sqrt{\sin^2 \left( \frac{\phi_2 - \phi_1}{2} \right) + \cos(\phi_1) \cos(\phi_2) \sin^2 \left( \frac{\lambda_2 - \lambda_1}{2} \right)} \right)\]
+
+<p>They then generate a “smoothed” label \(y_{n,i}\) for every geocell \(i\) relative to the true image location \(\mathbf{x}_n\). Cells closer to the true location receive a higher value:</p>
+
+\[y_{n,i} = \exp \left( - \frac{\text{Hav}(\mathbf{g}_i, \mathbf{x}_n) - \text{Hav}(\mathbf{g}_n, \mathbf{x}_n)}{\tau} \right)\]
+
+<p>Finally, the Loss Function \(\mathcal{L}_n\) minimizes the difference between the predicted probability \(p_{n,i}\) and this smoothed distance label:</p>
+
+\[\mathcal{L}_n = - \sum_{g_i \in G} \log(p_{n,i}) \cdot y_{n,i}\]
+
+<p>This ensures that the gradient penalty is lower if the model predicts a location that is geographically close to the target, effectively teaching the model a continuous topology of the Earth.</p>
+
+<h3 id="clip-pre-training--retrieval">CLIP Pre-training &amp; Retrieval</h3>
+<p>PIGEON utilizes <em>CLIP (Contrastive Language-Image Pre-training)</em> from OpenAI as its backbone. CLIP is trained on 400 million image-text pairs, so it already possesses a deep understanding of visual concepts, even before it is fine-tuned for location. It also introduces <em>intra-cell retrieval</em> to refine the exact location by looking up similar images within the predicted geocell.</p>
+
+<h3 id="results">Results</h3>
+<p>After several other finetuning features discussed in the paper but not here, <em>PIGEON</em> achieved landmark results and near pefect accuracy on country and continent classification:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Ablation Configuration [Distance (% @ km)]</th>
+      <th style="text-align: right">Street (1 km)</th>
+      <th style="text-align: right">City (25 km)</th>
+      <th style="text-align: right">Region (200 km)</th>
+      <th style="text-align: right">Country (750 km)</th>
+      <th style="text-align: right">Continent (2,500 km)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em><code class="language-plaintext highlighter-rouge">PIGEON (Full Model)</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">5.36</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">40.36</code></em></td>
+      <td style="text-align: right">78.28</td>
+      <td style="text-align: right">94.52</td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">98.56</code></em></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Freezing Last CLIP Layer</td>
+      <td style="text-align: right">4.84</td>
+      <td style="text-align: right">39.86</td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">78.98</code></em></td>
+      <td style="text-align: right">94.76</td>
+      <td style="text-align: right">98.48</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Hierarchical Refinement</td>
+      <td style="text-align: right">1.32</td>
+      <td style="text-align: right">34.96</td>
+      <td style="text-align: right">78.48</td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">94.82</code></em></td>
+      <td style="text-align: right">98.48</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Contrastive Pretraining</td>
+      <td style="text-align: right">1.24</td>
+      <td style="text-align: right">34.54</td>
+      <td style="text-align: right">76.36</td>
+      <td style="text-align: right">93.36</td>
+      <td style="text-align: right">97.94</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Semantic Geocells</td>
+      <td style="text-align: right">1.18</td>
+      <td style="text-align: right">33.22</td>
+      <td style="text-align: right">75.42</td>
+      <td style="text-align: right">93.42</td>
+      <td style="text-align: right">98.16</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Multi-task Prediction</td>
+      <td style="text-align: right">1.10</td>
+      <td style="text-align: right">32.74</td>
+      <td style="text-align: right">75.14</td>
+      <td style="text-align: right">93.00</td>
+      <td style="text-align: right">97.98</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Fine-tuning Last Layer</td>
+      <td style="text-align: right">1.10</td>
+      <td style="text-align: right">32.50</td>
+      <td style="text-align: right">75.32</td>
+      <td style="text-align: right">92.92</td>
+      <td style="text-align: right">98.00</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Four-image Panorama</td>
+      <td style="text-align: right">0.92</td>
+      <td style="text-align: right">24.18</td>
+      <td style="text-align: right">59.04</td>
+      <td style="text-align: right">82.84</td>
+      <td style="text-align: right">92.76</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Haversine Smoothing</td>
+      <td style="text-align: right">1.28</td>
+      <td style="text-align: right">24.08</td>
+      <td style="text-align: right">55.38</td>
+      <td style="text-align: right">80.20</td>
+      <td style="text-align: right">92.00</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Table 2. PIGEON Model results on a holdout dataset of 5,000 Street View locations [3].</em></p>
+
+<p style="width: 800px; max-width: 100%;">While some may call the above results unimpressive, they then compare PIGEON’s results to ranked players on GeoGuessr to more fairly contextualize results:
+<img src="/CS163-Projects-2025Fall/assets/images/team19/geoguessr_context.png" alt="GeoGuessr Context" /></p>
+<p><em>Fig 6. PIGEON Model Comparison to Ranked GeoGuessr players. Champion Division being top 0.01% of all players.</em></p>
+
+<h2 id="ethan-2024">ETHAN (2024)</h2>
+
+<p>ETHAN introduces a framework that leverages existing large vision language models(LVLMs). While PlaNet and PIGEON achieved impressive results, they operate as pattern matching systems, relying on visual features tied to geocells. ETHAN, instead, attempts to mimic human geoguessing strategies by analyzing visual and contextual cues such as architectural, natural, and cultural elements. It replicates this reasoning process through chain-of-thinking prompting built on top of existing VLMs.</p>
+
+<h3 id="vision-language-models">Vision-Language Models:</h3>
+
+<p>ETHAN is a prompting framework that relies on existing VLM models. They test their prompting framework on top of GPT-4o and LLaVA. These models have the architecture of Vision Encoder + projection + generative language model, combining context from image and text tokens. Ethan leverages this pre-existing knowledge without additional training</p>
+
+<h3 id="chain-of-thought-geolocation">Chain-Of-Thought Geolocation</h3>
+
+<p>The core innovation lies in the use of chain-of-thought(CoT) prompting that guide VLMs through structured geolocation reasoning. ETHAN produces intermediate reasoning steps that mirror human geographic deduction.</p>
+
+<p>A typical reasoning hierarchy looks like the following:</p>
+
+<ol>
+  <li>Visual clue extraction: architecture, vegetation, road signs, infrastructure</li>
+  <li>Geographic constraint Reasoning: apply world knowledge to narrow possibilities</li>
+  <li>Progressive Refinement: Continent-&gt;Country-&gt;Region-&gt;Coordinates</li>
+  <li>Uncertainty Quantification: Express confidence and alternate hypotheses</li>
+</ol>
+
+<h3 id="gps-module-prompting-strategy">GPS Module Prompting Strategy:</h3>
+
+<p>ETHAN introduces the GPS (Geolocation Prompting Strategy) module, which structures how queries are presented to VLMs. Since VLMs are general-purpose models not specifically trained for geolocation, careful prompt design is crucial for strong geographic reasoning.</p>
+
+<p>A typical prompt looks like:</p>
+<blockquote>
+  <p>You are the leading expert in geolocation research. You
+have been presented with an image, and your task is to
+determine its precise geolocation, specifically identifying
+the country it was taken in. To accomplish this, examine the
+image for broad geographic indicators such as architectural
+styles, natural landscapes, language on signs, and culturally
+distinctive elements to suggest a particular country. Narrow
+down the location by identifying regional characteristics
+like specific flora and fauna, types of vehicles, and road
+signs that can indicate a particular region or subdivision
+within the country. Focus on highly specific details within
+the image, such as unique landmarks, street names, or
+business names, to pinpoint an exact location. For instance,
+if the place is address, with coordinates lat, lon, explain
+how these elements led you to this conclusion by analyzing
+visual clues, cross-referencing data with known geographic
+information, and validating your findings with additional
+sources</p>
+</blockquote>
+
+<p>The GPS module can be enhanced with few-shot examples, providing 2-3 sample images with reasoning chains to prime the VLM’s logical patterns and calibrate confidence levels.</p>
+
+<h3 id="deriving-coordinates">Deriving Coordinates</h3>
+
+<p>To calculate coordinates form textual reasoning, ETHAN employs several strategies:</p>
+<ol>
+  <li>Direct Coordinate Prediction: VLMs output coordinates for recognized landmarks</li>
+  <li>Geocoding Integration: Convert place names (“Stockholm, Sweden”) to coordinates via APIs</li>
+  <li>Hierarchical Averaging: Use region centroids when only broad areas are identified</li>
+  <li>Multi-Hypothesis Handling: Process multiple candidates with associated probabilities</li>
+</ol>
+
+<h3 id="results-1">Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Method / Distance (% @ km)</th>
+      <th style="text-align: right">Street (1 km)</th>
+      <th style="text-align: right">City (25 km)</th>
+      <th style="text-align: right">Region (200 km)</th>
+      <th style="text-align: right">Country (750 km)</th>
+      <th style="text-align: right">Continent (2,500 km)</th>
+      <th style="text-align: right">Avg Dist (km)</th>
+      <th style="text-align: right">Avg Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">StreetClip</td>
+      <td style="text-align: right">4.9</td>
+      <td style="text-align: right">39.5</td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">77.8</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">93.0</code></em></td>
+      <td style="text-align: right">97.5</td>
+      <td style="text-align: right">120.5</td>
+      <td style="text-align: right">3500.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GeoClip</td>
+      <td style="text-align: right">3.6</td>
+      <td style="text-align: right">38.4</td>
+      <td style="text-align: right">75.2</td>
+      <td style="text-align: right">92.4</td>
+      <td style="text-align: right">97.2</td>
+      <td style="text-align: right">135.2</td>
+      <td style="text-align: right">3700.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em><code class="language-plaintext highlighter-rouge">-GPT4o-</code></em></td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Zero-shot</td>
+      <td style="text-align: right">5.5</td>
+      <td style="text-align: right">40.8</td>
+      <td style="text-align: right">71.0</td>
+      <td style="text-align: right">85.0</td>
+      <td style="text-align: right">93.0</td>
+      <td style="text-align: right">160.3</td>
+      <td style="text-align: right">3800.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Few-shot</td>
+      <td style="text-align: right">6.2</td>
+      <td style="text-align: right">41.5</td>
+      <td style="text-align: right">72.5</td>
+      <td style="text-align: right">86.5</td>
+      <td style="text-align: right">94.5</td>
+      <td style="text-align: right">155.0</td>
+      <td style="text-align: right">3900.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">CoT</td>
+      <td style="text-align: right">6.0</td>
+      <td style="text-align: right">42.0</td>
+      <td style="text-align: right">73.0</td>
+      <td style="text-align: right">87.0</td>
+      <td style="text-align: right">95.0</td>
+      <td style="text-align: right">150.7</td>
+      <td style="text-align: right">4000.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em><code class="language-plaintext highlighter-rouge">-LLaVA-</code></em></td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Zero-shot</td>
+      <td style="text-align: right">7.0</td>
+      <td style="text-align: right">43.2</td>
+      <td style="text-align: right">74.0</td>
+      <td style="text-align: right">88.0</td>
+      <td style="text-align: right">96.0</td>
+      <td style="text-align: right">140.7</td>
+      <td style="text-align: right">4100.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Few-shot</td>
+      <td style="text-align: right">6.5</td>
+      <td style="text-align: right">42.8</td>
+      <td style="text-align: right">74.5</td>
+      <td style="text-align: right">89.5</td>
+      <td style="text-align: right">97.5</td>
+      <td style="text-align: right">137.5</td>
+      <td style="text-align: right">4200.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">CoT</td>
+      <td style="text-align: right">7.2</td>
+      <td style="text-align: right">44.5</td>
+      <td style="text-align: right">76.0</td>
+      <td style="text-align: right">90.0</td>
+      <td style="text-align: right">98.0</td>
+      <td style="text-align: right">135.2</td>
+      <td style="text-align: right">4300.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">GeoSpy</td>
+      <td style="text-align: right">25.5</td>
+      <td style="text-align: right">53.7</td>
+      <td style="text-align: right">74.1</td>
+      <td style="text-align: right">89.4</td>
+      <td style="text-align: right">98.3</td>
+      <td style="text-align: right">110.3</td>
+      <td style="text-align: right">4400.0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em><code class="language-plaintext highlighter-rouge">ETHAN</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">27.0</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">55.0</code></em></td>
+      <td style="text-align: right">75.5</td>
+      <td style="text-align: right">91.2</td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">99.0</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">105.0</code></em></td>
+      <td style="text-align: right"><em><code class="language-plaintext highlighter-rouge">4600.0</code></em></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Table 3. Results of ETHAN Prompting framework with SOTA LVLMs on custom dataset[4].</em></p>
+
+<p>ETHAN performs strongly, with high accuracy in country and continent classification, on par with Pigeon. As compared to previous strategies, ETHAN benefits from increased interpretability, zero-shot generalization, but has higher computational costs as VLM inference is slower. Additionally, it can suffer from hallucination risks where generative model recognizes non-existent models or applies incorrect assumptions.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The progression from PlaNet to ETHAN illustrates a fundamental shift in image geolocation architectures. Early CNN-based approaches like PlaNet established geocell classification as a viable framework, while TransLocator demonstrated the advantages of transformer architectures and multi-modal inputs through semantic segmentation.</p>
+
+<p>Future work will likely focus on hybrid architectures that combine the computational efficiency of learned embeddings with the reasoning capabilities of VLMs. Possible research directions include developing loss functions that better capture hierarchical geographic relationships, improving geocell partitioning strategies that balance semantic coherence with training efficiency, and addressing the persistent challenge of performance degradation in underrepresented geographic regions where training data remains sparse.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] Weyand, Tobias, Ilya Kostrikov, and James Philbin. “Planet-photo geolocation with convolutional neural networks.” <em>European Conference on Computer Vision</em>. Springer, Cham, 2016.</p>
+
+<p>[2] Pramanick, Shraman, et al. “Where in the World is this Image? Transformer-based Geo-localization in the Wild.” 	arXiv:2204.13861, 2022. https://doi.org/10.48550/arXiv.2204.13861</p>
+
+<p>[3] Haas, Lukas, et al. “PIGEON: Predicting Image Geolocations.” <em>arXiv preprint</em> arXiv:2307.05845, 2023. https://doi.org/10.48550/arXiv.2307.05845 (Accepted at CVPR 2024.)</p>
+
+<p>[4] Liu, Yi, et al. “Image-Based Geolocation Using Large Vision-Language Models.” 	arXiv:2408.09474, 2024. 
+https://doi.org/10.48550/arXiv.2408.09474</p>
+
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html">&larr; Street-view Semantic Segmentation</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/12/team46-UDA-semantic-segmentation.html">Unsupervised Domain Adaptation for Semantic Segmentation &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>

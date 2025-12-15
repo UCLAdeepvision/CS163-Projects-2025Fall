@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>功能验证清单 - PR Review Tools</title>
+
+    <meta name="description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="功能验证清单 - PR Review Tools" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Course projects for UCLA CS163, Deep Learning in Compuver Vision" property="og:description">
+    
+    
+        <meta content="http://0.0.0.0:4000/FEATURE_CHECKLIST.html" property="og:url">
+    
+<!--
+     -->
+
+    <!-- 
+    
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://0.0.0.0:4000/CS163-Projects-2025Fall/FEATURE_CHECKLIST.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="功能验证清单 - PR Review Tools">
+
+    
+        <meta name="twitter:description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="功能验证清单---pr-review-tools">功能验证清单 - PR Review Tools</h1>
+
+<h2 id="-用户要求对照表">✅ 用户要求对照表</h2>
+
+<h3 id="核心功能">核心功能</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />列出所有PR并允许合并</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />运行Docker预览网站</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />创建临时分支审查PR</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />只接受assets/和_posts/下的文件</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />交互式网页界面</li>
+</ul>
+
+<h3 id="git保护">Git保护</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />审查工具文件不被添加到git</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />pr_review_tools文件夹不会被覆盖
+    <ul>
+      <li>所有git clean命令都有 <code class="language-plaintext highlighter-rouge">-e pr_review_tools</code> 排除</li>
+      <li>.gitignore只忽略pr_data.json和缓存文件</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Ctrl+C时自动清理临时分支</li>
+</ul>
+
+<h3 id="编辑功能">编辑功能</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Edit Mode支持手动修改文件</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />追踪所有修改（修改、添加、删除）</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />自动检测文件状态</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Additional comment框</li>
+</ul>
+
+<h3 id="github集成">GitHub集成</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />自动生成的comment用英文</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />接受PR后从本地列表移除</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />刷新PR列表只保留open的</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />接受PR后自动push到GitHub</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />接受PR后自动关闭GitHub PR</li>
+</ul>
+
+<h2 id="-关键保护机制">🔒 关键保护机制</h2>
+
+<h3 id="1-gitignore-保护">1. .gitignore 保护</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pr_review_tools/pr_data.json      # 只忽略缓存
+pr_review_tools/__pycache__/      # 只忽略Python缓存
+pr_review_tools/*.pyc             # 只忽略编译文件
+</code></pre></div></div>
+<p>✅ 不忽略整个文件夹</p>
+
+<h3 id="2-git-clean-保护">2. git clean 保护</h3>
+<p>所有清理命令都使用：</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clean <span class="nt">-fd</span> <span class="nt">-e</span> pr_review_tools
+              ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+              排除pr_review_tools
+</code></pre></div></div>
+
+<p>位置：</p>
+<ul>
+  <li>pr_review_server.py:255 (cleanup_branch)</li>
+  <li>pr_review_server.py:290 (cleanup_on_exit)</li>
+  <li>pr_review_server.py:405 (prepare_thread)</li>
+  <li>start.sh:33 (cleanup function)</li>
+</ul>
+
+<h3 id="3-文件过滤保护">3. 文件过滤保护</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 只接受这两个目录
+</span><span class="k">if</span> <span class="n">f</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'assets/'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">f</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'_posts/'</span><span class="p">):</span>
+    <span class="n">valid_files</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">invalid_files</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-完整工作流">🔄 完整工作流</h2>
+
+<h3 id="接受pr的自动化流程">接受PR的自动化流程</h3>
+<ol>
+  <li>✅ 合并到main分支</li>
+  <li>✅ 从列表中移除</li>
+  <li>✅ 生成英文审查报告</li>
+  <li>✅ 发布到GitHub</li>
+  <li>✅ 关闭GitHub PR</li>
+  <li>✅ 自动push到远程</li>
+</ol>
+
+<h3 id="edit-mode完整追踪">Edit Mode完整追踪</h3>
+<ol>
+  <li>✅ 检测修改的文件 (✏️)</li>
+  <li>✅ 检测添加的文件 (➕)</li>
+  <li>✅ 检测删除的文件 (➖)</li>
+  <li>✅ 分类显示在界面</li>
+  <li>✅ 分类显示在GitHub评论</li>
+</ol>
+
+<h2 id="-验证结果">📊 验证结果</h2>
+
+<h3 id="git-clean-保护验证">Git Clean 保护验证</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">grep</span> <span class="nt">-r</span> <span class="s2">"git clean"</span> pr_review_tools/
+所有4处都有 <span class="nt">-e</span> pr_review_tools ✅
+</code></pre></div></div>
+
+<h3 id="文件过滤验证">文件过滤验证</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">grep</span> <span class="s2">"startswith('assets/'"</span> pr_review_tools/pr_review_server.py
+找到1处，逻辑正确 ✅
+</code></pre></div></div>
+
+<h3 id="关闭pr验证">关闭PR验证</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">grep</span> <span class="s2">"close_github_pr"</span> pr_review_tools/pr_review_server.py
+定义: line 123 ✅
+调用: line 692 ✅
+</code></pre></div></div>
+
+<h3 id="自动push验证">自动Push验证</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">grep</span> <span class="s2">"git push origin main"</span> pr_review_tools/pr_review_server.py
+自动执行: line 701 ✅
+失败提示: line 708 ✅
+</code></pre></div></div>
+
+<h2 id="-所有用户要求已满足">🎯 所有用户要求已满足！</h2>
+
+<p>✅ 所有功能已实现
+✅ 所有保护机制已到位
+✅ pr_review_tools文件夹不会被覆盖
+✅ 工作流完全自动化</p>
+
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>

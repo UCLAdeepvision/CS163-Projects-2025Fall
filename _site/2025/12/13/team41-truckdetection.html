@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Computer Vision for Medium/Heavy-Duty Vehicle Detection via Satellite Imagery</title>
+
+    <meta name="description" content="We fine-tuned a ResNet50-FPN detector on the DOTA aerial dataset and applied it to Google satellite tiles to locate medium/heavy-duty truck parking clusters ...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Computer Vision for Medium/Heavy-Duty Vehicle Detection via Satellite Imagery" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="We fine-tuned a ResNet50-FPN detector on the DOTA aerial dataset and applied it to Google satellite tiles to locate medium/heavy-duty truck parking clusters for EV charging planning." property="og:description">
+    
+    
+        <meta content="http://0.0.0.0:4000/2025/12/13/team41-truckdetection.html" property="og:url">
+    
+<!--
+    
+        <meta content="Rafi Zahedi, Aryan Gupta, Jace Kasen, Jacob Young" property="article:author">
+        <meta content="http://0.0.0.0:4000/about/" property="article:author">
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="http://0.0.0.0:4000/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://0.0.0.0:4000/CS163-Projects-2025Fall/2025/12/13/team41-truckdetection.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Computer Vision for Medium/Heavy-Duty Vehicle Detection via Satellite Imagery">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>We fine-tuned a ResNet50-FPN detector on the DOTA aerial dataset and applied it to Google satellite tiles to locate medium/heavy-duty truck parking clusters for EV charging planning.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Computer Vision for Medium/Heavy-Duty Vehicle Detection via Satellite Imagery</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name">Rafi Zahedi, Aryan Gupta, Jace Kasen, Jacob Young</span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team41-truckdetection.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>We fine-tuned a ResNet50-FPN detector on the DOTA aerial dataset and applied it to Google satellite tiles to locate medium/heavy-duty truck parking clusters for EV charging planning.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#1-introduction" id="markdown-toc-1-introduction">1. Introduction</a></li>
+  <li><a href="#2-dataset-preparation" id="markdown-toc-2-dataset-preparation">2. Dataset Preparation</a>    <ul>
+      <li><a href="#21-configuration-and-dependencies" id="markdown-toc-21-configuration-and-dependencies">2.1. Configuration and dependencies</a></li>
+      <li><a href="#22-image-tilling-splitting" id="markdown-toc-22-image-tilling-splitting">2.2. Image tilling/ splitting</a></li>
+      <li><a href="#23-coco-annotation-construction" id="markdown-toc-23-coco-annotation-construction">2.3. COCO annotation construction</a></li>
+      <li><a href="#24-pytorch-dataset-and-dataloaders" id="markdown-toc-24-pytorch-dataset-and-dataloaders">2.4. PyTorch dataset and DataLoaders</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-model-architecture--training" id="markdown-toc-3-model-architecture--training">3. Model Architecture &amp; Training</a>    <ul>
+      <li><a href="#31-resnet50" id="markdown-toc-31-resnet50">3.1. ResNet50</a></li>
+      <li><a href="#32-feature-pyramid-network-fpn" id="markdown-toc-32-feature-pyramid-network-fpn">3.2. Feature pyramid network (FPN)</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-google-satellite-tile-extraction" id="markdown-toc-4-google-satellite-tile-extraction">4. Google satellite tile extraction</a></li>
+  <li><a href="#5-inference--results" id="markdown-toc-5-inference--results">5. Inference &amp; Results</a>    <ul>
+      <li><a href="#51-model-configuration" id="markdown-toc-51-model-configuration">5.1. Model configuration</a></li>
+      <li><a href="#52-google-satellite-tiling-for-inference" id="markdown-toc-52-google-satellite-tiling-for-inference">5.2. Google satellite tiling for inference</a></li>
+    </ul>
+  </li>
+  <li><a href="#6-conclusion-and-future-work" id="markdown-toc-6-conclusion-and-future-work">6. Conclusion and future work</a></li>
+  <li><a href="#7-references" id="markdown-toc-7-references">7. References</a></li>
+</ul>
+
+<p><strong>Computer Vision for Medium/Heavy-Duty Vehicle Detection via Satellite Imagery</strong></p>
+
+<p><strong>Group members:</strong></p>
+
+<p>Rafi Zahedi (805947697)</p>
+
+<p>Aryan Gupta (705943020)</p>
+
+<p>Jace Kasen (205 592 128)</p>
+
+<p>Jacob Young (205 934 037)</p>
+
+<h2 id="1-introduction">1. Introduction</h2>
+
+<p>The transportation sector is undergoing a rapid transition toward electrification, with medium- and heavy-duty (MD/HD) vehicles representing one of the most critical and challenging segments to decarbonize. As shown in Fig. 1, these vehicles including Class 3–8 trucks and buses, all above 10,000 lbs GVWR constitute a major share of freight movement in the United States and have a disproportionately large impact on emissions, air quality, and energy demand. California alone hosts approximately 1.8 million trucks, yet as of late 2022 only 1,943 of them were zero-emission, underscoring an enormous electrification gap that must be bridged in the coming decade. Projections show that the state may add 510,000 zero-emission trucks by 2035, scaling to nearly 1.6 million by 2050.</p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team41/image1.png" alt="A chart of different types of trucksAI-generated content may be incorrect." /></p>
+
+<p><strong>Fig 1. Vehicle classes in the US</strong></p>
+
+<p>A crucial challenge is determining where charging infrastructure should be located to support MD/HD electric vehicle (EV) fleet operations, especially for vehicles that predominantly park outdoors. Satellite imagery offers a scalable and powerful tool to detect the location of MD/HD vehicles before the conversion to the electric models. This helps to detect the high-density locations where are  convenient choices to install the charging infrastructure.</p>
+
+<p>This project leverages these properties by training a deep learning model on the DOTA dataset (one of the most frequently used high-resolution aerial imagery datasets with labeled large vehicles), and then applying that model to real-world Google satellite imagery.</p>
+
+<p>Deep learning architectures ResNet-50 with a Feature Pyramid Network (FPN) is well suited for this task because they extract multiscale features and preserve object visibility across wide size variations. Below is the pipeline of this project:</p>
+
+<ol>
+  <li>
+    <p>Extract and preprocess the DOTA dataset, focusing on MD/HD vehicle classes.</p>
+  </li>
+  <li>
+    <p>Convert annotations to a PyTorch-ready dataset format compatible with modern detectors.</p>
+  </li>
+  <li>
+    <p>Fine-tune a ResNet50-FPN model to learn vehicle features under varying orientations and scales.</p>
+  </li>
+  <li>
+    <p>Apply the trained detector to Google satellite imagery to identify real truck parking clusters across California.</p>
+  </li>
+</ol>
+
+<p>In this project, we built a complete satellite-image detection pipeline to identify MD/HD vehicles for EV-charging planning. We first prepared the DOTA aerial dataset and converted it into a PyTorch-ready COCO format. Using this data, we fine-tuned a Faster R-CNN model with a ResNet-50 + FPN backbone for multi-class vehicle detection. After training the model for 20 epochs, we applied it to a custom Google Maps satellite dataset that we generated by tiling the UCLA campus area—requiring 2,044 image queries. Each tile was analyzed by the model to count MD/HD vehicles, and the results were stored in a CSV file along with geographic coordinates. This allowed me to create a spatial heat map of truck density, which can support future analysis of where heavy-duty EV charging infrastructure may be needed.</p>
+
+<h2 id="2-dataset-preparation">2. Dataset Preparation</h2>
+
+<p>This section describes the pipeline implemented to convert the DOTA benchmark into a PyTorch-ready classification dataset. The original DOTA dataset consists of very large aerial images, which are annotated with bounding box polygons. Some examples of the object categories include planes, vehicles, and ships. The issue with this dataset is that the images are too large to be fed directly into most deep learning models, and the current annotation format is not applicable for standard PyTorch workflows. The script created provides a solution through tiling large images, converting annotations into COCO format, and creating a PyTorch dataset and dataloader for multi-label classification. <a href="https://colab.research.google.com/drive/1vWBr6rjQKc_69pvNUING5zZYZ4pQzVtR?usp=sharing">code</a></p>
+
+<h3 id="21-configuration-and-dependencies">2.1. Configuration and dependencies</h3>
+
+<p>​It starts by defining some basic configuration settings that describe where the data lives and where outputs should go. One path points to the overall project directory, another points to the location of the original dataset, which is assumed to contain subfolders for images and their corresponding label files. A separate output directory is specified for all generated results, such as processed images and annotation files, which are stored together in a dedicated folder for the PyTorch‑ready dataset.</p>
+
+<p>​A fixed list of DOTA categories is defined, and afterwards, two mappings are created: CAT2ID and ID2CAT. These mappings are used consistently throughout the pipelines, especially in constructing COCO annotations and building multi-label targets.</p>
+
+<h3 id="22-image-tilling-splitting">2.2. Image tilling/ splitting</h3>
+
+<p>The first major processing step is tilling the original high-resolution DOTA images into smaller patches. The function split_dota_split handles this for a given split. Three main tiling parameters are defined, which are subsize, gap, and threshold. Gap is the overlap between adjacent tiles,set to 200 pixels; threshold is the minimum fraction of object area that must remain inside a tile for it to be kept. Lastly, the subsize is the tile height/width, set to 1024 pixels. If DOTA_devkit is available, the script constructs a splitbase object using these parameters and invokes its splitdata method. This operation reads from DOTA_ROOT/{split_name} and writes tiles images and corresponding label files into OUTPUT_ROOT/{split)name}_split, preserving the original annotation but clipped to tile boundaries when necessary.</p>
+
+<p>​Tiling serves two purposes: it makes the input manageable for neural networks and increases the effective number of training examples, as each large image yields multiple overlapping tiles.</p>
+
+<h3 id="23-coco-annotation-construction">2.3. COCO annotation construction</h3>
+
+<p>​Once the image tiles have been created, a conversion function turns this tiled dataset into COCO-style JSON annotation files. It assumes a directory structure where one folder contains all tiled images and another folder contains the corresponding text label files. The function goes through every image, records basic information such as unique identifier, file, name, width, and heights, and uses this to build the images section of the COCO dictionary.</p>
+
+<p>​For each image, it looks up a matching label file. When a label file is present, it is parsed to extract a set of annotated objects, each described by a quadrilateral polygon and a category name. A helper routine then converts each polygon into an axis-aligned bounding box by finding the minimum and maximum x and y coordinates, and also computes the area of that box.</p>
+
+<p>​If an object’s category is part of the predefined class list, the function creates a COCO annotation entry containing a unique annotation id, the image id, the category id, the bounding box, the area, and escrowed flag, and a segmentation field holding the flattened polygon coordinates. All such entries together form the annotations section, while the fixed list of categories becomes the categories section. The combined images, annotation, and categories data structures are then written out as a COCO-style JSON file in an annotations directory.</p>
+
+<h3 id="24-pytorch-dataset-and-dataloaders">2.4. PyTorch dataset and DataLoaders</h3>
+
+<p>​A custom dataset class is used to present the processed tiles in a format compatible with PyTorch. It supports a main way of obtaining labels. It reads a COCO-style annotation file, builds a mapping from each image to all the object categories it contains, and then converts that information into a multi-labeled target vector. This lets a single tile be labeled with multiple object types at once.</p>
+
+<h2 id="3-model-architecture--training">3. Model Architecture &amp; Training</h2>
+
+<h3 id="31-resnet50">3.1. ResNet50</h3>
+
+<p>Accurate placement of MD/HD EV charging infrastructure requires reliable data on current truck parking density. We’re using the ResNet50 convolutional network as the backbone for feature extraction, combined with a FPN to handle the scale variation and small object size you get with geospatial images.</p>
+
+<p>Our project needs high precision because infrastructure planning is critical. While ResNet18 was initially suggested as a baseline, we went with ResNet50 to maximize feature robustness, which matters a lot when you’re working with the subtle visual differences in aerial imagery.</p>
+
+<p>ResNet50 has significantly more learnable parameters (23.5 million vs. 11.7 million) and uses the more complex Bottleneck Block design, compared to ResNet18’s simpler Basic Block. This architectural difference gives us two key advantages for our task:</p>
+
+<ol>
+  <li>
+    <p>Distinguishing a semi-trailer (HD, Class 8) from a large box truck (MD, Class 6) in a low-contrast satellite image means detecting subtle features. The greater depth and parameter count of ResNet50 let it learn a richer, more discriminative representation needed for high-accuracy sub-classification of vehicle types, which is essential for accurate power demand mapping.</p>
+  </li>
+  <li>
+    <p>While ResNet18 offers faster inference, the project’s success depends on the accuracy of the detection and classification. The marginal increase in training time for ResNet50 is worth it for the substantial gain in detection accuracy.</p>
+  </li>
+</ol>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team41/image2.png" alt="A diagram of a block diagramAI-generated content may be incorrect." /><br />
+<strong>Fig 2. ResNet50 architecture description</strong></p>
+
+<h3 id="32-feature-pyramid-network-fpn">3.2. Feature pyramid network (FPN)</h3>
+
+<p>Regardless of the backbone depth, the deepest layers of any CNN lose significant spatial resolution (down to 1/32 the size of the input image). For detecting tiny objects like a truck spanning 20×50 pixels, this downsampling kills your performance. The FPN is integrated as the network “neck” to solve this multi-scale detection problem.</p>
+
+<p>FPN builds a feature pyramid by combining two pathways:</p>
+
+<ul>
+  <li>Bottom-up Pathway: The standard feed-forward pass (from the ResNet50 backbone). Resolution decreases, but the feature maps become semantically strong (contextual).</li>
+  <li>Top-down Pathway: High-level semantic features from deep layers are upsampled.</li>
+  <li>Lateral Connections: The upsampled features are fused with the spatially precise features from the shallower layers via 1×1 convolutions.</li>
+</ul>
+
+<p>This process ensures that every level of the resulting feature pyramid is both semantically rich and spatially precise.</p>
+
+<p>The combination of ResNet50 and FPN is particularly well suited for the project’s core challenge:</p>
+
+<ul>
+  <li>Robust Small Object Detection: The FPN structure ensures that the high-resolution feature maps (like P3 or P4 levels) are semantically informed. This is mandatory for successfully detecting and correctly classifying the tiny vehicle objects in the high-resolution satellite imagery.</li>
+  <li>Scale Invariance: FPN allows the detector to effectively handle vehicles of varying sizes and perspectives that appear on the image plane, making the model robust across different parking environments.</li>
+  <li>Performance Baseline: The ResNet-FPN pairing is the foundation for industry-leading detectors (like RetinaNet), providing a strong and reliable starting point for training a high-performance, domain-specific model.</li>
+</ul>
+
+<h2 id="4-google-satellite-tile-extraction">4. Google satellite tile extraction</h2>
+
+<p>This section describes how we used Google Image API to query from Google, which we use to create a dataset for inferencing in the next section.</p>
+
+<p>The purpose of the get_satellite_image.py utility is to provide a reliable method for data validation. This tool uses the Google Maps Static API to fetch high-resolution satellite imagery for any given geographical coordinate. This allows the team to:</p>
+
+<ol>
+  <li>Validate Detections: When the primary model running on DOTA data yields a low-confidence detection, the corresponding Google image can be fetched to confirm the presence and class (e.g., heavy-duty) of the vehicle.</li>
+  <li>Generate Ground Truth: The high-resolution Google images serve as a source for visually verified ground truth data to potentially augment our training set or serve as a high-confidence validation baseline.</li>
+</ol>
+
+<p>The utility is implemented in Python and relies on the requests library to interface with the Google Maps Static API.</p>
+
+<p><strong>Table 1 Google query parameters description</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Parameter</th>
+      <th style="text-align: left">Value</th>
+      <th style="text-align: left">Justification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">maptype</td>
+      <td style="text-align: left">satellite</td>
+      <td style="text-align: left">Specifies the imagery type.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">zoom</td>
+      <td style="text-align: left">20 (Max)</td>
+      <td style="text-align: left">Zoom level 20 provides maximum detail, necessary for distinguishing between subtle visual characteristics of medium-duty (Class 3-6) and heavy-duty (Class 7-8) vehicles.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">size</td>
+      <td style="text-align: left">640x640</td>
+      <td style="text-align: left">Standard size for typical computer vision input tiles.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The script requires a valid Google Maps API Key, which must have the Maps Static API enabled. The key is managed via command line or environment variables for security.</p>
+
+<p>Example Execution: Downloads a satellite image tile centered at 33.7550, -118.2000</p>
+
+<p>python get_satellite_image.py 33.7550 -118.2000 --key “YOUR_API_KEY_HERE”<br />
+Output: Saves image to satellite_images/sat_33.7550_-118.2000.png</p>
+
+<p>While the script is functionally complete, its deployment in a batch process faces a severe budgetary constraint based on API usage limits.</p>
+
+<ul>
+  <li>The free tier of the Google Maps Static API allows for 10,000 requests per month. Our project’s ideal validation scope, covering a significant geographic area, is estimated to require 1.5 million requests.</li>
+  <li>Beyond the monthly quota, if the script is run in a tight loop to validate thousands of coordinates, the API may enforce burst rate limits, leading to HTTP 429 errors. Any large-scale execution must incorporate exponential backoff or throttling (e.g., using time.sleep) to manage request volume and prevent service denial.</li>
+</ul>
+
+<h2 id="5-inference--results">5. Inference &amp; Results</h2>
+
+<h3 id="51-model-configuration">5.1. Model configuration</h3>
+
+<p>We fine-tuned a Faster R-CNN detector with a ResNet-50 backbone and FPN using the default COCO pretrained weights. The original classification head was replaced with a new predictor configured for 17 total classes (16 DOTA classes + background). All images were forced to 3-channel RGB using a small wrapper to ensure compatibility with the detector. <a href="https://colab.research.google.com/drive/1HVTZsIpAQSMTcJhuzXsZ95USS4jgHg_M?usp=sharing">model</a></p>
+
+<p>Training parameters were:</p>
+
+<ul>
+  <li>
+    <p>Optimizer: SGD</p>
+  </li>
+  <li>
+    <p>Learning rate: 0.001</p>
+  </li>
+  <li>
+    <p>Momentum: 0.9</p>
+  </li>
+  <li>
+    <p>Weight decay: 0.0005</p>
+  </li>
+  <li>
+    <p>Batch size: 4</p>
+  </li>
+  <li>
+    <p>Epochs: 20</p>
+  </li>
+  <li>
+    <p>LR schedule: StepLR (step size = 3, gamma = 0.1)</p>
+  </li>
+  <li>
+    <p>Evaluation: Precision/Recall/F1 at IoU ≥ 0.5, score ≥ 0.5</p>
+  </li>
+</ul>
+
+<p>Both train and validation datasets used COCO-format DOTA annotations with only minimal preprocessing (tensor conversion, box cleanup). A model checkpoint was saved after each epoch. Fig. 3 shows the loss reduction per Epoch. Fig. 4 demonstrates the capability of our model in detecting the right object. <a href="https://colab.research.google.com/drive/1Y1DxzK-t90dQLxnuzjZgaV_VIzl1DNBm?usp=sharing">inference</a></p>
+
+<p><img src="/CS163-Projects-2025Fall/assets/images/team41/image3.png" alt="A graph with a lineAI-generated content may be incorrect." /></p>
+
+<p><strong>Fig 3. Loss function value per epoch</strong></p>
+
+<p>| <img src="/CS163-Projects-2025Fall/assets/images/team41/image4.png" alt="A aerial view of a buildingAI-generated content may be incorrect." /> | <img src="/CS163-Projects-2025Fall/assets/images/team41/image5.png" alt="Aerial view of a parking lot with cars and buildingsAI-generated content may be incorrect." /> | <img src="/CS163-Projects-2025Fall/assets/images/team41/image6.png" alt="A aerial view of a road with many trucksAI-generated content may be incorrect." /> |
+| :—- | :—- | :—- |</p>
+
+<p><strong>Fig 4. The performance of the fine-tuned model in detecting MD/HD vehicles</strong></p>
+
+<h3 id="52-google-satellite-tiling-for-inference">5.2. Google satellite tiling for inference</h3>
+
+<p>For inference, we created a Google Maps satellite dataset covering the UCLA campus region from<br />
+(34.0789592, −118.4783278) to (34.0603766, −118.419813).<br />
+Tiling this bounding box required 2,044 API queries.</p>
+
+<p>Each tile was processed by the trained model, and for every tile we recorded:</p>
+
+<ul>
+  <li>
+    <p>Tile coordinate (lat/lon)</p>
+  </li>
+  <li>
+    <p>Number of detected MD/HD vehicles</p>
+  </li>
+</ul>
+
+<p>All results were stored in a CSV file, which is used to generate a vehicle density heat map over the UCLA area as shown in Fig. 5.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/team41/image7.png" alt="" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/team41/image8.png" alt="" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Fig 5. High-density location of MD/HD vehicles around UCLA campus</strong></p>
+
+<h2 id="6-conclusion-and-future-work">6. Conclusion and future work</h2>
+
+<p>This project demonstrated that satellite imagery combined with modern deep learning models can effectively identify MD/HD vehicle activity at a regional scale. By training a ResNet50-FPN detector on the DOTA dataset and applying it to tiled Google imagery of the UCLA area, we generated a spatial map of truck density that can inform early-stage planning for charging infrastructure.</p>
+
+<p>For the future works, we will use the identified locations and the assigned vehicle density to estimate the energy need at each location and plan the local utility grid upgrade to meet that need.</p>
+
+<h2 id="7-references">7. References</h2>
+
+<p>[1]	D. Clar-Garcia, H. Campello-Vicente, M. Fabra-Rodriguez, and E. Velasco-Sanchez, “Research on Battery Electric Vehicles’ DC Fast Charging Noise Emissions: Proposals to Reduce Environmental Noise Caused by Fast Charging Stations,” <em>World Electric Vehicle Journal 2025, Vol. 16, Page 42</em>, vol. 16, no. 1, p. 42, Jan. 2025, doi: 10.3390/WEVJ16010042.</p>
+
+<p>[2]	“Alternative Fuels Data Center: Maps and Data - Types of Vehicles by Weight Class.” Accessed: Dec. 12, 2025. [Online]. Available: https://afdc.energy.gov/data/10381</p>
+
+<p>[3]	“Public Hearing to Consider the Proposed Advanced Clean Fleets Regulation Staff Report: Initial Statement of Reasons.” Accessed: Dec. 12, 2025. [Online]. Available: https://ww2.arb.ca.gov/sites/default/files/barcu/regact/2022/acf22/isor2.pdf</p>
+
+<p>[4]	“DOTA.” Accessed: Dec. 12, 2025. [Online]. Available: https://captain-whu.github.io/DOTA/</p>
+
+<p>[5]	P. Y. Chen, J. W. Hsieh, M. Gochoo, C. Y. Wang, and H. Y. M. Liao, “Smaller Object Detection for Real-Time Embedded Traffic Flow Estimation Using Fish-Eye Cameras,” <em>Proceedings - International Conference on Image Processing, ICIP</em>, vol. 2019-September, pp. 2956–2960, Sep. 2019, doi: 10.1109/ICIP.2019.8803719.</p>
+
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html">&larr; XAI in Facial Recognition</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team43-urban-segmentation.html">Streetview Semantic Segmentation &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>

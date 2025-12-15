@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Visuomotor Policy</title>
+
+    <meta name="description" content="Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequen...">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="Visuomotor Policy" property="og:title">
+    
+    
+        <meta content="article" property="og:type">
+    
+    
+        <meta content="Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning..." property="og:description">
+    
+    
+        <meta content="http://0.0.0.0:4000/2025/12/13/team22-visuomotor-policy.html" property="og:url">
+    
+<!--
+     -->
+
+    <!-- 
+        <meta content="2025-12-13T00:00:00+00:00" property="article:published_time">
+        <meta content="http://0.0.0.0:4000/about/" property="article:author">
+    
+    
+    
+        
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://0.0.0.0:4000/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="Visuomotor Policy">
+
+    
+        <meta name="twitter:description" content="<blockquote>
+  <p>Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.</p>
+</blockquote>
+
+">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Visuomotor Policy</h1>
+    <p class="post-meta">
+
+      <time datetime="2025-12-13T00:00:00+00:00" itemprop="datePublished">
+        
+        Dec 13, 2025
+      </time>
+
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        by <span itemprop="name"></span>
+      </span>
+
+      <!-- <span>
+        
+      </span> -->
+      <!--
+      <span class="share-buttons">
+        <span class="share-button"><a class="twitter-share-button" href="https://twitter.com/share" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></span>
+
+        <span class="share-button"><span class="fb-like" data-href="/2025/12/13/team22-visuomotor-policy.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></span></span>
+      </span>
+      <div style="clear: both;"/>
+      -->
+
+    </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#problem-setup" id="markdown-toc-problem-setup">Problem Setup</a>    <ul>
+      <li><a href="#interaction-and-trajectories" id="markdown-toc-interaction-and-trajectories">Interaction and Trajectories</a></li>
+      <li><a href="#objectives" id="markdown-toc-objectives">Objectives</a></li>
+    </ul>
+  </li>
+  <li><a href="#approaches" id="markdown-toc-approaches">Approaches</a>    <ul>
+      <li><a href="#imitation-learning" id="markdown-toc-imitation-learning">Imitation Learning</a></li>
+      <li><a href="#reinforcement-learning" id="markdown-toc-reinforcement-learning">Reinforcement Learning</a></li>
+      <li><a href="#policy-and-representation-pretraining" id="markdown-toc-policy-and-representation-pretraining">Policy and Representation Pretraining</a></li>
+    </ul>
+  </li>
+  <li><a href="#policy-pretraining" id="markdown-toc-policy-pretraining">Policy Pretraining</a>    <ul>
+      <li><a href="#action-conditioned-contrastive-policy-pretraining" id="markdown-toc-action-conditioned-contrastive-policy-pretraining">Action-Conditioned Contrastive Policy Pretraining</a></li>
+      <li><a href="#pretraining-versus-learning-from-scratch" id="markdown-toc-pretraining-versus-learning-from-scratch">Pretraining Versus Learning-from-Scratch</a></li>
+      <li><a href="#summary-and-discussion" id="markdown-toc-summary-and-discussion">Summary and Discussion</a></li>
+    </ul>
+  </li>
+  <li><a href="#diffusion-policy" id="markdown-toc-diffusion-policy">Diffusion Policy</a>    <ul>
+      <li><a href="#problem-formulation-1" id="markdown-toc-problem-formulation-1">Problem formulation</a></li>
+      <li><a href="#model-architecture-overview" id="markdown-toc-model-architecture-overview">Model architecture overview</a></li>
+      <li><a href="#visual-encoder-deep-dive" id="markdown-toc-visual-encoder-deep-dive">Visual encoder deep dive</a></li>
+      <li><a href="#diffusion-model-deep-dive" id="markdown-toc-diffusion-model-deep-dive">Diffusion model deep dive</a></li>
+      <li><a href="#results--limitations" id="markdown-toc-results--limitations">Results &amp; Limitations</a></li>
+    </ul>
+  </li>
+  <li><a href="#3d-diffusion-policy-dp3-4" id="markdown-toc-3d-diffusion-policy-dp3-4">3D Diffusion Policy (DP3) [4]</a>    <ul>
+      <li><a href="#issues-with-previous-work" id="markdown-toc-issues-with-previous-work">Issues with Previous Work</a></li>
+      <li><a href="#solution" id="markdown-toc-solution">Solution</a></li>
+      <li><a href="#the-decision-module-4" id="markdown-toc-the-decision-module-4">The Decision Module [4]</a></li>
+      <li><a href="#training-4" id="markdown-toc-training-4">Training [4]</a></li>
+      <li><a href="#ablation-studies-4" id="markdown-toc-ablation-studies-4">Ablation Studies [4]</a></li>
+      <li><a href="#results-4" id="markdown-toc-results-4">Results [4]</a></li>
+      <li><a href="#discussion-and-impact-of-dp3-4" id="markdown-toc-discussion-and-impact-of-dp3-4">Discussion and Impact of DP3 [4]</a></li>
+    </ul>
+  </li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Visuomotor policy learning aims to learn a control policy directly from visual inputs, enabling an agent to perceive its environment and take actions that accomplish a task. Compared with classical pipelines that rely on modular perception, planning, and control, end-to-end visuomotor learning offers a unified framework that can, in principle, learn task-relevant features automatically and handle complex sensor observations.</p>
+
+<p>However, learning from pixels is challenging: visual observations are high-dimensional, supervision is often limited or expensive to collect, and errors can compound over time as the agent visits states not covered by training data. These challenges are especially pronounced in real-world robotics and driving, where interaction data can be costly, slow, or safety-critical. As a result, recent work has emphasized data-efficient learning, including stronger IL/RL baselines, better augmentations, and pretraining strategies that improve downstream policy learning.</p>
+
+<h2 id="problem-setup">Problem Setup</h2>
+
+<p>We model visuomotor control as a sequential decision-making problem. Let the environment evolve over discrete time steps \(t = 1,2,\dots,T\). The agent receives an observation \(o_t \in \mathcal{O}\) (e.g., an RGB image or stacked frames), chooses an action \(a_t \in \mathcal{A}\) (e.g., steering/throttle or robot joint commands), and the environment transitions to the next state while emitting reward \(r_t\) (for RL) or providing supervision via expert actions (for IL).</p>
+
+<h3 id="interaction-and-trajectories">Interaction and Trajectories</h3>
+
+<p>A (partial-observation) trajectory can be written as:</p>
+
+<p>\(\)
+\tau = {(o_1, a_1, r_1), (o_2, a_2, r_2), \dots, (o_T, a_T, r_T)}.
+\(\)</p>
+
+<p>A parametrized policy \(\pi_\theta(a_t \mid o_t)\) maps observations to either:</p>
+
+<ul>
+  <li><strong>Deterministic actions</strong>: \(a_t = \pi_\theta(o_t)\), or</li>
+  <li><strong>Stochastic actions</strong>: \(a_t \sim \pi_\theta(\cdot \mid o_t).\)</li>
+</ul>
+
+<h3 id="objectives">Objectives</h3>
+
+<p><strong>Reinforcement Learning (RL).</strong> The goal is to maximize expected discounted return:</p>
+
+<p>\(\)
+\max_\theta ; \mathbb{E}<em>{\tau \sim \pi</em>\theta}\left[\sum_{t=1}^{T} \gamma^{t-1} r_t\right],
+\(\)</p>
+
+<p>where \(\gamma \in (0,1]\) is the discount factor.</p>
+
+<p><strong>Imitation Learning (IL).</strong> Given an offline dataset of expert demonstrations
+\(\mathcal{D} = {(o_i, a_i^{*})}_{i=1}^{N}\), behavior cloning typically minimizes a supervised loss:</p>
+
+<p>\(\)
+\min_\theta ; \mathbb{E}<em>{(o,a^</em>) \sim \mathcal{D}}\left[\mathcal{L}\big(\pi<em>\theta(o), a^</em>\big)\right],
+\(\)</p>
+
+<p>where \(\mathcal{L}\) is often MSE (continuous control) or cross-entropy (discrete actions).</p>
+
+<h2 id="approaches">Approaches</h2>
+
+<p>Broadly, modern visuomotor policy learning can be organized into three families: imitation learning, reinforcement learning, and pretraining-based methods that improve either of the above.</p>
+
+<h3 id="imitation-learning">Imitation Learning</h3>
+
+<p>Imitation learning learns directly from expert behavior (e.g., human driving or teleoperated robot demonstrations). The simplest and most common approach is behavior cloning (BC), which treats policy learning as supervised learning from \(o \mapsto a^*\).</p>
+
+<p>A key limitation is distribution shift: small errors can cause the policy to drift into states not represented in the dataset, leading to compounding mistakes. Methods such as dataset aggregation (e.g., iteratively collecting corrections) and stronger regularization/augmentation are often used to improve robustness, especially in driving-like settings where stable, human-aligned behavior is preferred.</p>
+
+<h3 id="reinforcement-learning">Reinforcement Learning</h3>
+
+<p>Reinforcement learning optimizes behavior through interaction, using reward feedback to explore and improve. RL can achieve superhuman performance in principle, but often suffers from:</p>
+
+<ul>
+  <li>high sample complexity (many environment interactions),</li>
+  <li>sensitivity to reward design,</li>
+  <li>instability during training (especially from pixels).</li>
+</ul>
+
+<p>In robotics, RL is widely used in simulation and increasingly combined with offline data, strong augmentations, and representation learning to reduce real-world interaction requirements.</p>
+
+<h3 id="policy-and-representation-pretraining">Policy and Representation Pretraining</h3>
+
+<p>Because real-world interaction is expensive, many recent methods pretrain visual representations or policy components before downstream IL/RL. Pretraining can leverage:</p>
+
+<ul>
+  <li>large-scale unlabeled videos/images,</li>
+  <li>self-supervised objectives (e.g., contrastive learning),</li>
+  <li>action-aware objectives when actions (or pseudo-actions) are available.</li>
+</ul>
+
+<p>This project’s later section (“Policy Pretraining”) focuses on two representative perspectives:</p>
+
+<ol>
+  <li>Action-conditioned contrastive pretraining that explicitly aligns representations with control-relevant semantics, and</li>
+  <li>A critical re-evaluation showing that strong learning-from-scratch baselines (with proper augmentation and architecture choices) can match or exceed frozen pretraining in many settings—highlighting that <em>when</em> pretraining helps depends heavily on domain alignment and experimental controls.</li>
+</ol>
+
+<h2 id="policy-pretraining">Policy Pretraining</h2>
+
+<p>Learning visuomotor policies directly from interaction data is often expensive, particularly in real-world robotic and autonomous driving settings. As a result, many approaches seek to improve sample efficiency by pretraining visual representations or policy components prior to downstream imitation or reinforcement learning. However, existing methods differ substantially in both how pretraining is performed and whether it consistently benefits policy learning.</p>
+
+<p>In this section, we examine two complementary perspectives on policy pretraining. The first presents an action-conditioned contrastive learning framework that explicitly aligns representation learning with control objectives [1]. The second revisits the effectiveness of visual pretraining by comparing it against strong learning-from-scratch baselines, providing a critical assessment of when and why pretraining improves visuomotor policy learning [2].</p>
+
+<h3 id="action-conditioned-contrastive-policy-pretraining">Action-Conditioned Contrastive Policy Pretraining</h3>
+
+<p>In <em>Learning to Drive by Watching YouTube Videos: Action-Conditioned Contrastive Policy Pretraining</em> [1], Zhang et al. introduce Action-Conditioned Contrastive Policy Pretraining (ACO), a contrastive representation learning framework designed specifically for visuomotor policy learning. The work builds on MoCo-style self-supervised learning, but argues that standard visual contrastive objectives are insufficient for control tasks because they primarily encode appearance-based features rather than action-relevant semantics. ACO modifies the contrastive objective to explicitly incorporate action information, enabling representations that are better aligned with downstream imitation and reinforcement learning.</p>
+
+<h4 id="motivation">Motivation</h4>
+
+<p>Traditional visual pretraining methods, such as ImageNet supervision or instance-level contrastive learning, aim to distinguish images based on visual content. However, in visuomotor control, the key requirement is not visual discrimination per se, but the ability to identify which aspects of an observation are predictive of the correct action. For example, road curvature and lane markings are critical for driving decisions, whereas lighting conditions or background buildings are largely irrelevant. The authors hypothesize that contrastive pretraining should group observations that require similar actions, even if they differ significantly in visual appearance.</p>
+
+<h4 id="method-overview">Method Overview</h4>
+
+<p>ACO extends standard contrastive learning by combining two types of positive pairs:</p>
+
+<ul>
+  <li>Instance Contrastive Pairs (ICP): as in MoCo, two augmented views of the same image form a positive pair, encouraging general visual discriminability.</li>
+  <li>Action Contrastive Pairs (ACP): two different images are treated as a positive pair if their associated actions are sufficiently similar (e.g., steering angles within a predefined threshold), regardless of visual similarity.</li>
+</ul>
+
+<p>By jointly optimizing ICP and ACP objectives, ACO encourages representations that preserve general visual structure while emphasizing action-consistent features. This dual-objective design allows the model to retain the benefits of instance discrimination while mitigating its tendency to overfit to appearance-level features.</p>
+
+<h4 id="pseudo-action-label-generation">Pseudo Action Label Generation</h4>
+
+<p>A challenge in applying ACP at scale is the lack of action annotations in in-the-wild data such as YouTube videos. To address this, Zhang et al. train an inverse dynamics model on the NuScenes dataset, where ground-truth ego-motion actions are available. Given consecutive frames \((o_t, o_{t+1})\), the inverse dynamics model predicts the corresponding control action</p>
+
+\[\hat{a}*t = h(o_t, o*{t+1}),\]
+
+<p>where \(h\) is trained using supervised regression. The trained inverse dynamics model is then applied to unlabeled YouTube driving videos to generate pseudo action labels, enabling large-scale action-conditioned pretraining without manual annotation. Importantly, optical flow is used as input to the inverse dynamics model instead of raw RGB frames, improving robustness to appearance variation and reducing prediction error.</p>
+
+<p style="width: 500px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/aco_inverse_dynamics.png" alt="Inverse Dynamics Pipeline" /></p>
+<p><em>Fig. 1. Inverse dynamics training on NuScenes and pseudo action label generation on YouTube driving videos [1].</em></p>
+
+<h4 id="training-architecture-and-objective">Training Architecture and Objective</h4>
+
+<p>The ACO architecture follows the MoCo framework and consists of a query encoder \(f\) and a momentum-updated key encoder \(f_m\). A shared visual backbone feeds into two projection heads: \(g_{\text{ins}}\) for the ICP objective and \(g_{\text{act}}\) for the ACP objective. Momentum-smoothed counterparts \(g_{\text{ins},m}\) and \(g_{\text{act},m}\) are used to populate a dictionary of negative samples.</p>
+
+<p>The ICP loss follows the standard InfoNCE formulation:</p>
+
+\[\mathcal{L}_{\text{ins}} =
+
+* \log
+  \frac{\exp(z^q \cdot z^+ / \tau)}
+  {\sum_{z \in \mathcal{N}(z^q)} \exp(z^q \cdot z / \tau)},\]
+
+<p>where \(z^q\) is the query embedding, \(z^+\) is the positive key, \(\mathcal{N}(z^q)\) is the set of negatives, and \(\tau\) is a temperature parameter.</p>
+
+<p>For ACP, the positive set is defined based on action similarity:</p>
+
+\[\mathcal{P}_{\text{act}}(z^q) =
+
+{ z \mid \lVert \hat{a} - \hat{a}^q \rVert &lt; \epsilon,\ (z,\hat{a}) \in \mathcal{K} },\]
+
+<p>where \(\epsilon\) is a predefined action-distance threshold and \(\mathcal{K}\) denotes the key set. The ACP loss is then given by</p>
+
+\[\mathcal{L}_{\text{act}} =
+
+* \log
+  \frac{\sum_{z^+ \in \mathcal{P}*{\text{act}}(z^q)} \exp(z^q \cdot z^+ / \tau)}
+  {\sum*{z \in \mathcal{N}(z^q)} \exp(z^q \cdot z / \tau)}.\]
+
+<p>The final training objective is a weighted combination of the two losses:</p>
+
+\[\mathcal{L} =
+
+\lambda_{\text{ins}} \mathcal{L}*{\text{ins}}
++
+\lambda*{\text{act}} \mathcal{L}_{\text{act}}.\]
+
+<p style="width: 500px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/aco_architecture.png" alt="ACO Architecture" /></p>
+<p><em>Fig. 2. ACO architecture showing joint optimization of instance contrastive and action-conditioned contrastive objectives [1].</em></p>
+
+<h4 id="experimental-results">Experimental Results</h4>
+
+<p>The authors evaluate ACO on downstream imitation learning tasks in the CARLA driving simulator, comparing against random initialization, autoencoder pretraining, ImageNet pretraining, and MoCo. Across all demonstration sizes, ACO consistently outperforms the baselines, with the performance gap most pronounced in low-data regimes. These results indicate that action-conditioned pretraining substantially improves sample efficiency and leads to representations that are better aligned with downstream control objectives.</p>
+
+<p style="width: 500px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/aco_results.png" alt="ACO Imitation Learning Results" /></p>
+<p><em>Fig. 3. Imitation learning performance under varying demonstration sizes for different pretraining methods [1].</em></p>
+
+<h3 id="pretraining-versus-learning-from-scratch">Pretraining Versus Learning-from-Scratch</h3>
+
+<p>In <em>On Pre-Training for Visuo-Motor Control: Revisiting a Learning-from-Scratch Baseline</em> [2], Hansen et al. provide a systematic re-evaluation of visual policy pretraining by comparing frozen pretrained representations against strong learning-from-scratch baselines. Rather than proposing a new pretraining method, this work examines whether commonly used pretrained visual encoders offer consistent advantages compared to baselines.</p>
+
+<h4 id="problem-formulation">Problem Formulation</h4>
+
+<p>Learning-from-scratch refers to training a randomly initialized encoder \(f_\theta\) jointly with a policy head using only task-specific data:</p>
+
+\[\theta^* = \arg\min_\theta ; \mathbb{E}*{(o,a)\sim\mathcal{D}} \left[ \ell(\pi*\theta(o), a) \right],\]
+
+<p>where \(\ell\) denotes a behavior cloning or reinforcement learning objective.</p>
+
+<p>In contrast, frozen pretraining fixes a pretrained encoder \(f_{\text{pre}}\) and optimizes only the policy parameters:</p>
+
+\[\theta^* = \arg\min_\theta ; \mathbb{E}*{(o,a)\sim\mathcal{D}} \left[ \ell(\pi*\theta(f_{\text{pre}}(o)), a) \right].\]
+
+<p>The authors emphasize that many prior works compare pretrained models against weak learning-from-scratch baselines that lack sufficient capacity or data augmentation.</p>
+
+<h4 id="experimental-setup-and-findings">Experimental Setup and Findings</h4>
+
+<p>Hansen et al. evaluate learning-from-scratch and frozen pretraining across multiple domains, including Adroit, DMControl, PixMC, and real-world robot manipulation, using behavior cloning, PPO, and DrQ-v2. The learning-from-scratch baselines employ shallow convolutional encoders paired with strong data augmentation, such as random shift and color jitter:</p>
+
+\[o' \sim \mathcal{T}(o),\]
+
+<p>which substantially improves robustness and generalization.</p>
+
+<p style="width: 500px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/lfs_vs_pretraining.png" alt="LfS vs Pretraining Overview" /></p>
+<p><em>Fig. 4. Comparison of learning-from-scratch and frozen pretrained representations across multiple domains [2].</em></p>
+
+<p>Across most tasks and learning algorithms, learning-from-scratch with augmentation matches or exceeds the performance of frozen pretrained representations. Frozen pretraining provides only limited benefits in very low-data regimes, and no single pretrained representation consistently dominates across domains. The authors attribute this in part to a domain gap between pretraining data (real-world images and videos) and downstream environments (often simulated).</p>
+
+<p>The authors further show that finetuning pretrained encoders on in-domain data,</p>
+
+\[\theta^* = \arg\min_\theta ; \mathbb{E}*{(o,a)\sim\mathcal{D}} \left[ \ell(\pi*\theta(f_\theta(o)), a) \right],\]
+
+<p>can outperform both frozen pretraining and learning-from-scratch when combined with strong augmentation, highlighting the importance of domain adaptation.</p>
+
+<h3 id="summary-and-discussion">Summary and Discussion</h3>
+
+<p>Taken together, the two works reviewed in this section offer complementary perspectives on policy pretraining for visuomotor control. Action-Conditioned Contrastive Policy Pretraining [1] demonstrates that pretraining can substantially improve downstream policy learning when the objective is explicitly aligned with action semantics, rather than relying solely on appearance-based visual similarity. By incorporating action-conditioned positives and leveraging large-scale unlabeled video data, ACO learns representations that are more directly relevant to control, yielding significant gains in low-data imitation and reinforcement learning settings.</p>
+
+<p>In contrast, Hansen et al. [2] provide a critical re-evaluation of visual policy pretraining, showing that frozen pretrained representations do not consistently outperform strong learning-from-scratch baselines when data augmentation and architectural choices are properly controlled. Their findings highlight the importance of domain alignment and adaptation, suggesting that generic visual pretraining alone is insufficient to guarantee improvements in visuomotor policy learning.</p>
+
+<p>Together, these results suggest that the effectiveness of policy pretraining depends not only on dataset scale, but more critically on the alignment between the pretraining objective and downstream control tasks. While action-aware and task-aligned pretraining objectives show clear promise, future work must carefully consider domain gaps, finetuning strategies, and strong baseline comparisons to fully realize the benefits of pretraining in visuomotor learning.</p>
+
+<h2 id="diffusion-policy">Diffusion Policy</h2>
+
+<p>Diffusion Policy is new paradigm introduced in 2023 by Chi et al [3]. It reframes visuomotor policy as a conditional diffusion process [3] over action sequences, conditioned on a short history of observations. By generating actions using iterative denoising, this new approach allows for more expressive multi-modal, high-dimensional manipulation, while improving temporal consistency in closed-loop control. In fact, the authors found that Diffusion Policy outperformed previous SoTA policies by 46.9% on average.</p>
+
+<h3 id="problem-formulation-1">Problem formulation</h3>
+
+<p>Diffusion Policy is formulated as an offline visuomotor imitation learning problem. The goal is to learn a policy which maps camera observations to actions.</p>
+
+<p>Diffusion Policy makes use of three distinct horizons: the <strong>observation horizon</strong> $T_o$, the <strong>prediction horizon</strong> $T_p$, and the <strong>action execution horizon</strong> $T_a$.</p>
+
+<p>At some time $t$, Diffusion Policy doesn’t predict a single action $a_t$, but instead an action sequence $A_t$, conditioned on a recent observation history. More specifically, the model learns to predict</p>
+
+\[A_t=(a_t,a_{t+1}, ...,a_{t+T_p-1})\]
+
+<p>given</p>
+
+\[O_t=(o_{t-T_o},o_{t-T_o+1},...,o_t)\]
+
+<p>However, at inference time, only the first $T_a$ actions from $A_t$ are executed.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>More formally, Diffusion Policy trains a conditional denoising diffusion model to learn the conditional distribution $p(A_t</td>
+      <td>O_t)$, where $A_t$ is in action space.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Prior research [3] has shown that standard supervised policies struggle with the multi-modal and temporally correlated action distributions introduced by manipulation demonstrations in imitation learning. Diffusion Policy improves on that, due to DDPM’s inherent capabilities with high-dimensional outputs [3], as well as predicting action sequences instead of individual actions.</p>
+
+<h3 id="model-architecture-overview">Model architecture overview</h3>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/DiffusionPolicyArchitecture.png" alt="Ablation_3D_Representation" /></p>
+<p><em>Fig 5. Diffusion Policy Model Architecture</em> [3].</p>
+
+<p>At a high level, at each time step $t$, Diffusion Policy does the following:</p>
+
+<ol>
+  <li>The <strong>visual encoder</strong> takes in the history of observations (images) $O_t$, and produces latent features $z_t$.</li>
+  <li>The <strong>diffusion model</strong> diffuses the action sequence ${A_t}^{(k)}$, which at each denoising iteration $k$ is conditioned on $z_t$. It is worth noting that the same latents are reused for each diffusion time step $k$, because unlike some previous methods [3], Diffusion Policy is not predicting the joint distribution $p(A_t, O_t)$.</li>
+</ol>
+
+<p>The controller then executes the first $T_a$ actions from $A_t$.</p>
+
+<p>Let’s now do a deep dive into the two main components of Diffusion Policy.</p>
+
+<h3 id="visual-encoder-deep-dive">Visual encoder deep dive</h3>
+
+<p>At each time step $t$, the visual encoder takes in the history of images $O_t$, and produces a sequence of embeddings $z_t$ which will be used as conditioning for the diffusion model.</p>
+
+<p>The authors found that a slightly modified ResNet-18, without pre-training, performed the best for the visual encoder module. The model used differs from the regular ResNet-18 in the following ways:</p>
+
+<ol>
+  <li>It uses spatial SoftMax pooling instead of global average pooling, to maintain spatial information [3].</li>
+  <li>It replaces BatchNorm with GroupNorm, to stabilize training [3].</li>
+</ol>
+
+<p>The outputs $z_t$ from the visual encoder are then fed into the diffusion model as conditioning.</p>
+
+<h3 id="diffusion-model-deep-dive">Diffusion model deep dive</h3>
+
+<p>The diffusion model is the backbone of Diffusion Policy. At each <strong>diffusion time step</strong> $k$, the diffusion model takes in a noisy action sequence ${A_t}^{(k)}$, the diffusion time step $k$, and the conditioning features $z_t$ from the encoder. It then produces the predicted noise $\hat{\varepsilon}_{\theta}$, which is used to de-noise ${A_t}^{(k)}$ and obtain the next sample ${A_t}^{(k-1)}$.</p>
+
+<p>The authors evaluated two backbone architectures for the diffusion model: CNN and time-series transformer.</p>
+
+<h4 id="cnn-based-diffusion">CNN-based diffusion</h4>
+
+<p>The CNN-based diffusion uses a 1D temporal CNN as its backbone, adapted from previous work on using diffusion for sequence generation [3].</p>
+
+<p>A method called FiLM is then used to condition the CNN on the conditioning latents $z_t$ [3]. FiLM generates a per-layer scale $\gamma(z_t)$ and shift $\beta(z_t)$, which are then applied to the layer’s activations. More specifically, at each layer, we apply the following transformation:</p>
+
+\[h \leftarrow \gamma(z_t) \circ h\]
+
+<p>The authors recommend using this approach as a starting point, as well as for more basic tasks, as it is easy to set-up and requires little tuning. It does have performance limitations, however, as it struggles with fast-changing action.</p>
+
+<h4 id="time-series-diffusion-transformer">Time-series diffusion transformer</h4>
+
+<p>The time-series diffusion transformer solves the issues with fast-changing action experienced by the CNN-based diffusion model.</p>
+
+<p>In short, the noisy actions ${A_t}^{(k)}$ are passed in as input tokens to the transformer decoder blocks. The diffusion time step $k$ is also passed in as a token. The conditioning latents $z_t$ are embedded by an MLP, and passed in as conditioning features to the decoder. Each output token then corresponds to a component of $\hat{\varepsilon}_{\theta}$, which is used to de-noise ${A_t}^{(k)}$ into ${A_t}^{(k-1)}$.</p>
+
+<p>The authors recommend using this approach if the CNN-based diffusion doesn’t lead to satisfactory results, or if the task at hand is more complex, as it is harder to set up and tune the transformer backbone.</p>
+
+<h3 id="results--limitations">Results &amp; Limitations</h3>
+
+<p>Diffusion Policy significantly outperforms previous SoTA policies across a variety of tasks. On average, Diffusion Policy increased performance by 46.9%.</p>
+
+<h2 id="3d-diffusion-policy-dp3-4">3D Diffusion Policy (DP3) [4]</h2>
+
+<h3 id="issues-with-previous-work">Issues with Previous Work</h3>
+
+<p>The breakthrough work in Diffusion Policy [3] achieved near-human or human level performance on many tasks, proving that diffusion is a very promising direction. However, this model was incredibly data-hungry (approximately 100-200 demonstrations per task) and sensitive to camera viewpoint. Furthermore, these issues lead to the model committing safety violations, requiring interruption of the experiments by humans.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>The authors of 3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations hypothesized that with a 3D aware diffusion policy one could achieve much better results. Rather than using multi-view 2D images fed through a ResNet backbone to condition the action diffusion process, they cleverly converted the visual input from a single camera into a point cloud representation followed by an efficient point encoder. They found that with far fewer demonstrations (as few as 10), DP3 is able to handle tasks, surpass previous baselines, and commit far fewer safety violations.</p>
+
+<h4 id="the-perception-module-4">The Perception Module [4]</h4>
+
+<p>First, 84 $\times$ 84 depth images from from the expert demonstrations are passed into the Perception Module. Using camera extrinsics and intrinsics, these are converted into point clouds. To improve generalization to different lighting and colors, they do not use color channels.</p>
+
+<p>These point clouds often contain many redundant points, hence it can be very useful to downsample these. First, they crop all points not within a bounding box, eliminating useless points such as those on the ground or on the table. This is further downsampled to 1024 points using Farthest Point Sampling (FPS). FPS chooses an arbitrary start point, then iteratively chooses the furthest point from the set of those already selected and adds it, reducing the number of points while still being representative of the original image.</p>
+
+<p>The final downsampled points are all fed into the DP3 Encoder. In the decoder, points are passed through a 3-layer MLP with LayerNorm, max-pooled, and finally projected into a compact vector, representing the entire 3D scene in a 64-dimensional vector. Surprisingly, this lightweight MLP encoder outperforms pre-trained models such as PointNet and Point Transformer (see the Ablation Studies sections).</p>
+
+<h3 id="the-decision-module-4">The Decision Module [4]</h3>
+
+<p>The Decision Module is a conditional denoising diffusion model conditioned on robot poses and the 3D feature vector obtained from the Perception Module. Specifically, let $q$ be robot pose,  $a^K$ be the final Gaussian noise, and $\epsilon_{\theta}$ be the denoising network. Then, the denoising network performs K iterations:
+\(a^{k-1}=\alpha_k(a^k - \gamma_k\epsilon_\theta(a^k, k, v, q)) + \sigma_k\mathcal{N}(0, 1)\)</p>
+
+<p>until it reaches the noise-free action $a^0$. Here $\gamma_k$, $\alpha_k$, and $\sigma_k$ all come from the noise scheduler and are functions of k.</p>
+
+<h3 id="training-4">Training [4]</h3>
+
+<p>The training data consisted of a small set of expert demonstrations, usually 10-40 per task, collected via human tele-operation or scripted oracles. The model was trained on 72 simulation tasks across 7 domains as well as 4 real robot tasks - see results section for more details.</p>
+
+<p>The training process samples a random $a^0$ from the data and conducts a diffusion process to get $\epsilon^k$ the noise at iteration k. Then, the objective is simply 
+\(\mathcal{L} = MSE(\epsilon^k, \epsilon_\theta(\bar{\alpha}_k a^0 + \bar{\beta}_k\epsilon^k, k, v, q))\)
+where $\beta_k$ and $\bar{\alpha}_k$ are, again, functions of k from the noise scheduler. They use the same diffusion policy network architecture as the original 2D Diffusion Policy authors.</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/DP3Architecture.png" alt="DP3_Architecture" /></p>
+<p><em>Fig 6. Overview of 3D Diffusion Policy. In the training phase, DP3 simultaneously trains its perception module and decision-making process end-to-end with expert demonstrations. During evaluation, DP3 determines actions based on visual observations from the environment.</em> [4].</p>
+
+<h3 id="ablation-studies-4">Ablation Studies [4]</h3>
+
+<p>The authors also performed several ablation studies to assess their design choices. They selected 6 tasks with 10 demonstrations each and ran ablations on different 3D representations, point cloud encoders, and other design choices. Here are some of their results:</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/3dRepAbl.png" alt="Ablation_3D_Representation" /></p>
+<p><em>Fig 7. Ablation on the choice of 3D representations. Point clouds perform the best.</em> [4].</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/DesignChoiceAbl.png" alt="Ablation_Design" /></p>
+<p>*Fig 8. Ablation on some design choices. * [4].</p>
+
+<p>Surprisingly, the lightweight MLP Encoder greatly outperformed even pre-trained models such as PointNet and Point Transformer. Through careful analysis, the authors made modifications to PointNet and achieved competitive accuracy (72.3%) with their MLP decoder. Here are the original ablation results below:</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/EncoderAbl.png" alt="Ablation_Encoder" /></p>
+<p>*Fig 9. Ablation on choice of point cloud encoder. Surprisingly, the lightweight MLP encoder outperforms larger pre-trained models. * [4].</p>
+
+<h3 id="results-4">Results [4]</h3>
+
+<p>DP3 was benchmarked on a wide range of tasks spanning rigid, articulated, and deformable object manipulation. It achieved over 24% relative improvement compared to Diffusion Policy, converged much faster, and required far fewer demonstrations. Here are the main results on benchmarks for DP3 and other models:</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/TableI.png" alt="ResultsTable" /></p>
+<p>*Fig 10. Main simulation results. Averaged over 72 tasks, DP3 achieves 24.2% relative improvement compared to Diffusion Policy, with a smaller variance.  * [4].</p>
+
+<p>DP3 also excelled in real robot tasks with greater generality. In particular, the real robot tasks were:</p>
+<ol>
+  <li><strong>Roll-up</strong>: The Allegro hand wraps the plasticine multiple times to make a roll-up.</li>
+  <li><strong>Dumpling</strong>: The Allegro hand first wraps the plasticine and then pinchs it to make dumpling pleats.</li>
+  <li><strong>Drill</strong>: The Allegro hand grasps the drill up and moves towards the green cube to touch the cube with the drill.</li>
+  <li><strong>Pour</strong>: The gripper grasps the bowl, moves towards the plasticine, pours out the dried meat floss in the bowl, and places the bowl on the table.</li>
+</ol>
+
+<p>For the sake of time, there were 40 demonstrations per task. See the table below for results on real-robot tasks:</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/TableVIII.png" alt="RealRobotResults" /></p>
+<p>*Fig 11. Results on real robot experiments with 10 tasks per trial. * [4].</p>
+
+<p>To further assess generalization capabilities, they studied spatial generalization with the Pour task, instance generalization on drill, and more. Here are some of their exciting results:</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/TableIX.png" alt="SpatialGeneralization" /></p>
+<p>*Fig 12. Spatial Generalization on Pour: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/TableX.png" alt="ColorGeneralization" /></p>
+<p>*Fig 13. Color/Appearance Generalization on Drill: The authors placed the bowl at 5 different positions that are unseen in the training data. Each position was evaluated with only one trial. * [4].</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/TableXI.png" alt="InstanceGeneralizatoin" /></p>
+<p>*Fig 14. Instance generalization on Drill. The authors replaced the cube used in Drill with five objects in varied sizes from our daily life. Each instance is evaluated with one trial. * [4].</p>
+
+<p>This generalizability of the model is perhaps the most crucial aspect, as robots will have to handle many different conditions in real-world applications. The instance generalization is an especially promising result, as it suggests possibilities for 0-shot learning on very similar tasks to training data.</p>
+
+<p>Finally, the authors also present encouraging results about safety. They define a safety violation as “unpredictable behaviors in real-world experiments, which necessitates human termination to ensure robot safety.” Below are the safety results for DP3 and Diffusion Policy:</p>
+
+<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team22/TableXIV.png" alt="SafetyViolations" /></p>
+<p>*Fig 15. Average safety violation rates. DP3 rarely committed any safety violations, in contrast to the other models. * [4].</p>
+
+<p>They found that DP3 rarely makes safety violations, and suspect this is due to its 3D awareness, though further work needs to be carried out in this direction.</p>
+
+<h3 id="discussion-and-impact-of-dp3-4">Discussion and Impact of DP3 [4]</h3>
+
+<p>Overall, DP3 represents a major step forward from 2D Diffusion Policy by showing that a simple, well-designed 3D representation—sparse point clouds plus a lightweight MLP encoder—is enough to dramatically improve data efficiency, generalization, and safety in visuomotor diffusion policies. However, despite their success, the authors believe that the optimal 3D representation is yet to be discovered. Furthermore, these tasks had relatively short horizons, and they acknowledge that much work needs to be done for tasks with extremely long horizons. Despite these limitations, DP3 has already lead to future work and been built upon in many other projects. For example, ManiCM [5] improves on inference speed, one of the most pressing practical issues. By distilling the multi-step denoising process into a consistency model that can generate actions in single step, ManiCM preserves the strengths of DP3’s 3D-aware policy while making it more suitable for real-time control. Taken together, DP3 and its extensions like ManiCM suggest that 3D diffusion policies are not just a one-off improvement over 2D image-based methods, but a robust foundation for future work in Imitation Learning for visuo-motor policy.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] Zhang, Qihang, et al. “Learning to Drive by Watching YouTube Videos: Action-Conditioned Contrastive Policy Pretraining.” European Conference on Computer Vision, 2022.</p>
+
+<p>[2] Hansen, Nicklas, et al. “On Pre-Training for Visuo-Motor Control: Revisiting a Learning-from-Scratch Baseline.” International Conference on Learning Representations, 2023.</p>
+
+<p>[3] Chi, Cheng, Zhenjia Xu, Shuran Song, and others.<br />
+“Diffusion Policy: Visuomotor Policy Learning via Action Diffusion.”<br />
+<em>arXiv preprint arXiv:2303.04137</em>, 2023.</p>
+
+<p>[4] Ze, Yanjie, Yiming Zhang, Zhiyang Dou, Xingyu Lin, and Shuran Song.<br />
+“3D Diffusion Policy: Generalizable Visuomotor Policy Learning via Simple 3D Representations.”<br />
+<em>arXiv preprint arXiv:2403.03954</em>, 2024.</p>
+
+<p>[5] Lu, Guanxing, Zifeng Gao, Tianxing Chen, Wenxun Dai, Ziwei Wang, Wenbo Ding, and Yansong Tang.
+“ManiCM: Real-time 3D Diffusion Policy via Consistency Model for Robotic Manipulation.”
+arXiv preprint arXiv:2406.01586, 2024.</p>
+
+  </div>
+
+
+  <!-- <div class="page-navigation">
+    
+      <a class="prev" href="/CS163-Projects-2025Fall/2025/12/13/team20-UDA.html">&larr; Unupervised Domain Adaptation with GTA -> Cityscapes</a>
+    
+
+    <!-- 
+      <a class="next" href="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html">From Labeling to Prompting: The Paradigm Shift in Image Segmentation &rarr;</a>
+     -->
+
+
+  <!--comment-->
+  
+    <div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://https-ucladeepvision-github-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>

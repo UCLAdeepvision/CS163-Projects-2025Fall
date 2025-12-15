@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    
+      
+
+
+
+
+
+
+    
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>2025F, UCLA CS163 Course Projects</title>
+
+    <meta name="description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+
+    <meta content="2025F, UCLA CS163 Course Projects" property="og:site_name">
+    
+        <meta content="2025F, UCLA CS163 Course Projects" property="og:title">
+    
+    
+        <meta content="website" property="og:type">
+    
+    
+        <meta content="Course projects for UCLA CS163, Deep Learning in Compuver Vision" property="og:description">
+    
+    
+        <meta content="http://0.0.0.0:4000/" property="og:url">
+    
+<!--
+     -->
+
+    <!-- 
+    
+     -->
+
+    <link rel="shortcut icon" href="/CS163-Projects-2025Fall/assets/ucla_ico.jpg">
+    <link rel="stylesheet" href="/CS163-Projects-2025Fall/assets/css/main.css">
+    <link rel="canonical" href="http://0.0.0.0:4000/CS163-Projects-2025Fall/">
+
+    <!-- For Latex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+    <!-- Google Analytics -->
+    <!-- <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-8161570-6', 'auto');
+        ga('send', 'pageview');
+    </script> -->
+
+    <!-- For Facebook share button -->
+    <!-- <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
+    <!-- Twitter cards -->
+    <!-- <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@UCLAdeepvision">
+    <meta name="twitter:title"   content="">
+
+    
+        <meta name="twitter:description" content="Course projects for UCLA CS163, Deep Learning in Compuver Vision">
+    
+
+    
+        <meta name="twitter:card"  content="summary">
+        <meta name="twitter:image" content="">
+     -->
+    <!-- end of Twitter cards -->
+
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner" id='header-bar'>
+
+    <div class="wrapper">
+        
+        <a class="site-title" style="color:#F2A900" href="/CS163-Projects-2025Fall/">2025F, UCLA CS163 Course Projects  </a>
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="http://lilianweng.github.io" target="_blank">&#x1f349; About</a>
+        </nav> -->
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/about.html"> About</a>
+        </nav>
+
+        <nav class="site-nav">
+            <a class="page-link" style="color:#F2A900" href="/CS163-Projects-2025Fall/archive.html"> Archive</a>
+        </nav>
+
+
+        <!-- <nav class="site-nav">
+            <a class="page-link" style="color:#FFD100" href="/CS163-Projects-2025Fall/FAQ.html"> FAQ</a>
+        </nav> -->
+        <!-- <nav class="site-nav">
+            <a class="page-link" href="/CS163-Projects-2025Fall/log.html">&#x231b; Log</a>
+        </nav> -->
+
+
+    </div>
+
+</header>
+
+
+    <!-- Back to top button -->
+    <script src="/CS163-Projects-2025Fall/assets/vanilla-back-to-top.min.js"></script>
+    <script>addBackToTop()</script>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="home other-pages">
+  <ul class="post-list">
+    
+    <li>
+      
+      <span class="post-meta">
+        Anirudh Kannan on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team50-control-from-vision.html">Representation and Prediction for Generalizable Robot Control</a>
+        
+        <blockquote>
+  <p>Vision-based learning has become a central paradigm for enabling robots to operate in complex, unstructured environments. Rather than relying on hand-engineered perception pipelines or task-specific supervision, recent work increasingly leverages large-scale video data to learn transferable visual representations and predictive models for control. This survey reviews a sequence of recent approaches that illustrate this progression: learning control directly from video demonstrations, pretraining universal visual representations, incorporating predictive dynamics through visual point tracking, and augmenting learning with synthetic visual data. Together, these works highlight how representation learning and prediction from video are enabling increasingly generalizable robot manipulation capabilities.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Anthony Yu on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team48-efficient-super-resolution.html">Efficient Super-Resolution: Bridging Quality and Computation</a>
+        
+        <blockquote>
+  <p>Super-resolution has long faced a fundamental tension: the highest-quality models require billions of operations, while edge devices demand sub-100ms inference. This article examines three recent methods—SPAN, EFDN, and DSCLoRa—that challenge this tradeoff through architectural innovation, training-time tricks, and efficient adaptation. We’ll see how rethinking the upsampling operation, leveraging structural reparameterization, and applying low-rank decomposition can each dramatically improve efficiency without sacrificing output quality.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Junguk Yoon on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team47-mia.html">Membership Inference Attacks against Vision Deep Learning Models</a>
+        
+        <blockquote>
+  <p>Membership Inference Attacks (MIA) are privacy attacks on machine learning models meant to predict whether or not a a data point was used to train a model. This blog looks at three different MIA methods against three different types of models.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Griffin Galimi, Yahvin Gali, Joseph Hu, and Pravir Chugh on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team43-urban-segmentation.html">Streetview Semantic Segmentation</a>
+        
+        <blockquote>
+  <p>[Project Track: Project 8]Semantic segmentation models achieve high overall accuracy on urban datasets, yet systematically fail on thin structures and object boundaries critical for safety-relevant perception.  This project presents a diagnostic-driven framework for understanding segmentation failures on Cityscapes and introduces a SAM3-guided boundary supervision method that injects geometric priors into SegFormer. By combining cross-model difficulty analysis with geometry-aware auxiliary training, we demonstrate targeted improvements on thin and boundary-sensitive classes without increasing inference cost.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Rafi Zahedi, Aryan Gupta, Jace Kasen, Jacob Young on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team41-truckdetection.html">Computer Vision for Medium/Heavy-Duty Vehicle Detection via Satellite Imagery</a>
+        
+        <blockquote>
+  <p>We fine-tuned a ResNet50-FPN detector on the DOTA aerial dataset and applied it to Google satellite tiles to locate medium/heavy-duty truck parking clusters for EV charging planning.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Erick Rosas Gonzalez, Maya Josifovska, Andrew Rubio, Wanda Barahona on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team39-XAI-Face.html">XAI in Facial Recognition</a>
+        
+        <blockquote>
+  <p>Facial Recognition (FR) systems are being increasingly used in high stake environments, but their decision making processes remain a mystery, raising concerns regarding trust, bias, and robustness. Traditional methods such as occlusion sensitivity or saliency maps (e.g., Grad-CAM), often fail to capture the causal mechanisms driving verification decisions or diagnosis reliance on shortcuts. This report analyzes three modern paradigms that shift Explainable AI (XAI) from passive visualization to active, feature level interrogation. We examined FastDiME [5] which utilizes generative diffusion models to create counterfactuals for detecting shortcut learning, Feature Guided Gradient Backpropagation (FGGB) [3], which mitigates vanishing gradients to produce similarity and dissimilarity maps, and Frequency Domain Explainability [2], which introduces Frequency Heat Plots (FHPs) to diagnose biases in CNNs. By synthesizing these approaches, we examine how modern XAI tools can assess model reliance on noise versus structural identity, with the goal of offering a pathway toward more robust and transparent biometric systems.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Andy Xu on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team38-vqa.html">From Classifiers to Assistants: The Evolution of Visual Question Answering</a>
+        
+        <blockquote>
+  <p>Visual Question Answering (VQA) represents a fundamental challenge in artificial intelligence: the ability to understand both visual content and natural language, then reason across these modalities to produce meaningful answers. This report traces the evolution of VQA from its formal definition as a classification task in 2015, through the era of sophisticated attention mechanisms, to its modern integration into Large Multimodal Models. We analyze three papers that define this trajectory, revealing how VQA transformed from a specialized benchmark into a core capability of general-purpose AI assistants.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Team 35 - Cara Burgess, Maria Campo Martins, Kevin Valencia on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team35-coral-reef-segmentation.html">Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3</a>
+        
+        <blockquote>
+  <p>[Project Track: Project 1] Deep learning has become a standard tool for dense prediction in environmental monitoring. Inthis project, we focus on semantic segmentation of coral reef imagery using the CoralScapes dataset. Starting from a pretrained SegFormer-B5 model, we design a coral-specific training pipeline that combines tiling, augmentations, and a CE+Dice loss. This yields a modest but consistent improvement in mIoU and qualitative boundary sharpness over the original checkpoint. We also run exploratory experiments with DeepLabv3 and SAM3, and discuss practical limitations due to the absence of coral-specific pretraining and limited compute.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Felicia Chen, Megan Luu, Derek Wu, Mallerly Mena on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team33-humanposeestimation.html">Evolution of Human Pose Estimation - From Deep Regression to YOLO-Pose</a>
+        
+        <blockquote>
+  <p>Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, and shoulders of a person through images or video. By predicting these keypoints or predefined body landmarks, models can infer a structured, skeleton-like representation of the human body, which enables further exploration into understanding human posture, motion, and interactions with the environment. As such, this field is a crucial area of research that is used in various real-world applications like action recognition or healthcare. In this project, we study a variety of different deep learning approaches to 2D human pose estimation, beginning first with early end-to-end regression models and progressing towards more structured and context-aware architectures. In particular, we delve deeper into how modeling choices around global context, spatial precision, and body structure influence pose estimation performances.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Adrian Pu on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team33-food-detection.html">Food Detection</a>
+        
+        <blockquote>
+  <p>Food detection is a subset of image classification that is able to classify specific foods. As such, it requires the ability to learn finer-grain details to differentiate specific foods. In this paper, we investigate how three models, DeepFood, WISeR, and Noisy-ViT, built upon state-of-the-art (at the time) object classification models for food detection, along with a dataset built for food detection Food-101. On this dataset, DeepFood performed at a 77.40% accuracy, WISeR performed at a 90.27% accuracy, and Noisy-ViT performed at a 99.50% accuracy.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Albert Dong, Lindsay Qin, Lune Chan, Clare Jin on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery.html">Global Human Mesh Recovery</a>
+        
+        <blockquote>
+  <p>In this blog post, we introduce and discuss recent advancements in global human mesh recovery, a challenging computer vision problem involving the extraction of human meshes on a global coordinate system from videos where the motion of the camera is unknown.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Abdallah Fares, Dean Ali, Olana Abraham on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html">From Labeling to Prompting: The Paradigm Shift in Image Segmentation</a>
+        
+        <blockquote>
+  <p>The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+         on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team22-visuomotor-policy.html">Visuomotor Policy</a>
+        
+        <blockquote>
+  <p>Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Na Yoon Kang and Gabe Macatula on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team20-UDA.html">Unupervised Domain Adaptation with GTA -&gt; Cityscapes</a>
+        
+        
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Kayla Hamakawa, Alyssa Leung, Meryl Mathew, Angela Quan on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team17-instance-segmentation.html">Instance Segmentation Paper Synthesis: Evolution and New Frontiers</a>
+        
+        <blockquote>
+  <p>Instance segmentation is a fundamental task in computer vision that detects and separates individual object instances on a pixel level. There have been several recent developments in computer vision that have led to improvements in instance segmentation performance and new applications of instance segmentation. We will discuss and analyze Segment Anything Model, Mask2Former, and Relation3D for image and point cloud instance segmentation in this paper report.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Pavan Gudavalli, Kevin Nguyen, Brian Felipe Brito, Alex Chen on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team14-photo-retouching.html">Machine Learning for Studio Photo Retouching: Object Removal, Background Inpainting, and Lighting/Shadow Preservation</a>
+        
+        <blockquote>
+  <p>Studio photography aims to produce aesthetically polished images. However, even in controlled environments, unwanted objects such as chairs, props, wires, etc., often appear in the scene. Further, lighting is altered tremendously by the addition / removal of these objetcs. Traditionally, these objects have been removed manually, requiring careful reconstruction of the background and its lighting conditions. This paper looks at modern models aimed at making this process easier.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Megan Jacob on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team13-medical-image-segmentation.html">Advances in Medical Image Segmentation</a>
+        
+        <blockquote>
+  <p>This paper is a review on the advances in medical image segmentation technology over the past few years. With the increasing popularity of deep learning, there has been more innovation and application of these techniques in the medical space. Through an analysis of these approaches we can see the clear progression in innovation and the extensive applications.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Eric Huang, Julia Wang, Zhiyi Chen, Boyan Yu on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars.html">Center Pillars - Anchor-Free Object Detection in 3D </a>
+        
+        <blockquote>
+  <p>[Project Track: Project 8] This project implements a LiDAR-based 3D object detection pipeline that uses PointPillars to encode raw point clouds into a bird’s-eye-view (BEV) pseudo-image, enabling efficient convolutional feature extraction. On top of this representation, the CenterPoint framework decodes BEV features by predicting object centers and regressing bounding box attributes in an anchor-free manner. This design removes the need for predefined anchors while maintaining accurate spatial localization and computational efficiency.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Team 10 on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team10-pose-estimation.html">Introduction to Camera Pose Estimation</a>
+        
+        <blockquote>
+  <p>Camera pose estimation is one important component in computer vision used for robotics, AR/VR, 3D reconstruction, and more. It involves determining the camera’s 3D position and orientation, also known as the “pose” in various environments and scenes. PoseNet, MeNet, and JOG3R are all various deep learning techniques used to accomplish camera pose estimation. There are also sensor-based tracking like LEDs and particle filters. We focus on geometric methods, specifically Structure-from-Motion (SfM).</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Brian Liu on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team05-vision-language-action-models.html">Vision Language Action Models for Robotics</a>
+        
+        <blockquote>
+  <p>The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Max Fukuhara, Nathan Chan, Jason Tran, Michael Co on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html">Facial Emotion Recognition</a>
+        
+        <blockquote>
+  <p>This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Thomas Peeler, Dylan Truong, Asher Christian, Daniel Chvat on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team01-super-res.html">Deep Learning for Image Super-Resolution</a>
+        
+        <blockquote>
+  <p>Image super-resolution is a natural, ill-posed computer vision problem, being the task of recovering a high-resolution, clean image from a low-resolution, degraded image. In this post, we survey 3 recent methods of image super-resolution, each highly distinct with its own advantages and disadvantages. Finally, we conduct an experiment in modifying the structure of one of these methods.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Benjamin Man, Nathan Leobandung, Jason Jiang, Steven Pan on Dec 13, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html">Streetview Semantics</a>
+        
+        <blockquote>
+  <p>[Project Track] Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Then, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Our last contribution is a boundary-aware auxillary supervision strategy that explicitly promotes boundary preservation for thin and small objects while maintaining architectural simplicity. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Brandon Wu on Dec 12, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/12/team46-UDA-semantic-segmentation.html">Unsupervised Domain Adaptation for Semantic Segmentation</a>
+        
+        <blockquote>
+  <p>Data annotation is widely considered a major bottleneck in semantic segmentation. It leads to domain gaps between labeled source data and unlabeled target data and stresses the need for unsupervised domain adaptation (UDA) methods. This post covers DAFormer, a recent transformer-based UDA method which significantly improved state-of-the-art performance, as well as two more recent performance-improving approaches to UDA (HRDA and MIC).</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Shelby Falde, Joshua Li, Alexander Chen on Dec 12, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/12/team19-instruction-to-post.html">From Paris to Seychelles - Deep Learning Techniques for Global Image Geolocation</a>
+        
+        <blockquote>
+  <p>Image geolocation—the task of predicting geographic coordinates from visual content alone—has evolved significantly with advances in deep learning. This survey examines four landmark approaches that have shaped the field. We begin with PlaNet (2016), which pioneered the geocell classification framework using CNNs and adaptive spatial partitioning based on photo density. We then explore TransLocator (2022), which leverages Vision Transformers and semantic segmentation maps to capture global context and improve robustness across varying conditions. Next, we analyze PIGEON (2023), which introduces semantic geocells respecting administrative boundaries, Haversine smoothing loss to penalize geographically distant predictions less harshly, and CLIP-based pre-training to achieve human-competitive performance on GeoGuessr. Finally, we examine ETHAN (2024), a prompting framework that applies chain-of-thought reasoning to large vision-language models, enabling interpretable geographic deduction without task-specific training. Through this progression, we trace the architectural evolution from convolutional networks to transformers to foundation models, highlighting key innovations in spatial partitioning strategies, loss function design, and the integration of semantic reasoning for worldwide image localization.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Zach Liu, Tianze Zhao, Ruizhe Cheng, Ahmad Khan on Dec 12, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/12/team02-streetviewseg.html">Street-view Semantic Segmentation</a>
+        
+        <blockquote>
+  <p>[Project Track: Project 8] In this project, we delve into the topic of developing model to apply semantic segmentations on fine-grained urban structures based on pretrained SegFormer model. We explore 3 approaches to enhance the model performance, and analyze their result. You can find the code <a href="https://colab.research.google.com/drive/1zyYjBVjg5Cb8FCsuKu3ZdRixrpnStUDx">here</a></p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Lina Lee on Dec 12, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/12/team31-human-pose-estimation.html">Human Pose Estimation</a>
+        
+        <blockquote>
+  <p>In this paper, I will be discussing the fundamentals and workings of deep learning for human pose estimation. I believe that there has been a lot of research and breakthroughs, especially recently, on technology that relates to this, and I hope that this deep dive will bring some clarity and new information to how it works!</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Vivek Alumootil and Jinying Lin on Dec 11, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/11/team09-novel-view-synthesis.html">Novel View Synthesis</a>
+        
+        <blockquote>
+  <p>In computer graphics and vision, novel view synthesis is the task of generating images of a scene given a set of images of the same scene taken from different perspectives. In this report, we introduce three important papers attempting to solve this task.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Team 32 on Dec 10, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/10/team32-NovelViewAHJZ.html">Exploring Modern Novel View Generation Methods</a>
+        
+        <blockquote>
+  <p>[Project Tack] Historically, novel view synthesis (NVS) has relied on volumetric radiance field approaches, such as NeRF. While effective, these methods are often computationally expensive to train and prohibitively slow to render for real-time applications. To address these limitations, researchers have developed new architectures that reduce computational costs while maintaining or exceeding visual fidelity. This report examines two distinct solutions to this challenge: 3D Gaussian Splatting (3DGS) and the Large View Synthesis Model (LVSM).</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Group 28 on Dec 7, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/07/team28-camera-pose-estimation.html">Camera Pose Estimation</a>
+        
+        <blockquote>
+  <p>Camera pose estimation is a fundamental Computer Vision task that aims to determine the position and orientation of a camera relative to a scene using image or video data. Our project evaluates three camera pose estimation methods, COLMAP, VGGSfM, and depth-based pose estimation with ICP.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Jeffrey Le on Dec 5, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/12/05/team49-human-pose.html">Human Pose Estimation in Robotics Simulation</a>
+        
+        <blockquote>
+  <p>[Project Track] Human pose estimation is the task of detecting and localizing key human joints from 2D images or video. These joints are typically represented as keypoints connected by a skeletal structure, forming a pose representation. Pose estimation has found applications in areas such as physiotherapy, animation, sports analytics, and robotics.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Ryan Carney, Phi Nguyen, Nikolas Rodriguez on Nov 19, 2025
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2025/11/19/team27-optical-flow.html">Optical Flow</a>
+        
+        <blockquote>
+  <p>Optical flow is simply the problem of estimating motion in images, with real world applications in other fields such as autonomous driving. As such, there have been many different approaches to this problem. We compare three of these approaches: FlowNet, RAFT, and UFlow. We explore each of these models in depth, before moving on to a comparative analysis and discussion of the three models. This analysis highlights the key differences between each approach, when they are most applicable, and how they each handle common problems in the optical flow field such as the lack of available training data.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Radhika Kakkar, Janie Kuang, Nyla Zia on Dec 13, 2024
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2024/12/13/team45-medical-segmentation.html">Medical Image Segmentation</a>
+        
+        <blockquote>
+  <p>Medical image segmentation is an important component in the medical field, supporting the diagnosis of patients, treatment planning, and disease monitoring. Segmentation in machine learning is a process where datasets are broken into meaningful groups for annotation and deeper analysis. Medical segmentation, a combination of the two, has grown to importance in the field, but there still remains a challenging problem due to the large variability in modalities, anatomical structures, and usage. This report examines three recent approaches, MedSAM, UniverSeg, and GenSeg, that aim to address and improve on these limitations by improving generalization and adaptability.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+    <li>
+      
+      <span class="post-meta">
+        Andrea Asprer, Diana Chu, Matthew Lee, Tanisha Aggarwal on Dec 12, 2024
+        <span>
+          
+        </span>
+      </span>
+
+      <h2>
+        <a class="post-link" href="/CS163-Projects-2025Fall/2024/12/12/team21-streetview-semantic-segmentation.html">Street-View Semantic Segmentation</a>
+        
+        <blockquote>
+  <p>[Project Track: Street-View Semantic Segmentation] In this project, we implemented and evaluated semantic segmentation models on the Cityscapes dataset to enhance pixel-level understanding of urban scenes for autonomous driving; we also built a car to evaluate our models in real-world scenarios.</p>
+</blockquote>
+
+
+        
+      </h2>
+    </li>
+    
+  </ul>
+</div>
+      </div>
+    </main>
+
+    <div style="clear: both;" />
+<footer class="site-footer">
+    2024 &copy; by UCLAdeepvision. All Rights Reserved. Built by <a href="https://jekyllrb.com/"
+        target="_blank">Jekyll</a>
+
+    <!-- <p>
+        <a href="/CS163-Projects-2025Fall/feed.xml" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_rss.png" />
+        </a>
+        <a href="https://scholar.google.com/citations?user=dCa-pW8AAAAJ&hl=en&oi=ao" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_scholar.png" />
+        </a>
+        <a href="https://github.com/lilianweng" target="_blank">
+            <img src="/CS163-Projects-2025Fall/assets/images/logo_github.png" />
+        </a>
+    </p> -->
+</footer>
+
+  </body>
+
+</html>
