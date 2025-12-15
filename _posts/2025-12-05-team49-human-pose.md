@@ -1,13 +1,13 @@
 ---
 layout: post
 comments: true
-title: "Project Track: Project 49 - Human Pose Estimation in Robotics Simulation"
+title: "Human Pose Estimation in Robotics Simulation"
 author: Jeffrey Le
 date: 2025-12-05
 ---
 
 
-> Human pose estimation is the task of detecting and localizing key human joints from 2D images or video. These joints are typically represented as keypoints connected by a skeletal structure, forming a pose representation. Pose estimation has found applications in areas such as physiotherapy, animation, sports analytics, and robotics.
+> [Project Track] Human pose estimation is the task of detecting and localizing key human joints from 2D images or video. These joints are typically represented as keypoints connected by a skeletal structure, forming a pose representation. Pose estimation has found applications in areas such as physiotherapy, animation, sports analytics, and robotics.
 
 
 <!--more-->
