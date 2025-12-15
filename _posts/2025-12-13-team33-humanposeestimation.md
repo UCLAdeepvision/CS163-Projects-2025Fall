@@ -8,6 +8,7 @@ date: 2025-12-13
 
 > Human pose estimation is a fundamental problem in computer vision that focuses on localizing and identifying key body joints, such as elbows, knees, wrists, and shoulders of a person through images or video. By predicting these keypoints or predefined body landmarks, models can infer a structured, skeleton-like representation of the human body, which enables further exploration into understanding human posture, motion, and interactions with the environment. As such, this field is a crucial area of research that is used in various real-world applications like action recognition or healthcare. In this project, we study a variety of different deep learning approaches to 2D human pose estimation, beginning first with early end-to-end regression models and progressing towards more structured and context-aware architectures. In particular, we delve deeper into how modeling choices around global context, spatial precision, and body structure influence pose estimation performances.
 
+<!--more-->
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -110,8 +111,9 @@ The central component of the model is the hourglass module, named after its symm
 
 Then, the network performs a top-down processing, which uses nearest-neighbor upsampling to recover the spatial resolution. This is similar to a U-Net architecture. Skip connections are added to merge features from corresponding resolutions both on the way down and up, which enables the model to preserve really precise spatial detail while still incorporating global context. The importance of the module is its symmetrical design, since the hourglass from earlier fully convolutional or encoder–decoder designs emphasize bottom-up computation more.
 
-![Hourglass Module](/assets/images/33/hourglassmodule.png)
-_Fig 2. The stacked hourglass module architecture._
+![Hourglass Module]({{ '/assets/images/team34/hourglassmodule.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 2. The stacked hourglass module architecture.</em></p>
 
 The model then stacks these multiple hourglass modules end-to-end. Each hourglass module takes the features and predictions of the previous stage as input and produces a new set of pose predictions. This is how the network is able to iteratively refine its pose estimates.
 
@@ -138,13 +140,13 @@ They utilized data augmentation during their training including rotation and sca
 
 The model at the time of publication achieved state-of-the-art performance on both FLIC and MPII benchmarks. Gains are especially large for difficult joints such as wrists, elbows, knees, and ankles, where global context is critical. Ablation experiments show that stacking hourglasses improves accuracy even when total model capacity is held constant, and that intermediate supervision provides additional gains.
 
-![FLIC Results](/assets/images/33/flicresults.png)
+![FLIC Results]({{ '/assets/images/team34/flicresults.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 3. PCKh results on the FLIC benchmark dataset.</em></p>
 
-_Fig 3. PCKh results on the FLIC benchmark dataset._
-
-![MPII Results](/assets/images/33/mpiihumanpose.png)
-
-_Fig 4. PCKh results on the MPII Human Pose benchmark dataset._
+![MPII Results]({{ '/assets/images/team34/mpiihumanpose.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 4. PCKh results on the MPII Human Pose benchmark dataset.</em></p>
 
 <a id="hourglass-conclusion"></a>
 
@@ -158,17 +160,18 @@ The equations in Stacked Hourglass Networks are intentionally simple but what ma
 
 In 2019, a new structure-aware approach to pose estimation was introduced in Adversarial Learning of Structure-Aware Fully Convolutional Networks for Landmark Localization. Researchers Yu Chen, Chunhua Shen, Hao Chen, Xiu-Shen Wei, Lingqiao Liu, and Jian Yang found inspiration in human vision, which is capable of both inferring potential poses and excluding implausible ones (even in the presence of severe occlusions). Prior solutions, such as stacked hourglass, imposed no constraints on potentially producing biologically implausible pose predictions and continue to struggle to overcome common challenges in pose estimation such as heavy occlusions and background clutter (see comparison below). This paper proposes a solution to integrate the concept of geometric constraints into pose estimation by utilizing Generative Adversarial Networks (GANs).
 
-![Adversarial Learning Comparison](/assets/images/33/adver_1.png)
-
-_Fig 5. Prediction samples on the MPII set comparing stacked hourglass (HG) and adversarial learning (Ours)._
+![Adversarial Learning Comparison]({{ '/assets/images/team34/adver_1.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 5. Prediction samples on the MPII set comparing stacked hourglass (HG) and adversarial learning (Ours).</em></p>
 
 <a id="adversarial-architecture"></a>
 
 ### The Architecture
 
 A GAN sets up two networks as competitors in a zero-sum game: a generator G and a discriminator P. The GAN described in this paper encourages P to classify the plausibility of a pose configuration and G to generate pose heatmaps aimed to fool the discriminator. The authors additionally made other minor architectural changes (e.g. designing stacked multi-task networks) that achieved improved results for 2D pose estimation. The discriminator learns the structure of body joints implicitly through the following designs of the generator and discriminator.
-![Structure-Aware Adversarial Training Model](/assets/images/33/adver_2.png)
-_Fig 5. Structure-Aware Adversarial Training Model_
+![Structure-Aware Adversarial Training Model]({{ '/assets/images/team34/adver_2.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 5. Structure-Aware Adversarial Training Model</em></p>
 
 <a id="generative-network"></a>
 
@@ -176,9 +179,9 @@ _Fig 5. Structure-Aware Adversarial Training Model_
 
 The fully convolutional generative network implements the Stacked Hourglass architecture previously discussed to combine local joint features with global body context, ensuring neurons maintain large receptive fields. Like stacked hourglass, the image is processed using a convolution, residual bloc, and max pooling. The network then includes multiple stacking modules where pose heatmaps (body part locations) and occlusion heatmaps (hidden parts) are jointly predicted to calculate the intermediate losses. Additionally, the network can access previous estimates and features through the stacked modules, enabling the system to re-evaluate the joint predictions of poses and occlusions at any latter stage. Note, this paper discusses both 2D and 3D pose estimation; however, we will be focusing on 2D pose estimation in this discussion. In each block, 1 x 1 convolutions with residual connections reduce the number of feature maps down to the number of body parts then obtain the final predicted heatmaps. The resulting multi-task generative network is the baseline model in the paper's framework whose goal is to learn a function 𝒢 that can project an image x to both the corresponding pose heatmaps y and the occlusion heatmaps z. The direct goal of 𝒢 is to minimize the Mean Squared Error between the predicted and ground-truth heatmaps to align spatial accuracy.
 
-![Generative Network G](/assets/images/33/adver_3.png)
-
-_Fig 6. Generative Network G._
+![Generative Network G]({{ '/assets/images/team34/adver_3.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 6. Generative Network G.</em></p>
 
 <a id="discriminative-network"></a>
 
@@ -232,9 +235,9 @@ $$\arg \min_G \max_{P,C} \mathcal{L}_G(\Theta) + \alpha \mathcal{L}_C(G, C) + \b
 
 Training the adversarial network follows this algorithm:
 
-![Adversarial Training Algorithm](/assets/images/33/adver_4.png)
-
-_Fig 7. Adversarial training algorithm._
+![Adversarial Training Algorithm]({{ '/assets/images/team34/adver_4.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 7. Adversarial training algorithm.</em></p>
 
 The algorithm iteratively learns the generator G, discriminator P, and confidence discriminator C. For both discriminators, each i-th fake label t is set to 1 if the normalized distance di between the prediction and ground truth is less than a threshold or , and 0 otherwise. These initializations for the discriminators coerce G into generating biologically plausible poses with high-confidence. The algorithm then iteratively learns the generator G, discriminator P, and confidence discriminator C with respect to each loss function and the combined objective function.
 
@@ -242,25 +245,25 @@ The algorithm iteratively learns the generator G, discriminator P, and confidenc
 
 Numerically, the proposed architecture in this paper did make improvements upon the state-of-the-art competitors at the time. The paper evaluated the 2D Human Pose estimation on Leeds Sports Poses (LPS), MPII Human Pose, and MSCOCO Keypoints dataset. Accuracy is evaluated on percentage of correct keypoints (PCK). For the LSP dataset, this method achieved the second-best performance with a 2.4% improvement over previous methods on average. For the MPII Human Pose dataset, this method achieves the best PCK with a score of 91.9% with notable improvements on difficult joints such as wrists and ankles.
 
-![Results on Leeds Sports Poses and MPII Human Pose](/assets/images/33/adver_5.png)
+![Results on Leeds Sports Poses and MPII Human Pose]({{ '/assets/images/team34/adver_5.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 8. Results on Leeds Sports Poses.</em></p>
 
-_Fig 8. Results on Leeds Sports Poses._
+![Qualitative Comparison]({{ '/assets/images/team34/adver_6.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 9. Results on MPII Human Pose</em></p>
 
-![Qualitative Comparison](/assets/images/33/adver_6.png)
-
-_Fig 9. Results on MPII Human Pose_
-
-![Results](/assets/images/33/adver_7.png)
-
-_Fig 10. Results on MSCOCO._
+![Results]({{ '/assets/images/team34/adver_7.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 10. Results on MSCOCO.</em></p>
 
 Qualitatively, visualizations demonstrated improved handling of occlusions, cropped out body parts, and invisible limbs that raised issues for stacked hourglass. The authors compared a 2-stacked hourglass network to their 2-stacked network and saw better information absorption due to recognizing plausible joint structure.
 
 However, the authors acknowledge their proposal failed in challenging edge cases with twisted limbs at the edge, overlapping people and occluded body parts, and in some cases where the authors speculate a human wouldn't be able to estimate the pose correctly either.
 
-![Ours vs HG](/assets/images/33/adver_8.png)
-
-_Fig 11. Ours vs HG._
+![Ours vs HG]({{ '/assets/images/team34/adver_8.png' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 11. Ours vs HG.</em></p>
 
 **Conclusion**
 
@@ -276,9 +279,9 @@ YOLO-Pose is motivated by a practical bottleneck: the highest-accuracy pipelines
 
 A key observation is that many challenges in pose estimation mirror those in object detection—scale variation, occlusion, and non-rigid deformation—so the authors argue that advances in object detection should transfer cleanly if pose can be expressed as “detection + structured regression.”
 
-![YOLO-Pose Comparison](/assets/images/33/Qualitative_result_on_a_crowded.jpg)
-
-_Fig 12. YOLO-Pose highlights "inherent grouping" (keypoints tied to each detected person) vs. bottom-up grouping failures in crowded scenes [4]._
+![YOLO-Pose Comparison]({{ '/assets/images/team34/Qualitative_result_on_a_crowded.jpg' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 12. YOLO-Pose highlights "inherent grouping" (keypoints tied to each detected person) vs. bottom-up grouping failures in crowded scenes [4].</em></p>
 
 <a id="yolo-arch"></a>
 
@@ -293,9 +296,9 @@ A clean way to write the per-anchor prediction is:
 - Bounding box (6 values): typically representing box geometry + objectness/class terms for the single “person” class (the paper summarizes this as 6 predicted elements).
 - Keypoints (51 values): For each of the 17 keypoints, predict (x, y, c), resulting in 17 × 3 = 51 values.
 
-![YOLO-Pose Architecture](/assets/images/33/YOLO_pose_architecture.jpg)
-
-_Fig 13. YOLO-Pose extends YOLOv5: CSP-Darknet backbone → PANet fusion → multi-scale heads, each branching into a box head and a keypoint head [4]._
+![YOLO-Pose Architecture]({{ '/assets/images/team34/YOLO_pose_architecture.jpg' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 13. YOLO-Pose extends YOLOv5: CSP-Darknet backbone → PANet fusion → multi-scale heads, each branching into a box head and a keypoint head [4].</em></p>
 
 <a id="formulation"></a>
 
@@ -365,9 +368,9 @@ A major systems claim is that YOLO-Pose uses **standard object-detection post-pr
 
 The authors also emphasize a robustness advantage under occlusion: keypoints are **not constrained to lie inside the predicted bounding box**. If an occluded limb’s keypoint falls outside the visible box extent, YOLO-Pose can still predict it, whereas a strict top-down crop-based pipeline may miss it when the box is imperfect.
 
-![YOLO-Pose Occlusion](/assets/images/33/yolo_pose_occlusion.jpg)
-
-_Fig 14. The paper's examples show keypoints predicted outside the detected box under occlusion and imperfect localization [4]._
+![YOLO-Pose Occlusion]({{ '/assets/images/team34/yolo_pose_occlusion.jpg' | relative_url }})
+{: style="width: 640px; max-width: 100%;"}
+<p style="text-align:center; font-size:0.9em;"><em>Fig 14. The paper's examples show keypoints predicted outside the detected box under occlusion and imperfect localization [4].</em></p>
 
 #### Test-time augmentation: why “no TTA” is a meaningful constraint
 
