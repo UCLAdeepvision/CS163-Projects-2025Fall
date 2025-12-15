@@ -1,28 +1,18 @@
 ---
 layout: post
 comments: true
-title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3.
-Project Track: Project 1"
+title: "Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3"
 author: Team 35 - Cara Burgess, Maria Campo Martins, Kevin Valencia
 date: 2025-12-13
 ---
 
-> Semantic Segmentation of Coral Reefs: Evaluating SegFormer, DeepLab, and SAM3
+> [Project Track: Project 1] Deep learning has become a standard tool for dense prediction in environmental monitoring. Inthis project, we focus on semantic segmentation of coral reef imagery using the CoralScapes dataset. Starting from a pretrained SegFormer-B5 model, we design a coral-specific training pipeline that combines tiling, augmentations, and a CE+Dice loss. This yields a modest but consistent improvement in mIoU and qualitative boundary sharpness over the original checkpoint. We also run exploratory experiments with DeepLabv3 and SAM3, and discuss practical limitations due to the absence of coral-specific pretraining and limited compute.
 
 <!--more-->
 {: class="table-of-content"}
 * TOC
 {:toc}
 
-## Introduction
-Deep learning has become a standard tool for dense prediction in environmental monitoring. In
-this project, we focus on semantic segmentation of coral reef imagery using the CoralScapes
-dataset. Starting from a pretrained SegFormer-B5 model, we design a coral-specific training
-pipeline that combines tiling, augmentations, and a CE+Dice loss. This yields a modest but
-consistent improvement in mIoU and qualitative boundary sharpness over the original
-checkpoint. We also run exploratory experiments with DeepLabv3 and SAM3, and
-discuss practical limitations due to the absence of coral-specific pretraining and limited
-compute.
 
 ## Main Content
 Coral reefs are under increasing stress from climate change and local human impacts, and
