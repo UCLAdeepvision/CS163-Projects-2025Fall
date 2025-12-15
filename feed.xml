@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-15T00:30:54+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Streetview Semantics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html" rel="alternate" type="text/html" title="Streetview Semantics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="/CS163-Projects-2025Fall/feed.xml" rel="self" type="application/atom+xml" /><link href="/CS163-Projects-2025Fall/" rel="alternate" type="text/html" /><updated>2025-12-15T00:34:56+00:00</updated><id>/CS163-Projects-2025Fall/feed.xml</id><title type="html">2025F, UCLA CS163 Course Projects</title><subtitle>Course projects for UCLA CS163, Deep Learning in Compuver Vision</subtitle><author><name>UCLAdeepvision</name></author><entry><title type="html">Streetview Semantics</title><link href="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html" rel="alternate" type="text/html" title="Streetview Semantics" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team44-streetview-semantics.html"><![CDATA[<blockquote>
   <p>[Project Track] Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Then, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Our last contribution is a boundary-aware auxillary supervision strategy that explicitly promotes boundary preservation for thin and small objects while maintaining architectural simplicity. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.</p>
 </blockquote>
 
@@ -624,7 +624,591 @@ L = L_{\text{seg}} + \lambda L_{\text{boundary}}
 
 <p>[5] He, K., Zhang, X., Ren, S., &amp; Sun, J. “Deep residual learning for image recognition.” <em>Proceedings of the IEEE conference on computer vision and pattern recognition</em>. 2016.</p>
 
-<p>[6] T. Takikawa, D. Acuna, V. Jampani and S. Fidler, “Gated-SCNN: Gated Shape CNNs for Semantic Segmentation,” 2019 IEEE/CVF International Conference on Computer Vision (ICCV), Seoul, Korea (South), 2019.</p>]]></content><author><name>Benjamin Man, Nathan Leobandung, Jason Jiang, Steven Pan</name></author><summary type="html"><![CDATA[[Project Track] Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Then, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Our last contribution is a boundary-aware auxillary supervision strategy that explicitly promotes boundary preservation for thin and small objects while maintaining architectural simplicity. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.]]></summary></entry><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
+<p>[6] T. Takikawa, D. Acuna, V. Jampani and S. Fidler, “Gated-SCNN: Gated Shape CNNs for Semantic Segmentation,” 2019 IEEE/CVF International Conference on Computer Vision (ICCV), Seoul, Korea (South), 2019.</p>]]></content><author><name>Benjamin Man, Nathan Leobandung, Jason Jiang, Steven Pan</name></author><summary type="html"><![CDATA[[Project Track] Street-level semantic segmentation is a core capability for autonomous driving systems, yet performance is often dominated by severe class imbalance where large categories such as roads and skies overwhelm safety-critical but rare classes like bikes, motorcycles, and poles. Using the BDD100K dataset, this study systematically examines how architectural choices, loss design, and training strategies affect segmentation quality beyond misleading pixel-level accuracy. Starting from a DeepLabV3-ResNet50 baseline, we demonstrate that high pixel accuracy (~ 94%) can coincide with extremely poor mIoU (~ 4%) under imbalance. We then introduce class-weighted and combined Dice-Cross-Entropy/Focal losses, auxiliary supervision, differential learning rates, and gradient clipping, achieving a 10x improvement in mIoU. Then, we propose a targeted optimization strategy that remaps the task to six safety-critical small classes and leverages higher resolution, aggressive augmentation, and boosted class weights for thin and small objects. This approach significantly improves IoU for bicycles, motorcycles, and poles, highlighting practical trade-offs between accuracy, resolution, and computational cost. However, such increases in resolution resulted in significant increases to training time per epoch, resulting in less training. Our last contribution is a boundary-aware auxillary supervision strategy that explicitly promotes boundary preservation for thin and small objects while maintaining architectural simplicity. Overall, the work provides an empirically grounded blueprint for addressing class imbalance and small-object segmentation in urban scene understanding.]]></summary></entry><entry><title type="html">Deep Learning for Image Super-Resolution</title><link href="/CS163-Projects-2025Fall/2025/12/13/team01-super-res.html" rel="alternate" type="text/html" title="Deep Learning for Image Super-Resolution" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team01-super-res</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team01-super-res.html"><![CDATA[<blockquote>
+  <p>Image super-resolution is a natural, ill-posed computer vision problem, being the task of recovering a high-resolution, clean image from a low-resolution, degraded image. In this post, we survey 3 recent methods of image super-resolution, each highly distinct with its own advantages and disadvantages. Finally, we conduct an experiment in modifying the structure of one of these methods.</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#background-and-introduction" id="markdown-toc-background-and-introduction">Background and Introduction</a></li>
+  <li><a href="#a-survey-of-deep-learning-for-super-resolution" id="markdown-toc-a-survey-of-deep-learning-for-super-resolution">A Survey of Deep Learning for Super Resolution</a>    <ul>
+      <li><a href="#hybrid-attention-transformer-hat" id="markdown-toc-hybrid-attention-transformer-hat">Hybrid Attention Transformer (HAT)</a></li>
+      <li><a href="#look-up-table-lut-methods" id="markdown-toc-look-up-table-lut-methods">Look-Up Table (LUT) Methods</a></li>
+      <li><a href="#unfolding-networks" id="markdown-toc-unfolding-networks">Unfolding Networks</a></li>
+    </ul>
+  </li>
+  <li><a href="#experiments-an-extension-of-the-hybrid-attention-transformer" id="markdown-toc-experiments-an-extension-of-the-hybrid-attention-transformer">Experiments: An Extension of the Hybrid Attention Transformer</a>    <ul>
+      <li><a href="#adaptive-sparse-transformer-ast" id="markdown-toc-adaptive-sparse-transformer-ast">Adaptive Sparse Transformer (AST)</a></li>
+      <li><a href="#putting-it-together" id="markdown-toc-putting-it-together">Putting it Together</a></li>
+      <li><a href="#results-4" id="markdown-toc-results-4">Results</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion-3" id="markdown-toc-conclusion-3">Conclusion</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="background-and-introduction">Background and Introduction</h2>
+
+<p>Super-resolution is a natural problem for image-to-image methods in computer vision, referring to the process of using a degraded, downsampled image to recover the original image before degradation and downsampling. Of course, this is an ill-posed problem; two different high-resolution images can downsample and degrade into the same low-resolution image (that is, the process is not injective), so truly inverting the process is impossible. For this reason, we settle for the task of estimating a function that approximates an inverse, producing a high-resolution image based solely on some mathematical assumptions and the information of the low-resolution image. This includes simple, classical methods, such as nearest-neighbor or bicubic upsampling, as well as, in recent years, statistical methods making use of deep learning for computer vision.</p>
+
+<p>We will be surveying three of these recent methods, highlighting the very different ways that one can go about achieving the same end goal in super-resolution:</p>
+
+<ul>
+  <li>
+    <p>The Hybrid Attention Transformer (HAT), a shifted-window Transformer-based method</p>
+  </li>
+  <li>
+    <p>Look-Up Table (LUT) methods, which use a precomputed table of pixel estimates</p>
+  </li>
+  <li>
+    <p>Unfolding networks, which combine classical model-based methods with learning-based methods</p>
+  </li>
+</ul>
+
+<p>Additionally, we will be discussing an experiment that we carried out involving a modification to the HAT architecture.</p>
+
+<h2 id="a-survey-of-deep-learning-for-super-resolution">A Survey of Deep Learning for Super Resolution</h2>
+
+<h3 id="hybrid-attention-transformer-hat">Hybrid Attention Transformer (HAT)</h3>
+
+<p>Transformer-based models have recently seen great success for vision tasks, with modifications such as the Swin Transformer further improving these models by reducing computational burdens and reintroducing inductive biases. However, in practice, Swin-based methods often suffer from a small practical receptive field, where the reconstruction prediction of any given pixel is based only upon a small number of pixels near it, even if, in theory, the tokens for that part of the image should have implicitly “seen” all other tokens during self-attention. For this, the Hybrid Attention Transformer (HAT) is designed specifically to utilize a larger portion of the image during reconstruction by combining windowed-self-attention, channel attention, and a novel overlapping-window attention mechanism.</p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/HAT_architecture.png" alt="HAT architecture" /></p>
+<p><em>Fig 1. HAT Architecture Overview [1].</em></p>
+
+<h4 id="hybrid-attention-block-hab">Hybrid Attention Block (HAB)</h4>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/hab.png" alt="hybrid attention block" /></p>
+<p><em>Fig 2. Hybrid Attention Block [1].</em></p>
+
+<p>The Hybrid Attention Block (HAB) aims to combine the deep flexibility of Vision Transformers with the efficiency and global accessibility of channel attention.</p>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/cab.png" alt="channel attention block" /></p>
+<p><em>Fig 3. Channel Attention Block [1].</em></p>
+
+<p>The Channel Attention Block (CAB) consists of two convolutional layers separated by a GELU activation, followed by a channel attention (CA) module. The CA module consists of global average pooling (GAP), followed by two \(1 \times 1\) convolutions, ensuring that the channel number is the same as prior to the CA module, separated by another GELU. Then, the sigmoid function is applied to the now-\(1 \times 1 \times C\)-shaped output to create channel weights, which are multiplied channel-wise by the pre-CA module input, to get an output of the same \(H \times W \times C\) shape, where each channel has been scaled by a factor in \([0, 1]\). The factors are applied globally to each channel and are determined by GAP + convolutions, allowing all channels to utilize information from, to some degree, all positions in all other channels in an efficient manner.</p>
+
+<p>In the HAB, the CAB is inserted into a standard Swin Transformer block after the first LayerNorm in parallel with the window-based multi-head self-attention (W-MSA) module, where they are then combined additively (along with a residual connection). The efficiency and simplicity of the CAB comes at the cost of specific positional information being unutilized due to GAP, which is why the CAB is used in parallel with W-MSA, which explicitly <em>does</em> account for positional information. So, then, for a given input feature \(X\), the HAB is computed as:</p>
+
+\[X_N = \mathrm{LN}(X),\]
+
+\[X_M = (\text{S})\text{W-MSA}(X_N) + \alpha\,\mathrm{CAB}(X_N) + X\]
+
+\[Y = \mathrm{MLP}(\mathrm{LN}(X_M)) + X_M,\]
+
+<p>where LN is the LayerNorm, (S)W-MSA is the (shifted) window-multihead self attention, MLP is the standard positionwise feed-forward network of a Transformer, \(X_N\) and \(X_M\) denote intermediate features, \(Y\) is the output, and \(\alpha\) is a small hyperparameter that tempers the influence of the CAB compared to the W-MSA, to avoid issues of conflict between the two modules during optimization; empirically, \(\alpha=0.01\) was found to give the best performance, as this parallel scheme can introduce significant stability issues in the optimization process if the influence of each branch is not controlled. Within-window linear mappings are used to get \(Q\), \(K\), and \(V\) matrices, though, notably, these mappings are applied on the individual spatial pixels of the input, not on patches (that is, patches of size \(1 \times 1\) are used), as the spatial dimensions of the input need to be maintained throughout the network to account for residual connections. A fixed window size is employed, the same as in the regular Swin Transformer, however, notably, the model does not contain any patch merging, again in service of retaining the shape of the image for residual connections. Within-window attention uses the standard attention scheme, with a fixed sinusoidal relative positional encoding within each window similar to that of “Attention is All You Need”.</p>
+
+<h4 id="overlapping-cross-attention-block-ocab">Overlapping Cross-Attention Block (OCAB)</h4>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/overlapping.png" alt="Overlapping window partition" /></p>
+<p><em>Fig 4. The overlapping window partition for OCA [1].</em></p>
+
+<p>OCAB modules are used throughout the HAT to further allow for cross-window connections; the basic idea is that windowed self-attention is performed on the input as normal, in the exact same manner as in the HAB module, though the windows for the keys and values, while still centered on the same locations as the windows of the queries, are larger than those of the queries, allowing each window to pull in some information from neighboring windows that it normally would not see.</p>
+
+<p>Specifically, for input features \(X\), let \(X_Q, X_K, X_V \in \mathbb{R}^{H \times W \times C}\). \(X_Q\) is partitioned into \(\frac{HW}{M^2}\) non-overlapping windows of size \(M \times M\). \(X_K\) and \(X_V\) are partitioned into \(\frac{HW}{M^2}\) overlapping windows of size \(M_o\times M_o\), where \(M_o\) is calculated as</p>
+
+\[M_o = (1 + \gamma)M,\]
+
+<p>where \(\gamma\) is a hyperparameter introduced in order to control the size of the overlapping windows, and the input is zero-padded to account for this larger window. Aside from shifting windows, this allows for even more cross-window information transmission, as each query window, which are the standard size, can pull in information from the key and value windows that include the query window and extend into the space that would otherwise be a separate, independent window. OCAB is specifically designed to mitigate the blocking artifacts that the standard Swin Transformer produces:</p>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/blocking.png" alt="Blocking " /></p>
+<p><em>Fig 5. Comparison of blocking between SwinIR and HAT [1].</em></p>
+
+<p>The OCAB combats this by directly stepping over the hard boundaries between windows, reducing their presence in the extracted features; each query window has access to information about the space beyond its own boundaries, so they can better create smooth boundaries in the features between adjacent windows. While standard window shifting has a similar goal, each shifted window still only has access to its own pixels, which may still lead to hard boundaries and blocking between windows that become present in the features.</p>
+
+<p>Empirically, \(\gamma=0.5\) was found to give the best performance, translating to overlapping windows that are, by area, 4/9 composed of the original window and 5/9 composed of adjacent windows. This is less extreme than the shifted windows of the standard Swin Transformer, where, since the regular shifting amount is half of the window size in each dimension, shifted windows are only 1/4 composed of their original window, and are 3/4 composed of other windows. Still, this additional method of cross-window attention gives the model greater flexibility and another opportunity to use a larger portion of the original image in its reconstruction process.</p>
+
+<h4 id="residual-hybrid-attention-group-rhag">Residual Hybrid Attention Group (RHAG)</h4>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/rhag.png" alt="Residual Hybrid Attention Group" /></p>
+<p><em>Fig 6. The structure of a Residual Hybrid Attention Group [1].</em></p>
+
+<p>These modules are combined in a further modular format via a Residual Hybrid Attention Group (RHAG), which puts a variable number of HAB modules in sequence which are followed by an OCAB module, with a final convolutional layer to ensure compatability between shapes of the input and output that allows for a residual connection over the entire module. The sequencing of HAB modules mirrors the structure of standard Swin stages, as the attention windows are shifted between subsequent HABs; though, patch merging is skipped in favor of the OCABs, as they both aim to combine information between windows, and OCAB can retain the spatial size of the input.</p>
+
+<h4 id="high-level-model-structure">High-Level Model Structure</h4>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/highlevelhat.png" alt="High Level HAT" /></p>
+<p><em>Fig 7. The high-level structure of the HAT [1].</em></p>
+
+<p>Contrary to the standard Swin, projection to the desired channel dimension is done using an initial convolutional layer; though, mirroring the structure of the Swin Transformer, multiple RHAG modules are placed in sequence (similar to the sequence of stages in Swin), though in this case, a residual connection (along with a convolutional layer to ensure compatability of shapes) is employed across the series of RHAGs. Then, the final image reconstruction is performed using convolutions (for channel number adjustments) and pixel shuffle, where pixels from many channels are pulled together sequentially into a smaller number of channels with a larger image size.</p>
+
+<h4 id="results">Results</h4>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/lam.png" alt="LAM Results" /></p>
+<p><em>Fig 8. LAM results for different SR methods [1].</em></p>
+
+<p>In practice, the HAT does, indeed, use a larger portion of the input image for reconstruction than other Transformer-based SR methods. Above is a comparison of Local Attribution Maps (LAM) between different models, which is a method for measuring which portions of the input were most influential for a given patch of the output. We see that HAT is highly nonlocal compared to other methods in terms of LAM, and performs better for it.</p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/quantitativeresultshat.png" alt="Quantitative Results" /></p>
+<p><em>Fig 9. Quantitative results for HAT compared to other methods [1].</em></p>
+
+<p>The authors compared 3 versions of the model: HAT-S, HAT, and HAT-L: HAT has a similar size to the existing Swin super-resolution model SwinIR, with 6 RHAG modules with 6 HABs each; HAT-L is larger than HAT, with 12 RHAGs instead of 6; HAT-S is smaller than HAT, utilizing only depthwise convolutions and featuring a smaller channel number throughout the model, resulting in overall computation similar to that of SwinIR. Quantitatively, in terms of peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), two standard metrics for image reconstruction, HAT’s variants outperform their peers (if only slightly), and larger HAT models tend to yield better performance (again, if only slightly).</p>
+
+<h4 id="conclusion">Conclusion</h4>
+
+<p>The HAT is a notable modification of the Swin Transformer architecture, designed for super resolution, due to its large practical receptive field; while all SR methods have an entire image to work with as input, it takes effort and specific design to actually use the information that is there in an efficient manner, which can be crucial to reconstructing an image correctly. Judging by its quantitative results, the future state-of-the-art in SR will likely be driven, to some degree, by the development of methods that are designed to produce even larger receptive fields. However, due to the large, Transformer-based architecture, despite using the Swin Transformer, the larger HAT variants can be computationally demanding; while the results are favorable, further developments may be required to make a model like this practical.</p>
+
+<h3 id="look-up-table-lut-methods">Look-Up Table (LUT) Methods</h3>
+
+<p>There have been relatively few attempts to make modern deep learning-based methods of super-resolution computationally efficient enough for common consumer applications such as cameras, mobile phones, and televisions. Look-Up Table (LUT) methods, as described in [3], aim to bridge this gap by using a precomputed LUT, where the output values from a deep SR network are stored in advance; during inference, the system can quickly retrieve these high-resolution values by querying the LUT with low-resolution input pixels.</p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/lut_architecture.png" alt="LUT architecture" /></p>
+<p><em>Fig 10. LUT Method Overview [3].</em></p>
+
+<h4 id="the-lut">The LUT</h4>
+
+<p>It may be useful to start with how the LUT will be used in inference: given a low-resolution image and an upscaling factor \(r\), our goal is will be to map each pixel of the low-res image to an image patch of size \(r \times r\), which we then assemble into a full upscaled image. This process will be done independently for each color channel, so that we are assembling 3 independent images with 1 color channel each and then concatenating them to form a 3-channel image. For a given image pixel at location \((i, j)\), we would like this mapping to take into account the pixels surrounding \((i, j)\) as well as the pixel itself; so, to get the patch for pixel \((i, j)\), the LUT will be indexed by a fixed number of pixel values surrounding \((i, j)\) (given that we use pixel values for indexing, we use 8-bit color), and at this index in the LUT, there will be \(r^2\) values that we can use to construct an image patch. For instance, for \(r=2\) and a LUT receptive field of 4, let 
+\(I_0 = image[i, j], I_1 = image[i+1, j], I_2 = image[i, j+1], I_3 = image[i+1, j+1]\). 
+Then, \(LUT[I_0][I_1][I_2][I_3][0][0]\) will contain the top-left corner of the upscaled patch, and \(LUT[I_0][I_1][I_2][I_3][1][1]\) will contain the bottom-right corner. This will be the basic method that the LUT uses in inference, which only requires table lookup, and no network computation.</p>
+
+<h4 id="the-sr-network">The SR Network</h4>
+
+<p>Now, with a clear goal of how the LUT should function, we can construct the network that will give us its values. Given that we want the patch in the LUT for each specific pixel value to depend solely on a fixed number of surrounding pixels, a convolutional network with a finely-controlled receptive field seems natural; again, note that the LUT upscaling process is performed independently on each color channel, so the input to this network will only have 1 channel. Specifically, given a receptive field size \(n\) and an upscaling factor \(r\), we can construct a network as:</p>
+
+<ul>
+  <li>
+    <p>a series of convolutional layers (with nonlinearities), where, at the end, each output pixel has a gross receptive field of size \(n\) and the output has \(r^2\) channels</p>
+  </li>
+  <li>
+    <p>a pixel shuffle that will construct upscaled patches from our channels and concatenate them together into a full upscaled image</p>
+  </li>
+</ul>
+
+<p>with this, we have constructed a network where each tiled \(r \times r\) patch of the output depends only on a (contiguous) size \(n\) receptive field from the input. Now, if we optimize this network for super-resolution, to construct our LUT, we can simply generate patches of size \(n\) with specific values (which will be indexes in the LUT) and feed them into the network, and the resulting upscaled patch can be added to the LUT at the given index. The kernels of the convolutional layers could be anything as long as it conforms to the receptive field requirement, however, the authors of the paper use an architecture where the first convolutional layer results in a receptive field of size \(n\), and all subsequent layers are \(1\times 1\) convolutions (the issue of the kernel reducing the size of the input is dealt with by pre-padding the image); additionally, they use a square kernel when possible, as it will capture the pixels that are most adjacent, and thus most relevant, to each other, compared to a non-square kernel.</p>
+
+<h4 id="lut-size">LUT Size</h4>
+
+<p>Of course, the principal design priority of the LUT is efficiency in speed and size. Using 8-bit color, if we construct a LUT that accounts for every possible input patch, one can compute the size of the LUT for a given receptive field \(n\) and upscale factor \(r\) as</p>
+
+\[(2^8)^n r^2 \text{ bytes}\]
+
+<p>This can be seen clearly from the structure of the LUT; there are \(2^8\) possible values for a given 1-channel pixel (again, for 8-bit color), so for a RF of size \(n\), there are \((2^8)^n\) possible input patches. At each index corresponding to an input patch, there is an upscaled patch of size \(r^2\), whose entries are also each 8 bits (or 1 byte). Clearly, this will not scale well with \(n\), and in fact, \(n=4\) and \(r=2\) gives us a LUT that is 16GB large. To counteract this, [3] uses a “sampled LUT”, where only a subset of the possible input patches are sampled for use in the LUT; specifically, they found that sampling the color space of \(0\) to \(2^8-1\) uniformly (including endpoints) with a sampling interval of \(2^4\) over each pixel of the input patch worked well to reduce the size of the LUT while retaining good performance, reducing the 16GB LUT to just \((1+\frac{2^8}{2^4})^4 2^2 = 334084\) bytes, or about 326KB.</p>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/lutsizes.png" alt="LUT sizes" /></p>
+<p><em>Fig 11. A comparison of LUT sizes for \(r=4\) [3].</em></p>
+
+<p>Of course, this sampled LUT introduces the issue of indexing: how do we index from the LUT if the input patch doesn’t match a patch that was seen while filling out the table? For this, the authors used interpolation; instead of indexing one upscaled patch, we can interpolate between up to \(2^n\) patches, for a RF size \(n\). For instance, for a LUT where \(n=2\), using a sampling interval of \(2^4\), getting the upscaled patch for an input patch where \(I_0 = 8, I_1 = 8\) would require interpolating between \(LUT[0][0], LUT[0][1], LUT[1][0], LUT[1][1]\). Using this sampling interval, these nearest points can actually be found easily by looking at the bit representation of \(I_j\): the first 4 bits, when converted to integer, will be the index of the lower part of the interpolation (e.g. for \(I_j = 20\), 20 \(\to\) 00010100, and then 0001 \(\to\) 1, meaning that \(LUT[1]\) will be the lower part of the interpolation and \(LUT[2]\) will be the upper part); this method of indexing for the interpolation points adds even further to the LUT’s speed. The issue of interpolating between points in \(n\) dimensional space is complex in its own right, though we note that the authors found that linear interpolation was slower than triangular interpolation (and its higher-dimensional couterparts), especially for larger \(n\).</p>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/interpolation.png" alt="LUT sizes" /></p>
+<p><em>Fig 12. A comparison of interpolation methods for \(n=2, 3, 4\) [3].</em></p>
+
+<h4 id="rotational-ensemble">Rotational Ensemble</h4>
+
+<p>Additionally, during training and testing, the authors employed the strategy of “rotational ensemble”. This is a method of data augmentation that involves:</p>
+
+<ul>
+  <li>
+    <p>rotating each input by 90, 180, and 270 (and 0) degrees</p>
+  </li>
+  <li>
+    <p>feeding each of the 4 rotations of the input into the model</p>
+  </li>
+  <li>
+    <p>rotating each the super-resolution outputs such that they are all at their original orientation</p>
+  </li>
+  <li>
+    <p>taking the average over the 4 outputs, and treating that as your final output</p>
+  </li>
+</ul>
+
+<p>This method is well-suited to our task; images that are rotated still fall under our base assumption of what “real” images look like for super resolution, so the model can improve by optimizing over them. In our case, this method can actually improve the effective receptive field of the model substantially:</p>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/rotensemble.png" alt="Rotational Ensemble Illustration" /></p>
+<p><em>Fig 13. An illustration of the effect of rotational ensemble on the receptive field; a 2x2 RF is effectively increased to a 3x3 RF [3].</em></p>
+
+<p>During training, rotational ensemble simply works well as a way to increase your dataset size. However, this method can be used in inference as well; we can construct 4 different super-resolution predictions using the LUT, and then average them together. For a 2x2 square RF, one can see, in the illustration above representing 2x upscaling, that the relative position of the patch in the output corresponding to the RF in the input will be determined by the relative position of the top-left pixel of the RF in the input image; that is, any RF in the input, no matter the rotation of the image, will correspond to the same patch in the output as long as the top-left pixel of the RF is the same across those RFs in the input. So, when we look at the RFs across our rotational ensemble when the top-left pixel is kept constant, we see that their union will be a 3x3 area in the input, which means that the given output patch will be influenced by all pixels in the 3x3 area, effectively increasing our inference RF size to 9.</p>
+
+<p>While this does increase our inference computation time by a factor of 4 (discounting rotations and averaging), it is likely a worthy trade-off for such a substantial increase in RF size, which would normally require increasing the LUT size to an unmanageable degree.</p>
+
+<h4 id="results-1">Results</h4>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/lut_comparison.png" alt="LUT Comparison Table" /></p>
+<p><em>Fig 14. Peak signal-to-noise ratio (PSNR) and runtime of various methods for 320 x 180 -&gt; 1280 x 720 upscaling [3].</em></p>
+
+<p>There are 3 models mentioned in the paper: V, F, and S, which have a receptive field of 2, 3, and 4, respectively. F and S use a sampled LUT with a sampling interval of \(2^4\), while V uses a full LUT. We see that the LUT methods provide a good tradeoff in terms of speed vs reconstruction quality, where F is even faster than bicubic interpolation, and V is even faster than bilinear interpolation.</p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/lutqualitative.png" alt="LUT qualitative results" /></p>
+<p><em>Fig 15. Qualitative comparison of results [3].</em></p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/lutquantitative.png" alt="LUT qualitative results" /></p>
+<p><em>Fig 16. Quantitative comparison of results; runtimes for all methods besides sparse coding are on a Galaxy S7 phone [3].</em></p>
+
+<p>We see that, quantitatively, all LUT variants perform substantially better than traditional interpolation upscaling methods, and are competitive with methods that require far greater runtime and/or storage space. Interestingly, there are some cases where the F model seems to perform quantitatively better than the S model, despite the fact that the only difference between them is that S has a larger receptive field. This likely just indicates a plateau in performance wrt receptive field size, or the differently shaped receptive fields may fare differently on different datasets (since RF=3 for F and RF=4 for S, the RF for F is a line and the RF for S is a square).</p>
+
+<p>LUT methods are an interesting way to make super-resolution more efficient; instead of making a more efficient network, it avoids using a network for inference altogether. However, there are some obvious flaws: the quantitative results do not make it state-of-the-art in that regard, and the methodology of using the same LUT for each color channel independently seems somewhat unintuitive. Additionally, a given LUT is confined to a fixed receptive field size and upscaling factor; an entirely new SR network and table must be created to change these factors, which restricts the method’s practical use.</p>
+
+<h4 id="im-lut">IM-LUT</h4>
+
+<p>Since its invention in 2021, there have been numerous published papers for extensions and modifications to the LUT. One of these, published in 2025, is Interpolation Mixing LUT, or IM-LUT [5]. IM-LUT allows for the model to adapt to the scaling factor at inference time, meaning that a single IM-LUT can be used to scale any image to any size. This is achieved by first upscaling the input image with standard interpolation algorithms, such as bicubic upsampling, and then using a standard LUT on the upscaled image. However, the IM-LUT can also adapt its interpolation to the input image dynamically; a single IM-LUT first uses many different interpolation algorithms, and then uses a weighted average, with weights based on the image itself and the given scale factor, to combine the interpolations together before the final refinement LUT. With this, the IM-LUT can adapt to any scaling factor while still also dynamically adapting to the specific input image.</p>
+
+<p>Now, we go through the structure of the IM-LUT.</p>
+
+<h4 id="im-net">IM-Net</h4>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/imnet.png" alt="IM Net" /></p>
+<p><em>Fig 17. IM-Net, the network used to generate the LUTs for IM-LUT [5].</em></p>
+
+<p>There are two overall parts to the IM-Net: weight map prediction, and image refinement. Image refinement is simply a network that refines an the interpolated input image; it takes an image of any given size, and produces an image of the same size. This part of the network is simple, but the weight maps are more involved:</p>
+
+<p>The IM-LUT works with a fixed set of \(K\) interpolation functions, and for any given image, the network predicts per-pixel weights for each interpolation function; these weight maps allow the network to take advantage of the fact that different interpolation methods may fare better in different areas of a given image. The weight maps are a combination of the output of two other networks:</p>
+
+<ul>
+  <li>
+    <p>An image-to-weight map network, that takes the low-resolution image and produces low-resolution weight maps.</p>
+  </li>
+  <li>
+    <p>An upscaling factor-to-scale vector network (“scale modulator”), that takes the scaling factor as input and outputs a vector of per-interpolation function weights.</p>
+  </li>
+</ul>
+
+<p>The weights from the scale modulator are multiplied by the initial weight maps (one scale weight per weight map) to produce the final weight maps. The networks optimize their predictions of these weight maps as so:</p>
+
+<ul>
+  <li>
+    <p>For a given image (where the ground truth is known) and upscaling factor, downscale the image and then get interpolations back to the original size using each given interpolation function.</p>
+  </li>
+  <li>
+    <p>Calculate per-interpolation deviations from the GT image using per-pixel L1 loss, i.e. 
+\(E_k[i, j] = |\hat I_k[i, j] - I_{\text{GT}}[i, j]|\) 
+for \(k=1,...,K\).</p>
+  </li>
+  <li>
+    <p>Compute ground-truth weight maps as a temperature-controlled per-pixel softmax over all negative interpolation deviations, i.e.
+\(W^{GT}_k[i, j] = \frac{e^{-\beta E_k[i, j]}}{\sum_{\ell=1}^K e^{-\beta E_\ell[i, j]}}\) 
+for \(\beta\) being the temperature constant.</p>
+  </li>
+  <li>
+    <p>Compute the “guide” loss (or, the weight map loss) as the L2 reconstruction loss between the predicted and ground-truth weight maps, that is
+\(\mathcal{L}_{\text{guide}} = \sum_{\ell=1}^K ||\hat W_\ell - W^{GT}_\ell||_2\)</p>
+  </li>
+</ul>
+
+<p>Then, when the predicted weight maps are used to create a final interpolated image, and that is run through the refinement network, the final reconstruction loss can be found as 
+\(\mathcal{L}_{\text{rec}} = ||\hat I - I^{GT}||_2\) 
+and the final loss that we optimize over is 
+\(\mathcal{L} = \mathcal{L}_{\text{rec}} + \lambda \mathcal{L}_{\text{guide}}\) 
+where \(\lambda\) is our trade-off hyperparameter. With this, we can optimize both the refinement and the weight map predictions at once, and we can vary the upscaling factor to ensure that the network can adapt well to different amounts of upscaling.</p>
+
+<h4 id="im-lut-1">IM-LUT</h4>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/imlut.png" alt="IM LUT" /></p>
+<p><em>Fig 18. An overview of the way in which the LUTs are created and used [5].</em></p>
+
+<p>Now, we have to transfer the IM-Net to LUTs. Given that IM-Net has 3 distinct sub-networks (scaling factor network, weight map network, and refinement network), we will have 3 LUTs; note that the refinement and weight map networks each use convolutional networks that leave each pixel of the output with a 2x2 receptive field in the input, as was seen with the original LUT. Additionally, each LUT is created with a sampling-interval scheme and interpolated indexing, as was also seen with the standard LUT (except for the scale LUT, which uses nearest neighbor interpolation). Specifically, the scale modulator LUT is indexed by a single number and outputs a vector of \(K\) weights, making it small and efficient; the weight map LUT is indexed by 4 pixel values and outputs \(K\) pixel values (since the weight map network <em>does not</em> perform any resizing), making it similar in size to the standard LUT; the refiner LUT is indexed by 4 pixels and outputs 1 pixel value (again, no resizing), making it smaller than the standard LUT. We see that, unlike the standard LUT, the size of the LUTs has no dependence on the scale factor; however, given that the refiner LUT will be used on the entire upscaled image, the overall computational complexity will increase with the scale factor (though, as noted in [5], it does not increase substantially).</p>
+
+<p>Once the LUTs are computed, they can be used as stand-ins for the networks (as in the standard LUT), and then images can be upscaled as they were in IM-Net.</p>
+
+<h4 id="results-2">Results</h4>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/imlutqualitative.png" alt="IM LUT qualitative" /></p>
+<p><em>Fig 19. Qualitative results of IM-LUT compared to other methods [5].</em></p>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/imlutresults.png" alt="IM LUT quantitative" /></p>
+<p><em>Fig 20. Multiply-accumulate (MAC) operations, required storage, and PSNR for various super-resolution methods [5].</em></p>
+
+<p>Given the freedom to choose interpolation functions, the authors highlight a few possible combinations of functions: in the table above, N means “nearest neighbor”, L means “bilinear”, C means “bicubic” and Z means “lanczos”, another kind of interpolation algorithm that uses windowed normalized sine functions; the letters, when put together, indicate that the given IM-LUT uses all of those interpolation functions. We see that the IM-LUT methods manage to be very efficient on storage and, for certain combinations of interpolations, on computations, as well; at the same time, they have much better performance than any single interpolation function, and, while not being state-of-the-art quantitatively, stay competitive with other LUT or similarly-efficient SR methods that require more storage and, in the case of the other LUT methods, cannot use a single model to adapt to different scaling factors.</p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/weightmaps.png" alt="IM LUT weight maps" /></p>
+<p><em>Fig 21. Analysis of weight maps for different interpolation functions [5].</em></p>
+
+<p>From the color-coded weight maps above, we see that the model is, in fact, using the weight maps to adapt to the input image. For instance, when nearest-neighbor and bilinear interpolation are used together, we see that the bilinear interpolation is prioritized in areas of low brightness, while the nearest neighbor method is used elsewhere. However, we also see that when nearest-neighbor, bilinear, and bicubic interpolation are used together, the nearest-neighbor interpolation has very little influence, indicating that one could even use the weight maps as a form of interpolation function selection, similar to how L1 regularization is used as variable selection in linear regression.</p>
+
+<h4 id="conclusion-1">Conclusion</h4>
+
+<p>The IM-Net is already an interesting kind of reparameterization of the problem of learning-based super-resolution; instead of directly learning how to upscale an image, the network instead learns how to ensemble a set of given interpolation functions to do upscaling. This modular design allows for a great deal of flexibility in the model, as it can be combined with any arbitrary-scale upscaling method, even other learning-based methods, without any change to the core architecture. Of course, in this case, our real goal is a LUT-based method; in the realm of LUT-based methods, IM-LUT still stands out for its capability of arbitrary-scale super-resolution. Dynamically adapting to different scales will be a practical necessity for any super-resolution method, so it will be interesting to see if, as time goes on, efficient super-resolution methods will expand further in the direction of the IM-LUT, or if an entirely different architecture will rise to the top; the obvious downside of LUT methods is their low accuracy, so it will be especially noteworthy if a whole new kind of model structure can improve on this while retaining the benefits of LUT and allowing for arbitrary scales.</p>
+
+<h3 id="unfolding-networks">Unfolding Networks</h3>
+
+<p>The “unfolding” in “unfolding network” refers to splitting up the problem of image reconstruction into two distinct subproblems, that being (1) deblurring and upsampling, and (2) denoising. With this approach, one can show that problem (1) has a closed-form optimal solution that can explicitly adapt to specific given types of degradation with 0 learned parameters; this greatly reduces the burden on the learned portion of the network, which now only needs to do denoising. The method is a kind of fusing of model-based and learning-based approaches; despite involving a variant of a UNet, it is designed to be zero-shot adaptable to any kind of degradation that is parameterized by a known blurring kernel, downsampling factor, and noise level.</p>
+
+<p>Now, we can go through and derive the method ourselves to illustrate how it arises:</p>
+
+<h4 id="derivation">Derivation</h4>
+
+<p>The basic assumption will be that the input image for the method will be the blurred, downsampled, and additive white Gaussian noise-ed version of a ground-truth image, or in other words, our degraded image \(\vec y\) is</p>
+
+\[\vec y = (\vec x \otimes \vec k)\downarrow_s + \vec N\]
+
+<p>where:</p>
+<ul>
+  <li>\(\vec x \otimes \vec k\) represents the application of blurring kernel \(\vec k\) to ground-truth image \(\vec x\) (via convolution)</li>
+  <li>\(\downarrow_s\) represents downsampling (decimation) by a factor of \(s\)</li>
+  <li>\(\vec N \sim N(\vec 0, \sigma^2 I)\) for noise level \(\sigma \in \mathbb{R}^+\)</li>
+</ul>
+
+<p>Given that \(\vec y \sim N((\vec x \otimes \vec k)\downarrow_s, \sigma^2 I)\), its PDF is</p>
+
+\[P(\vec y | \vec x) = \frac 1 {(2\pi\sigma^2)^{\frac p 2}}e^{-\frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2}\]
+
+<p>Furthermore, it will be useful to have an image prior, which we will define as</p>
+
+\[\Phi(\vec x) = -\log P(\vec x)\]
+
+<p>which will stand as a measure of how “natural” an image \(\vec x\) is, ideally being minimised for any of our ground truth images and being maximised for images that are very noisy or unrealistic (i.e. unlike our GT images); we could interpret it simply as the negative logarithm of the a-priori probability distribution function of our ground truth images. In a practical sense, incorporating such a measure in our optimization will push our model toward creating images that conform to the patterns that typically appear in real images regarding color, brightness, etc, as opposed to overfitting on an image reconstruction loss function (in other words, a form of regularization).</p>
+
+<p>Now, under a maximum a-posteriori (MAP) framework, our goal in super-resolution, given a degraded image \(\vec y\) conforming to the assumptions above, can be defined as finding</p>
+
+\[\hat x = \arg \max_{\vec x} P(\vec x | \vec y) \\\]
+
+<p>Or, in other words, the clean image that the degraded image most likely started as. From Bayes theorem, we have</p>
+
+\[P(\vec x | \vec y) = \frac{P(\vec y | \vec x)P(\vec x)}{P(\vec y)} \propto P(\vec y | \vec x)P(\vec x)\]
+
+<p>Since \(P(\vec y)\) is constant with regard to \(\vec x\). So now,</p>
+
+\[\begin{aligned}
+\hat x &amp;= \arg \max_{\vec x} P(\vec x | \vec y) \\
+&amp;= \arg \max_{\vec x} P(\vec y | \vec x)P(\vec x) \\
+&amp;= \arg \min_{\vec x} -\log(P(\vec y | \vec x)P(\vec x)) = \arg \min_{\vec x} -\log P(\vec y | \vec x) - \log P(\vec x) \\
+&amp;= \arg \min_{\vec x} -(\log(\frac 1 {(2\pi\sigma^2)^{\frac d 2}}) - \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2) + \Phi(\vec x) \\
+&amp;= \arg \min_{\vec x} \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2 + \Phi(\vec x)
+\end{aligned}\]
+
+<p>Additionally, for practical reasons, we often include a “trade-off” hyperparameter, which we represent with \(\lambda\), to balance the influence between our prior term \(\Phi\) and our data term 
+\(||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2\)
+, so we have</p>
+
+\[\hat x = \arg \min_{\vec x} \frac 1 {2\sigma^2}||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x)\]
+
+<p>Instead of directly minimizing this expression with something like gradient descent, one can actually notice that 
+\(\arg \min_{\vec x} ||(\vec x \otimes \vec k)\downarrow_s - \vec y||_2^2\)
+ has a closed form solution (which we will detail later); so, to take advantage of this fact, we can decouple the data term and prior term in our optimization by using half-quadratic splitting, where we introduce an auxiliary variable \(\vec z\) into our optimization:</p>
+
+\[\min_{\vec x, \vec z}\frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z||_2^2\]
+
+<p>Now, \(\mu\) is a hyperparameter controlling how much leeway we want to give \(\vec x\) and \(\vec z\) to be different, where \(\mu \to +\infty\) recovers our original problem. Now, given that we have two optimization variables instead of just one, we can <em>unfold</em> the target and perform alternating iterative optimization (with \(j\) as the step number):</p>
+
+\[\begin{aligned}
+\vec z_j &amp;= \arg \min_{\vec z} \frac 1 {2\sigma^2}||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \frac \mu 2 ||\vec x_{j-1} - \vec z||_2^2 \\
+\vec x_j &amp;= \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2
+\end{aligned}\]
+
+<p>Now, it may be useful to change the value of \(\mu\) throughout our optimization; a small \(\mu\) near the start of our optimization will help speed up convergence, and a large \(\mu\) near the end will ensure that our solution actually corresponds to the original problem. So, define \(\mu_1, ..., \mu_J\) for an optimization of \(J\) steps, and let \(\alpha_j = \mu_j\sigma^2\), so we have</p>
+
+\[\begin{aligned}
+\vec z_j &amp;= \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2 \\
+\vec x_j &amp;= \arg \min_{\vec x} \Phi(\vec x) + \frac {\mu_j} {2\lambda} ||\vec x - \vec z_j||_2^2
+\end{aligned}\]
+
+<p>Now, as alluded, \(\vec z_j\) actually still has a closed form solution:</p>
+
+\[\vec z_j  = \mathcal{F}^{-1} \left(\frac{1}{\alpha_j}\left(\vec d - \overline{\mathcal{F}(\vec k)} \odot_s \frac{(\mathcal{F}(\vec k)\vec d) \Downarrow_s}{(\overline{\mathcal{F}(\vec k)}\mathcal{F}(\vec k))\Downarrow_s + \alpha_j} \right) \right)\]
+
+<p>where</p>
+
+\[\vec d = \overline{\mathcal{F}(\vec k)}\mathcal{F}(\vec y \uparrow_s) + \alpha_j \mathcal{F}(\vec x_{j-1})\]
+
+<p>and \(\mathcal{F}\) denotes the discrete FFT (and \(\mathcal{F}^{-1}\) is the inverse discrete FFT), \(\odot_s\) is the distinct block processing operator with element-wise multiplication, \(\Downarrow_s\) denotes the block downsampler, and \(\uparrow_s\) denotes the upsampler. The derivation of this solution is too long to include here, but is detailed in [4].</p>
+
+<p>So, it remains to find 
+\(\vec x_j = \arg \min_{\vec x} \Phi(\vec x) + \frac {\mu_j} {2\lambda} ||\vec x - \vec z_j||_2^2\). 
+One can notice that this is similar to our very first optimization target; indeed, finding \(\vec x_j\) is equivalent to removing additive white Gaussian noise from \(\vec z_j\) with \(\sigma^2_\text{noise} = \frac {\lambda} {\mu_j}\) under a MAP framework. So, for convenience, we define 
+\(\beta_j = \sqrt{\frac{\lambda}{\mu_j}}\)
+ (the standard deviation of the Gaussian noise), and we have that finding \(x_j\) is equivalent to a Gaussian denoising problem with noise level \(\beta_j\) (or, \(\sigma^2_\text{noise} = \beta_j^2\)).</p>
+
+<p>Given that this is a simple denoising task, we can opt for a denoising neural network.</p>
+
+<h4 id="denoising-network">Denoising Network</h4>
+
+<p>The paper in question uses a “ResUNet”, which is a variant of a UNet:</p>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/UNet.png" alt="Unfolding UNet" /></p>
+<p><em>Fig 22. UNet architecture as depicted in  [6].</em></p>
+
+<p>The ResUNet involves four scales, in which 2x2 strided convolutions and 2x2 transposed convolutions are adopted for down- and up-scaling, respectively, and residual blocks with the same structure as from ResNet are added between these size changes; of course, skip connections between downscaling and upscaling are also employed, as in the regular UNet.</p>
+
+<p>In order to ensure adaptibility and nonblind-ness of the method, it is useful to incorporate the noise level \(\beta_j\) into the network input. The method in [2] for doing this is fairly simple: given an input image \(3 \times H \times W\), a constant matrix with size \(H \times W\) with all entries equal to \(\beta_j\) is appended on the channel dimension to create an input of shape \(4 \times H \times W\), which is fed into the network as normal.</p>
+
+<h4 id="network-modules">Network Modules</h4>
+
+<p>Now, to explicitly modularize the method so far, the authors introduce various network modules. First, we have the data module \(\mathcal{D}\), which is used to give us \(\vec z_j = \mathcal{D}(\vec x_{j-1}, s, \vec k, \vec y, \alpha_j)\), which is the optimal solution to</p>
+
+\[\vec z_j = \arg \min_{\vec z} ||(\vec z \otimes \vec k)\downarrow_s - \vec y||_2^2 + \alpha_j ||\vec x_{j-1} - \vec z||_2^2\]
+
+<p>Of course, this is achieved with the closed form solution detailed above, so this module has no learnable parameters and can explicitly adapt to any blurring kernel, scale factor and noise level \(\sigma\) (through \(\alpha_j\)).</p>
+
+<p>The prior module \(\mathcal{P}\), which is used to give us \(\vec x_j = \mathcal{P}(\vec z_j, \beta_j)\), is trained to optimize the other objective</p>
+
+\[\vec x_j = \arg \min_{\vec x} \lambda\Phi(\vec x) + \frac \mu 2 ||\vec x - \vec z_j||_2^2\]
+
+<p>As alluded, this encapsulates the denoising ResUNet.</p>
+
+<p>Lastly, the hyperparameter module \(\mathcal{H}\) is introduced to allow for dynamic hyperparameter selection.
+This module takes in the noise level \(\sigma\) and scale factor \(s\) and uses a MLP to predict optimal \(\lambda\) and \(\mu_1, ..., \mu_J\) for the given problem, which can then be used to compute \(\alpha_1, ..., \alpha_J\) and \(\beta_1, ..., \beta_J\).</p>
+
+<h4 id="overall-model-structure">Overall Model Structure</h4>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/unfoldingstructure.png" alt="Unfolding Network" /></p>
+<p><em>Fig 23. The full architecture of the unfolding network [2].</em></p>
+
+<p>These modules are combined by first predicting hyperparameters \(\alpha_j\) and \(\beta_j\) through the hyperparameter module, and then stacking the data and prior modules sequentially, performing iterative optimization on the low resolution input image (which is first upsampled with nearest-neighbor interpolation to be the target size before being fed into the network).</p>
+
+<p>With all of this, the authors note that the model is trained in a end-to-end fashion, where scaling factors, blurring kernels, and noise levels are sampled from a pool throughout training to generate LR samples. While certain portions of the network can explicitly adapt to these factors, the denoising network (and hyperparameter module) cannot do so in the same manner, and so varying these values throughout training ensures that the network, as a whole, is robust and adaptable.</p>
+
+<h4 id="results-3">Results</h4>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/unfoldingperformance.png" alt="Unfolding Performance" /></p>
+<p><em>Fig 24. Quantitative and qualitative results of various methods [2].</em></p>
+
+<p>We see that the unfolding network performs favorably compared to its peers, both qualitatively and quantitatively, for a variety of scaling factors, noise levels, and blurring kernels. Due to the explicit adaptibility to these factors, the model can even be effective even at parsing images that humans may have trouble with:</p>
+
+<p style="max-width: 80%;"><img src="/CS163-Projects-2025Fall/assets/images/01/unfoldingres2.png" alt="Unfolding Performance" /></p>
+<p><em>Fig 25. Qualitative results of deep unfolding network with the associated blurring kernels [2].</em></p>
+
+<h4 id="conclusion-2">Conclusion</h4>
+
+<p>Of course, in practice, we often may not have much idea about the specific blurring kernel or noise level for our given image, which limits the effective use of this model structure. Additionally, performing denoising only with convolutions, despite the use of a UNet, may limit the method’s effective receptive field.</p>
+
+<p>However, in all, the deep unfolding network is an interesting blend of model-based and learning-based methods; they can both be very useful in their own right, and can empower each other when combined. The efficient, learning-free data module makes the optimization problem of the learned prior module much easier, and attains an optimal solution that could have required many times more parameters to replicate in a learning-based method. Conversely, the prior module can give us an accurate approximation for a complex, statistical problem, which model-based methods can struggle with.</p>
+
+<h2 id="experiments-an-extension-of-the-hybrid-attention-transformer">Experiments: An Extension of the Hybrid Attention Transformer</h2>
+
+<h3 id="adaptive-sparse-transformer-ast">Adaptive Sparse Transformer (AST)</h3>
+
+<p>While Transformers have shown immense success in vision tasks due to their ability to model complex, long-range relationships, this can also be a detriment; for reconstructing a given portion of an image, there are likely many parts of the image that are not relevant, and trying to use information from those parts will only add noise to the reconstruction. The self-attention mechanism of the regular Transformer has all tokens attend to all other tokens, with (Softmax) attention weights that will always be greater than 0. While the Transformer can use very small attention scores as a way of giving less attention to irrelevant tokens, it is likely useful to give the model more direct flexibility in selecting relevant image regions that does not require assigning scores of large magnitude; for this, [7] proposes the Adaptive Sparse Transformer (AST).</p>
+
+<p>The AST changes the standard Transformer architecture in two ways: first, instead of just using Softmax on the attention scores to get attention weights, it introduces sparse score selection by using a weighted sum of the Softmax and squared-ReLU of the attention scores to get the attention weights, where the weight between the two schemes is a learnable parameter. With this, our Transformer has both “dense” (Softmax) attention weights, which makes all weights greater than 0, and “sparse” (squared ReLU) weights, where many weights will be exactly 0 and larger weights will be further amplified, and the model can learn how best to balance these two methods for the task at hand. This self-attention mechanism is known as Adaptive Sparse Self-Attention (ASSA), and it is notable as a potentially powerful modification to the self-attention mechanism that requires just 1 extra parameter (as the weights can be computed as \(\text{sigmoid}(b), 1-\text{sigmoid}(b)\) for learnable \(b\)).</p>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/assa.png" alt="AST Architecture" /></p>
+<p><em>Fig 26. Adaptive Sparse Self-Attention (ASSA) [7]</em></p>
+
+<p>Secondly, the AST replaces the standard MLP of the Transformer with what is known as a Feature Refinement Feed-forward Network (FRFN).</p>
+
+<p style="max-width: 70%;"><img src="/CS163-Projects-2025Fall/assets/images/01/frfn.png" alt="AST Architecture" /></p>
+<p><em>Fig 27. Feature Refinement Feed-forward Network (FRFN) [7]</em></p>
+
+<p>Aside from being a post-attention network with convolutions that takes advantage of the spatial relationship of the tokens, the FRFN aims to address redundancy in the channel dimension after using ASSA. It utilizes partial convolutions, which only convolves on a portion of the channels, and depthwise convolutions, which convolves each channel independently, along with splitting the image along its channels and then combining the two halves to efficiently provide a post-ASSA transformation that can further attenuate the information from features extracted by the self-attention while giving the model some flexilibity to clear uninformative channels.</p>
+
+<h3 id="putting-it-together">Putting it Together</h3>
+
+<p>Recall the structure of the Hybrid Attention Transformer (HAT):</p>
+
+<p style="max-width: 90%;"><img src="/CS163-Projects-2025Fall/assets/images/01/HAT_architecture.png" alt="HAT architecture" /></p>
+<p><em>Fig 28. HAT Architecture Overview [1].</em></p>
+
+<p>One can see that the OCAB at the end of each RHAG acts as a sort of “gate” between RHAG blocks. Additionally, given the large key and value windows for the OCA, part of the purpose of the OCAB is to give each segment of the image a chance to incorporate together information from a larger portion of the image. However, it is likely that portions of these larger windows are not useful for the image reconstruction task, so this larger window allows for ample noise to seep through into our image tokens. So, we propose a modification to the HAT architecture that replaces the attention mechanism of the OCA with the Adaptive Sparse Attention scheme of the AST, and, subsequently, replaces the MLP of the OCAB with the FRFN. We hypothesize that this can temper the OCA and prevent noise issues from the larger windows, but can also act as a overall information gate for each window itself at the end of the RHAG, as the windows will perform cross-attention where the set of key and value pixel tokens are a superset of the query pixel tokens. Given that the principal design goal of the HAT is to use as much of the image as possible during reconstruction, the sparse attention may work well to balance that image-overuse, resulting in a model that has access to a large portion of the image but which can easily select which portions of the image are most useful.</p>
+
+<p>Since we are giving the model this selective capability, we can likely afford to increase the size of the OCA window; in [1], they had found that an overlap ratio of 0.5 was optimal (meaning that key and value windows were 1.5x as large as the query window in each dimension), but a value of 0.75 produced slightly worse results. So, we propose that increasing the overlap ratio to 0.75 will better utilize the sparse attention, giving the model access to more information that it can select from, while remaining computationally efficient during the windowed cross-attention.</p>
+
+<p>Specifically, in our experiment, we will be modifying the architecture of the HAT-S, the smallest HAT model, for practical reasons, and training it for doing 4x image upscaling.</p>
+
+<h3 id="results-4">Results</h3>
+
+<p>Here is a comparison of average PSNR on benchmark datasets between the base HAT-S and our model:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">|Set5 [8]|</th>
+      <th style="text-align: center">|Set14 [9]|</th>
+      <th style="text-align: center">|BSD100 [10]|</th>
+      <th style="text-align: center">|Urban100 [11]|</th>
+      <th style="text-align: center">|Manga109 [12]|</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HAT-S (baseline)</td>
+      <td style="text-align: center">32.92</td>
+      <td style="text-align: center">29.15</td>
+      <td style="text-align: center">27.97</td>
+      <td style="text-align: center">27.87</td>
+      <td style="text-align: center">32.35</td>
+    </tr>
+    <tr>
+      <td>HAT-S + AST</td>
+      <td style="text-align: center">32.46</td>
+      <td style="text-align: center">28.86</td>
+      <td style="text-align: center">27.74</td>
+      <td style="text-align: center">26.71</td>
+      <td style="text-align: center">31.21</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Unfortunately, our modification to the HAT-S was unable to match the results of the regular HAT-S. A possible reason is that the sparse attention is not particularly useful for 4x upscaling; there are few pixels in the starting image compared to the output image, so each one is more likely to hold important information than if we were doing something like 2x upscaling. Additionally, the size of the overlap window may be an issue: we did not get the chance to experiment with other sizes, so it is possible that the smaller 0.5 ratio may have actually worked better for our model, still benefitting from the sparse attention mechanism.</p>
+
+<p>Here are a few samples from our validation sets:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">HR Image</th>
+      <th style="text-align: center">4x Bicubic</th>
+      <th style="text-align: center">HAT-S [1]</th>
+      <th style="text-align: center">HAT-S + AST</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/gt.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/bic.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/hat.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set5butterfly/hatast.png", width="170"></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/gt.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/bic.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/hat.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/set14ppt/hatast.png", width="170"></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/gt.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/bic.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/hat.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsdsfish/hatast.png", width="170"></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/gt.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/bic.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/hat.png", width="170"></td>
+      <td style="text-align: center"><img src="/CS163-Projects-2025Fall/assets/images/01/bsds2/hatast.png", width="170"></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Fig 30. Comparison of HAT-S and our modification for images from Set5 [8], Set14 [9], and BSD100 [10].</em></p>
+
+<p>We see similar qualitative peformance between HAT-S and our modification, though a closer inspection does confirm that our model produces slightly blurrier results.</p>
+
+<p>In any case, the sparse attention mechanism and FRFN are interesting modifications to the Transformer; while our own experiment with the modification did not produce favorable results, we hope that future research continues to try to improve the current architectures and create entirely new ones.</p>
+
+<p>Our Colab training script for the experiment can be found <a href="https://colab.research.google.com/drive/1izhn48tI3pAZmPG_GyJgbsLqqF8Rmbvk?usp=sharing">here</a>, with supporting codebases <a href="https://github.com/thom-1118/BasicSR">here</a> and <a href="https://github.com/thom-1118/HAT_AST">here</a>.</p>
+
+<h2 id="conclusion-3">Conclusion</h2>
+
+<p>Image super-resolution (or, simply, image upscaling and reconstruction) is a foundational vision problem that has, in a sense, been around for as long as images have been on computers. In recent years, methods that use deep learning for computer vision have shown success for this problem, having the capacity to model very complex relationships between regions of an image to perform upscaling and de-degradation. However, this class of methods is not a monolith; there are many ways to utilize deep learning for this task, all with their own quirks, advantages, and disadvantages. The Hybrid Attention Transformer is an example of a Transformer-based method, and as such, it enjoys the capacity to scale very large to model complex reconstruction algorithms, but may suffer from issues of computational efficicency due to this scale; it stands out among other Transformer-based methods for its ability to create a very large receptive field for reconstruction, fully utilizing a given image for the task instead of just a segment of it. Look-Up Table methods sit on the other end of the computational complexity spectrum, doing away with an inference-time network and instead utilizing a quantized representation of deep network via a LUT. Of course, while this is very practically efficient, the method somewhat lacks in reconstruction accuracy and requires a fixed scale; developing extensions to the LUT to ameliorate these issues while mainitaining its speed is an active area of research. Finally, Unfolding Networks take an interesting, more fine-grained approach to the process of upscaling and de-degredation, by separating the problem into two distinct parts and leveraging learning-free, model-based methods in combination with learning-based methods to create an algorithm that is lightweight and robust. Based on the variety among existing super resolution architectures, it will be exciting to see what else is developed in the future.</p>
+
+<p>In our experiment, we attempted to combine two existing super-resolution architectures, the Hybrid Attention Transformer and Adaptive Sparse Transformer, to determine if their opposing design philosophies could temper each other and result in a net-benefit. Unfortunately, this did not seem to be the case, as our modification to the HAT only worsened its performance. However, both of these architectures have been successful in their own right, and there likely exist yet-undiscovered modifications that will make them even more effective.</p>
+
+<h2 id="references">References</h2>
+
+<p>[1] X. Chen, X. Wang, J. Zhou, Y. Qiao and C. Dong, “Activating More Pixels in Image Super-Resolution Transformer,” 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Vancouver, BC, Canada, 2023, pp. 22367-22377, doi: 10.1109/CVPR52729.2023.02142.</p>
+
+<p>[2] Zhang, Kai, et al. “Deep Unfolding Network for Image Super-Resolution.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2020, pp. 3217–3226.</p>
+
+<p>[3] Jo, Younghyun, and Seon Joo Kim. “Practical Single-Image Super-Resolution Using Look-Up Table.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2021, pp. 691–700. doi:10.1109/CVPR46437.2021.00075.</p>
+
+<p>[4] N. Zhao, Q. Wei, A. Basarab, N. Dobigeon, D. Kouamé and J. -Y. Tourneret, “Fast Single Image Super-Resolution Using a New Analytical Solution for ℓ2 – ℓ2 Problems,” in IEEE Transactions on Image Processing, vol. 25, no. 8, pp. 3683-3697, Aug. 2016</p>
+
+<p>[5] Park, S., Lee, S., Jin, K., &amp; Jung, S.W. (2025). IM-LUT: Interpolation Mixing Look-Up Tables for Image Super-Resolution. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) (pp. 14317-14325).</p>
+
+<p>[6]  Olaf Ronneberger, Philipp Fischer, and Thomas Brox. Unet: Convolutional networks for biomedical image segmentation. In International Conference on Medical image computing and computer-assisted intervention, pages 234–241. Springer, 2015.</p>
+
+<p>[7] S. Zhou, D. Chen, J. Pan, J. Shi and J. Yang, “Adapt or Perish: Adaptive Sparse Transformer with Attentive Feature Refinement for Image Restoration,” 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), Seattle, WA, USA, 2024, pp. 2952-2963, doi: 10.1109/CVPR52733.2024.00285.</p>
+
+<p>[8] M. Bevilacqua, A. Roumy, C. Guillemot, and M.-L. A. Morel, “Low-complexity single-image super-resolution based on nonnegative neighbor embedding,” in Br. Mach. Vis. Conf. (BMVC), 2012.</p>
+
+<p>[9] R. Zeyde, M. Elad, and M. Protter, “On single image scale-up using sparse-representations,” in Int. Conf. Curves Surfaces, 2010, pp. 711–730.</p>
+
+<p>[10] D. Martin, C. Fowlkes, D. Tal, and J. Malik, “A database of human segmented natural images and its application to evaluating segmentation algorithms and measuring ecological statistics,” in Proc. IEEE Int. Conf. Comput. Vis. (ICCV), vol. 2, 2001, pp. 416–423.</p>
+
+<p>[11] J.-B. Huang, A. Singh, and N. Ahuja, “Single image super-resolution from transformed self-exemplars,” in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2015, pp. 5197–5206.</p>
+
+<p>[12] Y. Matsui, K. Ito, Y. Aramaki, A. Fujimoto, T. Ogawa, T. Yamasaki, and K. Aizawa, “Sketch-based manga retrieval using manga109 dataset,” Multimedia Tools Appl., vol. 76, no. 20, pp. 21 811–21 838, 2017.</p>
+
+<hr />]]></content><author><name>Thomas Peeler, Dylan Truong, Asher Christian, Daniel Chvat</name></author><summary type="html"><![CDATA[Image super-resolution is a natural, ill-posed computer vision problem, being the task of recovering a high-resolution, clean image from a low-resolution, degraded image. In this post, we survey 3 recent methods of image super-resolution, each highly distinct with its own advantages and disadvantages. Finally, we conduct an experiment in modifying the structure of one of these methods.]]></summary></entry><entry><title type="html">Facial Emotion Recognition</title><link href="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html" rel="alternate" type="text/html" title="Facial Emotion Recognition" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team03-facial-emotion-recognition.html"><![CDATA[<blockquote>
   <p>This post details the current landscape of the Facial Emotion Recognition (FER) field. We discuss why this field is important and the current challenges it faces. We then discuss two datasets and two deep learning models for FER, one building off of ResNet and another extending ConvNeXt. Finally, we compare the two approaches and summarize our view on the research area.</p>
 </blockquote>
 
@@ -1723,7 +2307,215 @@ datacenter-scale compute.</p>
 
 <p>[4] Sapkota, Ranjan, et al. “Vision-Language-Action Models: Concepts, Progress, Applications and Challenges.” arXiv preprint arXiv:2505.04769 (2025).</p>
 
-<hr />]]></content><author><name>Brian Liu</name></author><summary type="html"><![CDATA[The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.]]></summary></entry><entry><title type="html">Center Pillars - Anchor-Free Object Detection in 3D</title><link href="/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars.html" rel="alternate" type="text/html" title="Center Pillars - Anchor-Free Object Detection in 3D" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars.html"><![CDATA[<blockquote>
+<hr />]]></content><author><name>Brian Liu</name></author><summary type="html"><![CDATA[The core of computer vision for robotics is utilizing deep learning to allow robots to perceive, understand, and interact with the physical world. This report explores Vision Language Action (VLA) models that combine visual input, language instruction, and robot actions in end-to-end architectures.]]></summary></entry><entry><title type="html">Introduction to Camera Pose Estimation</title><link href="/CS163-Projects-2025Fall/2025/12/13/team10-pose-estimation.html" rel="alternate" type="text/html" title="Introduction to Camera Pose Estimation" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team10-pose-estimation</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team10-pose-estimation.html"><![CDATA[<blockquote>
+  <p>Camera pose estimation is one important component in computer vision used for robotics, AR/VR, 3D reconstruction, and more. It involves determining the camera’s 3D position and orientation, also known as the “pose” in various environments and scenes. PoseNet, MeNet, and JOG3R are all various deep learning techniques used to accomplish camera pose estimation. There are also sensor-based tracking like LEDs and particle filters. We focus on geometric methods, specifically Structure-from-Motion (SfM).</p>
+</blockquote>
+
+<!--more-->
+<ul id="markdown-toc">
+  <li><a href="#introduction-to-camera-geometry-basics" id="markdown-toc-introduction-to-camera-geometry-basics">Introduction to Camera Geometry Basics</a></li>
+  <li><a href="#structure-from-motion-overview" id="markdown-toc-structure-from-motion-overview">Structure-from-Motion Overview</a></li>
+  <li><a href="#methods" id="markdown-toc-methods">Methods</a></li>
+  <li><a href="#glomap" id="markdown-toc-glomap">GLOMAP</a>    <ul>
+      <li><a href="#glomap-overview" id="markdown-toc-glomap-overview">GLOMAP Overview</a></li>
+      <li><a href="#challenges-of-global-sfm" id="markdown-toc-challenges-of-global-sfm">Challenges of Global SfM</a></li>
+      <li><a href="#glomap-contributions" id="markdown-toc-glomap-contributions">GLOMAP Contributions</a></li>
+    </ul>
+  </li>
+  <li><a href="#visual-geometry-grounded-deep-sfm" id="markdown-toc-visual-geometry-grounded-deep-sfm">Visual Geometry Grounded Deep SfM</a>    <ul>
+      <li><a href="#vggsfm-overview" id="markdown-toc-vggsfm-overview">VGGSfM Overview</a></li>
+      <li><a href="#challenges-with-current-incremental-sfm-systems" id="markdown-toc-challenges-with-current-incremental-sfm-systems">Challenges with Current Incremental SfM Systems</a></li>
+      <li><a href="#vggsfm-contributions" id="markdown-toc-vggsfm-contributions">VGGSfM Contributions</a></li>
+    </ul>
+  </li>
+  <li><a href="#instantsfm" id="markdown-toc-instantsfm">InstantSfM</a>    <ul>
+      <li><a href="#instantsfm-overview" id="markdown-toc-instantsfm-overview">InstantSfM Overview</a></li>
+      <li><a href="#challenges-with-current-colmap-and-glomap-3d-reconstruction-software" id="markdown-toc-challenges-with-current-colmap-and-glomap-3d-reconstruction-software">Challenges with Current COLMAP and GLOMAP 3D Reconstruction Software</a></li>
+      <li><a href="#instantsfm-contributions" id="markdown-toc-instantsfm-contributions">InstantSfM Contributions</a></li>
+    </ul>
+  </li>
+  <li><a href="#emerging-alternatives-beyond-sfm" id="markdown-toc-emerging-alternatives-beyond-sfm">Emerging Alternatives Beyond SfM</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#sources" id="markdown-toc-sources">Sources</a></li>
+</ul>
+
+<h2 id="introduction-to-camera-geometry-basics">Introduction to Camera Geometry Basics</h2>
+
+<p>Camera geometry is necessary to map out the relationship between 3D points in the real world and the corresponding 2D projection which are pixel coordinates. There are a few technical terms we will use. First, the process of projecting 3D coordinates to 2D is typically modeled by the Pinhole Camera Model as shown in the figure below. This model describes the mathematical relationship of the projection where the pinhole is the center of projection and the origin of a Euclidean coordinate system and the Z axis is the image plane or focal plane [2.]</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_1.png" alt="Figure 1" /></p>
+<p>Figure 1. Pinhole Camera Model [1]</p>
+
+<p>Second, we define world coordinates as representations of a location in the World Cartesian coordinate system. The 3D position of a point P in this world is set to P = (X, Y, Z). Second, camera coordinates represent the coordinate system in the virtual camera plane. The planes x and y are parallel to the world coordinates axes X and Y but run in opposite directions. The signs of the coordinates will stay the same meaning both images in the world and camera coordinates are identical except for a flip. Assuming the distance from the pinhole to the sensing plane is represented by f also known as the focal length, then we can define the following equations:</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_2.png" alt="Figure 2" /></p>
+<p>Figure 2. Perspective projection equations [1]</p>
+
+<p>Based on the perspective projection equations which are from the notion of similar triangles, we can map the 3D point [X, Y, Z]T to the coordinates [x, y]T on the image plane. We also add a fourth coordinate to get P = (X, Y, Z, 1)T to get homogeneous coordinates. We can confirm that we get the perspective projection if we multiply P with the matrix K as shown below [2].</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_3.png" alt="Figure 3" /></p>
+<p>Figure 3. Perspective projection of 3D point p [1]</p>
+
+<p>Then we can transform the homogeneous coordinates scaled by the camera’s focal length f to convert it to heterogeneous coordinates and divide by Z into 2D coordinates. As a result, the 2D projected coordinates can be labeled as p.</p>
+
+<h2 id="structure-from-motion-overview">Structure-from-Motion Overview</h2>
+
+<p>SfM is the geometric method of recovering the 3D structure and camera motion through a collection of images which addresses a fundamental problem in computer vision. SfMs are applied to novel view synthesis which generates images of a specific scene or subject from a certain point of view given that the only available information of the specific scene or subject is images taken from different points of view than the one we are trying to synthesize. SfMs are also used for cloud-based mapping and localization which involves using powerful cloud servers for generating dynamic mappings of surrounding environments often used for autonomous vehicles and robots.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_4.png" alt="Figure 4" /></p>
+<p>Figure 4. Structure from Motion point cloud [4]</p>
+
+<p>SfM works by analyzing how various points in the images shift and change relative to one another as the camera angle and position changes. This is typically done through motion parallax which reconstructs the scene or subject’s 3D structure and camera orientation and position for each image taken at different point of views. Going more in detail, the first step involves taking multiple overlapping photos to capture either a scene or subject. Photos must be taken in well-lit lighting conditions with all features visible in multiple photos and no reflective surfaces. Then, software processes the photos to distinguish individual features such as textures and corners. Then, the software analyzes the 2D movement of all these features across all the images with the algorithm inferring the camera’s movement and the 3D position of the features. This perception is similar to how humans perceive depth such as how objects closer to the observer moves faster than objects further away move. Finally, the 3D points are reconstructed to build a 3D model that is typically in the form of point clouds [11].</p>
+
+<h2 id="methods">Methods</h2>
+
+<p>There are two methods of SfM: incremental and global. Incremental SfM starts with a pair of images and creates a 3D model by adding cameras and points step by step to estimate a similar pose of the existing construction. Then, it seeds the pair selection to form an initial reconstruction also known as triangulation. This creates a robust and more accurate model. On the other hand, global SfM considers all images and their relationship with each other to be a single optimization problem and attempts to reconstruct the camera poses and points simultaneously. First there is a feature mapping process for all the images that then builds a view graph. Finally, through various rotation and translation averaging, we get a global optimization and a 3D model. Global SfM is more scalable and efficient for large scale mapping but is not as accurate than incremental nor is it as robust if there are outliers or missing data such as if the graph is not fully connected.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_5.png" alt="Figure 5" /></p>
+<p>Figure 5. Incremental SfM vs. Global SfM [3]</p>
+
+<h2 id="glomap">GLOMAP</h2>
+
+<h3 id="glomap-overview">GLOMAP Overview</h3>
+
+<p>GLOMAP is a recent global SfM system by Pan et al. that addresses challenges encountered in global SfM.  At a high level, GLOMAP is a general-purpose pipeline designed to improve the accuracy and robustness of global SfMs while retaining its scalable and efficient characteristics of global SfM.  In fact, Pan et. al report that GLOMAP produces on par with or even superior to COLMAP (the incremental gold standard) in accuracy, yet is orders of magnitude faster.  For example, on a large-scale dataset LIN from LaMAR of 36,000 images, GLOMAP obtained ~90% correct camera pose recall at 1m error and reconstructed the scene in approximately 5.5 hours, while COLMAP had only ~50% recall and took more than 7 days to process the same data.  These results highlight a significant step forward for global SfM methods.</p>
+
+<h3 id="challenges-of-global-sfm">Challenges of Global SfM</h3>
+
+<p>The key difficulty in global SfM lies in how it handles noise and outliers when combining all pairwise relations simultaneously. In particular, the global translation averaging step is the main cause of global SfM’s shortfall in robustness.  After estimating relative motions between image pairs (the view graph), global SfM does rotational averaging, which estimates all camera orientations from pairwise relative rotation.  To obtain consistent global camera positions from noisy pairwise translations, however, is the more challenging problem.</p>
+
+<p>When estimating motion between two images, only the direction of the translation can be recovered and not the distance.  This means that every pair of cameras have an unknown scaling factor.  This introduces scale ambiguity that requires multiple loops or triplets of views to resolve.  Furthermore, if those triplets form “skewed” geometric configurations, the scale estimates become very noise-sensitive.  [9]</p>
+
+<p>Another challenge is the global SfM’s heavy dependence on camera intrinsics.  This information is needed so that global SfM can decompose two-view geometry into a direction and scale, and if there is any calibration error, the translation direction becomes highly inaccurate. [7]</p>
+
+<p>In scenarios with nearly collinear motion (e.g. walking forward with a front-facing phone, driving down a street, etc.) the geometry does not provide enough information for translation averaging, and this can cause reconstructions to become unreliable. [9]</p>
+
+<h3 id="glomap-contributions">GLOMAP Contributions</h3>
+
+<p>The key innovation introduced by GLOMAP is jointly estimating all camera positions and 3D points, which replaces the translation averaging step.  In other words, instead of first computing camera translations in isolation and then triangulating points, GLOMAP merges these into one optimization problem in a step the authors call global positioning.  This approach is fundamentally different from prior global SfM systems, which typically did a rotation averaging step, followed by translation averaging, and then triangulation. GLOMAP’s joint global position step replaces the fragile process with one unified optimization that solves for camera positions and 3D points at the same time.</p>
+
+<p>This optimization is achieved by minimizing a robust objective function over all camera centers c<sub>i</sub>, 3D points X<sub>k</sub>, and depth scaling factors d<sub>ik</sub>. Specifically, the method minimizes the misalignment between the observed viewing direction v<sub>ik</sub>, derived from feature tracks and known intrinsics, and the predicted ray from the estimated camera position to the 3D point:</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/equation1.png" alt="" /></p>
+
+<p>Here, ρ(⋅) is a robust loss function, and the constraint d<sub>ik</sub> ≥ 0 makes sure that the points lie in front of the corresponding cameras, a basic requirement for valid geometry. This formulation removes the need for a separate translation averaging step by treating the scene structure and camera positions as a part of one problem and solving for both the 3D points and camera positions together. As a result, this approach avoids relying on noisy or ambiguous pairwise translations. It uses feature tracks across multiple views to enforce geometric consistency, and this makes it more reliable under real-world conditions like straight-line motion or inaccurate intrinsics.</p>
+
+<p>Interestingly, GLOMAP doesn’t require any special initialization for either the 3D points or the camera centers. All positions are initialized randomly within a broad volume, and the optimizer is still able to converge to an accurate solution. In practice, the optimizer is able to reliably converge from random initial values, possibly due to the stability of the bounded angular loss used. This is a major contrast with incremental SfM systems, which usually rely on careful seeding with a strong image pair to get started.
+To evaluate the effectiveness of GLOMAP, the authors conduct extensive experiments across several benchmark datasets, including ETH3D, LaMAR, IMC 2023, and MIP360. In particular, Figure 6 shows results from the ETH3D MVS (rig) benchmark, comparing GLOMAP against three state-of-the-art SfM systems: OpenMVG, Theia, and COLMAP. GLOMAP achieves the highest average accuracy across all angular thresholds (1°, 3°, and 5°).  For example, it obtains an average AUC @ 5° of 87.2, compared to 81.4 for Theia and just 69.1 for COLMAP. Despite its accuracy, GLOMAP remains computationally efficient. It completes reconstructions in an average of 793.8 seconds across the scenes, which is over 3 times faster than COLMAP (2857.0 seconds on average). These results demonstrate GLOMAP’s ability to produce both higher-quality reconstructions and faster runtimes than prior global and incremental methods, and they showcase GLOMAP as a scalable and robust general-purpose SfM system.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_6.png" alt="Figure 6" /></p>
+<p>Figure 6. Performance of GLOMAP on ETH3D MVS Benchmark [7]</p>
+
+<p>GLOMAP is a significant step forward in balancing accuracy, speed, and robustness in Structure-from-Motion. While traditional systems tend to be strong in one or two of these areas, GLOMAP achieves strong performance across all three.  It avoids reliance on carefully selected initialization pairs, handles large-scale reconstructions efficiently, and remains robust under noisy conditions. These characteristics make GLOMAP a practical and adaptable solution for modern SfM tasks.</p>
+
+<h2 id="visual-geometry-grounded-deep-sfm">Visual Geometry Grounded Deep SfM</h2>
+
+<h3 id="vggsfm-overview">VGGSfM Overview</h3>
+
+<p>VGGSfM is a deep learning-based SfM pipeline designed to be fully differentiable end-to-end. It is conceptually closer to a global SfM approach since it estimates all camera poses jointly, but it avoids the typical weaknesses of classical global SfM such as noise-sensitive averaging of rotations and translations. Instead of relying on separate rotation/translation averaging steps, VGGSfM uses learned neural modules (e.g. Transformers) to recover camera parameters collectively, which helps avoid the instability that traditional global methods can face due to noisy pairwise estimates.</p>
+
+<h3 id="challenges-with-current-incremental-sfm-systems">Challenges with Current Incremental SfM Systems</h3>
+
+<p>Traditional incremental SfM systems, like COLMAP, build up 3D reconstructions one step at a time starting with a good image pair and then gradually adding new views. While this works well in many cases, it also introduces a number of weaknesses. One main issue is that these systems rely heavily on chaining pairwise keypoint matches into longer feature tracks. Small errors in matching can add up over time, and this leads to a “drift” in the reconstruction, especially on long sequences. The pipeline also consisted of many disconnected steps, like matching, RANSAC filtering, PnP pose estimation, triangulation, and bundle adjustment, which makes it difficult to train or tune the entire system as a whole.</p>
+
+<p>Since most of these steps are not differentiable, there is no way to optimize them end-to-end.  Another challenge is that these systems require a strong initialization in order to work properly.  Oftentimes, a carefully chosen pair of images with lots of shared features is needed for initialization.  If the initial pair is weak or mismatched, the whole reconstruction can fail or break down.  Finally, traditional pipelines struggle in scenes with low texture or repetitive patterns, where keypoint detection and matching may become unreliable.  In such cases, the system may not be able to find enough consistent matches between images, which prevents it from building the 3D structure.</p>
+
+<h3 id="vggsfm-contributions">VGGSfM Contributions</h3>
+
+<p>A major innovation in VGGSfM is its approach to correspondence tracking. Traditional SfM pipelines typically rely on chaining two-view matches across image pairs to form multi-view feature tracks.  However, this process is prone to error accumulation and drift. VGGSfM replaces this process with a learned 2D point tracking module that operates across the entire image set. Instead of depending on manually designed feature descriptors like SIFT or SuperPoint, it is able to use deep feature extractors and a transformer-based matching module to track points at the pixel level. This results in dense, accurate, and consistent multi-view correspondences, without needing explicit pairwise chaining. Because the point tracking is learned and is end-to-end differentiable, it can adapt during training to improve consistency and coverage, especially in hard conditions like wide baselines or low-texture scenes. The tracker is also able to predict per-point confidence and visibility.  This helps the system to focus only on matches that are high quality during reconstruction stages later in the process.</p>
+
+<p>Another major contribution of VGGSfM is how it handles camera pose estimation.  Instead of registering cameras one at a time like in incremental SfM or solving for relative orientations and positions in traditional global SfM, VGGSfM uses a transformer model that processes all images and track features and predicts all camera poses simultaneously.  This allows the system to reason globally about spatial relationships while avoiding the instability and scale ambiguity that comes with pairwise translation estimation. After pose prediction, VGGSfM initializes 3D points and refines the structure and motion using a differentiable bundle adjustment module.  Unlike traditional bundle adjustment, which depends on external solvers like Ceres, VGGSfM includes a version that’s differentiable and built directly into the neural network, the second-order Theseus solver. Because of this, the model can learn to improve earlier steps, like point tracking or camera pose estimation, so that the final optimization is more accurate. By combining steps such as tracking, pose recovery, triangulation, and refinement into one system that can be trained together, VGGSfM builds a more consistent and reliable SfM pipeline compared to traditional approaches.</p>
+
+<p>In practice, VGGSfM achieves strong results on the 3D computer vision CO3D dataset.  As shown in Table 1, it outperforms other existing SfM methods.  VGGSfM reaches an RRE @ 15° of 92.1 and an RTE @ 15° of 88.3, which is significantly ahead of COLMAP (31.6 and 27.3) and PoseDiffusion (80.5 and 79.8). These results are especially notable given the wide baselines in CO3D, which often cause traditional pipelines to fail. Even without joint training, VGGSfM performs well, but training all components together provides the best accuracy overall.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_7.png" alt="Figure 7" /></p>
+<p>Figure 7. Performance of GLOMAP on ETH3D MVS Benchmark [8]</p>
+
+<h2 id="instantsfm">InstantSfM</h2>
+
+<h3 id="instantsfm-overview">InstantSfM Overview</h3>
+
+<p>With different SfMs comes with different CPU computational costs that InstantSfM aims to decrease. InstantSfM is a comprehensive system that utilizes a fully sparse and parallel SfM pipeline to improve GPU acceleration in order to achieve significant speedup benefits while preserving performance. This is done through adding additional PyTorch operations that provide native and easy-to-use support directly for users.</p>
+
+<h3 id="challenges-with-current-colmap-and-glomap-3d-reconstruction-software">Challenges with Current COLMAP and GLOMAP 3D Reconstruction Software</h3>
+
+<p>COLMAP and GLOMAP require bundle adjustment (BA) or global positioning (GP) which all increase the computational overhead especially when attempting to scale to handle large data scenarios. This leads to a performance tradeoff in order to gain speed in SfM. Additionally, COLMAP and GLOMAP are implemented in C++ which restrains it from benefitting from different external optimization methods. VGGSfM using feed-forward methods for 3D reconstruction, they are still unable to be scalable. For instance, VGGSfM struggles with thousands of input views inputted simultaneously due to a spike in GPU memory usage.</p>
+
+<p>To address this issue, InstantSfM explores the potential in GPU parallel computation in order to gain significant speedups for each critical stage of the entire SfM pipeline. InstantSfM’s design builds on top of the sparse-aware bundle adjustment optimization which helps improve BA and GP processing. In fact, through the team’s extensive research, they were able to gain 40x speedup for COLMAP performance without sacrificing accuracy and they even saw improvements in the reconstruction accuracy.</p>
+
+<h3 id="instantsfm-contributions">InstantSfM Contributions</h3>
+
+<p>To achieve such GPU acceleration, Zhong et al. developed a comprehensive SfM optimization pipeline in PyTorch that builds a customized Lie group and Lie algebra. They implemented quaternion addition which extends complex numbers typically seen in the form shown below.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/equation2.png" alt="" /></p>
+
+<p>Furthermore, they implemented large matrix multiplication operations which were not previously supported by PyTorch. Through their work, InstantSfM provides user-friendly endpoints that allow users to seamlessly integrate it into their work without worrying about the underlying details as they are abstracted away. As a result, InstantSfM is able to tackle the computation bottleneck to provide state-of-the-art accuracy with significant efficiency, allowing SfM technology to be scalable for datasets containing thousands of images.</p>
+
+<p>Additionally, the team extended sparse-aware bundle adjustment to GP in PyTorch to provide the latest global SfM system. This allows readjusting and refining the 3D coordinates during reconstruction and improving the estimates of the 3D geometry and camera poses. This is done through minimizing the reprojection error which measures the difference between the observed 2D image coordinates and the projected 2D coordinates estimated from the 3D points and camera parameters. The team utilized the Levenberg-Marquardt Algorithm to optimize GP and BA. This algorithm is as follows:</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_8.png" alt="Figure 8" /></p>
+<p>Figure 8. The Levenberg-Marquardt Algorithm [12]</p>
+
+<p>This algorithm uses the Jacobian where each row of the matrix contains the gradient of the 2D reprojection with respect to all the parameters. Hence, this matrix is large by nature which restricts it from being utilized by the GPU. InstantSfM was able to extend the sparse data structure to create a unified framework. They extended the standard 2×7 and 2×3 Jacobian blocks to also provide depth constraint terms by implementing special block assembly routines that handle the geometric constraints while ensuring matrix efficiency. Extending spare-aware bundle adjustment allows scalability to run full bundle adjustment operations on large datasets that contain thousands to millions of images within an appropriate timeframe that allows SfM systems to truly scale.</p>
+
+<p>Diving deeper into InstantSfM benefits compared to COLMAP, GLOMAP, and VGGSfM, the team used Nvidia’ H200 GPU to test against camera pose estimation, quality of rendering with 3D Gaussian splitting to develop photorealistic 3D scenes from 2D input like images or video, and accuracy of 3D map reconstruction. Below are graph depicting the speedup seen with InstantSfM.</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_9.png" alt="Figure 9" /></p>
+<p>Figure 9. Comparison of SfM running time among COLMAP, GLOMAP, and InstantSfM [12]</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_10.png" alt="Figure 10" /></p>
+<p>Figure 10. Comparison of GLOMAP vs. InstantSfM on Bundle Adjustment and Global Positioning [12]</p>
+
+<p>From these comparisons, it is evident with the amount of time InstantSfM is able to save. The team tested from input ranging from 100 to 5,000 images taken from the MipNeRF360 dataset. Additionally, there are significant GPU savings</p>
+
+<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/team10/figure_11.png" alt="Figure 11" /></p>
+<p>Figure 11. GPU runtime comparison [12]</p>
+
+<p>By leveraging sparsity awareness operations in PyTorch directly, InstantSfM is able to provide a fast and simple user interface. As seen from the GPU runtime comparison table, InstantSfM is able to accomplish significant speedups compared to current existing SfM approaches in improving robustness in these systems and reconstruction quality.</p>
+
+<h2 id="emerging-alternatives-beyond-sfm">Emerging Alternatives Beyond SfM</h2>
+
+<p>With the rapidly developing field of 3D reconstruction, there have also been emerging alternatives beyond SfMs. Some notable examples include Dense Matching-based Pose estimation, DUSt3R, and MASt3R.</p>
+
+<p>Dense Matching–Based Pose Estimation helps tackle human pose estimation problems with learning the dense correlation between RGB images and different human body surfaces. Such technologies are applicable to human action recognition, human body reconstruction, and human pose transfer. Previously, human pose estimation methods were expanded from Mask R-CNN frameworks that handle top-down operation by first conducting object detection to identify the bounding boxes for each person. Then, matching of the dense correspondence is done with each bounding box. These approaches were not robust as they heavily relied on the Mask R-CNN detection with runtime growing worse as the number of humans in the input image increased. With Direct Dense Pose (DDP), it allows significant speedups. It first predicts the instance mask and the global IUV representation and then aggregates them together [10]. Additionally, DDP incorporates a 2D temporal-smoothing scheme to minimize the temporal jitters when processing video input [6].</p>
+
+<p>DUSt3R is a novel system that provides a way for Dense and Unconstrained Stereo 3D Reconstruction of arbitrary image collections to improve geometric 3D vision and make them easier to operate. Previously, multi-view stereo reconstruction (MVS) generated 3D models from many 2D images by identifying corresponding coordinates across many different points of views using depth triangulation and photogrammetry principles. However, the caveat to this was a tedious and cumbersome process. Thus, DUSt3R approaches geometric 3D vision in a different way by operating without prior information about the camera’s positioning and calibration process. DUSt3R is based on Transformer encoders and decoders to express pairwise pointmaps in a unified common reference frame. This differs from traditional SfMs that rely on geometric-based approaches to computer vision tasks.</p>
+
+<p>Lastly, MASt3R tackles problems with image matching, which is a key component to 3D vision performance and algorithms. Although traditionally image matching is considered a 3D problem, it can still be solved through a 2D approach through the utilization of DUSt3R. MASt3R extends pointmap regression to improve the robustness in matching views and coordinates with extreme viewpoint changes. Although there is limited accuracy to what MASt3R can provide, it demonstrates potential in improving image matching to handle a diverse set of viewpoints to handle practical real-life applications. Furthermore, MASt3R solves the quadratic complexity with dense matching that serves as a huge speedup liability if not solved. Through MASt3R, a fast matching scheme is available that outperforms current existing approaches by about 30% [5]. MASt3R also differs from SfM systems by having dense matching and outputting dense 3D point clouds which contrasts against SfMs sparse explicit feature matching approaches and sparse 3D point clouds.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Camera pose estimation plays an important role in creating 3D reconstructions from video and image data, with applications ranging from augmented reality to robotics.  Recent developments have introduced new approaches that go beyond the limitations of traditional incremental SfM pipelines.  GLOMAP represents a key advance in global SfM by jointly estimating camera positions and 3D options in a single optimization step to address challenges such as scale ambiguity and collinear motion.  VGGSfM demonstrates how end-to-end differentiable pipelines can improve the SfM pipeline by making it trainable end-to-end.  It uses learned point tracking and jointly estimates all camera poses which helps to reduce drift and improves the performance in challenge scenes (e.g. limited texture information).  The approach introduced by VGGSfM shows how combining learning and geometry can lead to improved SfM pipelines. In addition to the developments made by GLOMAP and VGGSfM, InstantSfM offers significant GPU speedups while preserving reconstruction accuracy and also at times improving it. Together, these approaches reflect the growing diversity of SfM methods and the progress made towards making camera pose estimation more accurate and scalable.</p>
+
+<p>Besides SfMs, there are also many approaches that tackle camera pose estimation and derive 3D structures that are fundamentally different from SfMs. Direct Dense Pose, DUSt3R, and MASt3R are all different approaches that differ from the geometry approach SfMs approach computer vision and 3D reconstruction. These various approaches nurture a diverse range of solutions for various problems in computer vision that allow society’s technologies to advance and be robust to handle different use cases.</p>
+
+<p>These various advancements from various types of SfMs to DUSt3R have many applications to the real world such as being critical pieces of technology for self-driving cars, industrial robotics, and mixed reality. Furthermore, with more efficient and highly accurate technology, safety and wellbeing improves. For instance, drones can be equipped with cameras that can rapidly reproduce disaster sites with 3D reconstruction to help rescue teams accurately map out regions for safe entry and identifying structural risks. Furthermore, with 3D reconstruction, humanity as a whole can preserve cultural and heritage sites in the digital space by developing digital twins of historical sites and artifacts, making cultural exploration more accessible to millions of more people. Lastly, 3D reconstruction empowers medical imaging and helps plan out complex procedures with ease by developing 3D models of the human body. The field of 3D reconstruction and camera pose estimation is a promising field with very much practical applications to society to have immense potential in improving all facets of human life.</p>
+
+<h2 id="sources">Sources</h2>
+
+<ul>
+  <li>[1] “5  Imaging – Foundations of Computer Vision.” – Foundations of Computer Vision, visionbook.mit.edu/imaging.html#eq-perspctiveProj. Accessed 13 Dec. 2025.</li>
+  <li>[2] “39  Camera Modeling and Calibration – Foundations of Computer Vision.” – Foundations of Computer Vision, visionbook.mit.edu/imaging_geometry.html. Accessed 13 Dec. 2025.</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>[3] Chen, Jerred. System Diagrams of Incremental vs. Global SFM.</td>
+          <td>Download Scientific Diagram,www.researchgate.net/figure/System-diagrams-of-Incremental-vs-Global-SfM_fig2_364126762. Accessed 13 Dec. 2025.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>[4] Joshi, Manish. “Structure from Motion.” LinkedIn, 30 Oct. 2022, www.linkedin.com/pulse/structure-from-motion-manish-joshi/.</li>
+  <li>[5] Leroy, Vincent, et al. “Grounding Image Matching in 3D with MAST3R.” arXiv.Org, 14 June 2024, arxiv.org/abs/2406.09756.</li>
+  <li>[6] Ma, Liqian, et al. “Direct Dense Pose Estimation.” arXiv.Org, 4 Apr. 2022, arxiv.org/abs/2204.01263.</li>
+  <li>[7] Pan, Linfei, Zixin Luo, Zhaopeng Cui, and Marc Pollefeys. “Global Structure-from-Motion Revisited.” Proceedings of the European Conference on Computer Vision (ECCV). 2024.</li>
+  <li>[8] Qian, Yiming, Changjian Wang, Yinda Zhang, et al. “Visual Geometry Grounded Structure from Motion.” arXiv preprint arXiv:2312.04563 (2023).</li>
+  <li>[9] Tao, Jianhao, Yuchao Dai, Xinghui Liu, and Hongdong Li. “Revisiting Global Translation Estimation with Feature Tracks.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). 2024.</li>
+  <li>[10] Wang, Shuzhe, et al. “DUST3R: Geometric 3D Vision Made Easy.” arXiv.Org, 2 Dec. 2024, arxiv.org/abs/2312.14132.</li>
+  <li>[11] “What Is Structure from Motion?” MATLAB &amp; Simulink, www.mathworks.com/help/vision/ug/what-is-structure-from-motion.html. Accessed 13 Dec. 2025.</li>
+  <li>[12] Zhong, Jiankun, et al. “InstantSfM: Fully Sparse and Parallel Structure-from-Motion.” arXiv.Org, 15 Oct. 2025, arxiv.org/abs/2510.13310.</li>
+</ul>]]></content><author><name>Team 10</name></author><summary type="html"><![CDATA[Camera pose estimation is one important component in computer vision used for robotics, AR/VR, 3D reconstruction, and more. It involves determining the camera’s 3D position and orientation, also known as the “pose” in various environments and scenes. PoseNet, MeNet, and JOG3R are all various deep learning techniques used to accomplish camera pose estimation. There are also sensor-based tracking like LEDs and particle filters. We focus on geometric methods, specifically Structure-from-Motion (SfM).]]></summary></entry><entry><title type="html">Center Pillars - Anchor-Free Object Detection in 3D</title><link href="/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars.html" rel="alternate" type="text/html" title="Center Pillars - Anchor-Free Object Detection in 3D" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team11-centerpillars.html"><![CDATA[<blockquote>
   <p>[Project Track: Project 8] This project implements a LiDAR-based 3D object detection pipeline that uses PointPillars to encode raw point clouds into a bird’s-eye-view (BEV) pseudo-image, enabling efficient convolutional feature extraction. On top of this representation, the CenterPoint framework decodes BEV features by predicting object centers and regressing bounding box attributes in an anchor-free manner. This design removes the need for predefined anchors while maintaining accurate spatial localization and computational efficiency.</p>
 </blockquote>
 
@@ -3044,446 +3836,4 @@ where $\beta_k$ and $\bar{\alpha}_k$ are, again, functions of k from the noise s
 
 <p>[5] Lu, Guanxing, Zifeng Gao, Tianxing Chen, Wenxun Dai, Ziwei Wang, Wenbo Ding, and Yansong Tang.
 “ManiCM: Real-time 3D Diffusion Policy via Consistency Model for Robotic Manipulation.”
-arXiv preprint arXiv:2406.01586, 2024.</p>]]></content><author><name>UCLAdeepvision</name></author><summary type="html"><![CDATA[Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.]]></summary></entry><entry><title type="html">From Labeling to Prompting: The Paradigm Shift in Image Segmentation</title><link href="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html" rel="alternate" type="text/html" title="From Labeling to Prompting: The Paradigm Shift in Image Segmentation" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team23-mask-sam.html"><![CDATA[<blockquote>
-  <p>The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.</p>
-</blockquote>
-
-<!--more-->
-<ul id="markdown-toc">
-  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
-  <li><a href="#mask-r-cnn" id="markdown-toc-mask-r-cnn">Mask R-CNN</a>    <ul>
-      <li><a href="#architecture" id="markdown-toc-architecture">Architecture:</a></li>
-    </ul>
-  </li>
-  <li><a href="#segment-anything-sam" id="markdown-toc-segment-anything-sam">Segment Anything (SAM)</a>    <ul>
-      <li><a href="#architecture-1" id="markdown-toc-architecture-1">Architecture:</a></li>
-      <li><a href="#results" id="markdown-toc-results">Results:</a></li>
-    </ul>
-  </li>
-  <li><a href="#discussion" id="markdown-toc-discussion">Discussion</a>    <ul>
-      <li><a href="#training-paradigms" id="markdown-toc-training-paradigms">Training Paradigms</a></li>
-      <li><a href="#the-semantic-gap" id="markdown-toc-the-semantic-gap">The Semantic Gap</a></li>
-      <li><a href="#the-future-towards-unified-perception" id="markdown-toc-the-future-towards-unified-perception">The Future: Towards Unified Perception</a></li>
-    </ul>
-  </li>
-  <li><a href="#references" id="markdown-toc-references">References</a></li>
-</ul>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>For the past decade, the “holy grail” of computer vision was fully automated perception: teaching a machine to look at an image and assign a semantic label to every pixel. The 2024 survey “Image Segmentation in Foundation Model Era: A Survey” by Zhou et al defines this era as “Generic Image Segmentation” (GIS), which was dominated by supervised specialists. One of the pinnacles of this approach was Mask R-CNN, a framework that efficiently detected objects and generated high-quality masks in parallel. While powerful, these models were fundamentally limited by their training data. They were “closed-vocabulary” systems that could only see what they were explicitly taught to label.</p>
-
-<p>To formalize this limitation, the 2024 survey introduces a unified formulation for the segmentation task:
-\(f: \mathcal{X} \mapsto \mathcal{Y} \quad \text{where} \quad \mathcal{X} = \mathcal{I} \times \mathcal{P}\)
-Here, I represents the image and P represents the user prompt. In the specialist era of Mask R-CNN, the prompt set was empty, forcing the model to rely entirely on learned semantics to determine the output. [1]</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1imageseg.png" alt="Image 1" /> 
-<em>Figure 1 from “Image Segmentation in Foundation Model Era: A Survey”.</em></p>
-
-<p>We are now witnessing a “new epoch” in computer vision driven by the rise of Foundation Models. The paradigm is shifting from passive labeling to active prompting. Leading this is the Segment Anything Model (SAM), which introduced the “promptable segmentation task”. Unlike its predecessors, SAM acts as a “segmentation generalist” that may not know what an object is but knows exactly where it is given a simple click or box prompt.</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1sama.png" alt="Image 2" /> 
-<em>Figure 1 from “Segment Anything”.</em></p>
-
-<p>Our discussion of the two models explores this transition by contrasting the supervised precision of Mask R-CNN with the zero-shot flexibility of SAM, discussing how the move from curated datasets to massive “data engines” is redefining what it means for a machine to “see”.</p>
-
-<h2 id="mask-r-cnn">Mask R-CNN</h2>
-
-<p>Mask R-CNN represents one of the culmination of the supervised segmentation era, exemplifying both the strengths and limitations of closed-vocabulary, instance-level segmentation systems. Designed to assign fixed semantic labels, such as “person” or “car” to every pixel belonging to an object instance, it operates with precision on known categories. Unlike segmentation-first approaches that group pixels before classification, Mask R-CNN adopts an instance-first strategy by detecting object bounding boxes first, then segmenting the pixels within those regions. This design allows segmentation to run parallel to detection, providing a clean conceptual separation between the two tasks. However, achieving pixel-accurate masks required precise spatial alignment, something earlier detection pipelines struggled to provide.[3]</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1mask.png" alt="Image 3" />
-<em>Figure 1 from “Mask R-CNN”.</em></p>
-
-<h3 id="architecture">Architecture:</h3>
-
-<p>The breakthrough that elevated Mask R-CNN to exception was an innovation known as RoIAlign which solved a critical spatial alignment problem. Prior methods relied on RoIPool which used coarse quantization when mapping regions of interest to feature maps. This introduced misalignments which were okay when it came to bounding box detection but catastrophic for pixel-level segmentation accuracy. RoIAlign came and eliminated quantization, using bilinear interpolation to preserve spatial coordinates. This led to dramatic improvements in mask accuracy, going from 10% to 50% across benchmarks, showing how spatial precision was the primary bottleneck in achieving quality segmentation. [3]</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/roipooltable.png" alt="Image 4" /><br />
-<em>Table 6. RoIAlign vs. RoIPool for keypoint detection on minival. The backbone is ResNet-50-FPN.</em></p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/roifig.png" alt="Image 5" /> 
-<em>Figure 3, “Research on Intelligent Detection and Segmentation of RockJoints Based on Deep Learning”.</em></p>
-
-<p>Mask R-CNN’s efficiency stems from its decoupling of mask prediction from class prediction. The architecture predicts binary masks independently for every class without inter-class competition. The classification branch determines object identity while the mask branch focuses exclusively on spatial extent within detected regions. This separation of concerns enabled Mask R-CNN to surpass all competing single-models entries on the COCO object detection challenges, establishing it as the dominant approach for instance segmentation tasks. The mask loss, is the average binary cross-entropy (BCE) loss over all pixels in the RoI, calculated only for the ground-truth class:</p>
-
-\[L_{\text{mask}} =
-\frac{1}{M^2}
-\sum_{i=1}^{M^2}
-\text{BCE}\bigl(p_i^{k}, y_i^{k}\bigr)\]
-
-<p>Despite its advances in computer vision, Mask R-CNN operates within a crucial limitation because it functions as a closed-vocabulary model, capable of segmenting only those object categories encountered during training. Extending the model to recognize new categories requires substantial data collection, labor-intensive pixel-level annotation, and complete model retraining. This rigidity, inherent to the supervised learning paradigm, ultimately necessitated the evolution toward promptable architectures like SAM, which transcend fixed category constraints through foundation model approaches.</p>
-
-<h2 id="segment-anything-sam">Segment Anything (SAM)</h2>
-
-<p>In the GIS era, models like Mask R-CNN were designed as “all-in-one” systems. They were trained to simultaneously localize an object and assign it a specific semantic label from a fixed vocabulary (e.g., class_id: 1 for “person”). The architecture explicitly coupled these tasks: the network’s classification branch and mask branch ran in parallel, meaning the model could only segment what it could also recognize. The Segment Anything Model (SAM) flips this paradigm. [1]</p>
-
-<p>Created by Meta AI, SAM fundamentally redefines the segmentation task so that instead of predicting a fixed class label for every pixel, the goal is to return a valid segmentation mask for any prompt. It is trained to be class-agnostic. It does not output a semantic label; instead, it outputs a “valid mask” and a confidence score reflecting the object’s “thingness” rather than its category. SAM essentially understands structure (boundaries, occlusion, and connectivity) without necessarily understanding semantics. It knows that a pixel belongs to a distinct entity, but it relies on the prompter to define the context. This shift transforms the model from a static labeler into an interactive “generalist” that decouples the concept of “where an object is” (segmentation) from “what an object is” (semantics).</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/segment-anything-cut-out.gif" alt="Image 7" />
-<em>GIF of SAM UI, taken from: <a href="https://learnopencv.com/segment-anything/">https://learnopencv.com/segment-anything/</a>.</em></p>
-
-<p>In the supervised era, models like Mask R-CNN were limited by the high cost of manual pixel-level annotation. To overcome this, SAM utilized a “Data Engine” as follows:</p>
-
-<ul>
-  <li>Assisted-Manual: Annotators used a SAM-powered tool to label masks, working 6.5x faster than standard COCO annotation.</li>
-  <li>Semi-Automatic: The model automatically labeled confident objects (like “stuff” categories), allowing annotators to focus on difficult, less prominent objects.</li>
-  <li>Fully Automatic: The model lastly ran on 11 million images to generate the SA-1B dataset, containing 1.1 billion masks (400x larger than any existing segmentation dataset).</li>
-</ul>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig1csam.png" alt="Image 8" /> 
-<em>Figure 1 from “Segment Anything”.</em></p>
-
-<p>This massive scale allowed SAM to learn a generalized notion of “thingness” that transfers zero-shot to underwater scenes, microscopy, and ego-centric views without specific retraining. [2]</p>
-
-<h3 id="architecture-1">Architecture:</h3>
-
-<p>SAM achieves real-time interactivity through a distinct three-part architecture that separates heavy computation from fluid interaction.</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig4sam.png" alt="Image 9" /> 
-<em>Figure 4 from “Segment Anything”.</em></p>
-
-<p>The backbone of SAM is a Vision Transformer (ViT) pre-trained using Masked Autoencoders (MAE). Unlike standard supervised pre-training, MAE masks a large portion of the input image patches (e.g., 75%) and forces the model to reconstruct the missing pixels.This self-supervised approach allows the model to learn robust, scalable visual representations without human labels. In SAM, this encoder runs once per image, outputting a 64 x 64 image embedding. While computationally expensive, this cost is “amortized” over the interaction because once the embedding is calculated, the model can respond to hundreds of prompts in milliseconds.</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/maefig1.png" alt="Image 10" /> 
-<img src="/CS163-Projects-2025Fall/assets/images/team23/maefig3.png" alt="Image 11" /> 
-<em>Figures 1 and 3 from “Masked Autoencoders Are Scalable Vision Learners”.</em></p>
-
-<p>The image encoder produces a high-dimensional embedding that preserves spatial structure. Unlike traditional CNNs that progressively downsample, the ViT maintains a 64 x 64 grid where each location encodes rich contextual information about that region. This design is essential for allowing the downstream decoder to perform pixel-precise localization even though the encoder operates at 16x downsampled resolution.</p>
-
-<p>To enable the “promptable” paradigm, SAM represents sparse inputs (points, boxes, text) as positional encodings:</p>
-
-<ul>
-  <li>Points &amp; Boxes: Represented by positional encodings summed with learned embeddings for each prompt type.</li>
-  <li>Text: Processed via an off-the-shelf CLIP text encoder, bridging the gap between language and pixels.</li>
-</ul>
-
-<p>Dense prompts (masks) are handled differently by being embedded using convolutions and summed element-wise with the image embedding. This enables SAM to accept a previous mask prediction as input, allowing iterative refinement, a key capability for interactive use cases where users progressively correct the model’s output.</p>
-
-<p>The decoder is a modification of a Transformer decoder block that efficiently maps the image embedding and prompt embeddings to an output mask. It utilizes a mechanism of cross-attention to update the image embedding with prompt information:</p>
-
-\[\text{Attention}(Q, K, V) = \text{softmax}\left( \frac{QK^T}{\sqrt{d_k}} \right) V\]
-
-<p>In this context, the prompt tokens act as queries (Q) to attend to the image embedding (K, V), ensuring the model focuses only on the regions relevant to the user’s input.</p>
-
-<p>The decoder performs bidirectional cross-attention where not only do prompt tokens query the image embedding, but the image embedding also queries the prompt tokens. This two-way information flow allows the model to both focus on relevant regions (prompt-to-image) and update its understanding based on spatial context (image-to-prompt). After two decoder blocks, the model upsamples the updated image embedding and applies a dynamic linear classifier (implemented as an MLP) to predict per-pixel mask probabilities.</p>
-
-<p>A critical innovation in SAM is its ambiguity awareness. In the Mask R-CNN era, a single input had to correspond to a single ground truth. However, a point on a person’s shirt is ambiguous: does the user want the shirt or the person?</p>
-
-<p>To solve this, SAM predicts three valid masks for a single prompt (corresponding to the whole, part, and sub-part) along with confidence scores (IoU), allowing the user or downstream system to resolve the ambiguity. This design choice acknowledges that segmentation is inherently ill-posed (i.e., a single input can have multiple valid outputs), a nuance often ignored by previous fully supervised specialists.</p>
-
-<p>SAM is trained with a multi-task loss combining focal loss and dice loss in a 20:1 ratio. The focal loss addresses class imbalance by down-weighting easy examples, while the dice loss directly optimizes for mask overlap (IoU). Critically, when SAM predicts multiple masks, only the mask with the lowest loss receives gradient updates (a technique that prevents the model from averaging over ambiguous ground truths). SAM also predicts an IoU score for each mask, trained via mean-squared-error loss, which enables automatic ranking of predictions without human intervention. The total loss is formulated as:</p>
-
-<p>\(L_{\text{total}} = \bigl(20 \cdot L_{\text{focal}} + L_{\text{dice}}\bigr) + L_{\text{MSE}}\)
-\(\underbrace{20 \cdot L_{\text{focal}} + L_{\text{dice}}}_{\text{Mask Prediction}}
-\quad + \quad
-\underbrace{L_{\text{MSE}}}_{\text{IoU Ranking}}\)</p>
-
-<p>During training, SAM also simulates interactive annotation by sampling prompts in 11 rounds per mask, including one initial prompt (point or box), 8 iteratively sampled points from error regions, and 2 refinement iterations with no new points. This forces the model to learn both initial prediction and self-correction, making it robust to imperfect prompts in deployment. [2]</p>
-
-<h3 id="results">Results:</h3>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/samtable.png" alt="Image 12" /> 
-<em>Figures 9 from “Segment Anything”.</em></p>
-
-<p>Upon its release, SAM demonstrated unprecedented zero-shot generalization across 23 diverse segmentation datasets spanning underwater imagery, microscopy, X-ray scans, and ego-centric video. On single-point prompts, SAM achieved competitive IoU with specialist models like RITM, but critically, human annotators rated SAM’s masks 1-2 points higher (on a 1-10 scale) than the strongest baselines of the time. This gap revealed a key limitation of IoU metrics because SAM produced perceptually better masks that effectively segmented valid objects, even when they differed from the specific ground truth, resulting in artificially deflated scores. [2]</p>
-
-<h2 id="discussion">Discussion</h2>
-
-<h3 id="training-paradigms">Training Paradigms</h3>
-
-<p>Mask R-CNN relies entirely on manually curated datasets like COCO and Cityscapes, which require pixel-level annotation. The model’s understanding was fundamentally bottlenecked by human time and effort. SAM flipped this paradigm by making the segmentation model itself the primary data generator. Instead of humans doing the work, the model proposes masks while humans simply validate and correct mistakes. This created a virtuous cycle that produced 1.1 billion masks, a scale utterly impossible with manual annotation alone. In the foundation model era, how data is collected may be as important as the model architecture itself.</p>
-
-<h3 id="the-semantic-gap">The Semantic Gap</h3>
-
-<p>The most important conceptual difference between Mask R-CNN and SAM lies in how they handle semantics. Mask R-CNN tightly couples segmentation and classification, where every predicted mask corresponds to a predefined category. This makes the model effective within its training distribution but also enforces a closed vocabulary.</p>
-
-<p>SAM deliberately breaks this coupling. It focuses on identifying coherent regions in an image without assigning semantic labels. In doing so, segmentation becomes a modular capability rather than a final output. SAM can be combined with other components (object detectors, language models, or task-specific logic) that provide semantic interpretation separately. This separation allows segmentation to function as general visual infrastructure that can support many downstream tasks without retraining.</p>
-
-<h3 id="the-future-towards-unified-perception">The Future: Towards Unified Perception</h3>
-
-<p>SAM represents a significant milestone, but recent developments suggest the field is moving beyond promptable segmentation. Models like DINO and Stable Diffusion now perform segmentation as an emergent capability, despite never being explicitly trained for it. Optimized for self-supervised learning and image generation respectively, these models spontaneously learn to group pixels into coherent objects. This suggests that segmentation may arise naturally from learning good visual representations, rather than requiring dedicated training.</p>
-
-<p><img src="/CS163-Projects-2025Fall/assets/images/team23/fig3survey.png" alt="Image 13" /> 
-<em>Figure 3 from “Image Segmentation in Foundation Model Era: A Survey”.</em></p>
-
-<p>These observations point toward unified perception systems that blur traditional task boundaries. Instead of separate modules for detection, segmentation, and classification, future architectures may provide continuous visual understanding from which any capability can be extracted as needed. The integration of large language models with vision systems exemplifies this trend, enabling reasoning about images at multiple levels simultaneously (e.g. like from pixel groupings to semantic relationships to natural language descriptions).</p>
-
-<p>The current landscape is characterized by coexisting paradigms rather than outright replacement. Specialist models remain optimal for well-defined domains with stable data distributions and strict performance requirements. Foundation models provide flexible infrastructure for open-world scenarios where generalization matters most. Emergent capabilities in self-supervised systems hint at a future where task boundaries dissolve entirely. Effective computer vision practice now requires combining these complementary approaches correctly for the right tasks.</p>
-
-<h2 id="references">References</h2>
-
-<p>[1] Zhou, T., Xia, W., Zhang, F., Chang, B., Wang, W., Yuan, Y., Konukoglu, E., &amp; Cremers, D. (2024). <em>Image Segmentation in Foundation Model Era: A Survey</em>. arXiv preprint arXiv:2408.12957. &lt;<a href="https://arxiv.org/abs/2408.12957">https://arxiv.org/abs/2408.12957</a>&gt;</p>
-
-<p>[2] Kirillov, A., Mintun, E., Ravi, N., Mao, H., Rolland, C., Gustafson, L., Xiao, T., Whitehead, S., Berg, A. C., Lo, W.-Y., Dollár, P., &amp; Girshick, R. (2023). <em>Segment Anything</em>. Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 4015-4026. &lt;<a href="https://arxiv.org/abs/2304.02643">https://arxiv.org/abs/2304.02643</a>&gt;</p>
-
-<p>[3] He, K., Gkioxari, G., Dollár, P., &amp; Girshick, R. (2017). <em>Mask R-CNN</em>. Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2961-2969. &lt;<a href="https://arxiv.org/abs/1703.06870">https://arxiv.org/abs/1703.06870</a>&gt;</p>
-
-<p>[4] Peng, L., Wang, H., Zhou, C., Hu, F., Tian, X., &amp; Hongtai, Z. (2024). <em>Research on Intelligent Detection and Segmentation of Rock Joints Based on Deep Learning</em>. Complexity, 2024, Article ID 8810092. &lt;<a href="https://onlinelibrary.wiley.com/doi/10.1155/2024/8810092">https://onlinelibrary.wiley.com/doi/10.1155/2024/8810092</a>&gt;</p>
-
-<p>[5] He, K., Chen, X., Xie, S., Li, Y., Dollár, P., &amp; Girshick, R. (2022). <em>Masked Autoencoders Are Scalable Vision Learners</em>. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 16000-16009. &lt;<a href="https://arxiv.org/abs/2111.06377">https://arxiv.org/abs/2111.06377</a>&gt;</p>]]></content><author><name>Abdallah Fares, Dean Ali, Olana Abraham</name></author><summary type="html"><![CDATA[The evolution from Mask R-CNN to SAM represents a paradigm shift in computer vision segmentation, moving from supervised specialists constrained by fixed vocabularies to promptable generalists that operate class-agnostically. We examine the technical innovations that distinguish these approaches, including SAM’s decoupling of spatial localization from semantic classification and its ambiguity-aware prediction mechanism, alongside future directions in image segmentation.]]></summary></entry><entry><title type="html">Global Human Mesh Recovery</title><link href="/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery.html" rel="alternate" type="text/html" title="Global Human Mesh Recovery" /><published>2025-12-13T00:00:00+00:00</published><updated>2025-12-13T00:00:00+00:00</updated><id>/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery</id><content type="html" xml:base="/CS163-Projects-2025Fall/2025/12/13/team25-global-human-mesh-recovery.html"><![CDATA[<blockquote>
-  <p>In this blog post, we introduce and discuss recent advancements in global human mesh recovery, a challenging computer vision problem involving the extraction of human meshes on a global coordinate system from videos where the motion of the camera is unknown.</p>
-</blockquote>
-
-<!--more-->
-
-<ul id="markdown-toc">
-  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
-  <li><a href="#backgroundfoundation" id="markdown-toc-backgroundfoundation">Background/Foundation</a></li>
-  <li><a href="#approaches" id="markdown-toc-approaches">Approaches</a>    <ul>
-      <li><a href="#slahmr" id="markdown-toc-slahmr">SLAHMR</a></li>
-      <li><a href="#trace" id="markdown-toc-trace">TRACE</a></li>
-      <li><a href="#wham" id="markdown-toc-wham">WHAM</a></li>
-    </ul>
-  </li>
-  <li><a href="#works-cited" id="markdown-toc-works-cited">Works Cited</a></li>
-</ul>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>Human mesh recovery (HMR) is the task of reconstructing a complete and accurate 3D mesh model of the human body and its pose from a single RGB image, with impressive results achieved especially in controlled settings.</p>
-
-<p>However, a problem with significantly less research progress is global human mesh recovery, in which a model takes in a monocular video with unknown camera motion and outputs a coherent sequence of human meshes in a world grounded coordinate system. This introduces significant challenges, including disentangling camera movement from human movement, enforcing temporal consistency, and ensuring physical plausibility to eliminate artifacts like foot sliding. Producing a global human mesh recovery model that works underneath these constraints would unlock applications spanning augmented and virtual reality, film production, sports analysis, human-computer interaction and more.</p>
-
-<p style="width: 400px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/local-motion.png" alt="local-motion" /></p>
-<p><em>Fig 1. Deriving a trajectory from the global frame requires accounting for camera movement in addition to the observed local motion</em> <sup id="fnref:9" role="doc-noteref"><a href="#fn:9" class="footnote" rel="footnote">1</a></sup></p>
-
-<p>To address these challenges, researchers have pursued complementary approaches that build upon each other. We will analyze the progression from foundational methods, SLAHMR and TRACE (CVPR 2023), which focused on decoupling camera motion and ensuring temporal smoothness, respectively. These techniques laid the groundwork for the WHAM model (CVPR 2024), which achieves superior world-grounded accuracy and physical plausibility through contact-aware trajectory recovery.</p>
-
-<h2 id="backgroundfoundation">Background/Foundation</h2>
-
-<p>Modern human mesh recovery methods rely primarily on parametric body models that represent the human body as a set of learnable parameters rather than estimating thousands of vertex positions, which would be necessary in the case of directly recovering a 3D triangle mesh.</p>
-
-<p>The most widely adopted model is SMPL (Skinned Multi-Person Linear model)<sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">2</a></sup>, which decomposes body representations into shape parameters (\(\beta\)), usually 10 values controlling identity characteristics like height and weight, and pose parameters (\(\theta\)), that describe the skeletal structure. Within this formulation, human mesh recovery essentially becomes a regression problem: a deep neural network takes the input and acts as a feature extractor that maps visual cues directly to the SMPL parameter space.</p>
-
-<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/smpl.png" alt="smpl" /></p>
-<p><em>Fig 2. Comparison between SMPL models (orange) and ground truths that SMPL parameters were learned from (gray) showing the variety of human forms that can be represented</em> <sup id="fnref:5:1" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">2</a></sup></p>
-
-<p>While this SMPL regression has been effective in recovering accurate body pose and shape, most early HMR methods operate in a camera-centric frame that treat each frame independently, failing to recover a globally consistent human trajectory over time. Recent approaches to the gloabl human mesh recovery problem effectively extend the same parametric SMPL formulation; all approaches covered aim to output SMPL or similar parametric models.</p>
-
-<h2 id="approaches">Approaches</h2>
-
-<h3 id="slahmr">SLAHMR</h3>
-
-<p>SLAHMR attempts to solve the problem of global human mesh recovery by taking an optimization-based approach.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">3</a></sup></p>
-
-<h4 id="method">Method</h4>
-
-<p>SLAHMR receives as input \(T\) frames of a scene with \(N\) people. First, each person \(i\)’s pose at each point in time \({\hat{P}}_t^i\) is estimated by a model known as PHALP. These estimates are used to calculate \(\mathbf{J}^i_t\), estimates locations of the joints of each human in the scene.</p>
-
-<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/phalp.jpg" alt="phalp" /></p>
-<p><em>Fig 3. Sample pose estimates from PHALP; entire body pose is estimated but only head shown for visualization</em> <sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">4</a></sup></p>
-
-<p>Then, a SLAM (simultaneous localization and mapping) system called DROID-SLAM to estimate the world-to-camera transform \(\{\hat{R}_t, \hat{T}_t\}\) at each point in time, where \(\hat{R}\) is the estimated camera rotation and \(\hat{T}\) is the estimated camera translation. Since DROID-SLAM estimates camera motion without knowing the scale of the world, SLAHMR will always multiply our predicted \(T\) by a value \(\alpha\) to correct for this factor.</p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/droid-slam.png" alt="droid-slam" /></p>
-<p><em>Fig 4. Sample output from DROID-SLAM; blue icons represent camera locations; outputted point map not used in SLAHMR</em> <sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">5</a></sup></p>
-
-<p>Since PHALP estimates poses for each person in the camera’s coordinate system, the goal is now to combine these pose estimations with our camera transform estimations, resulting in world-frame pose estimations.</p>
-
-<p>To do this, the estimates \({\hat{P}}_t^i\) and \(\{\hat{R}_t, \hat{T}_t\}\) are used to initialize an optimization problem that we will constrain and solve. This optimization problem can be expressed as the joint reproduction loss:</p>
-
-\[\begin{equation}
-E_{\textrm{data}} = \sum_{i=1}^N \sum_{t=1}^T \psi^i_t \rho \big( \Pi_K ( R_t \cdot {}^W{\mathbf{J}}^i_t + \alpha T_t )- {\mathbf{x}^i_t} \big)
-\end{equation}\]
-
-<p>This loss function represents the sum of the differences between 2D joint keypoints (\(\mathbf{x}\)) gathered from our mesh estimates and our current prediction of where that same keypoint would be on the image if a picture were taken of the predicted mesh estimate from the predicted camera location (\(R \cdot \mathbf{J} + \alpha T\)). The other terms present deal with camera projections, which are not important to understand with regards to how SLAHMR works.</p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/slahmr.png" alt="slahmr" /></p>
-<p><em>Fig 5. SLAHMR Pipeline: use optimization-based approach</em> <sup id="fnref:1:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">3</a></sup></p>
-
-<p>At this point, since we haven’t added many constraints, SLAHMR only optimizes the global orientation \(\Phi\) and root translation \(\Gamma\) of the human poses in a first pass. In other words, if \(\lambda\) is our learning rate:</p>
-
-\[\begin{equation}
-    \min_{\{\{ {}^W{\Phi}^i_t, {}^W{\Gamma}^i_t\}_{t=1}^T \}_{i=1}^N}
-    \lambda_{\textrm{data}} E_{\textrm{data}}.
-\end{equation}\]
-
-<p>Our next pass begins optimizing \(\alpha\) as well as the human body shapes and poses. To further constrain the optimization problem gradually, we add an additional loss meant to penalize joint movements that aren’t smooth. This is a simple prior that takes advantage of the assumption that humans typically move in a smooth fashion.</p>
-
-\[\begin{equation}
-E_{\textrm{smooth}}= \sum_i^N \sum_t^T \| \mathbf{J}^i_t - \mathbf{J}^i_{t+1} \|^2.
-\end{equation}\]
-
-<p>Along with a few other priors, this then allows us to optimize over all body pose parameters and our camera scale \(\alpha\):</p>
-
-\[\begin{equation}
-    \min_{\alpha, \{\{ {}^WP^i_t\}_{t=1}^T \}_{i=1}^N}
-    \lambda_\textrm{data} E_\textrm{data}
-    + \lambda_\beta E_{\beta} + \lambda_{\textrm{pose}} E_{\textrm{pose}}
-    + \lambda_\textrm{smooth} E_{\textrm{smooth}}.
-\end{equation}\]
-
-<p>Finally, a learned prior about the distribution of human motions is introduced: the likelihood of a transition between two velocity/joint locations \(p_\theta({s}_t \| {s}_{t-1})\) is modelled as a conditional VAE where the latent \(\mathbf{z}\) represents the transition between two time states. We can use this VAE to calculate part of a new loss term, representing the likelihood of a trajectory by combining the likelihoods of transitioning between each consecutive state within the trajectory.</p>
-
-\[\begin{equation}
-    E_\textrm{CVAE} = -\sum_i^N\sum_t^T
-    \log \mathcal{N}(\mathbf{z}_{t}^i; \mu_\theta({s}^i_{t-1}),\sigma_\theta({s}^i_{t-1})).
-\end{equation}\]
-
-<p>At this point, we can now optimize over entire trajectories by autoregressively calculating this loss term throughout all timesteps and adding it to all other components of our loss function.</p>
-
-<p>Note that this overview only covers the most major sections of the three optimization passes in SLAHMR. There are additional portions to the final loss function not mentioned for the sake of brevity; the important part how SLAHMR optimizes in many passes due to the complexity and difficulty of the optimization problem at hand.</p>
-
-<h4 id="performanceshortcomings">Performance/Shortcomings</h4>
-
-<p>SLAHMR improves stability over per-frame methods and handles complex camera movements significantly better than before; in comparison to PHALP alone, for instance, factoring in camera motion adds robustness to sudden camera motions when tracking subjects.</p>
-
-<p>One significant weakness of SLAHMR is that it is optimization-based: this process, as detailed above, is difficult, complex, and requires multiple computation-heavy stages. This results in slow performance.</p>
-
-<p>In addition, in-the-wild videos with a lot of rotational movement or co-linear motion between the human and camera can result in inconsistent trajectories. These are both areas where significant progress can be made.</p>
-
-<h3 id="trace">TRACE</h3>
-
-<p>Another foundational advancement in human mesh recovery is TRACE, whose primary goal is to reconstruct movement of multiple 3D people.<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">6</a></sup> This method was the first one-stage method to track people in global coordinates with moving cameras.</p>
-
-<p>TRACE achieves this by using a multiheaded network to output a novel 5D representation of space, time, and identity that enables reasoning about people in scenes. The network is divided into four branches: the detection branch, tracking branch, mesh recovery branch, and state output branch.</p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/trace.png" alt="trace" /></p>
-<p><em>Fig 6. General architecture of TRACE</em> <sup id="fnref:4:1" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">6</a></sup></p>
-
-<p>To use TRACE, the user must first annotate the first frame of the video being analyzed with information about where the \(K\) subjects they want to track are. TRACE then outputs 3D meshes and trajectory for each of these subjects from a global frame of reference.</p>
-
-<h4 id="method-1">Method</h4>
-
-<p>TRACE encodes the video it is given and the subject motion within it into temporal feature maps \(F_i\) and motion feature maps \(O_i\) using two parallel backbones. These feature maps are fed into the detection branch and tracking branch, respectively, which use multisubject tracking to output the 3D human trajectory in camera coordinates.</p>
-
-<p>The <em>detection branch</em> uses the temporal feature map \(F_i\) to output a 3D center map (the detection of the subject) and a 3D localization map (the precise location of the subject). These maps are composited and combined to output 3D positions, their confidences \((t_i, c_i)\), and their offset vectors, all in the camera space.</p>
-
-<p>The <em>tracking branch</em> uses the motion feature map \(O_i\) to to create a 3D motion offset map, which denotes the position change of each tracked subject from the previous frame to the current frame. Additionally, this branch utilizes a novel memory unit to address the problem of long-term occlusions by storing the 3D positions of each subject in previously examined frames.</p>
-
-<p>Unlike SLAHMR, which uses PHALP for pose estimation and separately extracts human pose, appearance, and location in multiple stages from each video frame and combines them together, TRACE does so in an end-to-end manner. By combining the 3D motion offset map and \((t_i, c_i)\) from the detection branch, the memory unit determines subject identities and builds trajectories for each of the \(K\) subjects. Detected subjects who do not fit the output trajectories are filtered out; remaining tracking ids and their respective trajectories in the camera space are output.</p>
-
-<p>Next, the <em>mesh branch</em> extracts SMPL formatted mesh parameters from \(F_i\) and \(O_i\) to calculate meshes for each human.</p>
-
-<p>Finally, the <em>world branch</em> uses the 3D positions of the subjects’ in-camera coordinates to output a world motion map, which encompasses the 3D orientation and 3D translation offset of each subject in global coordinates. The combination of these is the global trajectory.</p>
-
-<p>In this way, the four branches are able to recover the 3D pose, shape, identity, and trajectory of each tracked subject.</p>
-
-<h4 id="performanceshortcomings-1">Performance/Shortcomings</h4>
-
-<p>TRACE is able to accurately track multiple subjects and outperforms PHALP especially when long-term occlusions occur. Furthermore, TRACE has better motion continuity (no sudden translations of the subject between frames) than other state of the art methods.</p>
-
-<p>Unlike SLAHMR, which is a multi-stage optimization-based approach, TRACE combines scene information and 3D motion with its novel 5D representation to utilize the full scene context and allow for end-to-end training.</p>
-
-<p style="width: 600px; max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/trace-perf.png" alt="trace-perf" /></p>
-<p><em>Fig 7. Tracking results of TRACE and other SOTA methods of the time on MuPoTS-3D, a dataset that contains multiperson interaction scenes with long-term occlusions</em> <sup id="fnref:4:2" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">6</a></sup></p>
-
-<p>However, TRACE is still dependent on clean detections to output accurate trajectories and meshes. Furthermore, these meshes are not world-grounded and are relative to camera position. Finally, TRACE depends on videos as input and its multiple branches cause it to require heavy computation.</p>
-
-<h3 id="wham">WHAM</h3>
-
-<p>World-Grounded Humans with Accurate Motion (WHAM) is a relatively recent approach to global human mesh recovery that targets three specific issues: global motion estimation accuracy, inference speed, and foot-ground contact.<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup> It builds off of both SLAHMR and TRACE, using camera and scene localization and temporal modeling, respectively. It also attempts to address the computationally expensive nature of optimization methods such as SLAHMR and the jittery video motion in regression models such as TRACE caused by challenges with handling camera, rather than subject, movement.</p>
-
-<h4 id="method-2">Method</h4>
-
-<p>WHAM can be divided primarily into two main tasks: motion estimation and trajectory estimation.</p>
-
-<p>To perform motion estimation, the features of the video are first extracted. The raw video data \(\left\{ I(t) \right\}_{t=0}^{T}\) is first inputted into WHAM. ViTPose (a vision transformer based model<sup id="fnref:8" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup>) is used to detect 2D keypoints \(\left\{ x_{2D}^{(t)} \right\}_{t=0}^{T}\), which are then used to extract motion features \(\left\{ \varphi^{(t)}_m \right\}_{t=0}^{T}\).</p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/vitpose.png" alt="vitpose" /></p>
-<p><em>Fig 8. Architecture of the ViTPose model used for 2D keypoint extraction</em> <sup id="fnref:8:1" role="doc-noteref"><a href="#fn:8" class="footnote" rel="footnote">8</a></sup></p>
-
-<p>An image encoder pretrained on AMASS (a large human motion database<sup id="fnref:7" role="doc-noteref"><a href="#fn:7" class="footnote" rel="footnote">9</a></sup>) is then used to extract static image features; these static image features are integrated with the motion features to refine them.</p>
-
-<p>A uni-directional RNN is used in the motion encoder, as well as the motion decoder later on, to extract the motion context from both the current and previous 2D keypoints, as well as the hidden state. The encoder is as follows:</p>
-
-\[\begin{equation}
-\varphi^{(t)}_m = E_M \left( x_2^{(0)}, x_2^{(1)}, \dots, x_2^{(t)} \mid h_E^{(0)} \right)
-\end{equation}\]
-
-<p>where \(h_E^{(0)}\) is the hidden state. The keypoints are then normalized to a bounding box, and the decoder recovers the SMPL parameters as follows:</p>
-
-\[\begin{equation}
-\left( \theta^{(t)}, \beta^{(t)}, c^{(t)}, p^{(t)} \right)
-= D_M\!\left( \hat{\phi}_m^{(0)}, \ldots, \hat{\phi}_m^{(t)} \mid h_D^{(0)} \right).
-\end{equation}\]
-
-<p>Finally, a feature integrator combines the motion context and image features through the following residual connection:</p>
-
-\[\begin{equation}
-\hat{\varphi}^{(t)}_m = \varphi^{(t)}_m + F_I \left( \text{concat} \left( \varphi^{(t)}_m , \varphi^{(t)}_i \right) \right)
-\end{equation}\]
-
-<p>This outputs pixel-aligned 3D meshes that preserve temporal consistency. As we have meshes, we now need to finish our task of trajectory estimation. This can be split into two main stages.</p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/wham.png" alt="wham" /></p>
-<p><em>Fig 9. WHAM architecture; note the encoder-decoder structure</em> <sup id="fnref:6:1" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup></p>
-
-<p>First, the trajectory is decoded by an additional decoder \(D_T\) which predicts the global root orientation \(\Gamma^{(t)}_0\) and root velocity \(\omega^{(t)}\) from the motion feature \(\varphi^{(t)}_m\).</p>
-
-<p>However, the motion feature is derived from input signals from the camera, which makes it difficult to disambiguate the human motion from the camera motion. As such, the angular velocity of the camera is concatenated with the motion feature to create a motion context that is “camera-agnostic,” meaning WHAM is compatible with both SLAM algorithms and digital camera gyroscope measurements. With this, global orientation can be predicted through the uni-directional RNN:</p>
-
-\[\begin{equation}
-(\Gamma^{(t)}_0, v^{(t)}_0) = D_T \left( \varphi^{(0)}_m, \omega^{(0)}, \dots, \varphi^{(t)}_m, \omega^{(t)} \right)
-\end{equation}\]
-
-<p>WHAM then goes further to account for terrain differences to model accurate footground contact without sliding, issues that both SLAHMR and TRACE have, using a technique calledontact Aware Trajectory Refinement. First, the root velocity is adjusted to reduce foot sliding as a whole based on the probability of foot-ground contact:</p>
-
-\[\begin{equation}
-\tilde{v}^{(t)} = v^{(t)}_0 - \left( \Gamma^{(t)}_0 \right)^{-1} v^{(t)}_f
-\end{equation}\]
-
-<p>However, this can lead to noisy translation if the contact and pose estimation are inaccurate, an issue resolved by using a trajectory refining network \(R_T\) to update the root orientation and velocity as needed. This trajectory refining network is then used as part of the global translation operation:</p>
-
-\[\begin{equation}
-(\Gamma^{(t)}, v^{(t)}) = R_T \left( \varphi^{(0)}_m, \Gamma^{(0)}, \tilde{v}^{(0)}, \dots, \varphi^{(t)}_m, \Gamma^{(t)}, \tilde{v}^{(t)} \right)
-\end{equation}\]
-
-\[\begin{equation}
-\tau^{(t)} = \sum_{i=0}^{t-1} \Gamma^{(i)} \nu^{(i)}.
-\end{equation}\]
-
-<p>which allows the model to accurately reconstruct the motion and pose of the 3D human.</p>
-
-<h4 id="performanceshortcomings-2">Performance/Shortcomings</h4>
-
-<p>WHAM is quite powerful as it is now and is able to account for uneven terrain and camera movement while improving foot sliding issues, jittering, and inference speed.</p>
-
-<p>A comparison of its performance with SLAHMR and TRACE across the 3DPW, RICH, and EMDB datasets is provided in the paper discussing WHAM:</p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/wham-perf.png" alt="wham-perf" /></p>
-<p><em>Fig 10. WHAM estimation accuracy compared with SLAHMR and TRACE across multiple datasets</em> <sup id="fnref:6:2" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup></p>
-
-<p style="max-width: 100%;"><img src="/CS163-Projects-2025Fall/assets/images/25/wham-perf-emdb.png" alt="wham-perf-emdb" /></p>
-<p><em>Fig 11. WHAM estimation accuracy compared with SLAHMR and TRACE on the EMDB2 dataset</em> <sup id="fnref:6:3" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">7</a></sup></p>
-
-<p>Even with some data missing, it is clear that WHAM outperforms SLAHMR and TRACE across multiple of the datasets.</p>
-
-<p>However, although WHAM has contributed many improvements to human mesh recovery and can outperform SLAHMR, TRACE, and other single-image models, it still has several limitations.</p>
-
-<p>For example, because it utilizes the AMASS dataset, it has some level of motion prior bias that prevents it from fully accounting for “out-of-distribution” motions, or motions that the average person might not make regularly, such as acrobatics or injured movement, like limping. WHAM also does not fully address occlusion; even though masks are applied occasionally, motion that is blocked by other objects is not completely resolved by WHAM’s algorithm. Finally, it is still quite computationally heavy and could be further optimized for real-time applications, although it can theoretically handle them according to the paper.</p>
-
-<h2 id="works-cited">Works Cited</h2>
-
-<hr />
-<div class="footnotes" role="doc-endnotes">
-  <ol>
-    <li id="fn:9" role="doc-endnote">
-      <p>Yang, et al. “OfCaM: Global Human Mesh Recovery via Optimization-free Camera Motion Scale Calibration”. 2024. <a href="#fnref:9" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-    <li id="fn:5" role="doc-endnote">
-      <p>Loper, et al. “{SMPL}: A Skinned Multi-Person Linear Model” <em>ACM Trans. Graphics (Proc. SIGGRAPH Asia)</em>. 2015. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:5:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
-    </li>
-    <li id="fn:1" role="doc-endnote">
-      <p>Ye, et al. “Decoupling Human and Camera Motion from Videos in the Wild” <em>IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>. 2023. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:1:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
-    </li>
-    <li id="fn:2" role="doc-endnote">
-      <p>Rajasegaran, et al. “Tracking People by Predicting 3D Appearance, Location and Pose” <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition</em>. 2022. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-    <li id="fn:3" role="doc-endnote">
-      <p>Teed, Deng. “DROID-SLAM: Deep Visual SLAM for Monocular, Stereo, and RGB-D Cameras” <em>Advances in neural information processing systems</em>. 2021. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-    <li id="fn:4" role="doc-endnote">
-      <p>Sun, et al. “TRACE: 5D Temporal Regression of Avatars with Dynamic Cameras in 3D Environments” <em>IEEE/CVF Conf.~on Computer Vision and Pattern Recognition (CVPR)</em>. 2023. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:4:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a> <a href="#fnref:4:2" class="reversefootnote" role="doc-backlink">&#8617;<sup>3</sup></a></p>
-    </li>
-    <li id="fn:6" role="doc-endnote">
-      <p>Shin, et al. “{WHAM}: Reconstructing World-grounded Humans with Accurate {3D} Motion” <em>IEEE/CVF Conf.~on Computer Vision and Pattern Recognition (CVPR)</em>. 2024. <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:6:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a> <a href="#fnref:6:2" class="reversefootnote" role="doc-backlink">&#8617;<sup>3</sup></a> <a href="#fnref:6:3" class="reversefootnote" role="doc-backlink">&#8617;<sup>4</sup></a></p>
-    </li>
-    <li id="fn:8" role="doc-endnote">
-      <p>Xu, et al. “ViTPose: Simple Vision Transformer Baselines for Human Pose Estimation”, <em>Advances in Neural Information Processing Systems</em>. 2022. <a href="#fnref:8" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:8:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
-    </li>
-    <li id="fn:7" role="doc-endnote">
-      <p>Mahmood, et al. “{AMASS}: Archive of Motion Capture as Surface Shapes” <em>International Conference on Computer Vision</em>. 2019. <a href="#fnref:7" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
-    </li>
-  </ol>
-</div>]]></content><author><name>Albert Dong, Lindsay Qin, Lune Chan, Clare Jin</name></author><summary type="html"><![CDATA[In this blog post, we introduce and discuss recent advancements in global human mesh recovery, a challenging computer vision problem involving the extraction of human meshes on a global coordinate system from videos where the motion of the camera is unknown.]]></summary></entry></feed>
+arXiv preprint arXiv:2406.01586, 2024.</p>]]></content><author><name>UCLAdeepvision</name></author><summary type="html"><![CDATA[Visuomotor Policy Learning studies how an agent can map high-dimensional visual observations (e.g., camera images) to motor commands in order to solve sequential decision-making tasks. In this project, we focus on settings motivated by autonomous driving and robotic manipulation, and survey modern learning-based approaches—primarily imitation learning (IL) and reinforcement learning (RL)—with an emphasis on methods that improve sample efficiency through policy/representation pretraining.]]></summary></entry></feed>
