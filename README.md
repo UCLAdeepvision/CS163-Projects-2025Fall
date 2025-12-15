@@ -5,6 +5,27 @@ Project page: https://ucladeepvision.github.io/CS163-Projects-2025Fall/
 
 ## Instruction for running this site locally
 
+### Option 1: Using Docker (Recommended - No Ruby installation needed!)
+
+1. Follow the first 2 steps in [pull-request-instruction](pull-request-instruction.md)
+
+2. Make sure you have Docker and Docker Compose installed on your system
+
+3. Build and run the site with Docker Compose:
+```bash
+docker compose build
+docker compose up
+```
+
+4. Open your browser and go to http://localhost:4000/CS163-Projects-2025Fall/
+
+5. To stop the server, press `Ctrl+C` or run:
+```bash
+docker compose down
+```
+
+### Option 2: Using Local Ruby Installation
+
 1. Follow the first 2 steps in [pull-request-instruction](pull-request-instruction.md)
 
 2. Installing Ruby with version 3.1.4 

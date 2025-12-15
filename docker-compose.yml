@@ -1,0 +1,20 @@
+services:
+  jekyll:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cs163-jekyll:latest
+    container_name: cs163-projects-site
+    ports:
+      - "4000:4000"
+      - "35729:35729"  # LiveReload port
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    environment:
+      - JEKYLL_ENV=development
+    command: bundle exec jekyll serve --host 0.0.0.0 --livereload --force_polling
+
+volumes:
+  bundle_cache:
+
